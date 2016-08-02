@@ -10,6 +10,6 @@ public class SoSManager extends Constituent {
     }
 
     public void ack(){
-
+        // // TODO: 2016-08-02 Implement SoS manager acknowledgement
     }
 }
