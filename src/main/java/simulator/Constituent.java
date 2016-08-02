@@ -30,7 +30,6 @@ public class Constituent {
             a.updatePerformer(this);
             return a; // voidAction, nothing happen
         }else{
-            // Need to updated, currently select best utility action
             ArrayList<Action> tempList = new ArrayList<Action>(this.actionList.size());
             tempList.addAll(this.actionList);
             for(Action a : this.actionList){
@@ -49,6 +48,7 @@ public class Constituent {
     }
 
     public Action selectAction(ArrayList<Action> actions){
+        // TODO: 2016-08-02 Select action based on probability distribution of utility
         Action retAction = actions.get(0);
         for(Action a : actions){
             if(getUtility(a) > getUtility(retAction)){
