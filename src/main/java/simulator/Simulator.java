@@ -38,11 +38,13 @@ public class Simulator {
             actions.clear();
             for(Constituent cs : this.csList){
                 Action a = cs.step();
-                if(a.isImmediate()){
+                if(a.getDuration() == 0){ // This action is immediate
+                    // Immediate action: making a decision
                     // insert to immediateAction set
                     immediateActions.add(a);
                 }else {
                     // insert to normal action set
+                    // Normal actions
                     actions.add(a);
                 }
             }
