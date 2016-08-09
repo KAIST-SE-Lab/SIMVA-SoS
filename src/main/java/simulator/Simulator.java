@@ -12,12 +12,14 @@ public class Simulator {
 
     private ArrayList<Constituent> csList = null;
     private SoSManager manager = null;
+    private Environment env = null;
     private int tick;
 
-    public Simulator(Constituent[] CSs, SoSManager manager){
+    public Simulator(Constituent[] CSs, SoSManager manager, Environment env){
         this.csList = new ArrayList<Constituent>();
         this.csList.addAll(Arrays.asList(CSs));
         this.manager = manager;
+        this.env = env;
         this.tick = 0;
     }
 

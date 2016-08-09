@@ -1,9 +1,6 @@
 package main;
 
-import simulator.Action;
-import simulator.Constituent;
-import simulator.Simulator;
-import simulator.SoSManager;
+import simulator.*;
 
 /**
  * Simulator for System of Systems
@@ -17,9 +14,10 @@ public class Main {
         cs1.addAction(new Action("Action2", 2, 4, 2));
         cs2.addAction(new Action("Action1", 1, 2, 1));
         SoSManager manager = new SoSManager();
+        Environment env = new Environment();
         Constituent[] CSs = {cs1, cs2};
 
-        Simulator sim = new Simulator(CSs, manager);
+        Simulator sim = new Simulator(CSs, manager, env);
         sim.execute();
     }
 }
