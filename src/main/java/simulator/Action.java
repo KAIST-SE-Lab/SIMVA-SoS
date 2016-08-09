@@ -5,8 +5,8 @@ public class Action {
     private String name;
     private int cost;
     private int benefit;
+    private int duration;
     private int SoSBenefit;
-    private boolean isImmediate;
     private Constituent performer;
 
     public Action(String name, int cost, int benefit, int SoSBenefit){
@@ -14,7 +14,7 @@ public class Action {
         this.cost = cost;
         this.benefit = benefit;
         this.SoSBenefit = SoSBenefit;
-        this.isImmediate = true;
+        this.duration = 2;
     }
 
     public void updatePerformer(Constituent performer){
@@ -37,11 +37,11 @@ public class Action {
         return this.performer;
     }
 
-    public boolean isImmediate(){
-        return this.isImmediate;
-    }
-
     public String toString(){
         return this.name;
+    }
+
+    public int getDuration(){
+        return this.duration;
     }
 }
