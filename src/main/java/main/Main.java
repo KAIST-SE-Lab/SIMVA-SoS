@@ -1,13 +1,23 @@
 package main;
 
-import simulator.Simulator;
+import simulator.*;
 
 /**
+ * Simulator for System of Systems
  * Created by Junho on 2016-08-01.
  */
 public class Main {
     public static void main(String []args){
-        Simulator sim = new Simulator();
+        Constituent cs1 = new Constituent("CS1");
+        Constituent cs2 = new Constituent("CS2");
+        cs1.addAction(new Action("Action1", 1, 2, 1));
+        cs1.addAction(new Action("Action2", 2, 4, 2));
+        cs2.addAction(new Action("Action1", 1, 2, 1));
+        SoSManager manager = new SoSManager();
+        Environment env = new Environment();
+        Constituent[] CSs = {cs1, cs2};
+
+        Simulator sim = new Simulator(CSs, manager, env);
         sim.execute();
     }
 }
