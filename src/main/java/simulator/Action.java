@@ -1,28 +1,32 @@
 package simulator;
 
+import java.util.ArrayList;
+
 public class Action {
 
-    private String name;
-    private int cost;
-    private int benefit;
-    private int duration;
-    private int SoSBenefit;
-    private Constituent performer;
+    public static int numActions = 0;
+    public static ArrayList<Constituent> ownerList = new ArrayList<Constituent>();
 
-    public Action(String name, int cost, int benefit, int SoSBenefit){
+    public enum Status {Not_raised, Raised, Handled};
+
+    private String name;
+    private int ID;
+
+    private int benefit;
+    private int SoSBenefit;
+    private int duration;
+    private Status status;
+
+    private Constituent performer = null; // Current performer
+
+    public Action(String name, int benefit, int SoSBenefit){
+        ++Action.numActions;
+        this.ID = Action.numActions;
         this.name = name;
-        this.cost = cost;
         this.benefit = benefit;
         this.SoSBenefit = SoSBenefit;
         this.duration = 2;
-    }
-
-    public void updatePerformer(Constituent performer){
-        this.performer = performer;
-    }
-
-    public int getCost(){
-        return this.cost;
+        this.status = Status.Not_raised;
     }
 
     public int getBenefit() {
@@ -31,6 +35,15 @@ public class Action {
 
     public int getSoSBenefit() {
         return this.SoSBenefit;
+    }
+
+    public void setPerformer(Constituent performer){
+        if(this.performer == null){
+            this.performer = performer;
+            // Need of checking deleting performer
+            // performer 가 항상 중복이 없다라고 가정할 수 있어야함.
+            Action.ownerList.add(this.performer);
+        }
     }
 
     public Constituent getPerformer(){
@@ -43,5 +56,13 @@ public class Action {
 
     public int getDuration(){
         return this.duration;
+    }
+
+    public int getID(){
+        return this.ID;
+    }
+
+    public String getName(){
+        return this.name;
     }
 }

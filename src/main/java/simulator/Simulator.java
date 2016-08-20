@@ -83,11 +83,12 @@ public class Simulator {
     private void progress(ArrayList<Action> actionList){
         if(!actionList.isEmpty()){
             for(Action a : actionList){
-                if(a.getCost() == 0 && a.getBenefit() == 0){
+                int cost = a.getPerformer().getCost(a);
+                if(cost == 0 && a.getBenefit() == 0){
                     continue;
                 }
                 Constituent cs = a.getPerformer();
-                cs.updateCostBenefit(a.getCost(), a.getBenefit());
+                cs.updateCostBenefit(cost, a.getBenefit());
                 // Update SoS benefit
                 System.out.println(Integer.toString(tick) + " " + a.getPerformer() + " "
                         + a + " " + cs.getAccumulatedBenefit());
