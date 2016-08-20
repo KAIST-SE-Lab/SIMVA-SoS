@@ -10,7 +10,6 @@ public class Action {
     public enum Status {Not_raised, Raised, Handled};
 
     private String name;
-    private int ID;
 
     private int benefit;
     private int SoSBenefit;
@@ -20,8 +19,6 @@ public class Action {
     private Constituent performer = null; // Current performer
 
     public Action(String name, int benefit, int SoSBenefit){
-        ++Action.numActions;
-        this.ID = Action.numActions;
         this.name = name;
         this.benefit = benefit;
         this.SoSBenefit = SoSBenefit;
@@ -58,11 +55,11 @@ public class Action {
         return this.duration;
     }
 
-    public int getID(){
-        return this.ID;
-    }
-
     public String getName(){
         return this.name;
+    }
+
+    public Status getStatus(){
+        return this.status;
     }
 }
