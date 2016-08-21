@@ -59,28 +59,34 @@ public class Environment {
 
         Random randomGenerator = new Random();
         int numRaisingActions = randomGenerator.nextInt(possibleActionList.size()+1);
-        ArrayList<Action> selectedActionList = new ArrayList<Action>();
-        Collections.shuffle(possibleActionList);
+        if(numRaisingActions > 0){
+            ArrayList<Action> selectedActionList = new ArrayList<Action>();
+            Collections.shuffle(possibleActionList);
 
-        for(int i = 0; i < numRaisingActions; i++){
-            String actionName = possibleActionList.get(i);
-            for(Action a : this.actionList){
-                if(a.getName().equalsIgnoreCase(actionName)){
-                    a.setStatus(Action.Status.Raised);
-                    selectedActionList.add(a);
-                    break;
+            for(int i = 0; i < numRaisingActions; i++){
+                String actionName = possibleActionList.get(i);
+                for(Action a : this.actionList){
+                    if(a.getName().equalsIgnoreCase(actionName)){
+                        a.setStatus(Action.Status.Raised);
+                        selectedActionList.add(a);
+                        break;
+                    }
                 }
             }
-        }
 
-        updateActionStatus(selectedActionList);
+            updateActionStatus(selectedActionList);
+        }
     }
 
     /**
      * Notify randomly generated actions to CSs
+     * Send a message that the actions are raised
+     * The CS which got the message will modify their available action list
      */
     public void notifyCS(){
-
+        for(Constituent cs : this.csList){
+            cs.updateActionList(this.actionList);
+        }
     }
 
     /**

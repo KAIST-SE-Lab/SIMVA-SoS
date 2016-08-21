@@ -102,4 +102,12 @@ public class Constituent {
             return 0;
     }
 
+    public void updateActionList(ArrayList<Action> _list){
+        ArrayList<Action> newList = new ArrayList<Action>(this.actionList.size());
+        for(Action target : _list){
+            newList.add(target);
+        }
+        this.actionList = newList;
+    }
+
 }

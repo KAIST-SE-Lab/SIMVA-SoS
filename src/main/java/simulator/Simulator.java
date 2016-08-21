@@ -85,6 +85,7 @@ public class Simulator {
          */
         env.generateAction();
         env.notifyCS();
+
     }
 
     private void progress(ArrayList<Action> actionList){
