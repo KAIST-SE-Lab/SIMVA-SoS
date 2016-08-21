@@ -56,7 +56,7 @@ public class Environment {
         int numRaisingActions = randomGenerator.nextInt(possibleActionList.size()+1);
         ArrayList<Action> selectedActionList = new ArrayList<Action>();
         Collections.shuffle(possibleActionList);
-        for(int i = 0; i < numRaisingActions; i--){
+        for(int i = 0; i < numRaisingActions; i++){
             String actionName = possibleActionList.get(i);
             for(Action a : this.actionList){
                 if(a.getName().equalsIgnoreCase(actionName)){
