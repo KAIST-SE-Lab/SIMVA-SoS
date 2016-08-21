@@ -18,7 +18,8 @@ public class Main {
 
         SoSManager manager = new SoSManager();
         Constituent[] CSs = {cs1, cs2};
-        Environment env = new Environment(CSs);
+        Action[] actions = {a1, a2};
+        Environment env = new Environment(CSs, actions);
 
         Simulator sim = new Simulator(CSs, manager, env);
         sim.execute();
