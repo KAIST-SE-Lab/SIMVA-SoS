@@ -2,6 +2,7 @@ package simulator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * Simulator for System of Systems
@@ -18,10 +19,15 @@ public class Environment {
      */
 
     private ArrayList<Constituent> csList = null;
+    private ArrayList<Action> actionList = null;
+    private HashMap<String, Action.Status> statusHashMap = null;
 
-    public Environment(Constituent[] CSs){
+    public Environment(Constituent[] CSs, Action[] actions){
         this.csList = new ArrayList<Constituent>();
         Collections.addAll(this.csList, CSs);
+        this.actionList = new ArrayList<Action>();
+        Collections.addAll(this.actionList, actions);
+        this.statusHashMap = new HashMap<String, Action.Status>();
     }
 
     /**
@@ -32,9 +38,11 @@ public class Environment {
 
     /**
      * Randomly generate actions that are not raised
+     * Raise the action whose status is exactly not_raised
+     * If the number of actions to be raised is 0, then no action is raised.
      */
     public void generateAction(){
-
+        int numPossibleActions = 0;
     }
 
     /**
@@ -42,5 +50,17 @@ public class Environment {
      */
     public void notifyCS(){
 
+    }
+
+    /**
+     * Update the status of actions executed by CSs
+     * @param actionList the list of actions that are changed its status
+     */
+    public void updateActionStatus(ArrayList<Action> actionList){
+        for(Action a : actionList){
+            Action.Status newStatus = a.getStatus();
+            this.statusHashMap.remove(a.getName());
+            this.statusHashMap.put(a.getName(), newStatus);
+        }
     }
 }

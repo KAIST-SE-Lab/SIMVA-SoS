@@ -7,7 +7,7 @@ public class Action {
     public static int numActions = 0;
     public static ArrayList<Constituent> ownerList = new ArrayList<Constituent>();
 
-    public enum Status {Not_raised, Raised, Handled};
+    public enum Status {Not_raised, Raised, Handled}
 
     private String name;
 
@@ -61,5 +61,9 @@ public class Action {
 
     public Status getStatus(){
         return this.status;
+    }
+
+    public void setStatus(Status status){
+        this.status = status;
     }
 }
