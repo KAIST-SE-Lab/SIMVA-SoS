@@ -53,7 +53,7 @@ public class Simulator {
             // shuffle actions
             Collections.shuffle(immediateActions);
             this.progress(immediateActions);
-            endCondition = this.generateExogenousActions();
+            this.generateExogenousActions();
             Collections.shuffle(actions);
             this.progress(actions);
 //            endCondition = this.evaluateProperties();
@@ -69,7 +69,8 @@ public class Simulator {
         return true;
     }
 
-    private boolean generateExogenousActions(){
+    private void generateExogenousActions(){
+        /* Currently not used
         ArrayList<Constituent> tempList = new ArrayList<Constituent>(this.csList.size());
         tempList.addAll(this.csList);
         for(Constituent cs: this.csList){
@@ -77,7 +78,13 @@ public class Simulator {
                 tempList.remove(cs);
             }
         }
-        return tempList.isEmpty();
+        */
+        /**
+         * Generate randomly out action
+         * Notify to CS that environment generate the actions
+         */
+        env.generateAction();
+        env.notifyCS();
     }
 
     private void progress(ArrayList<Action> actionList){
