@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Action {
 
-    public static int numActions = 0;
     public static ArrayList<Constituent> ownerList = new ArrayList<Constituent>();
 
     public enum Status {Not_raised, Raised, Handled}

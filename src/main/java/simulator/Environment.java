@@ -26,6 +26,11 @@ public class Environment {
         this.actionList = new ArrayList<Action>();
         Collections.addAll(this.actionList, actions);
         this.statusHashMap = new HashMap<String, Action.Status>();
+
+        for(Action a : this.actionList){
+            this.statusHashMap.put(a.getName(), a.getStatus());
+        }
+
     }
 
     /**
@@ -56,6 +61,7 @@ public class Environment {
         int numRaisingActions = randomGenerator.nextInt(possibleActionList.size()+1);
         ArrayList<Action> selectedActionList = new ArrayList<Action>();
         Collections.shuffle(possibleActionList);
+
         for(int i = 0; i < numRaisingActions; i++){
             String actionName = possibleActionList.get(i);
             for(Action a : this.actionList){
