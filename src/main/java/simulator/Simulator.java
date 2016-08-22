@@ -31,28 +31,34 @@ public class Simulator {
      * Simulation Procedure function from "Simulation and SMC of Logic-Based MAS Models"
      */
     private void procedure(){
-//        boolean verdict = false;
         boolean endCondition = false;
         ArrayList<Action> immediateActions = new ArrayList<Action>();
         ArrayList<Action> actions = new ArrayList<Action>();
         while(!endCondition){
-            immediateActions.clear();
             actions.clear();
-            for(Constituent cs : this.csList){
-                Action a = cs.step();
-                if(a.getDuration() == 0){ // This action is immediate
-                    // Immediate action: making a decision
-                    // insert to immediateAction set
-                    immediateActions.add(a);
-                }else {
-                    // insert to normal action set
-                    // Normal actions
-                    actions.add(a);
-                }
+            // Check whether all CS has a job
+            boolean verdict = false;
+            for(Constituent cs: this.csList){
+                if(cs.getStatus() == Constituent.Status.IDLE)
+                    verdict = true;
             }
-            // shuffle actions
-            Collections.shuffle(immediateActions);
-            this.progress(immediateActions);
+            while(verdict){
+                immediateActions.clear();
+                for(Constituent cs : this.csList){
+                    Action a = cs.step();
+                    if(a.getDuration() == 0){ // This action is immediate
+                        // Immediate action: making a decision
+                        // insert to immediateAction set
+                        immediateActions.add(a);
+                    }else {
+                        // insert to normal action set
+                        // Normal actions
+                        actions.add(a);
+                    }
+                }
+                Collections.shuffle(immediateActions);
+                this.progress(immediateActions);
+            }
             this.generateExogenousActions();
             Collections.shuffle(actions);
             this.progress(actions);
