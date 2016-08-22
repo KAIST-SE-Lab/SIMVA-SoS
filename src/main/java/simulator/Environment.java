@@ -15,7 +15,6 @@ public class Environment {
      * 1. 각 CS의 capability list
      * 2. 현재 각 Action 의 진행 상황
      */
-
     private ArrayList<Constituent> csList = null; // 모든 CS list
     private ArrayList<Action> actionList = null; // 모든 Action List
     private HashMap<String, Action.Status> statusHashMap = null;
@@ -45,7 +44,7 @@ public class Environment {
      * If the number of actions to be raised is 0, then no action is raised.
      */
     public void generateAction(){
-        /**
+        /*
          * 1. Count the number of possible actions to be raised
          * 2. Generate a random number that how many actions will be raised
          * 3. Shuffle the possible action list and pick actions
