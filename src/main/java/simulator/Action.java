@@ -6,7 +6,7 @@ public class Action {
 
     public static ArrayList<Constituent> ownerList = new ArrayList<Constituent>();
 
-    public enum Status {Not_raised, Raised, Handled}
+    public enum Status {NOT_RAISED, RAISED, HANDLED}
 
     private String name;
 
@@ -22,7 +22,7 @@ public class Action {
         this.benefit = benefit;
         this.SoSBenefit = SoSBenefit;
         this.duration = 2;
-        this.status = Status.Not_raised;
+        this.status = Status.NOT_RAISED;
     }
 
     public int getBenefit() {
