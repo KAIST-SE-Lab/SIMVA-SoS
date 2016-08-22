@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 public class Constituent {
 
+    public enum Status {IDLE, OPERATING}
+
     private ArrayList<Action> actionList = null;
     private ArrayList<Action> capabilityList = null; // 일단 보존
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost

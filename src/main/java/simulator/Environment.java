@@ -51,7 +51,7 @@ public class Environment {
          */
         ArrayList<String> possibleActionList = new ArrayList<String>();
         for(Map.Entry<String, Action.Status> entry: this.statusHashMap.entrySet()){
-            if(entry.getValue() == Action.Status.Not_raised){
+            if(entry.getValue() == Action.Status.NOT_RAISED){
                 possibleActionList.add(entry.getKey());
             }
         }
@@ -66,7 +66,7 @@ public class Environment {
                 String actionName = possibleActionList.get(i);
                 for(Action a : this.actionList){
                     if(a.getName().equalsIgnoreCase(actionName)){
-                        a.setStatus(Action.Status.Raised);
+                        a.setStatus(Action.Status.RAISED);
                         selectedActionList.add(a);
                         break;
                     }
