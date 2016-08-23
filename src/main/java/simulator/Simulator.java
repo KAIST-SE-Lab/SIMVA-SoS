@@ -101,7 +101,7 @@ public class Simulator {
                     }
                 }
             }else if(type == Action.TYPE.NORMAL){
-                /**
+                /*
                  * 1. Calculate the minimum time to elapse among action list
                  * 2. Elapse the time and execute
                  * 3. If the remaining time is 0, then update Cost & Benefit
