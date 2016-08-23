@@ -55,7 +55,7 @@ public class Simulator {
                 }
 
                 Collections.shuffle(immediateActions);
-                this.progress(immediateActions); // Choose
+                this.progress(immediateActions, Action.TYPE.IMMEDIATE); // Choose
 
                 verdict = false;
                 for(Constituent _cs: this.csList){
@@ -66,7 +66,7 @@ public class Simulator {
 
             this.generateExogenousActions(); // Environment action
             Collections.shuffle(actions);
-            this.progress(actions);
+            this.progress(actions, Action.TYPE.NORMAL);
 //            endCondition = this.evaluateProperties();
             incTick();
         }
