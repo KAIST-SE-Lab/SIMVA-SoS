@@ -37,12 +37,13 @@ public class Simulator {
         while(!endCondition){
             actions.clear();
             // Check whether all CS has a job
-            boolean verdict = false;
-            for(Constituent cs: this.csList){
-                if(cs.getStatus() == Constituent.Status.IDLE)
-                    verdict = true;
-            }
+            boolean verdict = true;
             while(verdict){
+                for(Constituent cs: this.csList){
+                    if(cs.getStatus() == Constituent.Status.IDLE)
+                        verdict = false;
+                }
+
                 immediateActions.clear();
                 for(Constituent cs : this.csList){
                     Action a = cs.step();
@@ -59,7 +60,8 @@ public class Simulator {
                 Collections.shuffle(immediateActions);
                 this.progress(immediateActions);
             }
-            this.generateExogenousActions();
+
+            this.generateExogenousActions(); // Environment action
             Collections.shuffle(actions);
             this.progress(actions);
 //            endCondition = this.evaluateProperties();

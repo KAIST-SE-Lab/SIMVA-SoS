@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Constituent {
 
-    public enum Status {IDLE, SELECTION, OPERATING}
+    public enum Status {IDLE, SELECTION, OPERATING, NO_JOB}
 
     private ArrayList<Action> capabilityList = null; // 일단 보존
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
@@ -41,33 +41,8 @@ public class Constituent {
              * 2. If the status of CS is SELECTION, then
              */
             if(this.status == Status.IDLE){ // Select an action
-                /* How to choose an action
-                 * 1. Get a list of available actions
-                 * 2. Calculate the utilities to do actions
-                 * 3. Choose the best action to get the most utility
-                 */
-                ArrayList<Action> availableActions = new ArrayList<Action>();
-                for(Action a : this.capabilityList){
-                    if(a.getStatus() == Action.Status.RAISED)
-                        availableActions.add(a);
-                }
-
-                int bestIndex = -1;
-                if(availableActions.size() > 1){
-                    bestIndex = 0;
-                    for(int i=1; i<availableActions.size(); i++){
-                        if(this.getUtility(availableActions.get(bestIndex))
-                                < this.getUtility(availableActions.get(i))){
-                            bestIndex = i;
-                        }
-                    }
-                    String selectedName = availableActions.get(bestIndex).getName();
-
-                }else if(availableActions.size() == 0){
-
-                }else{
-                    bestIndex = 0;
-                }
+                this.status = Status.SELECTION;
+                return new Action("Action select", 0, 0, 0);
             }else if(this.status == Status.SELECTION){ // Selecting
                 /* Selecting the action at the immediate action step
                  * If we select the action, then this CS will try to choose the action.
@@ -76,6 +51,43 @@ public class Constituent {
         }
 
         return null;
+    }
+
+    /**
+     * How to choose an action
+     * 1. Get a list of available actions
+     * 2. Calculate the utilities to do actions
+     * 3. Choose the best action to get the most utility
+     * 4. If other CS choose the action first, then this CS return to IDLE
+     * 5. If no action remain, then do nothing
+     */
+    public void immediateAction(){
+        if(this.status != Status.IDLE) // Defend code
+            return;
+
+        ArrayList<Action> availableActions = new ArrayList<Action>();
+        for(Action a : this.capabilityList){
+            if(a.getStatus() == Action.Status.RAISED)
+                availableActions.add(a);
+        }
+
+        int bestIndex = -1;
+        if(availableActions.size() > 1){
+            bestIndex = 0;
+            for(int i=1; i<availableActions.size(); i++){
+                if(this.getUtility(availableActions.get(bestIndex))
+                        < this.getUtility(availableActions.get(i))){
+                    bestIndex = i;
+                }
+            }
+            if(bestIndex == -1)
+                return;
+            String selectedName = availableActions.get(bestIndex).getName();
+        }else if(availableActions.size() == 0){
+            this.status = Status.NO_JOB;
+        }else{
+            bestIndex = 0;
+        }
     }
 
     private Action selectAction(ArrayList<Action> actions){
