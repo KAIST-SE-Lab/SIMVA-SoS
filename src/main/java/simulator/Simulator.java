@@ -79,7 +79,7 @@ public class Simulator {
             this.generateExogenousActions(); // Environment action
             Collections.shuffle(actions);
             this.progress(actions, Action.TYPE.NORMAL);
-            
+
             endCondition = this.evaluateProperties();
         }
         System.out.println("Done Tick" + this.tick);
@@ -139,5 +139,6 @@ public class Simulator {
                 increaseTick(minimumElapsedTime);
             }
         }
+        actionList.clear();
     }
 }
