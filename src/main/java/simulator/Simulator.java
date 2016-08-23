@@ -16,6 +16,7 @@ public class Simulator {
     private SoSManager manager = null;
     private Environment env = null;
     private int tick;
+    private int minimumActionCost;
 
     public Simulator(Constituent[] CSs, SoSManager manager, Environment env){
         this.csList = new ArrayList<Constituent>();
@@ -23,6 +24,14 @@ public class Simulator {
         this.manager = manager;
         this.env = env;
         this.tick = 0;
+
+        this.minimumActionCost = Integer.MAX_VALUE - 100000;
+        for(Constituent CS: this.csList){
+            for(Action a : CS.getCapability()){
+                if(CS.getCost(a) < minimumActionCost)
+                    minimumActionCost = CS.getCost(a);
+            }
+        }
     }
 
     public void execute(){
@@ -36,6 +45,7 @@ public class Simulator {
         boolean endCondition = false;
         ArrayList<Action> immediateActions = new ArrayList<Action>();
         ArrayList<Action> actions = new ArrayList<Action>();
+
         while(!endCondition){
             actions.clear();
             // Check whether all CS has a job
@@ -69,8 +79,10 @@ public class Simulator {
             this.generateExogenousActions(); // Environment action
             Collections.shuffle(actions);
             this.progress(actions, Action.TYPE.NORMAL);
-//            endCondition = this.evaluateProperties();
+            
+            endCondition = this.evaluateProperties();
         }
+        System.out.println("Done Tick" + this.tick);
     }
 
     private void increaseTick(int minimumElapsedTime){
@@ -79,7 +91,17 @@ public class Simulator {
     }
 
     private boolean evaluateProperties(){
-        return true;
+        /*
+         * 1. Check whether is world ended?
+         * 1-1. If all CS has the cost which is less than the minimum cost of actions to execute
+         *
+         */
+        boolean verdict = true;
+        for(Constituent CS: this.csList){
+            if(CS.getRemainBudget() >= this.minimumActionCost)
+                verdict = false;
+        }
+        return verdict;
     }
 
     private void generateExogenousActions(){
