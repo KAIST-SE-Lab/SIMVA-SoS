@@ -115,17 +115,6 @@ public class Constituent {
         }
     }
 
-    private Action selectAction(ArrayList<Action> actions){
-        // TODO: 2016-08-02 Select action based on probability distribution of utility
-        Action retAction = actions.get(0);
-        for(Action a : actions){
-            if(getUtility(a) > getUtility(retAction)){
-                retAction = a;
-            }
-        }
-        return retAction;
-    }
-
     public int getRemainBudget(){
         return this.totalBudget - this.usedCost;
     }

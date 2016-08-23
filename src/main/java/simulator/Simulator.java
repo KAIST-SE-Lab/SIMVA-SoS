@@ -103,7 +103,8 @@ public class Simulator {
                 */
                 }
             }else if(type == Action.TYPE.NORMAL){
-                a.getPerformer().normalAction();
+                for(Action a : actionList)
+                    a.getPerformer().normalAction();
             }
         }
     }
