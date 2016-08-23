@@ -104,10 +104,11 @@ public class Constituent {
         }
     }
 
-    public void normalAction(){
+    public void normalAction(int elapsedTime){ // TODO: Need of renaming!
         if(currentAction == null)
             return;
-        if(currentAction.getRemainTime() == 0){
+        currentAction.decreaseRemainingTime(elapsedTime);
+        if(currentAction.getRemainingTime() == 0){
             // All actions are always more than and equal to 0
             int cost = this.getCost(currentAction);
             this.updateCostBenefit(cost, currentAction.getBenefit());

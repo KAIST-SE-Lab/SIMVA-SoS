@@ -50,8 +50,14 @@ public class Action {
         this.remainTime = duration;
     }
 
-    public int getRemainTime(){
+    public int getRemainingTime(){
         return this.remainTime;
+    }
+
+    public void decreaseRemainingTime(int elapsedTime){
+        if(elapsedTime > this.remainTime)
+            return;
+        this.remainTime -= elapsedTime;
     }
 
     public Constituent getPerformer(){

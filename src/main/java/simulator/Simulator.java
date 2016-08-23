@@ -7,6 +7,8 @@ import java.util.Collections;
 /**
  * System of Systems Simulator
  * Created by Junho on 2016-08-01.
+ * Output model : System.out.println(Integer.toString(tick) + " "
+ * + a.getPerformer() + " " + a + " " + cs.getAccumulatedBenefit());
  */
 public class Simulator {
 
@@ -97,14 +99,21 @@ public class Simulator {
                     if(a.getName().equalsIgnoreCase("Action select")) {
                         a.getPerformer().immediateAction(); // Select action
                     }
-                /*
-                System.out.println(Integer.toString(tick) + " " + a.getPerformer() + " "
-                        + a + " " + cs.getAccumulatedBenefit());
-                */
                 }
             }else if(type == Action.TYPE.NORMAL){
-                for(Action a : actionList)
-                    a.getPerformer().normalAction();
+                /**
+                 * 1. Calculate the minimum time to elapse among action list
+                 * 2. Elapse the time and execute
+                 * 3. If the remaining time is 0, then update Cost & Benefit
+                 */
+                int minimumElapsedTime = -1;
+                for(Action a : actionList){
+                    if(minimumElapsedTime < a.getRemainingTime())
+                        minimumElapsedTime = a.getRemainingTime();
+                }
+                for(Action a : actionList){
+                    a.getPerformer().normalAction(minimumElapsedTime);
+                }
             }
         }
     }
