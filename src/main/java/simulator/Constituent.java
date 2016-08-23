@@ -7,7 +7,7 @@ public class Constituent {
 
     public enum Status {IDLE, SELECTION, OPERATING, NO_JOB}
 
-    private ArrayList<Action> capabilityList = null; // 일단 보존
+    private ArrayList<Action> capabilityList = null;
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
 
     private String name;
@@ -42,7 +42,9 @@ public class Constituent {
              */
             if(this.status == Status.IDLE){ // Select an action
                 this.status = Status.SELECTION;
-                return new Action("Action select", 0, 0, 0);
+                Action a = new Action("Action select", 0, 0, 0);
+                a.setPerformer(this);
+                return a;
             }else if(this.status == Status.SELECTION){ // Selecting
                 /* Selecting the action at the immediate action step
                  * If we select the action, then this CS will try to choose the action.
@@ -72,6 +74,7 @@ public class Constituent {
         }
 
         int bestIndex = -1;
+        Action candidateAction = null;
         if(availableActions.size() > 1){
             bestIndex = 0;
             for(int i=1; i<availableActions.size(); i++){
@@ -80,13 +83,22 @@ public class Constituent {
                     bestIndex = i;
                 }
             }
-            if(bestIndex == -1)
-                return;
-            String selectedName = availableActions.get(bestIndex).getName();
-        }else if(availableActions.size() == 0){
+            candidateAction = availableActions.get(bestIndex);
+        }else if(availableActions.size() == 0){ // No more job left
             this.status = Status.NO_JOB;
         }else{
-            bestIndex = 0;
+            // Only one action exists
+            candidateAction = availableActions.get(0);
+        }
+
+        if(bestIndex != -1 && candidateAction != null){
+            // Selected action exists
+            if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
+                candidateAction.setStatus(Action.Status.HANDLED);
+                this.status = Status.SELECTION;
+            }
+        }else{ // To select an action again
+            this.status = Status.IDLE;
         }
     }
 
