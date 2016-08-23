@@ -13,6 +13,7 @@ public class Action {
     private int benefit;
     private int SoSBenefit;
     private int duration;
+    private int remainTime;
     private Status status;
 
     private Constituent performer = null; // Current performer
@@ -22,6 +23,7 @@ public class Action {
         this.benefit = benefit;
         this.SoSBenefit = SoSBenefit;
         this.duration = duration;
+        this.remainTime = -1; // not_raised
         this.status = Status.NOT_RAISED;
     }
 
@@ -40,6 +42,15 @@ public class Action {
             // performer 가 항상 중복이 없다라고 가정할 수 있어야함.
             Action.ownerList.add(this.performer);
         }
+    }
+
+    public void startHandle(){
+        this.setStatus(Status.HANDLED);
+        this.remainTime = duration;
+    }
+
+    public int getRemainTime(){
+        return this.remainTime;
     }
 
     public Constituent getPerformer(){

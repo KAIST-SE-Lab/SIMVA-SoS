@@ -90,7 +90,7 @@ public class Simulator {
             }
         }
         */
-        /**
+        /*
          * Generate randomly out action
          * Notify to CS that environment generate the actions
          */
@@ -102,18 +102,15 @@ public class Simulator {
     private void progress(ArrayList<Action> actionList){
         if(!actionList.isEmpty()){
             for(Action a : actionList){
-                if(a.getName().equalsIgnoreCase("Action select"))
+                if(a.getName().equalsIgnoreCase("Action select")) {
                     a.getPerformer().immediateAction(); // Select action
-
-                int cost = a.getPerformer().getCost(a);
-                if(cost == 0 && a.getBenefit() == 0){
-                    continue;
+                }else{
+                    a.getPerformer().normalAction();
                 }
-                Constituent cs = a.getPerformer();
-                cs.updateCostBenefit(cost, a.getBenefit());
-                // Update SoS benefit
+                /*
                 System.out.println(Integer.toString(tick) + " " + a.getPerformer() + " "
                         + a + " " + cs.getAccumulatedBenefit());
+                */
             }
         }
     }
