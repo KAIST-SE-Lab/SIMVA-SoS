@@ -70,12 +70,12 @@ public class Simulator {
             Collections.shuffle(actions);
             this.progress(actions, Action.TYPE.NORMAL);
 //            endCondition = this.evaluateProperties();
-            incTick();
         }
     }
 
-    private void incTick(){
-        this.tick++;
+    private void increaseTick(int minimumElapsedTime){
+        if(minimumElapsedTime > 0)
+            this.tick += minimumElapsedTime;
     }
 
     private boolean evaluateProperties(){
@@ -114,6 +114,7 @@ public class Simulator {
                 for(Action a : actionList){
                     a.getPerformer().normalAction(minimumElapsedTime);
                 }
+                increaseTick(minimumElapsedTime);
             }
         }
     }
