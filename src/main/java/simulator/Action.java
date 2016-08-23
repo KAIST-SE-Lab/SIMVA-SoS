@@ -17,11 +17,11 @@ public class Action {
 
     private Constituent performer = null; // Current performer
 
-    public Action(String name, int benefit, int SoSBenefit){
+    public Action(String name, int benefit, int SoSBenefit, int duration){
         this.name = name;
         this.benefit = benefit;
         this.SoSBenefit = SoSBenefit;
-        this.duration = 2;
+        this.duration = duration;
         this.status = Status.NOT_RAISED;
     }
 
