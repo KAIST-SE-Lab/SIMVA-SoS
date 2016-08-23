@@ -108,6 +108,7 @@ public class Constituent {
         if(currentAction == null)
             return;
         if(currentAction.getRemainTime() == 0){
+            // All actions are always more than and equal to 0
             int cost = this.getCost(currentAction);
             this.updateCostBenefit(cost, currentAction.getBenefit());
             // TODO: 2016-08-23 Add SoS benefit update

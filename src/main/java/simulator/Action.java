@@ -7,6 +7,7 @@ public class Action {
     public static ArrayList<Constituent> ownerList = new ArrayList<Constituent>();
 
     public enum Status {NOT_RAISED, RAISED, HANDLED}
+    public enum TYPE {IMMEDIATE, NORMAL}
 
     private String name;
 

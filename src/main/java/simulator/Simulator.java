@@ -81,15 +81,6 @@ public class Simulator {
     }
 
     private void generateExogenousActions(){
-        /* Currently not used
-        ArrayList<Constituent> tempList = new ArrayList<Constituent>(this.csList.size());
-        tempList.addAll(this.csList);
-        for(Constituent cs: this.csList){
-            if(cs.getRemainBudget() <= 0){
-                tempList.remove(cs);
-            }
-        }
-        */
         /*
          * Generate randomly out action
          * Notify to CS that environment generate the actions
@@ -99,18 +90,20 @@ public class Simulator {
 
     }
 
-    private void progress(ArrayList<Action> actionList){
+    private void progress(ArrayList<Action> actionList, Action.TYPE type){
         if(!actionList.isEmpty()){
-            for(Action a : actionList){
-                if(a.getName().equalsIgnoreCase("Action select")) {
-                    a.getPerformer().immediateAction(); // Select action
-                }else{
-                    a.getPerformer().normalAction();
-                }
+            if(type == Action.TYPE.IMMEDIATE){
+                for(Action a : actionList){
+                    if(a.getName().equalsIgnoreCase("Action select")) {
+                        a.getPerformer().immediateAction(); // Select action
+                    }
                 /*
                 System.out.println(Integer.toString(tick) + " " + a.getPerformer() + " "
                         + a + " " + cs.getAccumulatedBenefit());
                 */
+                }
+            }else if(type == Action.TYPE.NORMAL){
+                a.getPerformer().normalAction();
             }
         }
     }
