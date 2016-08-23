@@ -7,6 +7,8 @@ import java.util.Collections;
 /**
  * System of Systems Simulator
  * Created by Junho on 2016-08-01.
+ * Output model : System.out.println(Integer.toString(tick) + " "
+ * + a.getPerformer() + " " + a + " " + cs.getAccumulatedBenefit());
  */
 public class Simulator {
 
@@ -14,6 +16,7 @@ public class Simulator {
     private SoSManager manager = null;
     private Environment env = null;
     private int tick;
+    private int minimumActionCost;
 
     public Simulator(Constituent[] CSs, SoSManager manager, Environment env){
         this.csList = new ArrayList<Constituent>();
@@ -21,6 +24,14 @@ public class Simulator {
         this.manager = manager;
         this.env = env;
         this.tick = 0;
+
+        this.minimumActionCost = Integer.MAX_VALUE - 100000;
+        for(Constituent CS: this.csList){
+            for(Action a : CS.getCapability()){
+                if(CS.getCost(a) < minimumActionCost)
+                    minimumActionCost = CS.getCost(a);
+            }
+        }
     }
 
     public void execute(){
@@ -34,6 +45,7 @@ public class Simulator {
         boolean endCondition = false;
         ArrayList<Action> immediateActions = new ArrayList<Action>();
         ArrayList<Action> actions = new ArrayList<Action>();
+
         while(!endCondition){
             actions.clear();
             // Check whether all CS has a job
@@ -55,7 +67,7 @@ public class Simulator {
                 }
 
                 Collections.shuffle(immediateActions);
-                this.progress(immediateActions); // Choose
+                this.progress(immediateActions, Action.TYPE.IMMEDIATE); // Choose
 
                 verdict = false;
                 for(Constituent _cs: this.csList){
@@ -66,31 +78,34 @@ public class Simulator {
 
             this.generateExogenousActions(); // Environment action
             Collections.shuffle(actions);
-            this.progress(actions);
-//            endCondition = this.evaluateProperties();
-            incTick();
+            this.progress(actions, Action.TYPE.NORMAL);
+
+            endCondition = this.evaluateProperties();
         }
+        System.out.println("Done Tick" + this.tick);
     }
 
-    private void incTick(){
-        this.tick++;
+    private void increaseTick(int minimumElapsedTime){
+        if(minimumElapsedTime > 0)
+            this.tick += minimumElapsedTime;
     }
 
     private boolean evaluateProperties(){
-        return true;
+        /*
+         * 1. Check whether is world ended?
+         * 1-1. If all CS has the cost which is less than the minimum cost of actions to execute
+         *
+         */
+        boolean verdict = true;
+        for(Constituent CS: this.csList){
+            if(CS.getRemainBudget() >= this.minimumActionCost)
+                verdict = false;
+        }
+        return verdict;
     }
 
     private void generateExogenousActions(){
-        /* Currently not used
-        ArrayList<Constituent> tempList = new ArrayList<Constituent>(this.csList.size());
-        tempList.addAll(this.csList);
-        for(Constituent cs: this.csList){
-            if(cs.getRemainBudget() <= 0){
-                tempList.remove(cs);
-            }
-        }
-        */
-        /**
+        /*
          * Generate randomly out action
          * Notify to CS that environment generate the actions
          */
@@ -99,22 +114,31 @@ public class Simulator {
 
     }
 
-    private void progress(ArrayList<Action> actionList){
+    private void progress(ArrayList<Action> actionList, Action.TYPE type){
         if(!actionList.isEmpty()){
-            for(Action a : actionList){
-                if(a.getName().equalsIgnoreCase("Action select"))
-                    a.getPerformer().immediateAction(); // Select action
-
-                int cost = a.getPerformer().getCost(a);
-                if(cost == 0 && a.getBenefit() == 0){
-                    continue;
+            if(type == Action.TYPE.IMMEDIATE){
+                for(Action a : actionList){
+                    if(a.getName().equalsIgnoreCase("Action select")) {
+                        a.getPerformer().immediateAction(); // Select action
+                    }
                 }
-                Constituent cs = a.getPerformer();
-                cs.updateCostBenefit(cost, a.getBenefit());
-                // Update SoS benefit
-                System.out.println(Integer.toString(tick) + " " + a.getPerformer() + " "
-                        + a + " " + cs.getAccumulatedBenefit());
+            }else if(type == Action.TYPE.NORMAL){
+                /*
+                 * 1. Calculate the minimum time to elapse among action list
+                 * 2. Elapse the time and execute
+                 * 3. If the remaining time is 0, then update Cost & Benefit
+                 */
+                int minimumElapsedTime = -1;
+                for(Action a : actionList){
+                    if(minimumElapsedTime < a.getRemainingTime())
+                        minimumElapsedTime = a.getRemainingTime();
+                }
+                for(Action a : actionList){
+                    a.getPerformer().normalAction(minimumElapsedTime);
+                }
+                increaseTick(minimumElapsedTime);
             }
         }
+        actionList.clear();
     }
 }
