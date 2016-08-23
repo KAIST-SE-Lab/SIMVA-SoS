@@ -39,13 +39,9 @@ public class Simulator {
             // Check whether all CS has a job
             boolean verdict = true;
             while(verdict){
-                for(Constituent cs: this.csList){
-                    if(cs.getStatus() == Constituent.Status.IDLE)
-                        verdict = false;
-                }
-
                 immediateActions.clear();
-                for(Constituent cs : this.csList){
+
+                for(Constituent cs : this.csList){ // Get immediate candidate action
                     Action a = cs.step();
                     if(a.getDuration() == 0){ // This action is immediate
                         // Immediate action: making a decision
@@ -57,8 +53,15 @@ public class Simulator {
                         actions.add(a);
                     }
                 }
+
                 Collections.shuffle(immediateActions);
-                this.progress(immediateActions);
+                this.progress(immediateActions); // Choose
+
+                verdict = false;
+                for(Constituent _cs: this.csList){
+                    if(_cs.getStatus() == Constituent.Status.IDLE)
+                        verdict = true;
+                }
             }
 
             this.generateExogenousActions(); // Environment action
@@ -99,6 +102,9 @@ public class Simulator {
     private void progress(ArrayList<Action> actionList){
         if(!actionList.isEmpty()){
             for(Action a : actionList){
+                if(a.getName().equalsIgnoreCase("Action select"))
+                    a.getPerformer().immediateAction(); // Select action
+
                 int cost = a.getPerformer().getCost(a);
                 if(cost == 0 && a.getBenefit() == 0){
                     continue;
