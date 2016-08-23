@@ -15,6 +15,7 @@ public class Constituent {
     private int totalBudget;
     private int accumulatedBenefit;
     private Status status;
+    private Action currentAction;
 
     public Constituent(String name){
         this.name = name;
@@ -24,6 +25,7 @@ public class Constituent {
         this.totalBudget = 100;
         this.accumulatedBenefit = 0;
         this.status = Status.IDLE;
+        this.currentAction = null;
     }
 
     /**
@@ -94,7 +96,7 @@ public class Constituent {
         if(bestIndex != -1 && candidateAction != null){
             // Selected action exists
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
-                candidateAction.setStatus(Action.Status.HANDLED);
+                candidateAction.startHandle();
                 this.status = Status.SELECTION;
             }
         }else{ // To select an action again
@@ -102,15 +104,17 @@ public class Constituent {
         }
     }
 
-    private Action selectAction(ArrayList<Action> actions){
-        // TODO: 2016-08-02 Select action based on probability distribution of utility
-        Action retAction = actions.get(0);
-        for(Action a : actions){
-            if(getUtility(a) > getUtility(retAction)){
-                retAction = a;
-            }
+    public void normalAction(int elapsedTime){ // TODO: Need of renaming!
+        if(currentAction == null)
+            return;
+        currentAction.decreaseRemainingTime(elapsedTime);
+        if(currentAction.getRemainingTime() == 0){
+            // All actions are always more than and equal to 0
+            int cost = this.getCost(currentAction);
+            this.updateCostBenefit(cost, currentAction.getBenefit());
+            // TODO: 2016-08-23 Add SoS benefit update
+            currentAction.resetAction();
         }
-        return retAction;
     }
 
     public int getRemainBudget(){
