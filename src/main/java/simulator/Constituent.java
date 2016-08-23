@@ -7,7 +7,6 @@ public class Constituent {
 
     public enum Status {IDLE, SELECTION, OPERATING}
 
-    private ArrayList<Action> actionList = null;
     private ArrayList<Action> capabilityList = null; // 일단 보존
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
 
@@ -19,7 +18,6 @@ public class Constituent {
 
     public Constituent(String name){
         this.name = name;
-        this.actionList = new ArrayList<Action>();
         this.capabilityList = new ArrayList<Action>();
         this.capabilityMap = new HashMap<String, Integer>();
         this.usedCost = 0;
@@ -49,7 +47,7 @@ public class Constituent {
                  * 3. Choose the best action to get the most utility
                  */
                 ArrayList<Action> availableActions = new ArrayList<Action>();
-                for(Action a : this.actionList){
+                for(Action a : this.capabilityList){
                     if(a.getStatus() == Action.Status.RAISED)
                         availableActions.add(a);
                 }
@@ -63,26 +61,21 @@ public class Constituent {
                             bestIndex = i;
                         }
                     }
+                    String selectedName = availableActions.get(bestIndex).getName();
 
                 }else if(availableActions.size() == 0){
 
                 }else{
                     bestIndex = 0;
                 }
-            }
-            ArrayList<Action> tempList = new ArrayList<Action>(this.actionList.size());
-            tempList.addAll(this.actionList);
-            for(Action a : this.actionList){
-                if(this.getCost(a) > this.getRemainBudget()){
-                    tempList.remove(a);
-                }
-            }
-            if(tempList.size() > 0)
-                return selectAction(tempList);
-            else{ // We don't have enough money to execute an action.
-                return null;
+            }else if(this.status == Status.SELECTION){ // Selecting
+                /* Selecting the action at the immediate action step
+                 * If we select the action, then this CS will try to choose the action.
+                 */
             }
         }
+
+        return null;
     }
 
     private Action selectAction(ArrayList<Action> actions){
@@ -126,10 +119,6 @@ public class Constituent {
         return this.capabilityList;
     }
 
-    public ArrayList<Action> getActionList(){
-        return this.actionList;
-    }
-
     public int getCost(Action a){
         Integer _cost = this.capabilityMap.get(a.getName());
         if(_cost != null)
@@ -139,11 +128,11 @@ public class Constituent {
     }
 
     public void updateActionList(ArrayList<Action> _list){
-        ArrayList<Action> newList = new ArrayList<Action>(this.actionList.size());
+        ArrayList<Action> newList = new ArrayList<Action>(this.capabilityList.size());
         for(Action target : _list){
             newList.add(target);
         }
-        this.actionList = newList;
+        this.capabilityList = newList;
     }
 
     public Status getStatus(){
