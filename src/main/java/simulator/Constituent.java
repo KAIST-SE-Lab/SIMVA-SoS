@@ -113,6 +113,7 @@ public class Constituent {
             int cost = this.getCost(currentAction);
             this.updateCostBenefit(cost, currentAction.getBenefit());
             // TODO: 2016-08-23 Add SoS benefit update
+            currentAction.resetAction();
         }
     }
 

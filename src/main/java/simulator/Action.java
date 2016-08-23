@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Action {
 
-    public static ArrayList<Constituent> ownerList = new ArrayList<Constituent>();
-
     public enum Status {NOT_RAISED, RAISED, HANDLED}
     public enum TYPE {IMMEDIATE, NORMAL}
 
@@ -41,7 +39,6 @@ public class Action {
             this.performer = performer;
             // Need of checking deleting performer
             // performer 가 항상 중복이 없다라고 가정할 수 있어야함.
-            Action.ownerList.add(this.performer);
         }
     }
 
@@ -58,6 +55,12 @@ public class Action {
         if(elapsedTime > this.remainTime)
             return;
         this.remainTime -= elapsedTime;
+    }
+
+    public void resetAction(){
+        this.status = Status.NOT_RAISED;
+        this.remainTime = -1;
+        this.performer= null;
     }
 
     public Constituent getPerformer(){
