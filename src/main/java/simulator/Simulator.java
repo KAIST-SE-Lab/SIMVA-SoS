@@ -51,6 +51,7 @@ public class Simulator {
             // Check whether all CS has a job
             boolean verdict = true;
             while(verdict){
+                System.out.println("Immediate");
                 immediateActions.clear();
 
                 for(Constituent cs : this.csList){ // Get immediate candidate action

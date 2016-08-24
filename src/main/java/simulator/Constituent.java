@@ -42,6 +42,7 @@ public class Constituent {
              * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
              * 2. If the status of CS is SELECTION, then
              */
+            // TODO: What if no job and no raised action?
             if(this.status == Status.IDLE){ // Select an action
                 this.status = Status.SELECTION;
                 Action a = new Action("Action select", 0, 0, 0);
@@ -64,7 +65,7 @@ public class Constituent {
      * 5. If no action remain, then do nothing
      */
     public void immediateAction(){
-        if(this.status != Status.IDLE) // Defend code
+        if(this.status == Status.OPERATING) // Defend code
             return;
 
         ArrayList<Action> availableActions = new ArrayList<Action>();
