@@ -139,6 +139,7 @@ public class Simulator {
                     a.getPerformer().normalAction(minimumElapsedTime);
                 }
                 increaseTick(minimumElapsedTime);
+                System.out.println("Minimum time: " + minimumElapsedTime);
             }
         }
         actionList.clear();
