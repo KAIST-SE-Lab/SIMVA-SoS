@@ -48,36 +48,26 @@ public class Simulator {
 
         while(!endCondition){
             actions.clear();
-            // Check whether all CS has a job
-            boolean verdict = true;
-            while(verdict){
-                System.out.println("Immediate");
-                immediateActions.clear();
 
-                for(Constituent cs : this.csList){ // Get immediate candidate action
-                    Action a = cs.step();
-                    if(a == null)
-                        continue;
-                    if(a.getDuration() == 0){ // This action is immediate
-                        // Immediate action: making a decision
-                        // insert to immediateAction set
-                        immediateActions.add(a);
-                    }else {
-                        // insert to normal action set
-                        // Normal actions
-                        actions.add(a);
-                    }
-                }
+            immediateActions.clear();
 
-                Collections.shuffle(immediateActions);
-                this.progress(immediateActions, Action.TYPE.IMMEDIATE); // Choose
-
-                verdict = false;
-                for(Constituent _cs: this.csList){
-                    if(_cs.getStatus() == Constituent.Status.IDLE)
-                        verdict = true;
+            for(Constituent cs : this.csList){ // Get immediate candidate action
+                Action a = cs.step();
+                if(a == null)
+                    continue;
+                if(a.getDuration() == 0){ // This action is immediate
+                    // Immediate action: making a decision
+                    // insert to immediateAction set
+                    immediateActions.add(a);
+                }else {
+                    // insert to normal action set
+                    // Normal actions
+                    actions.add(a);
                 }
             }
+
+            Collections.shuffle(immediateActions);
+            this.progress(immediateActions, Action.TYPE.IMMEDIATE); // Choose
 
             this.generateExogenousActions(); // Environment action
             Collections.shuffle(actions);
@@ -85,7 +75,7 @@ public class Simulator {
 
             endCondition = this.evaluateProperties();
         }
-        System.out.println("Done Tick" + this.tick);
+        System.out.println("Final Tick " + this.tick);
     }
 
     private void increaseTick(int minimumElapsedTime){
@@ -101,7 +91,7 @@ public class Simulator {
          */
         boolean verdict = true;
         for(Constituent CS: this.csList){
-            if(CS.getRemainBudget() >= this.minimumActionCost)
+            if(CS.getStatus() != Constituent.Status.END)
                 verdict = false;
         }
         return verdict;
@@ -112,8 +102,8 @@ public class Simulator {
          * Generate randomly out action
          * Notify to CS that environment generate the actions
          */
-        env.generateAction();
-        env.notifyCS();
+        if(env.generateAction() > 0)
+            env.notifyCS();
 
     }
 
@@ -132,18 +122,31 @@ public class Simulator {
              */
             int minimumElapsedTime = -1;
             if(!actionList.isEmpty()){
-                for(Action a : actionList){
-                    if(minimumElapsedTime < a.getRemainingTime())
-                        minimumElapsedTime = a.getRemainingTime();
+                boolean discreteCondition = true;
+                for(Constituent CS: this.csList){ // To get all CS are in operation.
+                    if(CS.getStatus() != Constituent.Status.OPERATING){
+                        discreteCondition = false;
+                        break;
+                    }
                 }
-                for(Action a : actionList){
+                if(discreteCondition){
+                    for(Action a : actionList){
+                        if(minimumElapsedTime < a.getRemainingTime())
+                            minimumElapsedTime = a.getRemainingTime();
+                    }
+                }else{
+                    minimumElapsedTime = 1;
+                }
+                for(Action a: actionList){
                     a.getPerformer().normalAction(minimumElapsedTime);
+                    if(a.getPerformer() == null)
+                        System.out.println(this.tick + minimumElapsedTime);
                 }
             }else
                 minimumElapsedTime = 1;
-            System.out.println("Minimum time: " + minimumElapsedTime);
             increaseTick(minimumElapsedTime);
         }
+        env.updateActionStatus(actionList);
         actionList.clear();
     }
 }

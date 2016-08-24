@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Constituent {
 
-    public enum Status {IDLE, SELECTION, OPERATING, NO_JOB}
+    public enum Status {IDLE, SELECTION, OPERATING, END}
 
     private ArrayList<Action> capabilityList = null;
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
@@ -14,6 +14,7 @@ public class Constituent {
     private int usedCost;
     private int totalBudget;
     private int accumulatedBenefit;
+    private int requiredMinimumBudget;
     private Status status;
     private Action currentAction;
 
@@ -24,6 +25,7 @@ public class Constituent {
         this.usedCost = 0;
         this.totalBudget = 100;
         this.accumulatedBenefit = 0;
+        this.requiredMinimumBudget = 0;
         this.status = Status.IDLE;
         this.currentAction = null;
     }
@@ -42,7 +44,6 @@ public class Constituent {
              * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
              * 2. If the status of CS is SELECTION, then
              */
-            // TODO: What if no job and no raised action?
             if(this.status == Status.IDLE){ // Select an action
                 this.status = Status.SELECTION;
                 Action a = new Action("Action select", 0, 0, 0);
@@ -85,18 +86,17 @@ public class Constituent {
                 }
             }
             candidateAction = availableActions.get(bestIndex);
-        }else if(availableActions.size() == 0){ // No more job left
-            this.status = Status.NO_JOB;
-            return;
-        }else{
-            // Only one action exists
+        }else if(availableActions.size() == 1){ // No more job left
             candidateAction = availableActions.get(0);
+//            this.status = Status.NO_JOB;
+            bestIndex = 0;
         }
 
         if(bestIndex != -1 && candidateAction != null){
             // Selected action exists
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
                 candidateAction.startHandle();
+                candidateAction.setPerformer(this);
                 this.status = Status.OPERATING;
                 this.currentAction = candidateAction;
             }
@@ -111,10 +111,15 @@ public class Constituent {
         currentAction.decreaseRemainingTime(elapsedTime);
         if(currentAction.getRemainingTime() == 0){
             // All actions are always more than and equal to 0
+            System.out.print(this.name + " finished " + currentAction.getName() + " at ");
             int cost = this.getCost(currentAction);
             this.updateCostBenefit(cost, currentAction.getBenefit());
             // TODO: 2016-08-23 Add SoS benefit update
             currentAction.resetAction();
+            currentAction = null;
+            this.status = Status.IDLE;
+            if(this.getRemainBudget() < requiredMinimumBudget)
+                this.status = Status.END;
         }
     }
 
@@ -142,6 +147,8 @@ public class Constituent {
     public void addCapability(Action a, int cost){
         this.capabilityList.add(a);
         this.capabilityMap.put(a.getName(), cost);
+        if(this.requiredMinimumBudget < cost)
+            this.requiredMinimumBudget = cost;
     }
 
     public ArrayList<Action> getCapability(){

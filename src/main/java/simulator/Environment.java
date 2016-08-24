@@ -43,7 +43,7 @@ public class Environment {
      * Raise the action whose status is exactly not_raised
      * If the number of actions to be raised is 0, then no action is raised.
      */
-    public void generateAction(){
+    public int generateAction(){
         /*
          * 1. Count the number of possible actions to be raised
          * 2. Generate a random number that how many actions will be raised
@@ -55,26 +55,29 @@ public class Environment {
                 possibleActionList.add(entry.getKey());
             }
         }
+        int numRaisingActions = 0;
+        if(possibleActionList.size() > 0){
+            Random randomGenerator = new Random();
+            numRaisingActions = randomGenerator.nextInt(possibleActionList.size()+1);
+            if(numRaisingActions > 0){
+                ArrayList<Action> selectedActionList = new ArrayList<Action>();
+                Collections.shuffle(possibleActionList);
 
-        Random randomGenerator = new Random();
-        int numRaisingActions = randomGenerator.nextInt(possibleActionList.size()+1);
-        if(numRaisingActions > 0){
-            ArrayList<Action> selectedActionList = new ArrayList<Action>();
-            Collections.shuffle(possibleActionList);
-
-            for(int i = 0; i < numRaisingActions; i++){
-                String actionName = possibleActionList.get(i);
-                for(Action a : this.actionList){
-                    if(a.getName().equalsIgnoreCase(actionName)){
-                        a.setStatus(Action.Status.RAISED);
-                        selectedActionList.add(a);
-                        break;
+                for(int i = 0; i < numRaisingActions; i++){
+                    String actionName = possibleActionList.get(i);
+                    for(Action a : this.actionList){
+                        if(a.getName().equalsIgnoreCase(actionName)){
+                            a.setStatus(Action.Status.RAISED);
+                            selectedActionList.add(a);
+                            break;
+                        }
                     }
                 }
-            }
 
-            updateActionStatus(selectedActionList);
+                updateActionStatus(selectedActionList);
+            }
         }
+        return numRaisingActions;
     }
 
     /**
@@ -92,7 +95,7 @@ public class Environment {
      * Update the status of actions executed by CSs
      * @param actionList the list of actions that are changed its status
      */
-    private void updateActionStatus(ArrayList<Action> actionList){
+    public void updateActionStatus(ArrayList<Action> actionList){
         for(Action a : actionList){
             Action.Status newStatus = a.getStatus();
             this.statusHashMap.remove(a.getName());
