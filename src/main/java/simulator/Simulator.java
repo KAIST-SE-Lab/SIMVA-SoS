@@ -118,20 +118,20 @@ public class Simulator {
     }
 
     private void progress(ArrayList<Action> actionList, Action.TYPE type){
-        if(!actionList.isEmpty()){
-            if(type == Action.TYPE.IMMEDIATE){
-                for(Action a : actionList){
-                    if(a.getName().equalsIgnoreCase("Action select")) {
-                        a.getPerformer().immediateAction(); // Select action
-                    }
+        if(type == Action.TYPE.IMMEDIATE){
+            for(Action a : actionList){
+                if(a.getName().equalsIgnoreCase("Action select")) {
+                    a.getPerformer().immediateAction(); // Select action
                 }
-            }else if(type == Action.TYPE.NORMAL){
-                /*
-                 * 1. Calculate the minimum time to elapse among action list
-                 * 2. Elapse the time and execute
-                 * 3. If the remaining time is 0, then update Cost & Benefit
-                 */
-                int minimumElapsedTime = -1;
+            }
+        }else if(type == Action.TYPE.NORMAL){
+            /*
+             * 1. Calculate the minimum time to elapse among action list
+             * 2. Elapse the time and execute
+             * 3. If the remaining time is 0, then update Cost & Benefit
+             */
+            int minimumElapsedTime = -1;
+            if(!actionList.isEmpty()){
                 for(Action a : actionList){
                     if(minimumElapsedTime < a.getRemainingTime())
                         minimumElapsedTime = a.getRemainingTime();
@@ -139,9 +139,10 @@ public class Simulator {
                 for(Action a : actionList){
                     a.getPerformer().normalAction(minimumElapsedTime);
                 }
-                increaseTick(minimumElapsedTime);
-                System.out.println("Minimum time: " + minimumElapsedTime);
-            }
+            }else
+                minimumElapsedTime = 1;
+            System.out.println("Minimum time: " + minimumElapsedTime);
+            increaseTick(minimumElapsedTime);
         }
         actionList.clear();
     }
