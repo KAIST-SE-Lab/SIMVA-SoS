@@ -55,6 +55,8 @@ public class Simulator {
 
                 for(Constituent cs : this.csList){ // Get immediate candidate action
                     Action a = cs.step();
+                    if(a == null)
+                        continue;
                     if(a.getDuration() == 0){ // This action is immediate
                         // Immediate action: making a decision
                         // insert to immediateAction set

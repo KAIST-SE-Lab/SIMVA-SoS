@@ -47,10 +47,8 @@ public class Constituent {
                 Action a = new Action("Action select", 0, 0, 0);
                 a.setPerformer(this);
                 return a;
-            }else if(this.status == Status.SELECTION){ // Selecting
-                /* Selecting the action at the immediate action step
-                 * If we select the action, then this CS will try to choose the action.
-                 */
+            }else if(this.status == Status.OPERATING){ // Operation step
+                return this.currentAction;
             }
         }
 
@@ -97,7 +95,8 @@ public class Constituent {
             // Selected action exists
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
                 candidateAction.startHandle();
-                this.status = Status.SELECTION;
+                this.status = Status.OPERATING;
+                this.currentAction = candidateAction;
             }
         }else{ // To select an action again
             this.status = Status.IDLE;
