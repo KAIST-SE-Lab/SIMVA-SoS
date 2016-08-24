@@ -86,6 +86,7 @@ public class Constituent {
             candidateAction = availableActions.get(bestIndex);
         }else if(availableActions.size() == 0){ // No more job left
             this.status = Status.NO_JOB;
+            return;
         }else{
             // Only one action exists
             candidateAction = availableActions.get(0);
