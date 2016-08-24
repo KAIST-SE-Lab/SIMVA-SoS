@@ -1,8 +1,10 @@
 language: java
 jdk:
     - oraclejdk8
-./gradle check
-gradle assemble
+script:
+    ./gradle check
+    ./gradle assemble
+    ./gradle test
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
