@@ -15,10 +15,10 @@ public class Main {
         cs1.addCapability(a1, 1);
         cs1.addCapability(a2, 2);
         cs2.addCapability(a1, 1);
-        
+
         Constituent[] CSs = {cs1, cs2};
         Action[] actions = {a1, a2};
-        SoSManager manager = new SoSManager("SoS Manager", CSs);
+        SoSManager manager = new SoSManager("SoS Manager", CSs, actions);
         Environment env = new Environment(CSs, actions);
 
         Simulator sim = new Simulator(CSs, manager, env);
