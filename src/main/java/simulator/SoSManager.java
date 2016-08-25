@@ -1,6 +1,7 @@
 package simulator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SoSManager extends Constituent {
 
@@ -8,9 +9,10 @@ public class SoSManager extends Constituent {
     private ArrayList<Constituent> csList;
 
 
-    public SoSManager(String name, ArrayList<Constituent> csList) {
+    public SoSManager(String name, Constituent[] csList) {
         super(name);
-        this.csList = csList;
+        this.csList = new ArrayList<Constituent>();
+        Collections.addAll(this.csList, csList);
         this.SoSBenefit = 0;
     }
 
