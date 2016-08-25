@@ -1,7 +1,5 @@
 package simulator;
 
-import java.util.ArrayList;
-
 public class Action {
 
     public enum Status {NOT_RAISED, RAISED, HANDLED}
@@ -85,5 +83,9 @@ public class Action {
 
     public void setStatus(Status status){
         this.status = status;
+    }
+
+    public void addBenefit(int additionalBenefit){
+        this.benefit += additionalBenefit;
     }
 }

@@ -76,6 +76,7 @@ public class Simulator {
             endCondition = this.evaluateProperties();
         }
         System.out.println("Final Tick " + this.tick);
+        System.out.println("SoS benefit " + this.manager.getSoSLevelBenefit());
     }
 
     private void increaseTick(int minimumElapsedTime){
@@ -138,9 +139,12 @@ public class Simulator {
                     minimumElapsedTime = 1;
                 }
                 for(Action a: actionList){
+                    int SoSLevelBenefit = a.getSoSBenefit();
                     a.getPerformer().normalAction(minimumElapsedTime);
-                    if(a.getPerformer() == null)
+                    if(a.getPerformer() == null){ // Job is done.
                         System.out.println(this.tick + minimumElapsedTime);
+                        this.manager.addSoSLevelBenefit(SoSLevelBenefit);
+                    }
                 }
             }else
                 minimumElapsedTime = 1;
