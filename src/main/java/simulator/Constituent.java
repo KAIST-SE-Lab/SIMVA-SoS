@@ -7,21 +7,11 @@ import java.util.HashMap;
 
 public class Constituent extends BaseConstituent{
 
-    public enum Status {IDLE, SELECTION, OPERATING, END}
-
-    private ArrayList<Action> capabilityList = null;
-    private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
-
     private String name;
-
-    private Status status;
     private Action currentAction;
 
     public Constituent(String name, int totalBudget){
         this.name = name;
-        this.capabilityList = new ArrayList<Action>();
-        this.capabilityMap = new HashMap<String, Integer>();
-        this.status = Status.IDLE;
         this.currentAction = null;
         this.initBudget(totalBudget);
     }
@@ -40,12 +30,12 @@ public class Constituent extends BaseConstituent{
              * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
              * 2. If the status of CS is SELECTION, then
              */
-            if(this.status == Status.IDLE){ // Select an action
-                this.status = Status.SELECTION;
+            if(this.getStatus() == Status.IDLE){ // Select an action
+                this.setStatus(Status.SELECTION);
                 Action a = new Action("Action select", 0, 0, 0);
                 a.setPerformer(this);
                 return a;
-            }else if(this.status == Status.OPERATING){ // Operation step
+            }else if(this.getStatus() == Status.OPERATING){ // Operation step
                 return this.currentAction;
             }
         }
@@ -62,11 +52,12 @@ public class Constituent extends BaseConstituent{
      * 5. If no action remain, then do nothing
      */
     public void immediateAction(){
-        if(this.status == Status.OPERATING) // Defend code
+        if(this.getStatus() == Status.OPERATING) // Defend code
             return;
 
         ArrayList<Action> availableActions = new ArrayList<Action>();
-        for(Action a : this.capabilityList){
+        ArrayList<Action> capabilityList = this.getCapability();
+        for(Action a : capabilityList){
             if(a.getStatus() == Action.Status.RAISED)
                 availableActions.add(a);
         }
@@ -93,11 +84,11 @@ public class Constituent extends BaseConstituent{
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
                 candidateAction.startHandle();
                 candidateAction.setPerformer(this);
-                this.status = Status.OPERATING;
+                this.setStatus(Status.OPERATING);
                 this.currentAction = candidateAction;
             }
         }else{ // To select an action again
-            this.status = Status.IDLE;
+            this.setStatus(Status.IDLE);
         }
     }
 
@@ -113,9 +104,9 @@ public class Constituent extends BaseConstituent{
             // TODO: 2016-08-23 Add SoS benefit update
             currentAction.resetAction();
             currentAction = null;
-            this.status = Status.IDLE;
+            this.setStatus(Status.IDLE);
             if(this.getRemainBudget() < this.getRequiredMinimumBudget())
-                this.status = Status.END;
+                this.setStatus(Status.END);
         }
     }
 

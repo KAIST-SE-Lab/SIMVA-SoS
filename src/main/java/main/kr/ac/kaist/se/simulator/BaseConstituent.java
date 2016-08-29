@@ -1,7 +1,6 @@
 package main.kr.ac.kaist.se.simulator;
 
 import simulator.Action;
-import simulator.Constituent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +33,10 @@ public abstract class BaseConstituent {
 
     private ArrayList<Action> capabilityList = null;
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
+
+    protected BaseConstituent(){
+        this.status = Status.IDLE;
+    }
 
     public int getRemainBudget(){
         return this.totalBudget - this.usedCost;
@@ -79,6 +82,10 @@ public abstract class BaseConstituent {
     }
     public Status getStatus(){
         return this.status;
+    }
+
+    public void setStatus(Status _status){
+        this.status = _status;
     }
 
     // Need to be implemented methods
