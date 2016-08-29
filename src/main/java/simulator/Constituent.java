@@ -3,44 +3,14 @@ package simulator;
 import main.kr.ac.kaist.se.simulator.BaseConstituent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Constituent extends BaseConstituent{
 
     private String name;
-    private Action currentAction;
 
     public Constituent(String name, int totalBudget){
         this.name = name;
-        this.currentAction = null;
         this.initBudget(totalBudget);
-    }
-
-    /**
-     * step method
-     * CS chooses an action according to probability distribution.
-     * Before selecting, the CS checks the acknowledgement from SoS manager.
-     * @return chosen Action instance
-     */
-    public Action step(){
-        if(this.getRemainBudget() == 0){
-            return null; // voidAction, nothing happen
-        }else{ // We have money
-            /*
-             * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
-             * 2. If the status of CS is SELECTION, then
-             */
-            if(this.getStatus() == Status.IDLE){ // Select an action
-                this.setStatus(Status.SELECTION);
-                Action a = new Action("Action select", 0, 0, 0);
-                a.setPerformer(this);
-                return a;
-            }else if(this.getStatus() == Status.OPERATING){ // Operation step
-                return this.currentAction;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -75,7 +45,6 @@ public class Constituent extends BaseConstituent{
             candidateAction = availableActions.get(bestIndex);
         }else if(availableActions.size() == 1){ // No more job left
             candidateAction = availableActions.get(0);
-//            this.status = Status.NO_JOB;
             bestIndex = 0;
         }
 
@@ -85,7 +54,7 @@ public class Constituent extends BaseConstituent{
                 candidateAction.startHandle();
                 candidateAction.setPerformer(this);
                 this.setStatus(Status.OPERATING);
-                this.currentAction = candidateAction;
+                this.setCurrentAction(candidateAction);
             }
         }else{ // To select an action again
             this.setStatus(Status.IDLE);
@@ -93,6 +62,8 @@ public class Constituent extends BaseConstituent{
     }
 
     public void normalAction(int elapsedTime){ // TODO: Need of renaming!
+        Action currentAction = this.getCurrentAction();
+
         if(currentAction == null)
             return;
         currentAction.decreaseRemainingTime(elapsedTime);
@@ -103,7 +74,7 @@ public class Constituent extends BaseConstituent{
             this.updateCostBenefit(cost, currentAction.getBenefit());
             // TODO: 2016-08-23 Add SoS benefit update
             currentAction.resetAction();
-            currentAction = null;
+            this.resetCurrentAction();
             this.setStatus(Status.IDLE);
             if(this.getRemainBudget() < this.getRequiredMinimumBudget())
                 this.setStatus(Status.END);

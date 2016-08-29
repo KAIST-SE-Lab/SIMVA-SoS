@@ -122,7 +122,7 @@ public class Simulator {
              * 3. If the remaining time is 0, then update Cost & Benefit
              */
             int minimumElapsedTime = -1;
-            if(!actionList.isEmpty()){
+            if(!actionList.isEmpty()){ // If the action list is not empty
                 boolean discreteCondition = true;
                 for(Constituent CS: this.csList){ // To get all CS are in operation.
                     if(CS.getStatus() != Constituent.Status.OPERATING){
@@ -130,12 +130,12 @@ public class Simulator {
                         break;
                     }
                 }
-                if(discreteCondition){
+                if(discreteCondition){ // To jump the tick
                     for(Action a : actionList){
                         if(minimumElapsedTime < a.getRemainingTime())
                             minimumElapsedTime = a.getRemainingTime();
-                    }
-                }else{
+                    }// Calculate the minimum jump tick
+                }else{ // If any one CS are not in operation, minimum tick will be one
                     minimumElapsedTime = 1;
                 }
                 for(Action a: actionList){

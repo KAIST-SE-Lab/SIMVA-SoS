@@ -31,11 +31,15 @@ public abstract class BaseConstituent {
     private int requiredMinimumBudget = 0;
     private Status status;
 
+    private Action currentAction;
     private ArrayList<Action> capabilityList = null;
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
 
     protected BaseConstituent(){
         this.status = Status.IDLE;
+        this.currentAction = null;
+        this.capabilityList = new ArrayList<Action>();
+        this.capabilityMap = new HashMap<String, Integer>();
     }
 
     public int getRemainBudget(){
@@ -86,6 +90,45 @@ public abstract class BaseConstituent {
 
     public void setStatus(Status _status){
         this.status = _status;
+    }
+
+    public void setCurrentAction(Action a){
+        this.currentAction = a;
+    }
+
+    public Action getCurrentAction(){
+        return this.currentAction;
+    }
+
+    public void resetCurrentAction(){
+        this.currentAction = null;
+    }
+
+    /**
+     * step method
+     * CS chooses an action according to probability distribution.
+     * Before selecting, the CS checks the acknowledgement from SoS manager.
+     * @return chosen Action instance
+     */
+    public Action step(){
+        if(this.getRemainBudget() == 0){
+            return null; // voidAction, nothing happen
+        }else{ // We have money
+            /*
+             * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
+             * 2. If the status of CS is SELECTION, then
+             */
+            if(this.getStatus() == Status.IDLE){ // Select an action
+                this.setStatus(Status.SELECTION);
+                Action a = new Action("Action select", 0, 0, 0);
+                a.setPerformer(this);
+                return a;
+            }else if(this.getStatus() == Status.OPERATING){ // Operation step
+                return this.currentAction;
+            }
+        }
+
+        return null;
     }
 
     // Need to be implemented methods

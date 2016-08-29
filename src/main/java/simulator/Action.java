@@ -1,5 +1,7 @@
 package simulator;
 
+import main.kr.ac.kaist.se.simulator.BaseConstituent;
+
 public class Action {
 
     public enum Status {NOT_RAISED, RAISED, HANDLED}
@@ -13,7 +15,7 @@ public class Action {
     private int remainTime;
     private Status status;
 
-    private Constituent performer = null; // Current performer
+    private BaseConstituent performer = null; // Current performer
 
     public Action(String name, int benefit, int SoSBenefit, int duration){
         this.name = name;
@@ -32,7 +34,7 @@ public class Action {
         return this.SoSBenefit;
     }
 
-    public void setPerformer(Constituent performer){
+    public void setPerformer(BaseConstituent performer){
         if(this.performer == null){
             this.performer = performer;
             // Need of checking deleting performer
@@ -61,7 +63,7 @@ public class Action {
         this.performer= null;
     }
 
-    public Constituent getPerformer(){
+    public BaseConstituent getPerformer(){
         return this.performer;
     }
 

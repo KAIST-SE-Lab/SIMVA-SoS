@@ -1,10 +1,12 @@
 package simulator;
 
+import main.kr.ac.kaist.se.simulator.BaseConstituent;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class SoSManager extends Constituent {
+public class SoSManager extends BaseConstituent {
 
     private int SoSLevelBenefit;
     private ArrayList<Constituent> csList;
@@ -15,7 +17,6 @@ public class SoSManager extends Constituent {
     private Random generator;
 
     public SoSManager(String name, Constituent[] csList, Action[] actions) {
-        super(name);
         this.csList = new ArrayList<Constituent>();
         this.actionList = new ArrayList<Action>();
         Collections.addAll(this.csList, csList);
@@ -106,6 +107,10 @@ public class SoSManager extends Constituent {
             }
             cs.updateActionList(actionList);
         }
+    }
+    public int getUtility(Action a){
+        // not-used
+        return -1;
     }
 
     public int getSoSLevelBenefit(){
