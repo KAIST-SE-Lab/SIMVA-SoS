@@ -8,8 +8,8 @@ import simulator.*;
  */
 public class Main {
     public static void main(String []args){
-        Constituent cs1 = new Constituent("CS1");
-        Constituent cs2 = new Constituent("CS2");
+        Constituent cs1 = new Constituent("CS1", 100);
+        Constituent cs2 = new Constituent("CS2", 100);
         Action a1 = new Action("Action1", 2, 1, 2);
         Action a2 = new Action("Action2", 4, 2, 3);
         Action a3 = new Action("Action3", 3, 5, 4);

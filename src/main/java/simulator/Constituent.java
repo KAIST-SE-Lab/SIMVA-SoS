@@ -1,9 +1,11 @@
 package simulator;
 
+import main.kr.ac.kaist.se.simulator.BaseConstituent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Constituent {
+public class Constituent extends BaseConstituent{
 
     public enum Status {IDLE, SELECTION, OPERATING, END}
 
@@ -11,23 +13,17 @@ public class Constituent {
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
 
     private String name;
-    private int usedCost;
-    private int totalBudget;
-    private int accumulatedBenefit;
-    private int requiredMinimumBudget;
+
     private Status status;
     private Action currentAction;
 
-    public Constituent(String name){
+    public Constituent(String name, int totalBudget){
         this.name = name;
         this.capabilityList = new ArrayList<Action>();
         this.capabilityMap = new HashMap<String, Integer>();
-        this.usedCost = 0;
-        this.totalBudget = 100;
-        this.accumulatedBenefit = 0;
-        this.requiredMinimumBudget = 0;
         this.status = Status.IDLE;
         this.currentAction = null;
+        this.initBudget(totalBudget);
     }
 
     /**
@@ -118,61 +114,17 @@ public class Constituent {
             currentAction.resetAction();
             currentAction = null;
             this.status = Status.IDLE;
-            if(this.getRemainBudget() < requiredMinimumBudget)
+            if(this.getRemainBudget() < this.getRequiredMinimumBudget())
                 this.status = Status.END;
         }
     }
 
-    public int getRemainBudget(){
-        return this.totalBudget - this.usedCost;
-    }
-
-    public void updateCostBenefit(int cost, int benefit){
-        this.usedCost += cost;
-        this.accumulatedBenefit += benefit;
-    }
-
-    private int getUtility(Action a){
+    public int getUtility(Action a){
         return a.getBenefit() - this.getCost(a);
     }
 
     public String toString(){
         return this.name;
-    }
-
-    public int getAccumulatedBenefit(){
-        return this.accumulatedBenefit;
-    }
-
-    public void addCapability(Action a, int cost){
-        this.capabilityList.add(a);
-        this.capabilityMap.put(a.getName(), cost);
-        if(this.requiredMinimumBudget < cost)
-            this.requiredMinimumBudget = cost;
-    }
-
-    public ArrayList<Action> getCapability(){
-        return this.capabilityList;
-    }
-
-    public int getCost(Action a){
-        Integer _cost = this.capabilityMap.get(a.getName());
-        if(_cost != null)
-            return _cost;
-        else
-            return 0;
-    }
-
-    public void updateActionList(ArrayList<Action> _list){
-        ArrayList<Action> newList = new ArrayList<Action>(this.capabilityList.size());
-        for(Action target : _list){
-            newList.add(target);
-        }
-        this.capabilityList = newList;
-    }
-
-    public Status getStatus(){
-        return this.status;
     }
 
 }
