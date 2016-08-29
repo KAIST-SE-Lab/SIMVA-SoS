@@ -66,6 +66,16 @@ public class Simulator {
                 }
             }
 
+            if(this.manager != null){
+                Action a = this.manager.step();
+                if(a != null){
+                    if(a.getDuration() == 0)
+                        immediateActions.add(a);
+                    else
+                        actions.add(a);
+                }
+            }
+
             Collections.shuffle(immediateActions);
             this.progress(immediateActions, Action.TYPE.IMMEDIATE); // Choose
 
