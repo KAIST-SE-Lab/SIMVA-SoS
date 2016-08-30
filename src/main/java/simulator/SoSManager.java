@@ -1,58 +1,37 @@
 package simulator;
 
 import main.kr.ac.kaist.se.simulator.BaseConstituent;
+import main.kr.ac.kaist.se.simulator.ManagerInterface;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class SoSManager extends BaseConstituent {
+public class SoSManager extends BaseConstituent implements ManagerInterface{
 
-    private int SoSLevelBenefit;
-    private ArrayList<Constituent> csList;
+    private ArrayList<BaseConstituent> csList;
     private ArrayList<Action> actionList;
-    private Status status;
     private Action pickedAction;
-    private Action currentAction;
     private Random generator;
 
+    private String name;
+    private int SoSLevelBenefit;
+
     public SoSManager(String name, Constituent[] csList, Action[] actions) {
-        this.csList = new ArrayList<Constituent>();
+        this.name = name;
+        this.csList = new ArrayList<BaseConstituent>();
         this.actionList = new ArrayList<Action>();
+
         Collections.addAll(this.csList, csList);
         Collections.addAll(this.actionList, actions);
+
         this.SoSLevelBenefit = 0;
+
         this.pickedAction = null;
-        this.currentAction = null;
         this.generator = new Random();
-    }
 
-    /**
-     * step method of SoS Manager
-     * The manager chooses the action that best SoS_level benefit action
-     * @return the choice action to send an acknowledge, or the acknowledgement action
-     */
-    public Action step(){
-        if(this.getRemainBudget() == 0){ // No acknowledgement budget left
-            return null;
-        }else{
-            if(this.status == Status.IDLE){ // Searching
-                this.status = Status.SELECTION;
-                Action a = new Action("Acknowledgement", 0, 0, 0);
-                a.setPerformer(this);
-                return a;
-            }else if(this.status == Status.OPERATING){
-                int duration = 2;
-                duration += this.generator.nextInt(2); // Duration is 2-3
-                Action a = new Action("Search for acknowledgement", 0, 0, duration);
-                a.setPerformer(this);
-                a.startHandle();
-                this.currentAction = a;
-                return a;
-            }
-        }
-
-        return null;
+        this.setType(Type.SoSManager);
+        this.setStatus(Status.IDLE);
     }
 
     public void normalAction(int elapsedTime){
@@ -62,12 +41,14 @@ public class SoSManager extends BaseConstituent {
          * If the action that is to be acknowledged is already chosen by a CS,
          * then skip the ack.
          */
+        Action currentAction = this.getCurrentAction();
         if(currentAction == null)
             return;
         currentAction.decreaseRemainingTime(elapsedTime);
         if(currentAction.getRemainingTime() == 0){
-            this.currentAction = null;
-            this.status = Status.IDLE;
+            this.resetCurrentAction();
+            this.setStatus(Status.IDLE);
+//            System.out.print(this + " finished Acknowledgement at ");
         }
     }
 
@@ -94,23 +75,31 @@ public class SoSManager extends BaseConstituent {
             this.acknowledge(this.generator.nextInt(1) + 1);
             this.pickedAction = null;
         }
+
+        // For next normal action
+        int duration = 2;
+        duration += this.generator.nextInt(2); // Duration is 2-3
+        Action a = new Action("Search for acknowledgement", 0, 0, duration);
+        a.setPerformer(this);
+        a.setActionType(Action.TYPE.NORMAL);
+        a.startHandle();
+        this.setCurrentAction(a);
+
+        this.setStatus(Status.OPERATING);
     }
 
     private void acknowledge(int additionalBenefit){
-        for(Constituent cs : this.csList){
+        for(BaseConstituent cs : this.csList){
             ArrayList<Action> actionList = cs.getCapability();
             String targetActionName = this.pickedAction.getName();
             for(Action a : actionList){
                 if(a.getName().equalsIgnoreCase(targetActionName)){
                     a.addBenefit(additionalBenefit);
+                    System.out.println("Manager ack " + a + " with additional " + additionalBenefit);
                 }
             }
             cs.updateActionList(actionList);
         }
-    }
-    public int getUtility(Action a){
-        // not-used
-        return -1;
     }
 
     public int getSoSLevelBenefit(){
@@ -119,5 +108,9 @@ public class SoSManager extends BaseConstituent {
 
     public void addSoSLevelBenefit(int SoSLevelBenefit){
         this.SoSLevelBenefit += SoSLevelBenefit;
+    }
+
+    public String toString(){
+        return this.name;
     }
 }

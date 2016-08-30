@@ -1,15 +1,17 @@
 package simulator;
 
 import main.kr.ac.kaist.se.simulator.BaseConstituent;
+import main.kr.ac.kaist.se.simulator.ConstituentInterface;
 
 import java.util.ArrayList;
 
-public class Constituent extends BaseConstituent{
+public class Constituent extends BaseConstituent implements ConstituentInterface{
 
     private String name;
 
     public Constituent(String name, int totalBudget){
         this.name = name;
+        this.setType(Type.Constituent);
         this.initBudget(totalBudget);
     }
 

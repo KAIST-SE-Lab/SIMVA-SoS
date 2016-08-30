@@ -1,5 +1,7 @@
 package simulator;
 
+import main.kr.ac.kaist.se.simulator.BaseConstituent;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,21 +14,21 @@ import java.util.Collections;
  */
 public class Simulator {
 
-    private ArrayList<Constituent> csList = null;
+    private ArrayList<BaseConstituent> csList = null;
     private SoSManager manager = null;
     private Environment env = null;
     private int tick;
     private int minimumActionCost;
 
     public Simulator(Constituent[] CSs, SoSManager manager, Environment env){
-        this.csList = new ArrayList<Constituent>();
+        this.csList = new ArrayList<BaseConstituent>();
         this.csList.addAll(Arrays.asList(CSs));
         this.manager = manager;
         this.env = env;
         this.tick = 0;
 
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
-        for(Constituent CS: this.csList){
+        for(BaseConstituent CS: this.csList){
             for(Action a : CS.getCapability()){
                 if(CS.getCost(a) < minimumActionCost)
                     minimumActionCost = CS.getCost(a);
@@ -51,7 +53,7 @@ public class Simulator {
 
             immediateActions.clear();
 
-            for(Constituent cs : this.csList){ // Get immediate candidate action
+            for(BaseConstituent cs : this.csList){ // Get immediate candidate action
                 Action a = cs.step();
                 if(a == null)
                     continue;
@@ -101,8 +103,8 @@ public class Simulator {
          *
          */
         boolean verdict = true;
-        for(Constituent CS: this.csList){
-            if(CS.getStatus() != Constituent.Status.END)
+        for(BaseConstituent CS: this.csList){
+            if(CS.getStatus() != BaseConstituent.Status.END)
                 verdict = false;
         }
         return verdict;
@@ -121,7 +123,7 @@ public class Simulator {
     private void progress(ArrayList<Action> actionList, Action.TYPE type){
         if(type == Action.TYPE.IMMEDIATE){
             for(Action a : actionList){
-                if(a.getName().equalsIgnoreCase("Action select")) {
+                if(a.getActionType() == Action.TYPE.IMMEDIATE) {
                     a.getPerformer().immediateAction(); // Select action
                 }
             }
@@ -134,8 +136,8 @@ public class Simulator {
             int minimumElapsedTime = -1;
             if(!actionList.isEmpty()){ // If the action list is not empty
                 boolean discreteCondition = true;
-                for(Constituent CS: this.csList){ // To get all CS are in operation.
-                    if(CS.getStatus() != Constituent.Status.OPERATING){
+                for(BaseConstituent CS: this.csList){ // To get all CS are in operation.
+                    if(CS.getStatus() != BaseConstituent.Status.OPERATING){
                         discreteCondition = false;
                         break;
                     }
@@ -153,7 +155,8 @@ public class Simulator {
                     a.getPerformer().normalAction(minimumElapsedTime);
                     if(a.getPerformer() == null){ // Job is done.
                         System.out.println(this.tick + minimumElapsedTime);
-                        this.manager.addSoSLevelBenefit(SoSLevelBenefit);
+                        if(this.manager != null)
+                            this.manager.addSoSLevelBenefit(SoSLevelBenefit);
                     }
                 }
             }else

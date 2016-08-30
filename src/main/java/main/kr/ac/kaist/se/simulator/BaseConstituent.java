@@ -24,12 +24,14 @@ import java.util.HashMap;
 
 public abstract class BaseConstituent {
     public enum Status {IDLE, SELECTION, OPERATING, END}
+    public enum Type {Constituent, SoSManager}
 
     private int usedCost = 0;
     private int accumulatedBenefit = 0;
     private int totalBudget = 100;
     private int requiredMinimumBudget = 0;
     private Status status;
+    private Type type;
 
     private Action currentAction;
     private ArrayList<Action> capabilityList = null;
@@ -40,6 +42,14 @@ public abstract class BaseConstituent {
         this.currentAction = null;
         this.capabilityList = new ArrayList<Action>();
         this.capabilityMap = new HashMap<String, Integer>();
+    }
+
+    protected void setType(Type type){
+        this.type = type;
+    }
+
+    public Type getType(){
+        return this.type;
     }
 
     public int getRemainBudget(){
@@ -120,8 +130,9 @@ public abstract class BaseConstituent {
              */
             if(this.getStatus() == Status.IDLE){ // Select an action
                 this.setStatus(Status.SELECTION);
-                Action a = new Action("Action select", 0, 0, 0);
+                Action a = new Action("Immediate action", 0, 0, 0);
                 a.setPerformer(this);
+                a.setActionType(Action.TYPE.IMMEDIATE);
                 return a;
             }else if(this.getStatus() == Status.OPERATING){ // Operation step
                 return this.currentAction;
@@ -132,7 +143,6 @@ public abstract class BaseConstituent {
     }
 
     // Need to be implemented methods
-    public abstract int getUtility(Action a);
     public abstract void normalAction(int elapsedTime);
     public abstract void immediateAction();
 }

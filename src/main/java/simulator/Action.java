@@ -14,6 +14,7 @@ public class Action {
     private int duration;
     private int remainTime;
     private Status status;
+    private TYPE actionType;
 
     private BaseConstituent performer = null; // Current performer
 
@@ -89,5 +90,13 @@ public class Action {
 
     public void addBenefit(int additionalBenefit){
         this.benefit += additionalBenefit;
+    }
+
+    public TYPE getActionType(){
+        return this.actionType;
+    }
+
+    public void setActionType(TYPE type){
+        this.actionType = type;
     }
 }
