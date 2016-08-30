@@ -60,7 +60,7 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
          * Additional benefit will be 1 or 2
          * If the number of raised action is only one, there is no need to acknowledgement
          */
-        Action bestAction = new Action("Dummy", 0, 0, 0); // Best SoS-benefit action
+        Action bestAction = new Action("Dummy", 0, 0); // Best SoS-benefit action
         int numRaisedActions = 0;
         for(Action a : this.actionList){ // Pick the best SoS-level action
             if(a.getStatus() == Action.Status.RAISED){
@@ -79,7 +79,8 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
         // For next normal action
         int duration = 2;
         duration += this.generator.nextInt(2); // Duration is 2-3
-        Action a = new Action("Search for acknowledgement", 0, 0, duration);
+        Action a = new Action("Search for acknowledgement", 0, 0);
+        a.setDuration(duration);
         a.setPerformer(this);
         a.setActionType(Action.TYPE.NORMAL);
         a.startHandle();
