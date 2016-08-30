@@ -1,4 +1,4 @@
-package main.kr.ac.kaist.se.simulator;
+package kr.ac.kaist.se.simulator;
 
 import simulator.Action;
 

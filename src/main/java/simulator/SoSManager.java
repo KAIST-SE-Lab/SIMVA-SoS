@@ -1,7 +1,7 @@
 package simulator;
 
-import main.kr.ac.kaist.se.simulator.BaseConstituent;
-import main.kr.ac.kaist.se.simulator.ManagerInterface;
+import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.ManagerInterface;
 
 import java.util.ArrayList;
 import java.util.Collections;

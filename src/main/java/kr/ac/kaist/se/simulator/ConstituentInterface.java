@@ -1,7 +1,9 @@
-package main.kr.ac.kaist.se.simulator;
+package kr.ac.kaist.se.simulator;
+
+import simulator.Action;
 
 /**
- * ManagerInterface.java
+ * ConstituentInterface.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
@@ -16,8 +18,6 @@ package main.kr.ac.kaist.se.simulator;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
-
-public interface ManagerInterface {
-    int getSoSLevelBenefit();
-    void addSoSLevelBenefit(int SoSLevelBenefit);
+public interface ConstituentInterface {
+    int getUtility(Action a);
 }
