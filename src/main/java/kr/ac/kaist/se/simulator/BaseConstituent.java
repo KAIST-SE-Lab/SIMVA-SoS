@@ -1,6 +1,7 @@
 package kr.ac.kaist.se.simulator;
 
 import simulator.Action;
+import sun.util.resources.cldr.dua.CalendarData_dua_CM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,12 +37,14 @@ public abstract class BaseConstituent {
     private Action currentAction;
     private ArrayList<Action> capabilityList = null;
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
+    private HashMap<String, Integer> durationMap = null; // 각 CS의 Action 당 사용되는 duration
 
     protected BaseConstituent(){
         this.status = Status.IDLE;
         this.currentAction = null;
         this.capabilityList = new ArrayList<Action>();
         this.capabilityMap = new HashMap<String, Integer>();
+        this.durationMap = new HashMap<String, Integer>();
     }
 
     protected void setType(Type type){
@@ -76,7 +79,7 @@ public abstract class BaseConstituent {
             return 0;
     }
 
-    public void updateActionList(ArrayList<Action> _list){
+    public void updateCapability(ArrayList<Action> _list){
         ArrayList<Action> newList = new ArrayList<Action>(this.capabilityList.size());
         for(Action target : _list){
             newList.add(target);
@@ -91,13 +94,19 @@ public abstract class BaseConstituent {
             this.requiredMinimumBudget = cost;
     }
 
+    public HashMap<String, Integer> getDurationMap(){
+        return this.durationMap;
+    }
+    public void updateDurationMap(HashMap<String, Integer> _druationMap){
+        this.durationMap = _druationMap;
+    }
+
     public ArrayList<Action> getCapability(){
         return this.capabilityList;
     }
     public Status getStatus(){
         return this.status;
     }
-
     public void setStatus(Status _status){
         this.status = _status;
     }
@@ -105,11 +114,9 @@ public abstract class BaseConstituent {
     public void setCurrentAction(Action a){
         this.currentAction = a;
     }
-
     public Action getCurrentAction(){
         return this.currentAction;
     }
-
     public void resetCurrentAction(){
         this.currentAction = null;
     }
@@ -130,7 +137,7 @@ public abstract class BaseConstituent {
              */
             if(this.getStatus() == Status.IDLE){ // Select an action
                 this.setStatus(Status.SELECTION);
-                Action a = new Action("Immediate action", 0, 0, 0);
+                Action a = new Action("Immediate action", 0, 0);
                 a.setPerformer(this);
                 a.setActionType(Action.TYPE.IMMEDIATE);
                 return a;

@@ -90,7 +90,7 @@ public class Environment {
      */
     public void notifyCS(){
         for(Constituent cs : this.csList){
-            cs.updateActionList(this.actionList);
+            cs.updateCapability(this.actionList);
         }
     }
 

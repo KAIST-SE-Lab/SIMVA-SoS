@@ -4,15 +4,19 @@ import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Constituent extends BaseConstituent implements ConstituentInterface{
 
     private String name;
+    private int currentPosition;
 
     public Constituent(String name, int totalBudget){
         this.name = name;
         this.setType(Type.Constituent);
         this.initBudget(totalBudget);
+        // Randomly positioned
+        this.currentPosition = (int) (( Math.random() * 12) % 6);
     }
 
     /**
@@ -29,30 +33,19 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
 
         ArrayList<Action> availableActions = new ArrayList<Action>();
         ArrayList<Action> capabilityList = this.getCapability();
-        for(Action a : capabilityList){
-            if(a.getStatus() == Action.Status.RAISED)
-                availableActions.add(a);
-        }
 
-        int bestIndex = -1;
+        this.updateDurationMap(capabilityList);
+        getAvailableActionList(availableActions, capabilityList);
+
         Action candidateAction = null;
-        if(availableActions.size() > 1){
-            bestIndex = 0;
-            for(int i=1; i<availableActions.size(); i++){
-                if(this.getUtility(availableActions.get(bestIndex))
-                        < this.getUtility(availableActions.get(i))){
-                    bestIndex = i;
-                }
-            }
+        int bestIndex = chooseBestAction(availableActions);
+        if(bestIndex != -1)
             candidateAction = availableActions.get(bestIndex);
-        }else if(availableActions.size() == 1){ // No more job left
-            candidateAction = availableActions.get(0);
-            bestIndex = 0;
-        }
 
         if(bestIndex != -1 && candidateAction != null){
             // Selected action exists
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
+                candidateAction.setDuration(this.getDurationMap().get(candidateAction.getName()));
                 candidateAction.startHandle();
                 candidateAction.setPerformer(this);
                 this.setStatus(Status.OPERATING);
@@ -91,4 +84,40 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         return this.name;
     }
 
+    private void getAvailableActionList(ArrayList<Action> availableActions, ArrayList<Action> capabilityList){
+        for(Action a : capabilityList){
+            if(a.getStatus() == Action.Status.RAISED)
+                availableActions.add(a);
+        }
+    }
+
+    private int chooseBestAction(ArrayList<Action> availableActions){
+        int bestIndex = -1;
+        if(availableActions.size() > 1){
+            bestIndex = 0;
+            for(int i=1; i<availableActions.size(); i++){
+                if(this.getUtility(availableActions.get(bestIndex))
+                        < this.getUtility(availableActions.get(i))){
+                    bestIndex = i;
+                }
+            }
+        }else if(availableActions.size() == 1){ // No more job left
+            bestIndex = 0;
+        }
+        return bestIndex;
+    }
+
+    private void updateDurationMap(ArrayList<Action> capabilityList){
+        // Current Position 위치를 결정할 때 duration 이 다시 update 됨..
+        // Action 의 raisedLocation 정보를 기초로 duration 산출
+        HashMap<String, Integer> newDurationMap = new HashMap<String, Integer>();
+        for(Action a : capabilityList){
+            if(a.getStatus() == Action.Status.RAISED && a.getActionType() == Action.TYPE.NORMAL){
+                String actionName = a.getName();
+                int requiredDuration = Math.abs(a.getRaisedLocation() - this.currentPosition);
+                newDurationMap.put(actionName, requiredDuration);
+            }
+        }
+        this.updateDurationMap(newDurationMap);
+    }
 }

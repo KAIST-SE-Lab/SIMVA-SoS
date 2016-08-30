@@ -5,14 +5,16 @@ import kr.ac.kaist.se.simulator.BaseAction;
 public class Action extends BaseAction{
 
     private String name;
+    private int raisedLocation;
 
-    public Action(String name, int benefit, int SoSBenefit, int duration){
+    public Action(String name, int benefit, int SoSBenefit){
         this.name = name;
         this.setBenefit(benefit);
         this.setSoSBenefit(SoSBenefit);
-        this.setDuration(duration);
+        this.setDuration(0);
         this.setRemainTime(-1); // not_raised
         this.setStatus(BaseAction.Status.NOT_RAISED);
+        this.raisedLocation = (int) (( Math.random() * 12) % 6);
     }
 
     public String toString(){
@@ -25,5 +27,9 @@ public class Action extends BaseAction{
 
     public void addBenefit(int additionalBenefit){
         this.setBenefit(this.getBenefit() + additionalBenefit);
+    }
+
+    public int getRaisedLocation(){
+        return this.raisedLocation;
     }
 }

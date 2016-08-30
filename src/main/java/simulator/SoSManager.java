@@ -98,7 +98,7 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
                     System.out.println("Manager ack " + a + " with additional " + additionalBenefit);
                 }
             }
-            cs.updateActionList(actionList);
+            cs.updateCapability(actionList);
         }
     }
 
