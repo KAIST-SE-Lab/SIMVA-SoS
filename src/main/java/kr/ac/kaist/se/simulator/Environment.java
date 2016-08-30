@@ -1,4 +1,7 @@
-package simulator;
+package kr.ac.kaist.se.simulator;
+
+import simulator.Action;
+import simulator.Constituent;
 
 import java.util.*;
 
@@ -87,7 +90,7 @@ public class Environment {
      */
     public void notifyCS(){
         for(Constituent cs : this.csList){
-            cs.updateActionList(this.actionList);
+            cs.updateCapability(this.actionList);
         }
     }
 

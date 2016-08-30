@@ -1,5 +1,6 @@
 package simulator;
 
+import kr.ac.kaist.se.simulator.Simulator;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;

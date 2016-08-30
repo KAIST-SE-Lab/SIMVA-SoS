@@ -1,60 +1,22 @@
 package simulator;
 
+import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.ConstituentInterface;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Constituent {
-
-    public enum Status {IDLE, SELECTION, OPERATING, END}
-
-    private ArrayList<Action> capabilityList = null;
-    private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
+public class Constituent extends BaseConstituent implements ConstituentInterface{
 
     private String name;
-    private int usedCost;
-    private int totalBudget;
-    private int accumulatedBenefit;
-    private int requiredMinimumBudget;
-    private Status status;
-    private Action currentAction;
+    private int currentPosition;
 
-    public Constituent(String name){
+    public Constituent(String name, int totalBudget){
         this.name = name;
-        this.capabilityList = new ArrayList<Action>();
-        this.capabilityMap = new HashMap<String, Integer>();
-        this.usedCost = 0;
-        this.totalBudget = 100;
-        this.accumulatedBenefit = 0;
-        this.requiredMinimumBudget = 0;
-        this.status = Status.IDLE;
-        this.currentAction = null;
-    }
-
-    /**
-     * step method
-     * CS chooses an action according to probability distribution.
-     * Before selecting, the CS checks the acknowledgement from SoS manager.
-     * @return chosen Action instance
-     */
-    public Action step(){
-        if(this.getRemainBudget() == 0){
-            return null; // voidAction, nothing happen
-        }else{ // We have money
-            /*
-             * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
-             * 2. If the status of CS is SELECTION, then
-             */
-            if(this.status == Status.IDLE){ // Select an action
-                this.status = Status.SELECTION;
-                Action a = new Action("Action select", 0, 0, 0);
-                a.setPerformer(this);
-                return a;
-            }else if(this.status == Status.OPERATING){ // Operation step
-                return this.currentAction;
-            }
-        }
-
-        return null;
+        this.setType(Type.Constituent);
+        this.initBudget(totalBudget);
+        // Randomly positioned
+        this.currentPosition = (int) (( Math.random() * 12) % 6);
     }
 
     /**
@@ -66,46 +28,37 @@ public class Constituent {
      * 5. If no action remain, then do nothing
      */
     public void immediateAction(){
-        if(this.status == Status.OPERATING) // Defend code
+        if(this.getStatus() == Status.OPERATING) // Defend code
             return;
 
         ArrayList<Action> availableActions = new ArrayList<Action>();
-        for(Action a : this.capabilityList){
-            if(a.getStatus() == Action.Status.RAISED)
-                availableActions.add(a);
-        }
+        ArrayList<Action> capabilityList = this.getCapability();
 
-        int bestIndex = -1;
+        this.updateDurationMap(capabilityList);
+        getAvailableActionList(availableActions, capabilityList);
+
         Action candidateAction = null;
-        if(availableActions.size() > 1){
-            bestIndex = 0;
-            for(int i=1; i<availableActions.size(); i++){
-                if(this.getUtility(availableActions.get(bestIndex))
-                        < this.getUtility(availableActions.get(i))){
-                    bestIndex = i;
-                }
-            }
+        int bestIndex = chooseBestAction(availableActions);
+        if(bestIndex != -1)
             candidateAction = availableActions.get(bestIndex);
-        }else if(availableActions.size() == 1){ // No more job left
-            candidateAction = availableActions.get(0);
-//            this.status = Status.NO_JOB;
-            bestIndex = 0;
-        }
 
         if(bestIndex != -1 && candidateAction != null){
             // Selected action exists
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
+                candidateAction.setDuration(this.getDurationMap().get(candidateAction.getName()));
                 candidateAction.startHandle();
                 candidateAction.setPerformer(this);
-                this.status = Status.OPERATING;
-                this.currentAction = candidateAction;
+                this.setStatus(Status.OPERATING);
+                this.setCurrentAction(candidateAction);
             }
         }else{ // To select an action again
-            this.status = Status.IDLE;
+            this.setStatus(Status.IDLE);
         }
     }
 
     public void normalAction(int elapsedTime){ // TODO: Need of renaming!
+        Action currentAction = this.getCurrentAction();
+
         if(currentAction == null)
             return;
         currentAction.decreaseRemainingTime(elapsedTime);
@@ -116,23 +69,14 @@ public class Constituent {
             this.updateCostBenefit(cost, currentAction.getBenefit());
             // TODO: 2016-08-23 Add SoS benefit update
             currentAction.resetAction();
-            currentAction = null;
-            this.status = Status.IDLE;
-            if(this.getRemainBudget() < requiredMinimumBudget)
-                this.status = Status.END;
+            this.resetCurrentAction();
+            this.setStatus(Status.IDLE);
+            if(this.getRemainBudget() < this.getRequiredMinimumBudget())
+                this.setStatus(Status.END);
         }
     }
 
-    public int getRemainBudget(){
-        return this.totalBudget - this.usedCost;
-    }
-
-    public void updateCostBenefit(int cost, int benefit){
-        this.usedCost += cost;
-        this.accumulatedBenefit += benefit;
-    }
-
-    private int getUtility(Action a){
+    public int getUtility(Action a){
         return a.getBenefit() - this.getCost(a);
     }
 
@@ -140,39 +84,40 @@ public class Constituent {
         return this.name;
     }
 
-    public int getAccumulatedBenefit(){
-        return this.accumulatedBenefit;
-    }
-
-    public void addCapability(Action a, int cost){
-        this.capabilityList.add(a);
-        this.capabilityMap.put(a.getName(), cost);
-        if(this.requiredMinimumBudget < cost)
-            this.requiredMinimumBudget = cost;
-    }
-
-    public ArrayList<Action> getCapability(){
-        return this.capabilityList;
-    }
-
-    public int getCost(Action a){
-        Integer _cost = this.capabilityMap.get(a.getName());
-        if(_cost != null)
-            return _cost;
-        else
-            return 0;
-    }
-
-    public void updateActionList(ArrayList<Action> _list){
-        ArrayList<Action> newList = new ArrayList<Action>(this.capabilityList.size());
-        for(Action target : _list){
-            newList.add(target);
+    private void getAvailableActionList(ArrayList<Action> availableActions, ArrayList<Action> capabilityList){
+        for(Action a : capabilityList){
+            if(a.getStatus() == Action.Status.RAISED)
+                availableActions.add(a);
         }
-        this.capabilityList = newList;
     }
 
-    public Status getStatus(){
-        return this.status;
+    private int chooseBestAction(ArrayList<Action> availableActions){
+        int bestIndex = -1;
+        if(availableActions.size() > 1){
+            bestIndex = 0;
+            for(int i=1; i<availableActions.size(); i++){
+                if(this.getUtility(availableActions.get(bestIndex))
+                        < this.getUtility(availableActions.get(i))){
+                    bestIndex = i;
+                }
+            }
+        }else if(availableActions.size() == 1){ // No more job left
+            bestIndex = 0;
+        }
+        return bestIndex;
     }
 
+    private void updateDurationMap(ArrayList<Action> capabilityList){
+        // Current Position 위치를 결정할 때 duration 이 다시 update 됨..
+        // Action 의 raisedLocation 정보를 기초로 duration 산출
+        HashMap<String, Integer> newDurationMap = new HashMap<String, Integer>();
+        for(Action a : capabilityList){
+            if(a.getStatus() == Action.Status.RAISED && a.getActionType() == Action.TYPE.NORMAL){
+                String actionName = a.getName();
+                int requiredDuration = Math.abs(a.getRaisedLocation() - this.currentPosition) + 1;
+                newDurationMap.put(actionName, requiredDuration);
+            }
+        }
+        this.updateDurationMap(newDurationMap);
+    }
 }
