@@ -1,6 +1,8 @@
-package simulator;
+package kr.ac.kaist.se.simulator;
 
-import kr.ac.kaist.se.simulator.BaseConstituent;
+import simulator.Action;
+import simulator.Constituent;
+import simulator.SoSManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;

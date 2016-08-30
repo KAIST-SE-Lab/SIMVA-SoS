@@ -1,5 +1,7 @@
 package main;
 
+import kr.ac.kaist.se.simulator.Environment;
+import kr.ac.kaist.se.simulator.Simulator;
 import simulator.*;
 
 /**

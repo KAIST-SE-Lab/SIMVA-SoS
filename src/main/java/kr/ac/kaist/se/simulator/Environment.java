@@ -1,4 +1,7 @@
-package simulator;
+package kr.ac.kaist.se.simulator;
+
+import simulator.Action;
+import simulator.Constituent;
 
 import java.util.*;
 
