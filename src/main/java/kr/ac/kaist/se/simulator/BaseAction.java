@@ -100,5 +100,8 @@ public abstract class BaseAction {
         this.remainTime = remainTime;
     }
 
+    /*
+     * Abstract methods
+     */
     public abstract void addBenefit(int additionalBenefit);
 }

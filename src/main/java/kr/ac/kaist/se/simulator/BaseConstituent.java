@@ -100,6 +100,10 @@ public abstract class BaseConstituent {
         this.durationMap = _druationMap;
     }
 
+    public int getAccumulatedBenefit(){
+        return this.accumulatedBenefit;
+    }
+
     public ArrayList<Action> getCapability(){
         return this.capabilityList;
     }
@@ -148,7 +152,9 @@ public abstract class BaseConstituent {
         return null;
     }
 
-    // Need to be implemented methods
+    /*
+     * Abstract methods
+     */
     public abstract void normalAction(int elapsedTime);
     public abstract void immediateAction();
 }

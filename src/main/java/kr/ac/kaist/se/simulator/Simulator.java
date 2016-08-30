@@ -91,6 +91,9 @@ public class Simulator {
         }
         System.out.println("Final Tick " + this.tick);
         System.out.println("SoS benefit " + this.manager.getSoSLevelBenefit());
+        for(BaseConstituent CS: this.csList){
+            System.out.println(CS + " gets " + CS.getAccumulatedBenefit() + " benefits");
+        }
     }
 
     private void increaseTick(int minimumElapsedTime){
