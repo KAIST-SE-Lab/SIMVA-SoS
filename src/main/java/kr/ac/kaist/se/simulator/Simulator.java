@@ -109,6 +109,10 @@ public class Simulator {
             if(CS.getStatus() != BaseConstituent.Status.END)
                 verdict = false;
         }
+        if(this.tick > 10000){
+            verdict = true;
+            System.out.println("10000 step is done");
+        }
         return verdict;
     }
 

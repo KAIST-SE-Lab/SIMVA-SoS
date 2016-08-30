@@ -114,7 +114,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         for(Action a : capabilityList){
             if(a.getStatus() == Action.Status.RAISED && a.getActionType() == Action.TYPE.NORMAL){
                 String actionName = a.getName();
-                int requiredDuration = Math.abs(a.getRaisedLocation() - this.currentPosition);
+                int requiredDuration = Math.abs(a.getRaisedLocation() - this.currentPosition) + 1;
                 newDurationMap.put(actionName, requiredDuration);
             }
         }
