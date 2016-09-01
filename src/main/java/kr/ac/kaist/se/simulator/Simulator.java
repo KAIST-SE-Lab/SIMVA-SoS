@@ -14,7 +14,7 @@ import java.util.Collections;
  * Output model : System.out.println(Integer.toString(tick) + " "
  * + a.getPerformer() + " " + a + " " + cs.getAccumulatedBenefit());
  */
-public class Simulator {
+public final class Simulator {
 
     private ArrayList<BaseConstituent> csList = null;
     private SoSManager manager = null;

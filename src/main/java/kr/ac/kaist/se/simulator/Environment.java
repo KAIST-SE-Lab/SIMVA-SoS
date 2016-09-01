@@ -11,7 +11,7 @@ import java.util.*;
  * Raise actions that are handled by CSs
  * Send a message to CSs that the action is raised
  */
-public class Environment {
+public final class Environment {
 
     /**
      * 필요한 자료구조
