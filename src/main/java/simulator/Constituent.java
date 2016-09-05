@@ -120,4 +120,9 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         }
         this.updateDurationMap(newDurationMap);
     }
+
+    public Constituent clone(){
+        Constituent copy = new Constituent(this.name, this.getTotalBudget());
+        return copy;
+    }
 }

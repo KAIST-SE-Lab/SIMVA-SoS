@@ -69,6 +69,9 @@ public abstract class BaseConstituent {
         else
             this.totalBudget = totalBudget;
     }
+    public int getTotalBudget(){
+        return this.totalBudget;
+    }
 
     public int getCost(Action a){
         Integer _cost = this.capabilityMap.get(a.getName());
@@ -157,4 +160,5 @@ public abstract class BaseConstituent {
      */
     public abstract void normalAction(int elapsedTime);
     public abstract void immediateAction();
+    public abstract BaseConstituent clone();
 }
