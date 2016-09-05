@@ -32,4 +32,9 @@ public class Action extends BaseAction{
     public int getRaisedLocation(){
         return this.raisedLocation;
     }
+
+    public Action clone(){
+        Action copyAction = new Action(this.name, this.getBenefit(), this.getSoSBenefit());
+        return copyAction;
+    }
 }

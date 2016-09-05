@@ -1,5 +1,7 @@
 package kr.ac.kaist.se.simulator.method;
 
+import kr.ac.kaist.se.mc.BLTLChecker;
+
 /**
  * SPRTMethod.java
 
@@ -34,11 +36,14 @@ public class SPRTMethod {
 
     private int numSamples; // Total number of samples to calculate the decision
 
-    public SPRTMethod(double alpha, double beta, double delta){
+    private BLTLChecker checker;
+
+    public SPRTMethod(double alpha, double beta, double delta, BLTLChecker checker){
         this.alpha = alpha;
         this.beta = beta;
         this.delta = delta;
         this.numSamples = 0;
+        this.checker = checker;
     }
 
     public boolean checkStopCondition(){

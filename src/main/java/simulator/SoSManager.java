@@ -114,4 +114,9 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
     public String toString(){
         return this.name;
     }
+
+    public SoSManager clone(){
+//        SoSManager newManager = new SoSManager(this.name, csList, actionList);
+        return null;
+    }
 }

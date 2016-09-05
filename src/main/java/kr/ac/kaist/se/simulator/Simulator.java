@@ -1,8 +1,6 @@
 package kr.ac.kaist.se.simulator;
 
 import simulator.Action;
-import simulator.Constituent;
-import simulator.SoSManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,17 +10,17 @@ import java.util.Collections;
  * System of Systems Simulator
  * Created by Junho on 2016-08-01.
  * Output model : System.out.println(Integer.toString(tick) + " "
- * + a.getPerformer() + " " + a + " " + cs.getAccumulatedBenefit());
+ * + a.getPerformer() + " " + a + " " + cs.getAccumulatedSoSBenefit());
  */
 public final class Simulator {
 
     private ArrayList<BaseConstituent> csList = null;
-    private SoSManager manager = null;
+    private BaseConstituent manager = null;
     private Environment env = null;
     private int tick;
     private int minimumActionCost;
 
-    public Simulator(Constituent[] CSs, SoSManager manager, Environment env){
+    public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env){
         this.csList = new ArrayList<BaseConstituent>();
         this.csList.addAll(Arrays.asList(CSs));
         this.manager = manager;
@@ -31,15 +29,21 @@ public final class Simulator {
 
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
         for(BaseConstituent CS: this.csList){
-            for(Action a : CS.getCapability()){
-                if(CS.getCost(a) < minimumActionCost)
-                    minimumActionCost = CS.getCost(a);
-            }
+        for(Action a : CS.getCapability()){
+            if(CS.getCost(a) < minimumActionCost)
+                minimumActionCost = CS.getCost(a);
         }
     }
+}
 
-    public void execute(){
-        this.procedure();
+    /**
+     * simulate the model n steps Every steps, reset the environment and states
+     * @param steps the number of simulating steps
+     */
+    public void execute(int steps){
+        //for(int i=0 ; i< steps; i++){
+            this.procedure();
+        //}
     }
 
     /**
@@ -90,7 +94,11 @@ public final class Simulator {
             endCondition = this.evaluateProperties();
         }
         System.out.println("Final Tick " + this.tick);
-        System.out.println("SoS benefit " + this.manager.getSoSLevelBenefit());
+        int SoSBenefit = 0;
+        for(BaseConstituent CS : this.csList){
+            SoSBenefit += CS.getAccumulatedSoSBenefit();
+        }
+        System.out.println("SoS benefit " + SoSBenefit);
         for(BaseConstituent CS: this.csList){
             System.out.println(CS + " gets " + CS.getAccumulatedBenefit() + " benefits");
         }
@@ -160,12 +168,12 @@ public final class Simulator {
                     minimumElapsedTime = 1;
                 }
                 for(Action a: actionList){
-                    int SoSLevelBenefit = a.getSoSBenefit();
+//                    int SoSLevelBenefit = a.getSoSBenefit();
                     a.getPerformer().normalAction(minimumElapsedTime);
                     if(a.getPerformer() == null){ // Job is done.
                         System.out.println(this.tick + minimumElapsedTime);
-                        if(this.manager != null)
-                            this.manager.addSoSLevelBenefit(SoSLevelBenefit);
+//                        if(this.manager != null)
+//                            this.manager.addSoSLevelBenefit(SoSLevelBenefit);
                     }
                 }
             }else

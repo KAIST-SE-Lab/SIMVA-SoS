@@ -33,6 +33,6 @@ public class Main {
         Environment env = new Environment(CSs, actions);
 
         Simulator sim = new Simulator(CSs, manager, env);
-        sim.execute();
+        sim.execute(10000);
     }
 }

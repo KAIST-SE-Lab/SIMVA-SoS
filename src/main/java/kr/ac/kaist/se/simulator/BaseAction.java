@@ -104,4 +104,5 @@ public abstract class BaseAction {
      * Abstract methods
      */
     public abstract void addBenefit(int additionalBenefit);
+    public abstract BaseAction clone();
 }

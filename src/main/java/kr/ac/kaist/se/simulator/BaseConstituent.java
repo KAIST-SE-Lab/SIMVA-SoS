@@ -27,6 +27,7 @@ public abstract class BaseConstituent {
     public enum Type {Constituent, SoSManager}
 
     private int usedCost = 0;
+    private int accumulatedSoSBenefit = 0;
     private int accumulatedBenefit = 0;
     private int totalBudget = 100;
     private int requiredMinimumBudget = 0;
@@ -58,9 +59,10 @@ public abstract class BaseConstituent {
         return this.totalBudget - this.usedCost;
     }
     public int getRequiredMinimumBudget() { return this.requiredMinimumBudget; }
-    public void updateCostBenefit(int cost, int benefit){
+    public void updateCostBenefit(int cost, int CSbenefit, int SoSbenefit){
         this.usedCost += cost;
-        this.accumulatedBenefit += benefit;
+        this.accumulatedSoSBenefit += SoSbenefit;
+        this.accumulatedBenefit += CSbenefit;
     }
 
     public void initBudget(int totalBudget){
@@ -103,10 +105,12 @@ public abstract class BaseConstituent {
         this.durationMap = _druationMap;
     }
 
+    public int getAccumulatedSoSBenefit(){
+        return this.accumulatedSoSBenefit;
+    }
     public int getAccumulatedBenefit(){
         return this.accumulatedBenefit;
     }
-
     public ArrayList<Action> getCapability(){
         return this.capabilityList;
     }
