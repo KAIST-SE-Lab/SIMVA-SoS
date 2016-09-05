@@ -1,6 +1,7 @@
 package kr.ac.kaist.se.simulator;
 
 import simulator.Action;
+import simulator.Constituent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +46,11 @@ public final class Simulator {
      */
     public void execute(int steps){
         for(int i=0 ; i< steps; i++){
+            for(BaseConstituent CS: this.csList){
+                CS.reset();
+            }
+            if(manager != null)
+                manager.reset();
             this.procedure();
         }
     }
@@ -103,9 +109,9 @@ public final class Simulator {
             SoSBenefit += CS.getAccumulatedSoSBenefit();
         }
         System.out.println("SoS benefit " + SoSBenefit);
-        for(BaseConstituent CS: this.csList){
-            System.out.println(CS + " gets " + CS.getAccumulatedBenefit() + " benefits");
-        }
+//        for(BaseConstituent CS: this.csList){
+//            System.out.println(CS + " gets " + CS.getAccumulatedBenefit() + " benefits");
+//        }
         this.resultList.add(new SIMResult(this.tick, SoSBenefit));
     }
 
@@ -125,9 +131,9 @@ public final class Simulator {
             if(CS.getStatus() != BaseConstituent.Status.END)
                 verdict = false;
         }
-        if(this.tick > 10000){
+        if(this.tick > 1700){
             verdict = true;
-            System.out.println("10000 step is done");
+//            System.out.println("2000 step is done");
         }
         return verdict;
     }
@@ -175,11 +181,11 @@ public final class Simulator {
                 for(Action a: actionList){
 //                    int SoSLevelBenefit = a.getSoSBenefit();
                     a.getPerformer().normalAction(minimumElapsedTime);
-                    if(a.getPerformer() == null){ // Job is done.
-                        System.out.println(this.tick + minimumElapsedTime);
+//                    if(a.getPerformer() == null){ // Job is done.
+//                        System.out.println(this.tick + minimumElapsedTime);
 //                        if(this.manager != null)
 //                            this.manager.addSoSLevelBenefit(SoSLevelBenefit);
-                    }
+//                    }
                 }
             }else
                 minimumElapsedTime = 1;

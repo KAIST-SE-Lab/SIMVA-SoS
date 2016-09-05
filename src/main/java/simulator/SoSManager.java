@@ -121,6 +121,10 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
     }
 
     public void reset(){
-
+        super.reset();
+        this.pickedAction = null;
+        this.setStatus(Status.IDLE);
+        this.SoSLevelBenefit = 0;
+        this.setCurrentAction(null);
     }
 }

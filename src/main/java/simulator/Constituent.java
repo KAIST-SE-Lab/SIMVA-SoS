@@ -64,7 +64,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         currentAction.decreaseRemainingTime(elapsedTime);
         if(currentAction.getRemainingTime() == 0){
             // All actions are always more than and equal to 0
-            System.out.print(this.name + " finished " + currentAction.getName() + " at ");
+//            System.out.print(this.name + " finished " + currentAction.getName() + " at ");
             int cost = this.getCost(currentAction);
             this.updateCostBenefit(cost, currentAction.getBenefit(), currentAction.getSoSBenefit());
             currentAction.resetAction();
@@ -126,6 +126,8 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
     }
 
     public void reset(){
-
+        super.reset();
+        this.currentPosition = (int) (( Math.random() * 12) % 6);
+        this.getDurationMap().clear();
     }
 }

@@ -20,19 +20,12 @@ public final class Environment {
      */
     private ArrayList<Constituent> csList = null; // 모든 CS list
     private ArrayList<Action> actionList = null; // 모든 Action List
-    private HashMap<String, Action.Status> statusHashMap = null;
 
     public Environment(Constituent[] CSs, Action[] actions){
         this.csList = new ArrayList<Constituent>();
         Collections.addAll(this.csList, CSs);
         this.actionList = new ArrayList<Action>();
         Collections.addAll(this.actionList, actions);
-        this.statusHashMap = new HashMap<String, Action.Status>();
-
-        for(Action a : this.actionList){
-            this.statusHashMap.put(a.getName(), a.getStatus());
-        }
-
     }
 
     /**
@@ -53,11 +46,15 @@ public final class Environment {
          * 3. Shuffle the possible action list and pick actions
          */
         ArrayList<String> possibleActionList = new ArrayList<String>();
-        for(Map.Entry<String, Action.Status> entry: this.statusHashMap.entrySet()){
-            if(entry.getValue() == Action.Status.NOT_RAISED){
-                possibleActionList.add(entry.getKey());
-            }
+        for(Action a : this.actionList){
+            if(a.getStatus() == Action.Status.NOT_RAISED)
+                possibleActionList.add(a.getName());
         }
+//        for(Map.Entry<String, Action.Status> entry: this.statusHashMap.entrySet()){
+//            if(entry.getValue() == Action.Status.NOT_RAISED){
+//                possibleActionList.add(entry.getKey());
+//            }
+//        }
         int numRaisingActions = 0;
         if(possibleActionList.size() > 0){
             Random randomGenerator = new Random();
@@ -100,9 +97,13 @@ public final class Environment {
      */
     public void updateActionStatus(ArrayList<Action> actionList){
         for(Action a : actionList){
-            Action.Status newStatus = a.getStatus();
-            this.statusHashMap.remove(a.getName());
-            this.statusHashMap.put(a.getName(), newStatus);
+            String targetName = a.getName();
+            for(int i=0; i<this.actionList.size() ;i++){
+                if(this.actionList.get(i).getName().equalsIgnoreCase(targetName)){
+                    this.actionList.set(i, a);
+                    break;
+                }
+            }
         }
     }
 }

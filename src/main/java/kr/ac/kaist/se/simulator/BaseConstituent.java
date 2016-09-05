@@ -86,7 +86,10 @@ public abstract class BaseConstituent {
     public void updateCapability(ArrayList<Action> _list){
         ArrayList<Action> newList = new ArrayList<Action>(this.capabilityList.size());
         for(Action target : _list){
-            newList.add(target);
+            for(Action a : this.capabilityList){
+                if(a.getName().equalsIgnoreCase(target.getName()))
+                    newList.add(target);
+            }
         }
         this.capabilityList = newList;
     }
@@ -131,6 +134,17 @@ public abstract class BaseConstituent {
         this.currentAction = null;
     }
 
+    public void reset(){
+        for(BaseAction a : this.getCapability()){
+            a.reset();
+        }
+        this.usedCost = 0;
+        this.accumulatedBenefit = 0;
+        this.accumulatedSoSBenefit = 0;
+        this.setStatus(Status.IDLE);
+        this.currentAction = null;
+    }
+
     /**
      * step method
      * CS chooses an action according to probability distribution.
@@ -165,5 +179,5 @@ public abstract class BaseConstituent {
     public abstract void normalAction(int elapsedTime);
     public abstract void immediateAction();
     public abstract BaseConstituent clone();
-    public abstract void reset();
+
 }
