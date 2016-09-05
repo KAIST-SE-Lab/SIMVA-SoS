@@ -28,13 +28,55 @@ public class BLTLChecker {
      * 3. Return Bernoulli random variable value (0, not satisfied or 1, satisfied)
      */
 
-    public BLTLChecker(){
+    public enum comparisonType {LESS_THAN, GREATER_THAN, EQUAL_TO, LESS_THAN_AND_EQUAL_TO, GREATER_THAN_AND_EQUAL_TO}
 
+    private int baseTick;
+    private int baseSoSBenefit;
+    private comparisonType type;
+
+    /**
+     * Constructor for BLTL model Checker
+     * @param baseTick baseline of the time tick, BLTL Checker will evaluate the sample sequence based on this tick
+     * @param baseSoSBenefit baseline of SoS benefit, BLTL Checeker will evaluate the sample seuqence based on this SoS benefit
+     */
+    public BLTLChecker(int baseTick, int baseSoSBenefit, comparisonType type){
+        this.baseTick = baseTick;
+        this.baseSoSBenefit = baseSoSBenefit;
+        this.type = type;
     }
 
+    /**
+     * Evaluate the sample sequence based on the base tick and base SoS benefit
+     * @param res Simulation result (sample sequence)
+     * @return 1 - satisfied, 0 - not satisfied
+     */
     public int evaluateSample(SIMResult res){
-
-
+        int sampleTick = res.getNumTicks();
+        int sampleBenefit = res.getSoSBenefit();
+        if(sampleTick <= baseTick){
+            switch(this.type){
+                case LESS_THAN:
+                    if(sampleBenefit < this.baseSoSBenefit)
+                        return 1;
+                    break;
+                case GREATER_THAN:
+                    if(sampleBenefit > this.baseSoSBenefit)
+                        return 1;
+                    break;
+                case EQUAL_TO:
+                    if(sampleBenefit == this.baseSoSBenefit)
+                        return 1;
+                    break;
+                case LESS_THAN_AND_EQUAL_TO:
+                    if(sampleBenefit <= this.baseSoSBenefit)
+                        return 1;
+                    break;
+                case GREATER_THAN_AND_EQUAL_TO:
+                    if(sampleBenefit >= this.baseSoSBenefit)
+                        return 1;
+                    break;
+            }
+        }
         return 0;
     }
 }
