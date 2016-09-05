@@ -15,6 +15,7 @@ import java.util.Collections;
 public final class Simulator {
 
     private ArrayList<BaseConstituent> csList = null;
+    private ArrayList<SIMResult> resultList = null;
     private BaseConstituent manager = null;
     private Environment env = null;
     private int tick;
@@ -33,23 +34,26 @@ public final class Simulator {
             if(CS.getCost(a) < minimumActionCost)
                 minimumActionCost = CS.getCost(a);
         }
+
+        this.resultList = new ArrayList<SIMResult>();
     }
 }
 
     /**
-     * simulate the model n steps Every steps, reset the environment and states
+     * simulate the model n steps every steps, reset the environment and states
      * @param steps the number of simulating steps
      */
     public void execute(int steps){
-        //for(int i=0 ; i< steps; i++){
+        for(int i=0 ; i< steps; i++){
             this.procedure();
-        //}
+        }
     }
 
     /**
      * Simulation Procedure function from "Simulation and SMC of Logic-Based MAS Models"
      */
     private void procedure(){
+        this.tick = 0;
         boolean endCondition = false;
         ArrayList<Action> immediateActions = new ArrayList<Action>();
         ArrayList<Action> actions = new ArrayList<Action>();
@@ -102,6 +106,7 @@ public final class Simulator {
         for(BaseConstituent CS: this.csList){
             System.out.println(CS + " gets " + CS.getAccumulatedBenefit() + " benefits");
         }
+        this.resultList.add(new SIMResult(this.tick, SoSBenefit));
     }
 
     private void increaseTick(int minimumElapsedTime){

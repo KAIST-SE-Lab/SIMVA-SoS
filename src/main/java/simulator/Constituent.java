@@ -67,7 +67,6 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
             System.out.print(this.name + " finished " + currentAction.getName() + " at ");
             int cost = this.getCost(currentAction);
             this.updateCostBenefit(cost, currentAction.getBenefit(), currentAction.getSoSBenefit());
-            // TODO: 2016-08-23 Add SoS benefit update
             currentAction.resetAction();
             this.resetCurrentAction();
             this.setStatus(Status.IDLE);
@@ -124,5 +123,9 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
     public Constituent clone(){
         Constituent copy = new Constituent(this.name, this.getTotalBudget());
         return copy;
+    }
+
+    public void reset(){
+
     }
 }

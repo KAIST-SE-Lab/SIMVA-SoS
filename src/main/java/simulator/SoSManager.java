@@ -96,7 +96,6 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
             for(Action a : actionList){
                 if(a.getName().equalsIgnoreCase(targetActionName)){
                     a.addBenefit(additionalBenefit);
-                    System.out.println("Manager ack " + a + " with additional " + additionalBenefit);
                 }
             }
             cs.updateCapability(actionList);
@@ -116,7 +115,12 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
     }
 
     public SoSManager clone(){
+        // TO be implemented
 //        SoSManager newManager = new SoSManager(this.name, csList, actionList);
         return null;
+    }
+
+    public void reset(){
+
     }
 }

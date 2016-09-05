@@ -165,4 +165,5 @@ public abstract class BaseConstituent {
     public abstract void normalAction(int elapsedTime);
     public abstract void immediateAction();
     public abstract BaseConstituent clone();
+    public abstract void reset();
 }

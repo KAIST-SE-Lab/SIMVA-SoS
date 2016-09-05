@@ -105,4 +105,5 @@ public abstract class BaseAction {
      */
     public abstract void addBenefit(int additionalBenefit);
     public abstract BaseAction clone();
+    public abstract void reset();
 }
