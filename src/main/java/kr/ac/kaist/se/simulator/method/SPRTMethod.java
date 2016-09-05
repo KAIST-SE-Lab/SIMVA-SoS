@@ -20,6 +20,9 @@ package kr.ac.kaist.se.simulator.method;
 public class SPRTMethod {
     // Sequential Probability Ratio Test Method for Statistical Model Checking
 
+    // Default alpha: 0.1, 0.01, 0.001
+    // Default beta: same as above
+    // Default delta: 0.01, 0.03, 0.05
     private double alpha;
     private double beta;
     private double delta;

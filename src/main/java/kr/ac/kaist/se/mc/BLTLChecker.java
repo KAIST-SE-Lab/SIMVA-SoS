@@ -1,5 +1,7 @@
 package kr.ac.kaist.se.mc;
 
+import kr.ac.kaist.se.simulator.SIMResult;
+
 /**
  * BLTLChecker.java
 
@@ -18,4 +20,21 @@ package kr.ac.kaist.se.mc;
  */
 
 public class BLTLChecker {
+
+    /*
+     * BLTL Model Checker for SIMSoS
+     * 1. Getting a sample sequence from the simulator
+     * 2. Check whether the sample sequence satisfies or not the condition (temporal logic)
+     * 3. Return Bernoulli random variable value (0, not satisfied or 1, satisfied)
+     */
+
+    public BLTLChecker(){
+
+    }
+
+    public int evaluateSample(SIMResult res){
+
+
+        return 0;
+    }
 }

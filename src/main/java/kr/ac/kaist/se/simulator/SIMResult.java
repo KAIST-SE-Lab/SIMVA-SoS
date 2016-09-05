@@ -1,7 +1,7 @@
 package kr.ac.kaist.se.simulator;
 
 /**
- * Result.java
+ * SIMResult.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
@@ -17,15 +17,15 @@ package kr.ac.kaist.se.simulator;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public final class Result {
+public final class SIMResult {
     /*
-     * Simulation Result class
+     * Simulation SIMResult class
      */
 
     private int numTicks;
     private int SoSBenefit;
 
-    public Result(int numTicks, int SoSBenefit){
+    public SIMResult(int numTicks, int SoSBenefit){
         this.numTicks = numTicks;
         this.SoSBenefit = SoSBenefit;
     }
