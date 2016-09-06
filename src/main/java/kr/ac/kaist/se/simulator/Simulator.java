@@ -16,7 +16,7 @@ import java.util.Collections;
 public final class Simulator {
 
     private ArrayList<BaseConstituent> csList = null;
-    private ArrayList<SIMResult> resultList = null;
+    private SIMResult result = null;
     private BaseConstituent manager = null;
     private Environment env = null;
     private int tick;
@@ -36,23 +36,24 @@ public final class Simulator {
                 minimumActionCost = CS.getCost(a);
         }
 
-        this.resultList = new ArrayList<SIMResult>();
     }
 }
 
     /**
-     * simulate the model n steps every steps, reset the environment and states
-     * @param steps the number of simulating steps
+     * simulate the model, reset the environment and states
      */
-    public void execute(int steps){
-        for(int i=0 ; i< steps; i++){
-            for(BaseConstituent CS: this.csList){
-                CS.reset();
-            }
-            if(manager != null)
-                manager.reset();
-            this.procedure();
+    public void execute(){
+        this.result = null;
+        for(BaseConstituent CS: this.csList){
+            CS.reset();
         }
+        if(manager != null)
+            manager.reset();
+        this.procedure();
+    }
+
+    public SIMResult getResult(){
+        return this.result;
     }
 
     /**
@@ -103,16 +104,16 @@ public final class Simulator {
 
             endCondition = this.evaluateProperties();
         }
-        System.out.println("Final Tick " + this.tick);
+//        System.out.println("Final Tick " + this.tick);
         int SoSBenefit = 0;
         for(BaseConstituent CS : this.csList){
             SoSBenefit += CS.getAccumulatedSoSBenefit();
         }
-        System.out.println("SoS benefit " + SoSBenefit);
+//        System.out.println("SoS benefit " + SoSBenefit);
 //        for(BaseConstituent CS: this.csList){
 //            System.out.println(CS + " gets " + CS.getAccumulatedBenefit() + " benefits");
 //        }
-        this.resultList.add(new SIMResult(this.tick, SoSBenefit));
+        this.result = new SIMResult(this.tick, SoSBenefit);
     }
 
     private void increaseTick(int minimumElapsedTime){

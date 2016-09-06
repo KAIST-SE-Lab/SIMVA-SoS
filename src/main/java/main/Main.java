@@ -1,8 +1,15 @@
 package main;
 
+import kr.ac.kaist.se.mc.BLTLChecker;
 import kr.ac.kaist.se.simulator.Environment;
+import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
+import kr.ac.kaist.se.simulator.method.SPRTMethod;
 import simulator.*;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
 
 /**
  * Simulator for System of Systems
@@ -10,6 +17,8 @@ import simulator.*;
  */
 public class Main {
     public static void main(String []args){
+
+
 
         Constituent cs1 = new Constituent("CS1", 100);
         Constituent cs2 = new Constituent("CS2", 100);
@@ -60,6 +69,38 @@ public class Main {
         Environment env = new Environment(CSs, actions);
 
         Simulator sim = new Simulator(CSs, manager, env);
-        sim.execute(100);
+        BLTLChecker checker = new BLTLChecker(500, 450, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+        SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.001);
+
+        double[] thetaArr = {0.2, 0.4, 0.6, 0.8, 0.99};
+        for(double theta: thetaArr){
+            // Time measure
+            Instant start = Instant.now();
+
+
+            sprt.setExpression(theta);
+
+            while(!sprt.checkStopCondition()){
+                sim.execute();
+                SIMResult res = sim.getResult();
+                int checkResult = checker.evaluateSample(res); // 1: satisfy, 0: not-satisfy
+                sprt.updateResult(checkResult);
+            }
+
+
+            boolean h0 = sprt.getResult();
+            System.out.print("SMC decides that your hypothesis is ");
+            if(h0)
+                System.out.println("accepted at " + theta);
+            else
+                System.out.println("not accepted at " + theta);
+
+            sprt.reset();
+
+
+            Instant end = Instant.now();
+            System.out.println(Duration.between(start, end));
+        }
+
     }
 }
