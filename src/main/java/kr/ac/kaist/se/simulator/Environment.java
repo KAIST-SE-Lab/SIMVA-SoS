@@ -18,11 +18,11 @@ public final class Environment {
      * 1. 각 CS의 capability list
      * 2. 현재 각 Action 의 진행 상황
      */
-    private ArrayList<Constituent> csList = null; // 모든 CS list
+    private ArrayList<BaseConstituent> csList = null; // 모든 CS list
     private ArrayList<BaseAction> actionList = null; // 모든 Action List
 
-    public Environment(Constituent[] CSs, Action[] actions){
-        this.csList = new ArrayList<Constituent>();
+    public Environment(BaseConstituent[] CSs, BaseAction[] actions){
+        this.csList = new ArrayList<BaseConstituent>();
         Collections.addAll(this.csList, CSs);
         this.actionList = new ArrayList<BaseAction>();
         Collections.addAll(this.actionList, actions);
@@ -50,34 +50,43 @@ public final class Environment {
             if(a.getStatus() == BaseAction.Status.NOT_RAISED)
                 possibleActionList.add(a.getName());
         }
-//        for(Map.Entry<String, Action.Status> entry: this.statusHashMap.entrySet()){
-//            if(entry.getValue() == Action.Status.NOT_RAISED){
-//                possibleActionList.add(entry.getKey());
+
+//        int numRaisingActions = 0;
+//        if(possibleActionList.size() > 0){
+//            Random randomGenerator = new Random();
+//            numRaisingActions = randomGenerator.nextInt(possibleActionList.size()+1);
+//                if(numRaisingActions > 0){
+//                    ArrayList<BaseAction> selectedActionList = new ArrayList<BaseAction>();
+//                    Collections.shuffle(possibleActionList);
+//
+//                    for(int i = 0; i < numRaisingActions; i++){
+//                        String actionName = possibleActionList.get(i);
+//                        for(BaseAction a : this.actionList){
+//                            if(a.getName().equalsIgnoreCase(actionName)){
+//                                a.setStatus(BaseAction.Status.RAISED);
+//                                selectedActionList.add(a);
+//                                break;
+//                            }
+//                        }
+//                    }
+//
+//                updateActionStatus(selectedActionList);
 //            }
 //        }
-        int numRaisingActions = 0;
-        if(possibleActionList.size() > 0){
-            Random randomGenerator = new Random();
-            numRaisingActions = randomGenerator.nextInt(possibleActionList.size()+1);
-            if(numRaisingActions > 0){
-                ArrayList<BaseAction> selectedActionList = new ArrayList<BaseAction>();
-                Collections.shuffle(possibleActionList);
 
-                for(int i = 0; i < numRaisingActions; i++){
-                    String actionName = possibleActionList.get(i);
-                    for(BaseAction a : this.actionList){
-                        if(a.getName().equalsIgnoreCase(actionName)){
-                            a.setStatus(BaseAction.Status.RAISED);
-                            selectedActionList.add(a);
-                            break;
-                        }
-                    }
+        ArrayList<BaseAction> selectedActionList = new ArrayList<BaseAction>();
+        for(String targetName : possibleActionList){
+            for(BaseAction a : this.actionList){
+                if(a.getName().equalsIgnoreCase(targetName)){
+                    a.setStatus(BaseAction.Status.RAISED);
+                    selectedActionList.add(a);
+                    break;
                 }
-
-                updateActionStatus(selectedActionList);
             }
         }
-        return numRaisingActions;
+        updateActionStatus(selectedActionList);
+
+        return selectedActionList.size();
     }
 
     /**
@@ -86,7 +95,7 @@ public final class Environment {
      * The CS which got the message will modify their available action list
      */
     public void notifyCS(){
-        for(Constituent cs : this.csList){
+        for(BaseConstituent cs : this.csList){
             cs.updateCapability(this.actionList);
         }
     }

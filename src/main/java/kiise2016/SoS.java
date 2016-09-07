@@ -11,7 +11,7 @@ import java.util.Random;
 public class SoS extends BaseConstituent implements ManagerInterface{
     private ArrayList<BaseConstituent> csList;
     private ArrayList<Action> actionList;
-    private Action pickedAction;
+    private Action currentAction;
     private Random generator;
 
     private String name;
@@ -27,11 +27,11 @@ public class SoS extends BaseConstituent implements ManagerInterface{
 
         this.SoSLevelBenefit = 0;
 
-        this.pickedAction = null;
+        this.currentAction = null;
         this.generator = new Random();
 
-        this.setType(BaseConstituent.Type.SoSManager);
-        this.setStatus(BaseConstituent.Status.IDLE);
+        this.setType(Type.SoSManager);
+        this.setStatus(Status.IDLE);
     }
 
     public void normalAction(int elapsedTime){
@@ -47,7 +47,7 @@ public class SoS extends BaseConstituent implements ManagerInterface{
         currentAction.decreaseRemainingTime(elapsedTime);
         if(currentAction.getRemainingTime() == 0){
             this.resetCurrentAction();
-            this.setStatus(BaseConstituent.Status.IDLE);
+            this.setStatus(Status.IDLE);
 //            System.out.print(this + " finished Acknowledgement at ");
         }
     }
@@ -57,44 +57,46 @@ public class SoS extends BaseConstituent implements ManagerInterface{
          * Check the SoS-level benefit of the raised actions
          * Pick the best SoS-level benefit action
          * Acknowledge that action to give more benefit
-         * Additional benefit will be 1 or 2
+         * Additional benefit will be 0 or 1 or 2
          * If the number of raised action is only one, there is no need to acknowledgement
          */
-        Action bestAction = new Action("Dummy", 0, 0); // Best SoS-benefit action
-        int numRaisedActions = 0;
-        for(Action a : this.actionList){ // Pick the best SoS-level action
-            if(a.getStatus() == Action.Status.RAISED){
-                numRaisedActions++;
-                if(a.getSoSBenefit() > bestAction.getSoSBenefit()){
-                    bestAction = a;
-                }
-            }
-        }
-        if(numRaisedActions > 1){ // Only this case is worthwhile
-            this.pickedAction = bestAction;
-            this.acknowledge(this.generator.nextInt(1) + 1);
-            this.pickedAction = null;
+        // Actions are always raised
+        // Randomly select the acknowledge value (additional benefit)
+        // For 0.3 for no additional benefit, 0.4 for 1 additional benefit, 0.3 for 2 additional benefit
+
+        int additionalBenefit = 0;
+        int ranNum = this.generator.nextInt(100);
+        if( 0 <= ranNum && ranNum <= 29){
+            additionalBenefit = 0;
+        }else if( 30 <= ranNum && ranNum <= 69){
+            additionalBenefit = 1;
+        }else if( 70 <= ranNum && ranNum <= 99){
+            additionalBenefit = 2;
         }
 
+        this.acknowledge(additionalBenefit);
+
         // For next normal action
-        int duration = 2;
-        duration += this.generator.nextInt(2); // Duration is 2-3
         Action a = new Action("Search for acknowledgement", 0, 0);
-        a.setDuration(duration);
+        a.setDuration(1);
         a.setPerformer(this);
         a.setActionType(Action.TYPE.NORMAL);
         a.startHandle();
         this.setCurrentAction(a);
 
-        this.setStatus(BaseConstituent.Status.OPERATING);
+        this.setStatus(Status.OPERATING);
     }
 
+    /**
+     * No matter what action always acknowledge to action2 and action3
+     * @param additionalBenefit the additional benefit
+     */
     private void acknowledge(int additionalBenefit){
         for(BaseConstituent cs : this.csList){
-            ArrayList<Action> actionList = cs.getCapability();
-            String targetActionName = this.pickedAction.getName();
-            for(Action a : actionList){
-                if(a.getName().equalsIgnoreCase(targetActionName)){
+            ArrayList<BaseAction> actionList = cs.getCapability();
+            for(BaseAction a : actionList){
+                if(a.getName().equalsIgnoreCase("action2")
+                        || a.getName().equalsIgnoreCase("action3")){
                     a.addBenefit(additionalBenefit);
                 }
             }
@@ -115,15 +117,45 @@ public class SoS extends BaseConstituent implements ManagerInterface{
     }
 
     public SoS clone(){
-        // Not used
+        // TO be implemented
+//        SoSManager newManager = new SoSManager(this.name, csList, actionList);
         return null;
     }
 
     public void reset(){
         super.reset();
-        this.pickedAction = null;
-        this.setStatus(BaseConstituent.Status.IDLE);
+        this.setStatus(Status.IDLE);
         this.SoSLevelBenefit = 0;
         this.setCurrentAction(null);
+    }
+
+    public void setCurrentAction(Action a){
+        this.currentAction = a;
+    }
+
+    public Action getCurrentAction(){
+        return this.currentAction;
+    }
+
+    public Action step(){
+        if(this.getRemainBudget() == 0){
+            return null; // voidAction, nothing happen
+        }else{ // We have money
+            /*
+             * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
+             * 2. If the status of CS is SELECTION, then
+             */
+            if(this.getStatus() == Status.IDLE){ // Select an action
+                this.setStatus(Status.SELECTION);
+                Action a = new Action("[SoS] Immediate action", 0, 0);
+                a.setPerformer(this);
+                a.setActionType(Action.TYPE.IMMEDIATE);
+                return a;
+            }else if(this.getStatus() == Status.OPERATING){ // Operation step
+                return this.currentAction;
+            }
+        }
+
+        return null;
     }
 }
