@@ -1,13 +1,29 @@
-package simulator;
+package kr.ac.kaist.se.simulator.method;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 
-public class Action extends BaseAction{
+/**
+ * DummyAction.java
 
-    private int raisedLocation;
+ * Author: Junho Kim <jhim@se.kaist.ac.kr>
+
+ * The MIT License (MIT)
+
+ * Copyright (c) 2016 Junho Kim
+
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions: TBD
+ */
+
+public class DummyAction extends BaseAction {
+
     private int additionalBenefit;
 
-    public Action(String name, int benefit, int SoSBenefit){
+    public DummyAction(String name, int benefit, int SoSBenefit){
         this.setName(name);
         this.additionalBenefit = 0;
         this.setBenefit(benefit);
@@ -15,7 +31,6 @@ public class Action extends BaseAction{
         this.setDuration(0);
         this.setRemainTime(-1); // not_raised
         this.setStatus(BaseAction.Status.NOT_RAISED);
-        this.setRaisedLocation();
     }
 
     public String toString(){
@@ -26,11 +41,6 @@ public class Action extends BaseAction{
         this.additionalBenefit = additionalBenefit;
 //        this.setBenefit(this.getBenefit() + additionalBenefit);
     }
-
-    public void setRaisedLocation(){
-        this.raisedLocation = (int) (( Math.random() * 12) % 6);
-    }
-
     public void resetAction(){
         super.resetAction();
         this.additionalBenefit = 0;
@@ -40,17 +50,14 @@ public class Action extends BaseAction{
         return super.getBenefit() + this.additionalBenefit;
     }
 
-    public int getRaisedLocation(){
-        return this.raisedLocation;
-    }
-
-    public Action clone(){
-        Action copyAction = new Action(this.getName(), this.getBenefit(), this.getSoSBenefit());
+    public DummyAction clone(){
+        DummyAction copyAction = new DummyAction(this.getName(), this.getBenefit(), this.getSoSBenefit());
         return copyAction;
     }
 
     public void reset(){
         this.resetAction();
-        this.setRaisedLocation();
     }
+
+
 }

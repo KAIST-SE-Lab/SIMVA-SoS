@@ -1,25 +1,23 @@
-package simulator;
+package kiise2016;
 
-import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ManagerInterface;
+import kr.ac.kaist.se.simulator.BaseAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class SoSManager extends BaseConstituent implements ManagerInterface{
-
+public class SoS extends BaseConstituent implements ManagerInterface{
     private ArrayList<BaseConstituent> csList;
     private ArrayList<Action> actionList;
     private Action pickedAction;
-    private Action currentAction;
     private Random generator;
 
     private String name;
     private int SoSLevelBenefit;
 
-    public SoSManager(String name, Constituent[] csList, Action[] actions) {
+    public SoS(String name, Constituent[] csList, Action[] actions) {
         this.name = name;
         this.csList = new ArrayList<BaseConstituent>();
         this.actionList = new ArrayList<Action>();
@@ -30,11 +28,10 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
         this.SoSLevelBenefit = 0;
 
         this.pickedAction = null;
-        this.currentAction = null;
         this.generator = new Random();
 
-        this.setType(Type.SoSManager);
-        this.setStatus(Status.IDLE);
+        this.setType(BaseConstituent.Type.SoSManager);
+        this.setStatus(BaseConstituent.Status.IDLE);
     }
 
     public void normalAction(int elapsedTime){
@@ -50,7 +47,7 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
         currentAction.decreaseRemainingTime(elapsedTime);
         if(currentAction.getRemainingTime() == 0){
             this.resetCurrentAction();
-            this.setStatus(Status.IDLE);
+            this.setStatus(BaseConstituent.Status.IDLE);
 //            System.out.print(this + " finished Acknowledgement at ");
         }
     }
@@ -89,14 +86,14 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
         a.startHandle();
         this.setCurrentAction(a);
 
-        this.setStatus(Status.OPERATING);
+        this.setStatus(BaseConstituent.Status.OPERATING);
     }
 
     private void acknowledge(int additionalBenefit){
         for(BaseConstituent cs : this.csList){
-            ArrayList<BaseAction> actionList = cs.getCapability();
+            ArrayList<Action> actionList = cs.getCapability();
             String targetActionName = this.pickedAction.getName();
-            for(BaseAction a : actionList){
+            for(Action a : actionList){
                 if(a.getName().equalsIgnoreCase(targetActionName)){
                     a.addBenefit(additionalBenefit);
                 }
@@ -117,47 +114,16 @@ public class SoSManager extends BaseConstituent implements ManagerInterface{
         return this.name;
     }
 
-    public SoSManager clone(){
-        // TO be implemented
-//        SoSManager newManager = new SoSManager(this.name, csList, actionList);
+    public SoS clone(){
+        // Not used
         return null;
     }
 
     public void reset(){
         super.reset();
         this.pickedAction = null;
-        this.setStatus(Status.IDLE);
+        this.setStatus(BaseConstituent.Status.IDLE);
         this.SoSLevelBenefit = 0;
         this.setCurrentAction(null);
-    }
-
-    public void setCurrentAction(Action a){
-        this.currentAction = a;
-    }
-
-    public Action getCurrentAction(){
-        return this.currentAction;
-    }
-
-    public Action step(){
-        if(this.getRemainBudget() == 0){
-            return null; // voidAction, nothing happen
-        }else{ // We have money
-            /*
-             * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
-             * 2. If the status of CS is SELECTION, then
-             */
-            if(this.getStatus() == Status.IDLE){ // Select an action
-                this.setStatus(Status.SELECTION);
-                Action a = new Action("[SoS] Immediate action", 0, 0);
-                a.setPerformer(this);
-                a.setActionType(Action.TYPE.IMMEDIATE);
-                return a;
-            }else if(this.getStatus() == Status.OPERATING){ // Operation step
-                return this.currentAction;
-            }
-        }
-
-        return null;
     }
 }

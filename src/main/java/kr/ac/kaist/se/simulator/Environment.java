@@ -19,12 +19,12 @@ public final class Environment {
      * 2. 현재 각 Action 의 진행 상황
      */
     private ArrayList<Constituent> csList = null; // 모든 CS list
-    private ArrayList<Action> actionList = null; // 모든 Action List
+    private ArrayList<BaseAction> actionList = null; // 모든 Action List
 
     public Environment(Constituent[] CSs, Action[] actions){
         this.csList = new ArrayList<Constituent>();
         Collections.addAll(this.csList, CSs);
-        this.actionList = new ArrayList<Action>();
+        this.actionList = new ArrayList<BaseAction>();
         Collections.addAll(this.actionList, actions);
     }
 
@@ -46,8 +46,8 @@ public final class Environment {
          * 3. Shuffle the possible action list and pick actions
          */
         ArrayList<String> possibleActionList = new ArrayList<String>();
-        for(Action a : this.actionList){
-            if(a.getStatus() == Action.Status.NOT_RAISED)
+        for(BaseAction a : this.actionList){
+            if(a.getStatus() == BaseAction.Status.NOT_RAISED)
                 possibleActionList.add(a.getName());
         }
 //        for(Map.Entry<String, Action.Status> entry: this.statusHashMap.entrySet()){
@@ -60,14 +60,14 @@ public final class Environment {
             Random randomGenerator = new Random();
             numRaisingActions = randomGenerator.nextInt(possibleActionList.size()+1);
             if(numRaisingActions > 0){
-                ArrayList<Action> selectedActionList = new ArrayList<Action>();
+                ArrayList<BaseAction> selectedActionList = new ArrayList<BaseAction>();
                 Collections.shuffle(possibleActionList);
 
                 for(int i = 0; i < numRaisingActions; i++){
                     String actionName = possibleActionList.get(i);
-                    for(Action a : this.actionList){
+                    for(BaseAction a : this.actionList){
                         if(a.getName().equalsIgnoreCase(actionName)){
-                            a.setStatus(Action.Status.RAISED);
+                            a.setStatus(BaseAction.Status.RAISED);
                             selectedActionList.add(a);
                             break;
                         }
@@ -95,8 +95,8 @@ public final class Environment {
      * Update the status of actions executed by CSs
      * @param actionList the list of actions that are changed its status
      */
-    public void updateActionStatus(ArrayList<Action> actionList){
-        for(Action a : actionList){
+    public void updateActionStatus(ArrayList<BaseAction> actionList){
+        for(BaseAction a : actionList){
             String targetName = a.getName();
             for(int i=0; i<this.actionList.size() ;i++){
                 if(this.actionList.get(i).getName().equalsIgnoreCase(targetName)){

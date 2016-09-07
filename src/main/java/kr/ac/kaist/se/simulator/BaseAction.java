@@ -22,6 +22,7 @@ public abstract class BaseAction {
     public enum Status {NOT_RAISED, RAISED, HANDLED}
     public enum TYPE {IMMEDIATE, NORMAL}
 
+    private String name;
     private int benefit;
     private int SoSBenefit;
     private int duration;
@@ -98,6 +99,13 @@ public abstract class BaseAction {
 
     public void setRemainTime(int remainTime){
         this.remainTime = remainTime;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+    public String getName(){
+        return this.name;
     }
 
     /*

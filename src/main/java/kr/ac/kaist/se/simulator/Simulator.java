@@ -31,7 +31,7 @@ public final class Simulator {
 
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
         for(BaseConstituent CS: this.csList){
-        for(Action a : CS.getCapability()){
+        for(BaseAction a : CS.getCapability()){
             if(CS.getCost(a) < minimumActionCost)
                 minimumActionCost = CS.getCost(a);
         }
@@ -62,8 +62,8 @@ public final class Simulator {
     private void procedure(){
         this.tick = 0;
         boolean endCondition = false;
-        ArrayList<Action> immediateActions = new ArrayList<Action>();
-        ArrayList<Action> actions = new ArrayList<Action>();
+        ArrayList<BaseAction> immediateActions = new ArrayList<BaseAction>();
+        ArrayList<BaseAction> actions = new ArrayList<BaseAction>();
 
         while(!endCondition){
             actions.clear();
@@ -71,7 +71,7 @@ public final class Simulator {
             immediateActions.clear();
 
             for(BaseConstituent cs : this.csList){ // Get immediate candidate action
-                Action a = cs.step();
+                BaseAction a = cs.step();
                 if(a == null)
                     continue;
                 if(a.getDuration() == 0){ // This action is immediate
@@ -86,7 +86,7 @@ public final class Simulator {
             }
 
             if(this.manager != null){
-                Action a = this.manager.step();
+                BaseAction a = this.manager.step();
                 if(a != null){
                     if(a.getDuration() == 0)
                         immediateActions.add(a);
@@ -149,14 +149,14 @@ public final class Simulator {
 
     }
 
-    private void progress(ArrayList<Action> actionList, Action.TYPE type){
-        if(type == Action.TYPE.IMMEDIATE){
-            for(Action a : actionList){
+    private void progress(ArrayList<BaseAction> actionList, BaseAction.TYPE type){
+        if(type == BaseAction.TYPE.IMMEDIATE){
+            for(BaseAction a : actionList){
                 if(a.getActionType() == Action.TYPE.IMMEDIATE) {
                     a.getPerformer().immediateAction(); // Select action
                 }
             }
-        }else if(type == Action.TYPE.NORMAL){
+        }else if(type == BaseAction.TYPE.NORMAL){
             /*
              * 1. Calculate the minimum time to elapse among action list
              * 2. Elapse the time and execute
@@ -172,14 +172,14 @@ public final class Simulator {
                     }
                 }
                 if(discreteCondition){ // To jump the tick
-                    for(Action a : actionList){
+                    for(BaseAction a : actionList){
                         if(minimumElapsedTime < a.getRemainingTime())
                             minimumElapsedTime = a.getRemainingTime();
                     }// Calculate the minimum jump tick
                 }else{ // If any one CS are not in operation, minimum tick will be one
                     minimumElapsedTime = 1;
                 }
-                for(Action a: actionList){
+                for(BaseAction a: actionList){
 //                    int SoSLevelBenefit = a.getSoSBenefit();
                     a.getPerformer().normalAction(minimumElapsedTime);
 //                    if(a.getPerformer() == null){ // Job is done.

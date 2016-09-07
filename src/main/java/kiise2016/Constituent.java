@@ -1,26 +1,20 @@
-package simulator;
+package kiise2016;
 
-import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
-import kr.ac.kaist.se.simulator.method.DummyAction;
+import simulator.Action;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Constituent extends BaseConstituent implements ConstituentInterface{
+public class Constituent extends BaseConstituent implements ConstituentInterface {
 
     private String name;
-    private int currentPosition;
-    private Action currentAction;
 
     public Constituent(String name, int totalBudget){
         this.name = name;
         this.setType(Type.Constituent);
         this.initBudget(totalBudget);
-        // Randomly positioned
-        this.currentPosition = (int) (( Math.random() * 12) % 6);
-        this.currentAction = null;
     }
 
     /**
@@ -36,7 +30,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
             return;
 
         ArrayList<Action> availableActions = new ArrayList<Action>();
-        ArrayList<BaseAction> capabilityList = this.getCapability();
+        ArrayList<Action> capabilityList = this.getCapability();
 
         this.updateDurationMap(capabilityList);
         getAvailableActionList(availableActions, capabilityList);
@@ -49,7 +43,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         if(bestIndex != -1 && candidateAction != null){
             // Selected action exists
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
-                candidateAction.setDuration(this.getDurationMap().get(candidateAction.getName()));
+                candidateAction.setDuration(1); // 시간은 무조건 1초
                 candidateAction.startHandle();
                 candidateAction.setPerformer(this);
                 this.setStatus(Status.OPERATING);
@@ -61,7 +55,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
     }
 
     public void normalAction(int elapsedTime){ // TODO: Need of renaming!
-        Action currentAction = (Action) this.getCurrentAction();
+        Action currentAction = this.getCurrentAction();
 
         if(currentAction == null)
             return;
@@ -87,13 +81,10 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         return this.name;
     }
 
-    private void getAvailableActionList(ArrayList<Action> availableActions, ArrayList<BaseAction> capabilityList){
-        for(BaseAction a : capabilityList){
-            if(a.getStatus() == Action.Status.RAISED){
-                Action _a = (Action) a;
-                availableActions.add(_a);
-            }
-
+    private void getAvailableActionList(ArrayList<Action> availableActions, ArrayList<Action> capabilityList){
+        for(Action a : capabilityList){
+            if(a.getStatus() == Action.Status.RAISED)
+                availableActions.add(a);
         }
     }
 
@@ -113,23 +104,14 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         return bestIndex;
     }
 
-    public Action getCurrentAction(){
-        return this.currentAction;
-    }
-
-    public void setCurrentAction(Action a){
-        this.currentAction = a;
-    }
-
-    private void updateDurationMap(ArrayList<BaseAction> capabilityList){
+    private void updateDurationMap(ArrayList<Action> capabilityList){
         // Current Position 위치를 결정할 때 duration 이 다시 update 됨..
-        // Action 의 raisedLocation 정보를 기초로 duration 산출
+        // Action 의 raisedLocation 정보를 기초로 duration 산출 KIISE 에서는 무조건 1
         HashMap<String, Integer> newDurationMap = new HashMap<String, Integer>();
-        for(BaseAction a : capabilityList){
+        for(Action a : capabilityList){
             if(a.getStatus() == Action.Status.RAISED && a.getActionType() == Action.TYPE.NORMAL){
                 String actionName = a.getName();
-                Action _a = (Action) a;
-                int requiredDuration = Math.abs(_a.getRaisedLocation() - this.currentPosition) + 1;
+                int requiredDuration = 1;
                 newDurationMap.put(actionName, requiredDuration);
             }
         }
@@ -143,29 +125,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
 
     public void reset(){
         super.reset();
-        this.currentPosition = (int) (( Math.random() * 12) % 6);
         this.getDurationMap().clear();
     }
 
-    public Action step(){
-        if(this.getRemainBudget() == 0){
-            return null; // voidAction, nothing happen
-        }else{ // We have money
-            /*
-             * 1. If the status of CS is IDLE (currently no job), then select a job (immediate action)
-             * 2. If the status of CS is SELECTION, then
-             */
-            if(this.getStatus() == Status.IDLE){ // Select an action
-                this.setStatus(Status.SELECTION);
-                Action a = new Action("[CS] Immediate action", 0, 0);
-                a.setPerformer(this);
-                a.setActionType(Action.TYPE.IMMEDIATE);
-                return a;
-            }else if(this.getStatus() == Status.OPERATING){ // Operation step
-                return this.currentAction;
-            }
-        }
-
-        return null;
-    }
 }
