@@ -64,11 +64,11 @@ public class KIISEMain {
                 System.out.print("SMC decides that your hypothesis is ");
                 if(h0)
                 {
-                    System.out.println("accepted at " + theta);
+                    System.out.println("accepted at " + theta + " / number of samples: " + sprt.getNumSamples());
                 }
                 else
                 {
-                    System.out.println("not accepted at " + theta);
+                    System.out.println("not accepted at " + theta + " / number of samples: " + sprt.getNumSamples());
                 }
 
                 sprt.reset();

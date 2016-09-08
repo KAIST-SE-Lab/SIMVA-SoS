@@ -110,4 +110,8 @@ public class SPRTMethod {
         this.dm = 0;
     }
 
+    public int getNumSamples(){
+        return this.numSamples;
+    }
+
 }
