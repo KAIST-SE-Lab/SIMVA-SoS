@@ -1,7 +1,6 @@
 package kr.ac.kaist.se.simulator;
 
 import kr.ac.kaist.se.simulator.method.DummyAction;
-import simulator.Action;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -160,7 +159,7 @@ public abstract class BaseConstituent {
                 this.setStatus(Status.SELECTION);
                 BaseAction a = new DummyAction("Immediate action", 0, 0);
                 a.setPerformer(this);
-                a.setActionType(Action.TYPE.IMMEDIATE);
+                a.setActionType(BaseAction.TYPE.IMMEDIATE);
                 return a;
             }else if(this.getStatus() == Status.OPERATING){ // Operation step
                 return this.currentAction;

@@ -70,7 +70,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
             // All actions are always more than and equal to 0
 //            System.out.print(this.name + " finished " + currentAction.getName() + " at ");
             int cost = this.getCost(currentAction);
-            this.updateCostBenefit(cost, currentAction.getBenefit(), currentAction.getSoSBenefit());
+            this.updateCostBenefit(cost, currentAction.getBenefit(), (currentAction.getSoSBenefit() - 1) );
             currentAction.resetAction();
             this.resetCurrentAction();
             this.setStatus(Status.IDLE);

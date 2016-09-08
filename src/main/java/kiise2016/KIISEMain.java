@@ -43,7 +43,7 @@ public class KIISEMain {
         for(int bound: boundArr){
             System.out.println("----------------------------------------------------");
             System.out.println("SoS-level benefit is greater than "+bound + ".");
-            BLTLChecker checker = new BLTLChecker(1500, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+            BLTLChecker checker = new BLTLChecker(10000, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.005);
 
             double[] thetaArr = {0.8, 0.85, 0.9, 0.95, 0.99};
