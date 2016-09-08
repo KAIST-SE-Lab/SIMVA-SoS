@@ -3,7 +3,7 @@ package kiise2016;
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
-import simulator.Action;
+//import simulator.Action;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         }
     }
 
-    public int getUtility(Action a){
+    public int getUtility(BaseAction a){
         return a.getBenefit() - this.getCost(a);
     }
 

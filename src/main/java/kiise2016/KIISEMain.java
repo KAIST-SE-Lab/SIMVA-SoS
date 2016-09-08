@@ -38,37 +38,47 @@ public class KIISEMain {
         Environment env = new Environment(CSs, actions);
 
         Simulator sim = new Simulator(CSs, sos, env);
-        BLTLChecker checker = new BLTLChecker(500, 450, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
-        SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.001);
 
-        double[] thetaArr = {0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99};
+        int[] boundArr = {100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
+        for(int bound: boundArr){
+            System.out.println("----------------------------------------------------");
+            System.out.println("SoS-level benefit is greater than "+bound + ".");
+            BLTLChecker checker = new BLTLChecker(1500, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+            SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.005);
 
-        for(double theta: thetaArr){
-            // Time measure
+            double[] thetaArr = {0.8, 0.85, 0.9, 0.95, 0.99};
             Instant start = Instant.now();
+            for(double theta: thetaArr){
+                sprt.setExpression(theta);
 
-            sprt.setExpression(theta);
+                while(!sprt.checkStopCondition())
+                {
+                    sim.execute();
+                    SIMResult res = sim.getResult();
+                    int checkResult = checker.evaluateSample(res);
+                    sprt.updateResult(checkResult);
+                }
 
-            while(!sprt.checkStopCondition()){
-                sim.execute();
-                SIMResult res = sim.getResult();
-                int checkResult = checker.evaluateSample(res); // 1: satisfy, 0: not-satisfy
-                sprt.updateResult(checkResult);
+
+                boolean h0 = sprt.getResult();
+                System.out.print("SMC decides that your hypothesis is ");
+                if(h0)
+                {
+                    System.out.println("accepted at " + theta);
+                }
+                else
+                {
+                    System.out.println("not accepted at " + theta);
+                }
+
+                sprt.reset();
+
+
             }
-
-
-            boolean h0 = sprt.getResult();
-            System.out.print("SMC decides that your hypothesis is ");
-            if(h0)
-                System.out.println("accepted at " + theta);
-            else
-                System.out.println("not accepted at " + theta);
-
-            sprt.reset();
-
-
             Instant end = Instant.now();
-            System.out.println(Duration.between(start, end));
+            System.out.println("TOTAL EXECUTION TIME : " + Duration.between(start, end));
         }
+
+
     }
 }

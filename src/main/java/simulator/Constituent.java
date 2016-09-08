@@ -79,7 +79,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         }
     }
 
-    public int getUtility(Action a){
+    public int getUtility(BaseAction a){
         return a.getBenefit() - this.getCost(a);
     }
 

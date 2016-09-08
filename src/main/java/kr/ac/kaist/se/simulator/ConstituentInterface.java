@@ -1,6 +1,5 @@
 package kr.ac.kaist.se.simulator;
 
-import simulator.Action;
 
 /**
  * ConstituentInterface.java
@@ -19,5 +18,5 @@ import simulator.Action;
  * furnished to do so, subject to the following conditions: TBD
  */
 public interface ConstituentInterface {
-    int getUtility(Action a);
+    int getUtility(BaseAction a);
 }
