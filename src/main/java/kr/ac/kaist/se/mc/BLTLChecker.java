@@ -45,8 +45,8 @@ public class BLTLChecker {
         this.baseTick = baseTick;
         this.baseSoSBenefit = baseSoSBenefit;
         this.type = type;
-        this.minTick = -1;
-        this.maxTick = -1;
+        this.minTick = Integer.MAX_VALUE;
+        this.maxTick = Integer.MIN_VALUE;
     }
 
     /**

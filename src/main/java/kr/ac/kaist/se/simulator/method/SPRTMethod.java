@@ -42,7 +42,7 @@ public class SPRTMethod {
     public SPRTMethod(double alpha, double beta, double delta){
         this.alpha = alpha;
         this.beta = beta;
-        this.delta = delta/2;
+        this.delta = delta;
         this.numSamples = 0;
         this.dm = 0;
 
@@ -75,7 +75,7 @@ public class SPRTMethod {
      * @param theta - probability that requires property
      */
     public void setExpression(double theta){
-        this.theta = theta;
+        this.theta = Math.round(theta*100)/100.0;
         this.p1 = this.theta - this.delta;
         this.p0 = this.theta + this.delta;
     }
@@ -83,6 +83,10 @@ public class SPRTMethod {
     public void updateResult(int res){
         if( !(res == 1 || res == 0) )
             return;
+        if(this.numSamples > 100000){
+            this.numSamples = 0;
+            this.dm = 0;
+        }
         this.numSamples++;
         if(res == 1)
             this.dm++;

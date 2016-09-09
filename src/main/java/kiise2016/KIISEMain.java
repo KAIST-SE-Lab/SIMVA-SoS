@@ -1,16 +1,15 @@
 package kiise2016;
 
-
+import com.opencsv.CSVWriter;
 import kr.ac.kaist.se.mc.BLTLChecker;
 import kr.ac.kaist.se.simulator.Environment;
 import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+
 
 public class KIISEMain {
     public static void main(String[] args) throws IOException{
@@ -43,15 +42,15 @@ public class KIISEMain {
 
         int[] boundArr = {140, 145, 150, 155, 160, 165, 170};
         for(int bound: boundArr){
-            String outputName = "SIM_" + boundArr + ".csv";
-            FileWriter fw = new FileWriter(outputName);
-            BufferedWriter bw = new BufferedWriter(fw);
+
+            String outputName = "SIM_" + bound + ".csv";
+            CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
 
             ArrayList<SMCResult> resList = new ArrayList<SMCResult>();
 
             System.out.println("----------------------------------------------------");
             System.out.println("SoS-level benefit is greater than "+bound + ".");
-            BLTLChecker checker = new BLTLChecker(10000, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+            BLTLChecker checker = new BLTLChecker(5000, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.005);
 
             for(int i=0; i<100; i++){
@@ -87,11 +86,13 @@ public class KIISEMain {
                 resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
                 System.out.print(".");
             }
-
+            System.out.println();
+            System.out.print("w");
             for(SMCResult r : resList){
-                bw.write(r.toString());
+                System.out.print(".");
+                cw.writeNext(r.getArr());
             }
-            bw.close();
+            cw.close();
             resList.clear();
             System.out.println();
         }
