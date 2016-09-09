@@ -7,11 +7,13 @@ import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class KIISEMain {
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         Constituent cs1 = new Constituent("CS1", 100);
         Constituent cs2 = new Constituent("CS2", 100);
         Constituent cs3 = new Constituent("CS3", 100);
@@ -39,16 +41,22 @@ public class KIISEMain {
 
         Simulator sim = new Simulator(CSs, sos, env);
 
-        int[] boundArr = {100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
+        int[] boundArr = {140, 145, 150, 155, 160, 165, 170};
         for(int bound: boundArr){
+            String outputName = "SIM_" + boundArr + ".csv";
+            FileWriter fw = new FileWriter(outputName);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            ArrayList<SMCResult> resList = new ArrayList<SMCResult>();
+
             System.out.println("----------------------------------------------------");
             System.out.println("SoS-level benefit is greater than "+bound + ".");
             BLTLChecker checker = new BLTLChecker(10000, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.005);
 
-            double[] thetaArr = {0.8, 0.85, 0.9, 0.95, 0.99};
-            Instant start = Instant.now();
-            for(double theta: thetaArr){
+            for(int i=0; i<100; i++){
+                double theta = 0.01 * i; // theta
+                long start = System.currentTimeMillis();
                 sprt.setExpression(theta);
 
                 while(!sprt.checkStopCondition())
@@ -60,25 +68,34 @@ public class KIISEMain {
                 }
 
 
-                boolean h0 = sprt.getResult();
-                System.out.print("SMC decides that your hypothesis is ");
-                if(h0)
-                {
-                    System.out.println("accepted at " + theta + " / number of samples: " + sprt.getNumSamples());
-                }
-                else
-                {
-                    System.out.println("not accepted at " + theta + " / number of samples: " + sprt.getNumSamples());
-                }
+                boolean h0 = sprt.getResult(); // Result
+                int numSamples = sprt.getNumSamples();
+//                System.out.print("SMC decides that your hypothesis is ");
+//                if(h0)
+//                {
+//                    System.out.println("accepted at " + theta + " / number of samples: " + numSamples);
+//                }
+//                else
+//                {
+//                    System.out.println("not accepted at " + theta + " / number of samples: " + numSamples);
+//                }
 
+                long exec_time = System.currentTimeMillis() - start; //exec time
+                int minTick = checker.getMinTick();
+                int maxTick = checker.getMaxTick();
                 sprt.reset();
-
-
+                resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
+                System.out.print(".");
             }
-            Instant end = Instant.now();
-            System.out.println("TOTAL EXECUTION TIME : " + Duration.between(start, end));
-        }
 
+            for(SMCResult r : resList){
+                bw.write(r.toString());
+            }
+            bw.close();
+            resList.clear();
+            System.out.println();
+        }
+        System.out.println("Finished");
 
     }
 }

@@ -1,8 +1,8 @@
 package kiise2016;
 
+import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ManagerInterface;
-import kr.ac.kaist.se.simulator.BaseAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,11 +66,11 @@ public class SoS extends BaseConstituent implements ManagerInterface{
 
         int additionalBenefit = 0;
         int ranNum = this.generator.nextInt(100);
-        if( 0 <= ranNum && ranNum <= 29){
+        if( 0 <= ranNum && ranNum <= 29){ //0.3
             additionalBenefit = 0;
-        }else if( 30 <= ranNum && ranNum <= 69){
+        }else if( 30 <= ranNum && ranNum <= 69){ //0.4
             additionalBenefit = 1;
-        }else if( 70 <= ranNum && ranNum <= 99){
+        }else if( 70 <= ranNum && ranNum <= 99){ // 0.3
             additionalBenefit = 2;
         }
 

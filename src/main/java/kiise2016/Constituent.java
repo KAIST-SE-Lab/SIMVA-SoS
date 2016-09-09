@@ -3,10 +3,11 @@ package kiise2016;
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
-//import simulator.Action;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+//import simulator.Action;
 
 public class Constituent extends BaseConstituent implements ConstituentInterface {
 

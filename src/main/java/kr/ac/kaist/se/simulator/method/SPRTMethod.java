@@ -1,8 +1,5 @@
 package kr.ac.kaist.se.simulator.method;
 
-import kr.ac.kaist.se.mc.BLTLChecker;
-import kr.ac.kaist.se.simulator.SIMResult;
-
 /**
  * SPRTMethod.java
 
@@ -42,13 +39,13 @@ public class SPRTMethod {
     private int numSamples; // Total number of samples to calculate the decision
     private int dm; // Total number of samples that satisfies the condition
 
-
     public SPRTMethod(double alpha, double beta, double delta){
         this.alpha = alpha;
         this.beta = beta;
         this.delta = delta/2;
         this.numSamples = 0;
         this.dm = 0;
+
     }
 
     /**
@@ -86,7 +83,6 @@ public class SPRTMethod {
     public void updateResult(int res){
         if( !(res == 1 || res == 0) )
             return;
-
         this.numSamples++;
         if(res == 1)
             this.dm++;

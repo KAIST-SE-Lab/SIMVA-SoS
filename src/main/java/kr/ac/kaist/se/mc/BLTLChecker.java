@@ -33,6 +33,8 @@ public class BLTLChecker {
     private int baseTick;
     private int baseSoSBenefit;
     private comparisonType type;
+    private int minTick;
+    private int maxTick;
 
     /**
      * Constructor for BLTL model Checker
@@ -43,6 +45,8 @@ public class BLTLChecker {
         this.baseTick = baseTick;
         this.baseSoSBenefit = baseSoSBenefit;
         this.type = type;
+        this.minTick = -1;
+        this.maxTick = -1;
     }
 
     /**
@@ -76,7 +80,19 @@ public class BLTLChecker {
                         return 1;
                     break;
             }
+            if(this.minTick > res.getNumTicks())
+                this.minTick = res.getNumTicks();
+            else if(this.maxTick < res.getNumTicks())
+                this.maxTick = res.getNumTicks();
         }
         return 0;
+    }
+
+    public int getMinTick(){
+        return this.minTick;
+    }
+
+    public int getMaxTick(){
+        return this.maxTick;
     }
 }
