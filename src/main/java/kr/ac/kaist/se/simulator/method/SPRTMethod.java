@@ -42,7 +42,7 @@ public class SPRTMethod {
     public SPRTMethod(double alpha, double beta, double delta){
         this.alpha = alpha;
         this.beta = beta;
-        this.delta = delta;
+        this.delta = delta/2.0;
         this.numSamples = 0;
         this.dm = 0;
 
@@ -83,7 +83,7 @@ public class SPRTMethod {
     public void updateResult(int res){
         if( !(res == 1 || res == 0) )
             return;
-        if(this.numSamples > 100000){
+        if(this.numSamples > 500000){ // Large number of samples, re-sampling
             this.numSamples = 0;
             this.dm = 0;
         }
