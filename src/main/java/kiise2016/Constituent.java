@@ -32,9 +32,9 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
      * 4. If other CS choose the action first, then this CS return to IDLE
      * 5. If no action remain, then do nothing
      */
-    public void immediateAction(){
+    public BaseAction immediateAction(){
         if(this.getStatus() == Status.OPERATING) // Defend code
-            return;
+            return null;
 
         ArrayList<Action> availableActions = new ArrayList<Action>();
         ArrayList<BaseAction> capabilityList = this.getCapability();
@@ -50,15 +50,17 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         if(bestIndex != -1 && candidateAction != null){
             // Selected action exists
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
-                candidateAction.setDuration(this.getDurationMap().get(candidateAction.getName()));
+                candidateAction.setDuration(1); // duration is always 1.
                 candidateAction.startHandle();
-                candidateAction.setPerformer(this);
+                candidateAction.addPerformer(this);
                 this.setStatus(Status.OPERATING);
                 this.setCurrentAction(candidateAction);
+                return candidateAction;
             }
         }else{ // To select an action again
             this.setStatus(Status.IDLE);
         }
+        return null;
     }
 
     public void normalAction(int elapsedTime){ // TODO: Need of renaming!
@@ -66,18 +68,15 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
 
         if(currentAction == null)
             return;
-        currentAction.decreaseRemainingTime(elapsedTime);
-        if(currentAction.getRemainingTime() == 0){
-            // All actions are always more than and equal to 0
-//            System.out.print(this.name + " finished " + currentAction.getName() + " at ");
-            int cost = this.getCost(currentAction);
-            this.updateCostBenefit(cost, currentAction.getBenefit(), (currentAction.getSoSBenefit() - 1) );
-            currentAction.resetAction();
-            this.resetCurrentAction();
-            this.setStatus(Status.IDLE);
-            if(this.getRemainBudget() < this.getRequiredMinimumBudget())
-                this.setStatus(Status.END);
-        }
+
+        int cost = this.getCost(currentAction);
+        this.updateCostBenefit(cost, currentAction.getBenefit(), (currentAction.getSoSBenefit() - 1) );
+        this.setStatus(Status.IDLE);
+        currentAction.removeFromList(this);
+//        System.out.println(this.name + " - " + currentAction.getName());
+        if(this.getRemainBudget() < this.getRequiredMinimumBudget())
+            this.setStatus(Status.END);
+
     }
 
     public int getUtility(BaseAction a){
@@ -94,7 +93,6 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
                 Action _a = (Action) a;
                 availableActions.add(_a);
             }
-
         }
     }
 
@@ -160,7 +158,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
             if(this.getStatus() == Status.IDLE){ // Select an action
                 this.setStatus(Status.SELECTION);
                 Action a = new Action("[CS] Immediate action", 0, 0);
-                a.setPerformer(this);
+                a.addPerformer(this);
                 a.setActionType(Action.TYPE.IMMEDIATE);
                 return a;
             }else if(this.getStatus() == Status.OPERATING){ // Operation step

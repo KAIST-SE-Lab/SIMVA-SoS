@@ -83,9 +83,18 @@ public class SPRTMethod {
     public void updateResult(int res){
         if( !(res == 1 || res == 0) )
             return;
-        if(this.numSamples > 500000){ // Large number of samples, re-sampling
+        if(this.numSamples > 100000){ // Large number of samples, re-sampling
+            System.out.println("\n[WARN] Num of Sample has been breached 100,000, Re-sampled");
             this.numSamples = 0;
             this.dm = 0;
+        }else if(this.numSamples == 30000){
+            System.out.println("\n[WARN] Num of Sample has been breached 30,000");
+        }else if(this.numSamples == 10000){
+            System.out.println("\n[WARN] Num of Sample has been breached 10,000");
+        }else if(this.numSamples == 50000){
+            System.out.println("\n[WARN] Num of Sample has been breached 50,000");
+        }else if(this.numSamples == 70000){
+            System.out.println("\n[WARN] Num of Sample has been breached 70,000");
         }
         this.numSamples++;
         if(res == 1)

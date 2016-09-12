@@ -158,7 +158,7 @@ public abstract class BaseConstituent {
             if(this.getStatus() == Status.IDLE){ // Select an action
                 this.setStatus(Status.SELECTION);
                 BaseAction a = new DummyAction("Immediate action", 0, 0);
-                a.setPerformer(this);
+                a.addPerformer(this);
                 a.setActionType(BaseAction.TYPE.IMMEDIATE);
                 return a;
             }else if(this.getStatus() == Status.OPERATING){ // Operation step
@@ -173,7 +173,7 @@ public abstract class BaseConstituent {
      * Abstract methods
      */
     public abstract void normalAction(int elapsedTime);
-    public abstract void immediateAction();
+    public abstract BaseAction immediateAction();
     public abstract BaseConstituent clone();
     public abstract BaseAction getCurrentAction();
 

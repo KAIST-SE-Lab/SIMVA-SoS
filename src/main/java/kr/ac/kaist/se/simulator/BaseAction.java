@@ -1,5 +1,8 @@
 package kr.ac.kaist.se.simulator;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * BaseAction.java
 
@@ -31,6 +34,7 @@ public abstract class BaseAction {
     private BaseAction.TYPE actionType;
 
     private BaseConstituent performer = null; // Current performer
+    private ArrayList<BaseConstituent> performerList = new ArrayList<BaseConstituent>();
 
     public void startHandle(){
         this.setStatus(BaseAction.Status.HANDLED);
@@ -69,15 +73,27 @@ public abstract class BaseAction {
     public void setStatus(Status status){
         this.status = status;
     }
-    public void setPerformer(BaseConstituent performer){
+    public void addPerformer(BaseConstituent performer){
+        if(!this.performerList.contains(performer))
+            this.performerList.add(performer);
+
         if(this.performer == null){
             this.performer = performer;
             // Need of checking deleting performer
             // performer 가 항상 중복이 없다라고 가정할 수 있어야함.
         }
     }
+
+    public void removeFromList(BaseConstituent _cs){
+        this.performerList.remove(_cs);
+    }
+
     public BaseConstituent getPerformer(){
         return this.performer;
+    }
+
+    public ArrayList<BaseConstituent> getPerformerList(){
+        return this.performerList;
     }
 
     public int getRemainingTime(){

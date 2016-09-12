@@ -16,6 +16,8 @@ import java.util.Collections;
 public final class Simulator {
 
     private ArrayList<BaseConstituent> csList = null;
+    private ArrayList<BaseAction> immediateActions = new ArrayList<>();
+    private ArrayList<BaseAction> actions = new ArrayList<>();
     private SIMResult result = null;
     private BaseConstituent manager = null;
     private Environment env = null;
@@ -62,8 +64,6 @@ public final class Simulator {
     private void procedure(){
         this.tick = 0;
         boolean endCondition = false;
-        ArrayList<BaseAction> immediateActions = new ArrayList<BaseAction>();
-        ArrayList<BaseAction> actions = new ArrayList<BaseAction>();
 
         while(!endCondition){
             actions.clear();
@@ -96,11 +96,11 @@ public final class Simulator {
             }
 
             Collections.shuffle(immediateActions);
-            this.progress(immediateActions, Action.TYPE.IMMEDIATE); // Choose
+            this.progress(Action.TYPE.IMMEDIATE); // Choose
 
             this.generateExogenousActions(); // Environment action
             Collections.shuffle(actions);
-            this.progress(actions, Action.TYPE.NORMAL);
+            this.progress(Action.TYPE.NORMAL);
 
             endCondition = this.evaluateProperties();
         }
@@ -149,11 +149,14 @@ public final class Simulator {
 
     }
 
-    private void progress(ArrayList<BaseAction> actionList, BaseAction.TYPE type){
+    private void progress(BaseAction.TYPE type){
         if(type == BaseAction.TYPE.IMMEDIATE){
+            ArrayList<BaseAction> actionList = this.immediateActions;
             for(BaseAction a : actionList){
                 if(a.getActionType() == Action.TYPE.IMMEDIATE) {
-                    a.getPerformer().immediateAction(); // Select action
+                    BaseAction selectedAction = a.getPerformer().immediateAction(); // Select action
+                    if(selectedAction != null)
+                        actions.add(selectedAction);
                 }
             }
         }else if(type == BaseAction.TYPE.NORMAL){
@@ -162,6 +165,7 @@ public final class Simulator {
              * 2. Elapse the time and execute
              * 3. If the remaining time is 0, then update Cost & Benefit
              */
+            ArrayList<BaseAction> actionList = this.actions;
             int minimumElapsedTime = -1;
             if(!actionList.isEmpty()){ // If the action list is not empty
                 boolean discreteCondition = true;
@@ -179,20 +183,23 @@ public final class Simulator {
                 }else{ // If any one CS are not in operation, minimum tick will be one
                     minimumElapsedTime = 1;
                 }
-                for(BaseAction a: actionList){
-//                    int SoSLevelBenefit = a.getSoSBenefit();
-                    a.getPerformer().normalAction(minimumElapsedTime);
-//                    if(a.getPerformer() == null){ // Job is done.
-//                        System.out.println(this.tick + minimumElapsedTime);
-//                        if(this.manager != null)
-//                            this.manager.addSoSLevelBenefit(SoSLevelBenefit);
-//                    }
+                for(BaseAction a: actionList){ // List로 수정하면 이부분 수정해야함..
+//                    a.getPerformer().normalAction(minimumElapsedTime);
+                    BaseConstituent[] tmpArr = (BaseConstituent []) a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
+                    for(int i = 0; i < tmpArr.length; i++){
+                        tmpArr[i].normalAction(minimumElapsedTime);
+                    }
                 }
             }else
                 minimumElapsedTime = 1;
             increaseTick(minimumElapsedTime);
         }
-        env.updateActionStatus(actionList);
-        actionList.clear();
+        if(type == BaseAction.TYPE.IMMEDIATE) {
+            env.updateActionStatus(immediateActions);
+            immediateActions.clear();
+        }else{
+            env.updateActionStatus(actions);
+            actions.clear();
+        }
     }
 }

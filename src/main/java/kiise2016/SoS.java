@@ -52,7 +52,7 @@ public class SoS extends BaseConstituent implements ManagerInterface{
         }
     }
 
-    public void immediateAction(){
+    public BaseAction immediateAction(){
         /*
          * Check the SoS-level benefit of the raised actions
          * Pick the best SoS-level benefit action
@@ -79,12 +79,13 @@ public class SoS extends BaseConstituent implements ManagerInterface{
         // For next normal action
         Action a = new Action("Search for acknowledgement", 0, 0);
         a.setDuration(1);
-        a.setPerformer(this);
+        a.addPerformer(this);
         a.setActionType(Action.TYPE.NORMAL);
         a.startHandle();
         this.setCurrentAction(a);
 
         this.setStatus(Status.OPERATING);
+        return a;
     }
 
     /**
@@ -148,7 +149,7 @@ public class SoS extends BaseConstituent implements ManagerInterface{
             if(this.getStatus() == Status.IDLE){ // Select an action
                 this.setStatus(Status.SELECTION);
                 Action a = new Action("[SoS] Immediate action", 0, 0);
-                a.setPerformer(this);
+                a.addPerformer(this);
                 a.setActionType(Action.TYPE.IMMEDIATE);
                 return a;
             }else if(this.getStatus() == Status.OPERATING){ // Operation step
@@ -158,4 +159,5 @@ public class SoS extends BaseConstituent implements ManagerInterface{
 
         return null;
     }
+
 }

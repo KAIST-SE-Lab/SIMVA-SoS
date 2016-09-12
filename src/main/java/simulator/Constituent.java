@@ -3,7 +3,6 @@ package simulator;
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
-import kr.ac.kaist.se.simulator.method.DummyAction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,9 +30,9 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
      * 4. If other CS choose the action first, then this CS return to IDLE
      * 5. If no action remain, then do nothing
      */
-    public void immediateAction(){
+    public BaseAction immediateAction(){
         if(this.getStatus() == Status.OPERATING) // Defend code
-            return;
+            return null;
 
         ArrayList<Action> availableActions = new ArrayList<Action>();
         ArrayList<BaseAction> capabilityList = this.getCapability();
@@ -51,13 +50,15 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
             if(candidateAction.getStatus() == Action.Status.RAISED){ // Lucky!
                 candidateAction.setDuration(this.getDurationMap().get(candidateAction.getName()));
                 candidateAction.startHandle();
-                candidateAction.setPerformer(this);
+                candidateAction.addPerformer(this);
                 this.setStatus(Status.OPERATING);
                 this.setCurrentAction(candidateAction);
+                return candidateAction;
             }
         }else{ // To select an action again
             this.setStatus(Status.IDLE);
         }
+        return null;
     }
 
     public void normalAction(int elapsedTime){ // TODO: Need of renaming!
@@ -158,7 +159,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
             if(this.getStatus() == Status.IDLE){ // Select an action
                 this.setStatus(Status.SELECTION);
                 Action a = new Action("[CS] Immediate action", 0, 0);
-                a.setPerformer(this);
+                a.addPerformer(this);
                 a.setActionType(Action.TYPE.IMMEDIATE);
                 return a;
             }else if(this.getStatus() == Status.OPERATING){ // Operation step
