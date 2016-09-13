@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * BaseConstituent.java
 
- * Author: Junho Kim <jhim@se.kaist.ac.kr>
+ * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
 

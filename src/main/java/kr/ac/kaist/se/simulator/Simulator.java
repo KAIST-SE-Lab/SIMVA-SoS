@@ -33,13 +33,13 @@ public final class Simulator {
 
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
         for(BaseConstituent CS: this.csList){
-        for(BaseAction a : CS.getCapability()) {
-            if (CS.getCost(a) < minimumActionCost)
-                minimumActionCost = CS.getCost(a);
-        }
+            for(BaseAction a : CS.getCapability()) {
+                if (CS.getCost(a) < minimumActionCost)
+                    minimumActionCost = CS.getCost(a);
+            }
 
+        }
     }
-}
 
     /**
      * simulate the model, reset the environment and states
@@ -70,19 +70,6 @@ public final class Simulator {
 
             immediateActions.clear();
 
-            if(this.manager != null){
-                BaseAction a = this.manager.step();
-                a.getPerformerList().get(0).immediateAction();
-                //temp
-//                if(a != null){
-//                    if(a.getDuration() == 0) {
-//                        immediateActions.add(a);
-//                    }
-//                    else
-//                        actions.add(a);
-//                }
-            }
-
             for(BaseConstituent cs : this.csList){ // Get immediate candidate action
                 BaseAction a = cs.step();
                 if(a == null)
@@ -98,16 +85,16 @@ public final class Simulator {
                 }
             }
 
-//            if(this.manager != null){
-//                BaseAction a = this.manager.step();
-//                if(a != null){
-//                    if(a.getDuration() == 0) {
-//                        immediateActions.add(a);
-//                    }
-//                    else
-//                        actions.add(a);
-//                }
-//            }
+            if(this.manager != null){
+                BaseAction a = this.manager.step();
+                if(a != null){
+                    if(a.getDuration() == 0) {
+                        immediateActions.add(a);
+                    }
+                    else
+                        actions.add(a);
+                }
+            }
 
             Collections.shuffle(immediateActions);
             this.progress(Action.TYPE.IMMEDIATE); // Choose
@@ -118,15 +105,10 @@ public final class Simulator {
 
             endCondition = this.evaluateProperties();
         }
-//        System.out.println("Final Tick " + this.tick);
         int SoSBenefit = 0;
         for(BaseConstituent CS : this.csList){
             SoSBenefit += CS.getAccumulatedSoSBenefit();
         }
-//        System.out.println("SoS benefit " + SoSBenefit);
-//        for(BaseConstituent CS: this.csList){
-//            System.out.println(CS + " gets " + CS.getAccumulatedBenefit() + " benefits");
-//        }
         this.result = new SIMResult(this.tick, SoSBenefit);
     }
 
@@ -199,7 +181,7 @@ public final class Simulator {
                 }
                 for(BaseAction a: actionList){ // List로 수정하면 이부분 수정해야함..
 //                    a.getPerformer().normalAction(minimumElapsedTime);
-                    BaseConstituent[] tmpArr = (BaseConstituent []) a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
+                    BaseConstituent[] tmpArr = a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
                     for(int i = 0; i < tmpArr.length; i++){
                         tmpArr[i].normalAction(minimumElapsedTime);
                     }

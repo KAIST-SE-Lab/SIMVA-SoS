@@ -1,7 +1,10 @@
-package kr.ac.kaist.se.simulator;
+package christian;
+
+import kr.ac.kaist.se.simulator.BaseAction;
 
 /**
- * ManagerInterface.java
+ * Movement.java
+ * This class example is came from "Simulation and Statistical Model Checking of Logic-Based Multi-Agent System Models", Christian Kroib
 
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
@@ -17,7 +20,25 @@ package kr.ac.kaist.se.simulator;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public interface ManagerInterface {
-    int getSoSLevelBenefit();
-    void addSoSLevelBenefit(int SoSLevelBenefit);
+public class Movement extends BaseAction {
+
+    public Movement(){
+        super.setDuration(1);
+        super.setActionType(TYPE.NORMAL);
+    }
+
+    @Override
+    public void addBenefit(int additionalBenefit) {
+
+    }
+
+    @Override
+    public Movement clone() {
+        return null;
+    }
+
+    @Override
+    public void reset() {
+
+    }
 }

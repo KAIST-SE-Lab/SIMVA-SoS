@@ -6,7 +6,7 @@ import java.math.MathContext;
 /**
  * SPRTMethod.java
 
- * Author: Junho Kim <jhim@se.kaist.ac.kr>
+ * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
 
@@ -26,7 +26,7 @@ public class SPRTMethod {
     // Default alpha: 0.1, 0.01, 0.001
     // Default beta: same as above
     // Default delta: 0.01, 0.03, 0.05 -> 99%, 97%, 95% we choose 99%
-//    private double alpha; // 0.01
+
     private BigDecimal alpha; // 0.01
     private BigDecimal beta; // 0.01
     private BigDecimal delta; // 0.005
@@ -63,11 +63,7 @@ public class SPRTMethod {
         BigDecimal pRatioA = new BigDecimal(String.valueOf(1));
         pRatioA = pRatioA.subtract(this.beta);
         pRatioA = pRatioA.divide(this.alpha, MathContext.DECIMAL128);
-
-//        double pRatioA = (1-this.beta) / this.alpha;
-
         BigDecimal pRatioB = this.beta.divide(new BigDecimal(String.valueOf(1)).subtract(this.alpha), MathContext.DECIMAL128);
-//        double pRatioB = this.beta / (1 - this.alpha);
 
         if( this.p1m.divide(this.p0m, MathContext.DECIMAL128).compareTo(pRatioB) <= 0){
             h0decision = true;
@@ -94,19 +90,6 @@ public class SPRTMethod {
     public void updateResult(int res){
         if( !(res == 1 || res == 0) )
             return;
-//        if(this.numSamples > 1000000){ // Large number of samples, re-sampling
-//            System.out.println("\n[WARN] Num of Sample has been breached 1,000,000, Re-sampled");
-//            this.numSamples = 0;
-//            this.dm = 0;
-//        }else if(this.numSamples == 100000){
-//            System.out.println("\n[WARN] Num of Sample has been breached 100,000");
-//        }else if(this.numSamples == 300000){
-//            System.out.println("\n[WARN] Num of Sample has been breached 300,000");
-//        }else if(this.numSamples == 500000){
-//            System.out.println("\n[WARN] Num of Sample has been breached 500,000");
-//        }else if(this.numSamples == 700000){
-//            System.out.println("\n[WARN] Num of Sample has been breached 700,000");
-//        }
         this.numSamples++;
         if(res == 1)
             this.dm++;
@@ -116,7 +99,6 @@ public class SPRTMethod {
             p1m_before = p1m_before.pow(this.numSamples-this.dm);
             this.p1m = this.p1.pow(this.dm);
             this.p1m = this.p1m.multiply(p1m_before);
-//            this.p1m = Math.pow(this.p1,this.dm) * Math.pow((1 - this.p1), (this.numSamples - this.dm));
 
             BigDecimal p0m_before = new BigDecimal(String.valueOf(1));
             p0m_before = p0m_before.subtract(this.p0);
@@ -124,8 +106,6 @@ public class SPRTMethod {
 
             this.p0m = this.p0.pow(this.dm);
             this.p0m = this.p0m.multiply(p0m_before);
-
-//            this.p0m = Math.pow(this.p0,this.dm) * Math.pow((1 - this.p0), (this.numSamples - this.dm));
         }
     }
 

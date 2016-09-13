@@ -3,7 +3,7 @@ package kr.ac.kaist.se.simulator;
 /**
  * SimpleRandomNumberGenerator.java
 
- * Author: Junho Kim <jhim@se.kaist.ac.kr>
+ * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
 
