@@ -40,7 +40,7 @@ public class KIISEMain {
 
         Simulator sim = new Simulator(CSs, sos, env);
 
-        int[] boundArr = {140, 145, 150, 155, 160, 165, 170};
+        int[] boundArr = {120, 125, 130, 135, 140, 145, 150};
         for(int bound: boundArr){
 
             String outputName = "SIM_" + bound + ".csv";

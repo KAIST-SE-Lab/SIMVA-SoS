@@ -43,7 +43,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         getAvailableActionList(availableActions, capabilityList);
 
         Action candidateAction = null;
-        int bestIndex = chooseBestAction(availableActions);
+        int bestIndex = chooseBestAction(availableActions); // Not raised case가 있음.
         if(bestIndex != -1)
             candidateAction = availableActions.get(bestIndex);
 

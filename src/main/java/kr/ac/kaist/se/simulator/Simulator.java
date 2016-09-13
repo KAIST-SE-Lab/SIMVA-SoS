@@ -33,8 +33,8 @@ public final class Simulator {
 
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
         for(BaseConstituent CS: this.csList){
-        for(BaseAction a : CS.getCapability()){
-            if(CS.getCost(a) < minimumActionCost)
+        for(BaseAction a : CS.getCapability()) {
+            if (CS.getCost(a) < minimumActionCost)
                 minimumActionCost = CS.getCost(a);
         }
 
@@ -70,6 +70,19 @@ public final class Simulator {
 
             immediateActions.clear();
 
+            if(this.manager != null){
+                BaseAction a = this.manager.step();
+                a.getPerformerList().get(0).immediateAction();
+                //temp
+//                if(a != null){
+//                    if(a.getDuration() == 0) {
+//                        immediateActions.add(a);
+//                    }
+//                    else
+//                        actions.add(a);
+//                }
+            }
+
             for(BaseConstituent cs : this.csList){ // Get immediate candidate action
                 BaseAction a = cs.step();
                 if(a == null)
@@ -85,15 +98,16 @@ public final class Simulator {
                 }
             }
 
-            if(this.manager != null){
-                BaseAction a = this.manager.step();
-                if(a != null){
-                    if(a.getDuration() == 0)
-                        immediateActions.add(a);
-                    else
-                        actions.add(a);
-                }
-            }
+//            if(this.manager != null){
+//                BaseAction a = this.manager.step();
+//                if(a != null){
+//                    if(a.getDuration() == 0) {
+//                        immediateActions.add(a);
+//                    }
+//                    else
+//                        actions.add(a);
+//                }
+//            }
 
             Collections.shuffle(immediateActions);
             this.progress(Action.TYPE.IMMEDIATE); // Choose

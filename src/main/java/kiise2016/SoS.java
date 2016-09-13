@@ -77,15 +77,16 @@ public class SoS extends BaseConstituent implements ManagerInterface{
         this.acknowledge(additionalBenefit);
 
         // For next normal action
-        Action a = new Action("Search for acknowledgement", 0, 0);
-        a.setDuration(1);
-        a.addPerformer(this);
-        a.setActionType(Action.TYPE.NORMAL);
-        a.startHandle();
-        this.setCurrentAction(a);
+//        Action a = new Action("Search for acknowledgement", 0, 0);
+//        a.setDuration(0);
+//        a.addPerformer(this);
+//        a.setActionType(Action.TYPE.NORMAL);
+//        a.startHandle();
+//        this.setCurrentAction(a);
 
-        this.setStatus(Status.OPERATING);
-        return a;
+        this.setStatus(Status.IDLE);
+//        System.out.print("a");
+        return null;
     }
 
     /**
@@ -152,8 +153,6 @@ public class SoS extends BaseConstituent implements ManagerInterface{
                 a.addPerformer(this);
                 a.setActionType(Action.TYPE.IMMEDIATE);
                 return a;
-            }else if(this.getStatus() == Status.OPERATING){ // Operation step
-                return this.currentAction;
             }
         }
 
