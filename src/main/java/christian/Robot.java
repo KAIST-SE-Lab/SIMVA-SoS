@@ -2,6 +2,7 @@ package christian;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.method.DummyAction;
 
 import java.util.Random;
 
@@ -37,6 +38,7 @@ public class Robot extends BaseConstituent{
         this.token = false;
         this.move = move;
         this.ranNumGenerator = new Random();
+        this.setStatus(Status.IDLE);
     }
 
     @Override
@@ -46,8 +48,10 @@ public class Robot extends BaseConstituent{
             token = false; // loose its token;
         }
 
-        if(token)
+        if(token) {
             xpos++;
+            this.setStatus(Status.IDLE);
+        }
         else
             this.setStatus(Status.END);
         if(this.xpos > 20){
@@ -64,11 +68,31 @@ public class Robot extends BaseConstituent{
             Movement do_movement = this.move.clone();
 //            do_movement.setStatus();
             this.setStatus(Status.OPERATING);
+            do_movement.startHandle();
+            do_movement.addPerformer(this);
             return do_movement;
         }else if(token){
             Movement do_movement = this.move.clone();
             this.setStatus(Status.OPERATING);
+            do_movement.startHandle();
+            do_movement.addPerformer(this);
             return do_movement;
+        }
+        return null;
+    }
+
+    public BaseAction step(){
+        if(this.getRemainBudget() == 0){
+            return null; // voidAction, nothing happen
+        }else{
+            if(this.getStatus() == Status.IDLE){ // Select an action
+                BaseAction a = new DummyAction("Immediate action", 0, 0);
+                a.addPerformer(this);
+                a.setActionType(BaseAction.TYPE.IMMEDIATE);
+                return a;
+            }else if(this.getStatus() == Status.OPERATING){ // Operation step
+                return this.move;
+            }
         }
         return null;
     }
@@ -81,5 +105,12 @@ public class Robot extends BaseConstituent{
     @Override
     public BaseAction getCurrentAction() {
         return move;
+    }
+
+    @Override
+    public void reset(){
+        this.xpos = 10;
+        this.token = false;
+        super.reset();
     }
 }

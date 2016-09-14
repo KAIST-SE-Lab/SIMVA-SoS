@@ -23,6 +23,7 @@ public final class Simulator {
     private Environment env = null;
     private int tick;
     private int minimumActionCost;
+    private int endTick;
 
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env){
         this.csList = new ArrayList<BaseConstituent>();
@@ -30,6 +31,7 @@ public final class Simulator {
         this.manager = manager;
         this.env = env;
         this.tick = 0;
+        this.endTick = 0;
 
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
         for(BaseConstituent CS: this.csList){
@@ -39,6 +41,10 @@ public final class Simulator {
             }
 
         }
+    }
+
+    public void setEndTick(int tick){
+        this.endTick = tick;
     }
 
     /**
@@ -128,7 +134,7 @@ public final class Simulator {
             if(CS.getStatus() != BaseConstituent.Status.END)
                 verdict = false;
         }
-        if(this.tick > 1700){
+        if(this.tick >= endTick){
             verdict = true;
 //            System.out.println("2000 step is done");
         }
@@ -183,6 +189,7 @@ public final class Simulator {
 //                    a.getPerformer().normalAction(minimumElapsedTime);
                     BaseConstituent[] tmpArr = a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
                     for(int i = 0; i < tmpArr.length; i++){
+                        // Real normal action happens.
                         tmpArr[i].normalAction(minimumElapsedTime);
                     }
                 }

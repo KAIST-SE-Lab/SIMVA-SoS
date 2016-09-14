@@ -1,9 +1,9 @@
 package christian;
 
-import kr.ac.kaist.se.simulator.BaseAction;
+import kr.ac.kaist.se.mc.BaseChecker;
 
 /**
- * Movement.java
+ * BaseChecker.java
  * This class example is came from "Simulation and Statistical Model Checking of Logic-Based Multi-Agent System Models", Christian Kroib
 
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
@@ -20,31 +20,15 @@ import kr.ac.kaist.se.simulator.BaseAction;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class Movement extends BaseAction {
-
-    public Movement(){
-        this.setName("Right move");
-        super.setDuration(1);
-        super.setActionType(TYPE.NORMAL);
-    }
-
-    @Override
-    public void addBenefit(int additionalBenefit) {
-
-    }
-
-    @Override
-    public Movement clone() {
-
-        Movement _copy = new Movement();
-        _copy.setDuration(1);
-        super.setActionType(TYPE.NORMAL);
-
-        return _copy;
-    }
-
-    @Override
-    public void reset() {
-
+public class BLTLChecker extends BaseChecker{
+    /**
+     * Constructor for BLTL model Checker
+     *
+     * @param baseTick       baseline of the time tick, BLTL Checker will evaluate the sample sequence based on this tick
+     * @param baseSoSBenefit baseline of SoS benefit, BLTL Checeker will evaluate the sample seuqence based on this SoS benefit
+     * @param type
+     */
+    public BLTLChecker(int baseTick, int baseSoSBenefit, comparisonType type) {
+        super(baseTick, baseSoSBenefit, type);
     }
 }

@@ -70,6 +70,7 @@ public class Main {
         Environment env = new Environment(CSs, actions);
 
         Simulator sim = new Simulator(CSs, manager, env);
+        sim.setEndTick(1700);
         BLTLChecker checker = new BLTLChecker(500, 450, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
         SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.001);
 

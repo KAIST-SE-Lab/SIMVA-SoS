@@ -33,7 +33,7 @@ public abstract class BaseAction {
     private BaseAction.TYPE actionType;
 
     private BaseConstituent performer = null; // Current performer
-    private ArrayList<BaseConstituent> performerList = new ArrayList<BaseConstituent>();
+    private ArrayList<BaseConstituent> performerList = new ArrayList<>();
 
     public void startHandle(){
         this.setStatus(BaseAction.Status.HANDLED);

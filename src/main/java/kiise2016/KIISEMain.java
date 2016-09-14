@@ -1,7 +1,7 @@
 package kiise2016;
 
 import com.opencsv.CSVWriter;
-import kr.ac.kaist.se.mc.BLTLChecker;
+import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.Environment;
 import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
@@ -39,6 +39,7 @@ public class KIISEMain {
         Environment env = new Environment(CSs, actions);
 
         Simulator sim = new Simulator(CSs, sos, env);
+        sim.setEndTick(300);
 
         int[] boundArr = {120, 125, 130, 135, 140, 145, 150};
         for(int bound: boundArr){
@@ -50,7 +51,7 @@ public class KIISEMain {
 
             System.out.println("----------------------------------------------------");
             System.out.println("SoS-level benefit is greater than "+bound + ".");
-            BLTLChecker checker = new BLTLChecker(10000, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+            BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.005);
 
             for(int i=1; i<100; i++){

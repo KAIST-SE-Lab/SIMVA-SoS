@@ -43,13 +43,23 @@ public class SPRTMethod {
     private int numSamples; // Total number of samples to calculate the decision
     private int dm; // Total number of samples that satisfies the condition
 
+    private boolean condition; // True -> more than, False -> less than
+
     public SPRTMethod(double alpha, double beta, double delta){
         this.alpha = new BigDecimal(String.valueOf(alpha));
         this.beta = new BigDecimal(String.valueOf(beta));
         this.delta = new BigDecimal(String.valueOf(delta));
         this.numSamples = 0;
         this.dm = 0;
+        this.condition = true;
+    }
 
+    public void setBigCheck(){
+        this.condition = true;
+    }
+
+    public void setLessCheck(){
+        this.condition = false;
     }
 
     /**
@@ -83,8 +93,15 @@ public class SPRTMethod {
      */
     public void setExpression(double theta){
         this.theta = new BigDecimal(String.valueOf(theta));
-        this.p1 = this.theta.subtract(this.delta);
-        this.p0 = this.theta.add(this.delta);
+        if(condition)
+        {
+            this.p1 = this.theta.subtract(this.delta);
+            this.p0 = this.theta.add(this.delta);
+        }else{
+            this.p0 = this.theta.subtract(this.delta);
+            this.p1 = this.theta.add(this.delta);
+        }
+
     }
 
     public void updateResult(int res){

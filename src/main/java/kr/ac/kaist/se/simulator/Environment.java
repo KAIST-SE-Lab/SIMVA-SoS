@@ -45,11 +45,15 @@ public final class Environment {
          * 2. Generate a random number that how many actions will be raised
          * 3. Shuffle the possible action list and pick actions
          */
+
+        // Step 1
         ArrayList<String> possibleActionList = new ArrayList<String>();
         for(BaseAction a : this.actionList){
             if(a.getStatus() == BaseAction.Status.NOT_RAISED)
                 possibleActionList.add(a.getName());
         }
+
+        // Step 2 Randomly generate option
 
 //        int numRaisingActions = 0;
 //        if(possibleActionList.size() > 0){
