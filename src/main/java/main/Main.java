@@ -1,6 +1,5 @@
 package main;
 
-import kr.ac.kaist.se.mc.BLTLChecker;
 import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.Environment;
 import kr.ac.kaist.se.simulator.SIMResult;
