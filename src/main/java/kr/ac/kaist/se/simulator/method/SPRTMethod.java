@@ -67,7 +67,7 @@ public class SPRTMethod {
      * @return true - we can decide smc is done.
      */
     public boolean checkStopCondition(){
-        if(this.numSamples < 2)
+        if(this.numSamples < 5) // Minimum required samples
             return false;
 
         BigDecimal pRatioA = new BigDecimal(String.valueOf(1));
