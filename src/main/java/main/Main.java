@@ -1,6 +1,7 @@
 package main;
 
 import kr.ac.kaist.se.mc.BLTLChecker;
+import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.Environment;
 import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
@@ -17,8 +18,7 @@ import java.time.Instant;
  * Created by Junho on 2016-08-01.
  */
 public class Main {
-    public static void main(String []args){
-
+    public static void main(String[] args) {
 
 
         Constituent cs1 = new Constituent("CS1", 100);
@@ -71,19 +71,19 @@ public class Main {
 
         Simulator sim = new Simulator(CSs, manager, env);
         sim.setEndTick(1700);
-        BLTLChecker checker = new BLTLChecker(500, 450, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+        BaseChecker checker = new BaseChecker(500, 450, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
         SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.001);
 
 //        double[] thetaArr = {0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99};
         double[] thetaArr = {0.9, 0.95, 0.99};
-        for(double theta: thetaArr){
+        for (double theta : thetaArr) {
             // Time measure
             Instant start = Instant.now();
 
 
             sprt.setExpression(theta);
 
-            while(!sprt.checkStopCondition()){
+            while (!sprt.checkStopCondition()) {
                 sim.execute();
                 SIMResult res = sim.getResult();
                 int checkResult = checker.evaluateSample(res); // 1: satisfy, 0: not-satisfy
@@ -93,7 +93,7 @@ public class Main {
 
             boolean h0 = sprt.getResult();
             System.out.print("SMC decides that your hypothesis is ");
-            if(h0)
+            if (h0)
                 System.out.println("accepted at " + theta);
             else
                 System.out.println("not accepted at " + theta);
