@@ -3,9 +3,28 @@ package mci;
 import kr.ac.kaist.se.simulator.BaseAction;
 
 /**
- * Created by Junho on 2016-09-30.
+ * RescueAction.java
+ * Rescue patient action class
+
+ * Author: Junho Kim <jhkim@se.kaist.ac.kr>
+
+ * The MIT License (MIT)
+
+ * Copyright (c) 2016 Junho Kim
+
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions: TBD
  */
 public class RescueAction extends BaseAction {
+
+    public enum PatientStatus { Dangerous, Very_Dangerous }
+
+    private PatientStatus pStat;
+
     @Override
     public void addBenefit(int additionalBenefit) {
 
@@ -19,5 +38,9 @@ public class RescueAction extends BaseAction {
     @Override
     public void reset() {
 
+    }
+
+    public PatientStatus getPatientStatus(){
+        return this.pStat;
     }
 }
