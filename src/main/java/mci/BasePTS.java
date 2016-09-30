@@ -1,11 +1,13 @@
 package mci;
 
-import kr.ac.kaist.se.simulator.NormalDistributor;
-
-import java.util.ArrayList;
+import kr.ac.kaist.se.simulator.BaseAction;
+import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.ConstituentInterface;
 
 /**
- * Main.java
+ * BasePTS.java
+ * Basic PTS class
+
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
@@ -19,17 +21,26 @@ import java.util.ArrayList;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
-public class Main {
+public abstract class BasePTS extends BaseConstituent implements ConstituentInterface{
 
-    public static void main(String[] args){
-        NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(150, 50);
-        ArrayList<Integer> list = distributor.getDistributionArray(100);
-        for(Integer i : list){
-            System.out.println(i);
-        }
+
+    @Override
+    public void normalAction(int elapsedTime) {
+
     }
 
+    @Override
+    public BaseAction immediateAction() {
+        return null;
+    }
 
+    @Override
+    public BaseConstituent clone() {
+        return null;
+    }
 
+    @Override
+    public BaseAction getCurrentAction() {
+        return null;
+    }
 }
