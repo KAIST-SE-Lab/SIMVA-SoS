@@ -21,14 +21,23 @@ import kr.ac.kaist.se.simulator.ConstituentInterface;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
+
 public abstract class BasePTS extends BaseConstituent implements ConstituentInterface{
 
-
+    /**
+     * normal Action method
+     * @param elapsedTime
+     */
     @Override
     public void normalAction(int elapsedTime) {
 
     }
 
+    /**
+     * immediate Action method
+     * choose the action
+     * @return the Base Action that which patient will be rescued by this PTS.
+     */
     @Override
     public BaseAction immediateAction() {
         return null;
@@ -43,4 +52,6 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     public BaseAction getCurrentAction() {
         return null;
     }
+
+    public abstract RescueAction choosePatient();
 }
