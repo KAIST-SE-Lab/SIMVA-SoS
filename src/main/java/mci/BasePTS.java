@@ -35,12 +35,16 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 
     /**
      * immediate Action method
-     * choose the action
-     * @return the Base Action that which patient will be rescued by this PTS.
+     * choose the patient to save
+     * this method will get best patient to save using choosePatient method.
+     * @return the Base Action that which patient will be rescued by this TS.
      */
     @Override
     public BaseAction immediateAction() {
-        return null;
+        if(this.getStatus() != Status.IDLE)
+            return null;
+        RescueAction action = choosePatient();
+        return action;
     }
 
     @Override

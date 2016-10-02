@@ -1,10 +1,12 @@
 package mci;
 
 import kr.ac.kaist.se.simulator.BaseAction;
+import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.ManagerInterface;
 
 /**
- * SeverityPTS.java
- * Severity patient first PTS class
+ * Hospital.java
+ * Hospital class, this is an SoS manager class
 
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
@@ -19,19 +21,35 @@ import kr.ac.kaist.se.simulator.BaseAction;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
-public class SeverityPTS extends BasePTS{
+public class Hospital extends BaseConstituent implements ManagerInterface {
 
     @Override
-    public int getUtility(BaseAction a) {
+    public int getSoSLevelBenefit() {
         return 0;
     }
 
     @Override
-    public RescueAction choosePatient() {
+    public void addSoSLevelBenefit(int SoSLevelBenefit) {
+
+    }
+
+    @Override
+    public void normalAction(int elapsedTime) {
+
+    }
+
+    @Override
+    public BaseAction immediateAction() {
         return null;
     }
 
-    private void getPatientInfo(){
+    @Override
+    public BaseConstituent clone() {
+        return null;
+    }
 
+    @Override
+    public BaseAction getCurrentAction() {
+        return null;
     }
 }
