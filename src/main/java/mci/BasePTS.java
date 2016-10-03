@@ -61,7 +61,8 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         }else if(this.PTS_STATUS == 2){ // Go to Hospital
             movePTS(elapsedTime);
             if(this.curPos == 50){ // PTS has breached to the hospital!
-                this.updateCostBenefit(0, 1, 1);
+                if(this.currentAction.getPatientStatus() != RescueAction.PatientStatus.Dead) // Not dead
+                    this.updateCostBenefit(0, 1, 1); // save one patient!
                 this.PTS_STATUS = 0;
             }
         }

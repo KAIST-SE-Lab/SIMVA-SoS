@@ -21,7 +21,7 @@ import kr.ac.kaist.se.simulator.BaseAction;
  */
 public class RescueAction extends BaseAction {
 
-    public enum PatientStatus { Dangerous, Very_Dangerous }
+    public enum PatientStatus { Dangerous, Very_Dangerous, Dead }
 
     private PatientStatus pStat;
     private int raisedLoc;
