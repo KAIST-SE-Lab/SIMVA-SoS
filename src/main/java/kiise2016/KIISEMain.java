@@ -54,7 +54,7 @@ public class KIISEMain {
             BLTLChecker checker = new BLTLChecker(10000, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.005);
 
-            for(int i=0; i<100; i++){
+            for(int i=76; i<100; i++){
                 double theta = 0.01 * i; // theta
                 long start = System.currentTimeMillis();
                 sprt.setExpression(theta);
