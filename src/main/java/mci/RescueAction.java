@@ -55,6 +55,14 @@ public class RescueAction extends BaseAction {
             this.pStat = PatientStatus.Dead;
     }
 
+    public int getRemainTime(){
+        return this.timeToDead;
+    }
+
+    public boolean isAcknowledged(){
+        return this.isAcknowledged;
+    }
+
     public int getRaisedLoc(){
         return this.raisedLoc;
     }

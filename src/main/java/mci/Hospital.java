@@ -37,14 +37,38 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
 
     }
 
+    /**
+     * Normal action of Hospital
+     * Heal the patient.
+     * This action takes 10 ticks
+     * @param elapsedTime
+     */
     @Override
     public void normalAction(int elapsedTime) {
 
     }
 
+    /**
+     * Immediate action of Hospital
+     * Hospital find the patients who has limited death time. (< 50)
+     * @return
+     */
     @Override
     public BaseAction immediateAction() {
-        return null;
+        for(MapPoint eachMap : Hospital.GeoMap){
+            RescueAction rA = eachMap.getCurAction();
+            if(rA == null)
+                continue;
+
+            if(rA.getRemainTime() < 50){
+                rA.addBenefit(10); // Acknowledge
+            }
+
+        }
+        RescueAction healAction = new RescueAction(50, 10);
+        healAction.addPerformer(this);
+        healAction.setStatus(BaseAction.Status.HANDLED);
+        return healAction;
     }
 
     @Override

@@ -93,6 +93,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         }else if(this.getStatus() == Status.SELECTION){
             if(this.candidateAction.getStatus() == BaseAction.Status.RAISED){
                 this.currentAction = this.candidateAction;
+                this.currentAction.addPerformer(this);
                 this.gotoPatient();
                 return this.candidateAction;
             }
