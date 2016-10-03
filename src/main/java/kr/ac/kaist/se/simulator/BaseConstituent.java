@@ -124,8 +124,6 @@ public abstract class BaseConstituent {
         this.status = _status;
     }
 
-
-
     public void resetCurrentAction(){
         this.currentAction = null;
     }

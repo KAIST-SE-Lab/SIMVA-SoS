@@ -28,8 +28,6 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     public static ArrayList<MapPoint> GeoMap = new ArrayList<>();
     private RescueAction currentAction = null;
 
-
-
     /**
      * Normal action of Hospital
      * Heal the patient.
