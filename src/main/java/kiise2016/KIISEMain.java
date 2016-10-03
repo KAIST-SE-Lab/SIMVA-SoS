@@ -1,22 +1,21 @@
 package kiise2016;
 
-
-import kr.ac.kaist.se.mc.BLTLChecker;
+import com.opencsv.CSVWriter;
+import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.Environment;
 import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+
 
 public class KIISEMain {
     public static void main(String[] args) throws IOException{
-        Constituent cs1 = new Constituent("CS1", 100);
-        Constituent cs2 = new Constituent("CS2", 100);
-        Constituent cs3 = new Constituent("CS3", 100);
+        Constituent cs1 = new Constituent("CS1", 120);
+        Constituent cs2 = new Constituent("CS2", 120);
+        Constituent cs3 = new Constituent("CS3", 120);
 
         Action a1 = new Action("Action1", 2, 1);
         a1.setActionType(Action.TYPE.NORMAL);
@@ -40,21 +39,22 @@ public class KIISEMain {
         Environment env = new Environment(CSs, actions);
 
         Simulator sim = new Simulator(CSs, sos, env);
+        sim.setEndTick(300);
 
-        int[] boundArr = {140, 145, 150, 155, 160, 165, 170};
+        int[] boundArr = {120, 125, 130, 135, 140, 145, 150};
         for(int bound: boundArr){
-            String outputName = "SIM_" + boundArr + ".csv";
-            FileWriter fw = new FileWriter(outputName);
-            BufferedWriter bw = new BufferedWriter(fw);
 
+            String outputName = "SIM_" + bound + ".csv";
+            CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
+            cw.writeNext(new String[] {"prob", "num_of_samples", "execution_time", "min_tick", "max_tick", "result"});
             ArrayList<SMCResult> resList = new ArrayList<SMCResult>();
 
             System.out.println("----------------------------------------------------");
             System.out.println("SoS-level benefit is greater than "+bound + ".");
-            BLTLChecker checker = new BLTLChecker(10000, bound, BLTLChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+            BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.005);
 
-            for(int i=76; i<100; i++){
+            for(int i=1; i<100; i++){
                 double theta = 0.01 * i; // theta
                 long start = System.currentTimeMillis();
                 sprt.setExpression(theta);
@@ -85,13 +85,16 @@ public class KIISEMain {
                 int maxTick = checker.getMaxTick();
                 sprt.reset();
                 resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
-                System.out.print(".");
+                if(h0) System.out.print("T");
+                else System.out.print("F");
             }
-
+            System.out.println();
+            System.out.print("w");
             for(SMCResult r : resList){
-                bw.write(r.toString());
+                System.out.print(".");
+                cw.writeNext(r.getArr());
             }
-            bw.close();
+            cw.close();
             resList.clear();
             System.out.println();
         }

@@ -6,6 +6,7 @@ import simulator.Constituent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * System of Systems Simulator
@@ -16,11 +17,14 @@ import java.util.Collections;
 public final class Simulator {
 
     private ArrayList<BaseConstituent> csList = null;
+    private ArrayList<BaseAction> immediateActions = new ArrayList<>();
+    private ArrayList<BaseAction> actions = new ArrayList<>();
     private SIMResult result = null;
     private BaseConstituent manager = null;
     private Environment env = null;
     private int tick;
     private int minimumActionCost;
+    private int endTick;
 
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env){
         this.csList = new ArrayList<BaseConstituent>();
@@ -28,16 +32,21 @@ public final class Simulator {
         this.manager = manager;
         this.env = env;
         this.tick = 0;
+        this.endTick = 0;
 
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
         for(BaseConstituent CS: this.csList){
-        for(BaseAction a : CS.getCapability()){
-            if(CS.getCost(a) < minimumActionCost)
-                minimumActionCost = CS.getCost(a);
-        }
+            for(BaseAction a : CS.getCapability()) {
+                if (CS.getCost(a) < minimumActionCost)
+                    minimumActionCost = CS.getCost(a);
+            }
 
+        }
     }
-}
+
+    public void setEndTick(int tick){
+        this.endTick = tick;
+    }
 
     /**
      * simulate the model, reset the environment and states
@@ -62,8 +71,6 @@ public final class Simulator {
     private void procedure(){
         this.tick = 0;
         boolean endCondition = false;
-        ArrayList<BaseAction> immediateActions = new ArrayList<BaseAction>();
-        ArrayList<BaseAction> actions = new ArrayList<BaseAction>();
 
         while(!endCondition){
             actions.clear();
@@ -88,31 +95,27 @@ public final class Simulator {
             if(this.manager != null){
                 BaseAction a = this.manager.step();
                 if(a != null){
-                    if(a.getDuration() == 0)
+                    if(a.getDuration() == 0) {
                         immediateActions.add(a);
+                    }
                     else
                         actions.add(a);
                 }
             }
 
             Collections.shuffle(immediateActions);
-            this.progress(immediateActions, Action.TYPE.IMMEDIATE); // Choose
+            this.progress(Action.TYPE.IMMEDIATE); // Choose
 
             this.generateExogenousActions(); // Environment action
             Collections.shuffle(actions);
-            this.progress(actions, Action.TYPE.NORMAL);
+            this.progress(Action.TYPE.NORMAL);
 
             endCondition = this.evaluateProperties();
         }
-//        System.out.println("Final Tick " + this.tick);
         int SoSBenefit = 0;
         for(BaseConstituent CS : this.csList){
             SoSBenefit += CS.getAccumulatedSoSBenefit();
         }
-//        System.out.println("SoS benefit " + SoSBenefit);
-//        for(BaseConstituent CS: this.csList){
-//            System.out.println(CS + " gets " + CS.getAccumulatedBenefit() + " benefits");
-//        }
         this.result = new SIMResult(this.tick, SoSBenefit);
     }
 
@@ -132,7 +135,7 @@ public final class Simulator {
             if(CS.getStatus() != BaseConstituent.Status.END)
                 verdict = false;
         }
-        if(this.tick > 1700){
+        if(this.tick >= endTick){
             verdict = true;
 //            System.out.println("2000 step is done");
         }
@@ -149,11 +152,14 @@ public final class Simulator {
 
     }
 
-    private void progress(ArrayList<BaseAction> actionList, BaseAction.TYPE type){
+    private void progress(BaseAction.TYPE type){
         if(type == BaseAction.TYPE.IMMEDIATE){
+            ArrayList<BaseAction> actionList = this.immediateActions;
             for(BaseAction a : actionList){
                 if(a.getActionType() == Action.TYPE.IMMEDIATE) {
-                    a.getPerformer().immediateAction(); // Select action
+                    BaseAction selectedAction = a.getPerformer().immediateAction(); // Select action
+                    if(selectedAction != null)
+                        actions.add(selectedAction);
                 }
             }
         }else if(type == BaseAction.TYPE.NORMAL){
@@ -162,6 +168,7 @@ public final class Simulator {
              * 2. Elapse the time and execute
              * 3. If the remaining time is 0, then update Cost & Benefit
              */
+            ArrayList<BaseAction> actionList = this.actions;
             int minimumElapsedTime = -1;
             if(!actionList.isEmpty()){ // If the action list is not empty
                 boolean discreteCondition = true;
@@ -179,20 +186,24 @@ public final class Simulator {
                 }else{ // If any one CS are not in operation, minimum tick will be one
                     minimumElapsedTime = 1;
                 }
-                for(BaseAction a: actionList){
-//                    int SoSLevelBenefit = a.getSoSBenefit();
-                    a.getPerformer().normalAction(minimumElapsedTime);
-//                    if(a.getPerformer() == null){ // Job is done.
-//                        System.out.println(this.tick + minimumElapsedTime);
-//                        if(this.manager != null)
-//                            this.manager.addSoSLevelBenefit(SoSLevelBenefit);
-//                    }
+                for(BaseAction a: actionList){ // List로 수정하면 이부분 수정해야함..
+//                    a.getPerformer().normalAction(minimumElapsedTime);
+                    BaseConstituent[] tmpArr = a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
+                    for(int i = 0; i < tmpArr.length; i++){
+                        // Real normal action happens.
+                        tmpArr[i].normalAction(minimumElapsedTime);
+                    }
                 }
             }else
                 minimumElapsedTime = 1;
             increaseTick(minimumElapsedTime);
         }
-        env.updateActionStatus(actionList);
-        actionList.clear();
+        if(type == BaseAction.TYPE.IMMEDIATE) {
+            env.updateActionStatus(immediateActions);
+            immediateActions.clear();
+        }else{
+            env.updateActionStatus(actions);
+            actions.clear();
+        }
     }
 }

@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * BaseConstituent.java
 
- * Author: Junho Kim <jhim@se.kaist.ac.kr>
+ * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
 
@@ -84,7 +84,7 @@ public abstract class BaseConstituent {
     }
 
     public void updateCapability(ArrayList<BaseAction> _list){
-        ArrayList<BaseAction> newList = new ArrayList<BaseAction>(this.capabilityList.size());
+        ArrayList<BaseAction> newList = new ArrayList<>(this.capabilityList.size());
         for(BaseAction target : _list){
             for(BaseAction a : this.capabilityList){
                 if(a.getName().equalsIgnoreCase(target.getName()))
@@ -124,8 +124,6 @@ public abstract class BaseConstituent {
         this.status = _status;
     }
 
-
-
     public void resetCurrentAction(){
         this.currentAction = null;
     }
@@ -158,7 +156,7 @@ public abstract class BaseConstituent {
             if(this.getStatus() == Status.IDLE){ // Select an action
                 this.setStatus(Status.SELECTION);
                 BaseAction a = new DummyAction("Immediate action", 0, 0);
-                a.setPerformer(this);
+                a.addPerformer(this);
                 a.setActionType(BaseAction.TYPE.IMMEDIATE);
                 return a;
             }else if(this.getStatus() == Status.OPERATING){ // Operation step
@@ -173,7 +171,7 @@ public abstract class BaseConstituent {
      * Abstract methods
      */
     public abstract void normalAction(int elapsedTime);
-    public abstract void immediateAction();
+    public abstract BaseAction immediateAction();
     public abstract BaseConstituent clone();
     public abstract BaseAction getCurrentAction();
 

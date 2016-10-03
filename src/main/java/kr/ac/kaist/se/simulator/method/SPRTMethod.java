@@ -1,9 +1,12 @@
 package kr.ac.kaist.se.simulator.method;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 /**
  * SPRTMethod.java
 
- * Author: Junho Kim <jhim@se.kaist.ac.kr>
+ * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
 
@@ -23,29 +26,40 @@ public class SPRTMethod {
     // Default alpha: 0.1, 0.01, 0.001
     // Default beta: same as above
     // Default delta: 0.01, 0.03, 0.05 -> 99%, 97%, 95% we choose 99%
-    private double alpha; // 0.01
-    private double beta; // 0.01
-    private double delta; // 0.005
-    private double theta;
 
-    private double p0; // theta + delta
-    private double p1; // theta - delta
+    private BigDecimal alpha; // 0.01
+    private BigDecimal beta; // 0.01
+    private BigDecimal delta; // 0.005
+    private BigDecimal theta; // (0,1)
 
-    private double p0m;
-    private double p1m;
+    private BigDecimal p0; // theta + delta
+    private BigDecimal p1; // theta - delta
+
+    private BigDecimal p0m;
+    private BigDecimal p1m;
 
     private boolean h0decision;
 
     private int numSamples; // Total number of samples to calculate the decision
     private int dm; // Total number of samples that satisfies the condition
 
+    private boolean condition; // True -> more than, False -> less than
+
     public SPRTMethod(double alpha, double beta, double delta){
-        this.alpha = alpha;
-        this.beta = beta;
-        this.delta = delta/2;
+        this.alpha = new BigDecimal(String.valueOf(alpha));
+        this.beta = new BigDecimal(String.valueOf(beta));
+        this.delta = new BigDecimal(String.valueOf(delta));
         this.numSamples = 0;
         this.dm = 0;
+        this.condition = true;
+    }
 
+    public void setBigCheck(){
+        this.condition = true;
+    }
+
+    public void setLessCheck(){
+        this.condition = false;
     }
 
     /**
@@ -53,16 +67,19 @@ public class SPRTMethod {
      * @return true - we can decide smc is done.
      */
     public boolean checkStopCondition(){
-        if(this.numSamples < 2)
+        if(this.numSamples < 5) // Minimum required samples
             return false;
-        double pRatioA = (1-this.beta) / this.alpha;
-        double pRatioB = this.beta / (1 - this.alpha);
 
-        if( (this.p1m / this.p0m) <= pRatioB){
+        BigDecimal pRatioA = new BigDecimal(String.valueOf(1));
+        pRatioA = pRatioA.subtract(this.beta);
+        pRatioA = pRatioA.divide(this.alpha, MathContext.DECIMAL128);
+        BigDecimal pRatioB = this.beta.divide(new BigDecimal(String.valueOf(1)).subtract(this.alpha), MathContext.DECIMAL128);
+
+        if( this.p1m.divide(this.p0m, MathContext.DECIMAL128).compareTo(pRatioB) <= 0){
             h0decision = true;
             return true;
         }
-        else if( (this.p1m / this.p0m) >= pRatioA){
+        else if( this.p1m.divide(this.p0m, MathContext.DECIMAL128).compareTo(pRatioA) >= 0){
             h0decision = false;
             return true;
         }else{
@@ -75,9 +92,16 @@ public class SPRTMethod {
      * @param theta - probability that requires property
      */
     public void setExpression(double theta){
-        this.theta = theta;
-        this.p1 = this.theta - this.delta;
-        this.p0 = this.theta + this.delta;
+        this.theta = new BigDecimal(String.valueOf(theta));
+        if(condition)
+        {
+            this.p1 = this.theta.subtract(this.delta);
+            this.p0 = this.theta.add(this.delta);
+        }else{
+            this.p0 = this.theta.subtract(this.delta);
+            this.p1 = this.theta.add(this.delta);
+        }
+
     }
 
     public void updateResult(int res){
@@ -87,8 +111,18 @@ public class SPRTMethod {
         if(res == 1)
             this.dm++;
         if(numSamples > 1){
-            this.p1m = Math.pow(this.p1,this.dm) * Math.pow((1 - this.p1), (this.numSamples - this.dm));
-            this.p0m = Math.pow(this.p0,this.dm) * Math.pow((1 - this.p0), (this.numSamples - this.dm));
+            BigDecimal p1m_before = new BigDecimal(String.valueOf(1));
+            p1m_before = p1m_before.subtract(this.p1);
+            p1m_before = p1m_before.pow(this.numSamples-this.dm);
+            this.p1m = this.p1.pow(this.dm);
+            this.p1m = this.p1m.multiply(p1m_before);
+
+            BigDecimal p0m_before = new BigDecimal(String.valueOf(1));
+            p0m_before = p0m_before.subtract(this.p0);
+            p0m_before = p0m_before.pow(this.numSamples - this.dm);
+
+            this.p0m = this.p0.pow(this.dm);
+            this.p0m = this.p0m.multiply(p0m_before);
         }
     }
 
@@ -102,7 +136,7 @@ public class SPRTMethod {
 
     public void reset(){
         this.numSamples = 0;
-        this.theta = 0.0;
+        this.theta = new BigDecimal(String.valueOf(0));
         this.dm = 0;
     }
 

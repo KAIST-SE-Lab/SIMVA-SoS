@@ -29,4 +29,10 @@ public class SMCResult {
         return retStr;
     }
 
+    public String[] getArr(){
+        return new String[] {String.format("%.2f", this.prob), Integer.toString(numOfSamples),
+                String.format("%.3f", (this.executionTime/1000.0)), Integer.toString(this.minTick),
+                Integer.toString(this.maxTick), Boolean.toString(this.result)};
+    }
+
 }

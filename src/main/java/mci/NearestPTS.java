@@ -1,7 +1,10 @@
-package kr.ac.kaist.se.simulator;
+package mci;
+
+import kr.ac.kaist.se.simulator.BaseAction;
 
 /**
- * SimpleRandomNumberGenerator.java
+ * NearestPTS.java
+ * Nearest patient first PTS class
 
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
@@ -16,6 +19,15 @@ package kr.ac.kaist.se.simulator;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
+public class NearestPTS extends BasePTS{
 
-public class SimpleRandomNumberGenerator {
+    @Override
+    public int getUtility(BaseAction a) {
+        RescueAction rA = (RescueAction) a;
+        int patientSavingBenefit = 70;
+        if(rA.isAcknowledged())
+            patientSavingBenefit += 10;
+        return patientSavingBenefit - (Math.abs(rA.getRaisedLoc() - 50) * 2);
+    }
+
 }

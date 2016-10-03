@@ -3,7 +3,7 @@ package kr.ac.kaist.se.mc;
 import kr.ac.kaist.se.simulator.SIMResult;
 
 /**
- * BLTLChecker.java
+ * BaseChecker.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
@@ -19,7 +19,7 @@ import kr.ac.kaist.se.simulator.SIMResult;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class BLTLChecker {
+public class BaseChecker {
 
     /*
      * BLTL Model Checker for SIMSoS
@@ -35,18 +35,19 @@ public class BLTLChecker {
     private comparisonType type;
     private int minTick;
     private int maxTick;
+    private boolean negation = false;
 
     /**
      * Constructor for BLTL model Checker
      * @param baseTick baseline of the time tick, BLTL Checker will evaluate the sample sequence based on this tick
      * @param baseSoSBenefit baseline of SoS benefit, BLTL Checeker will evaluate the sample seuqence based on this SoS benefit
      */
-    public BLTLChecker(int baseTick, int baseSoSBenefit, comparisonType type){
+    public BaseChecker(int baseTick, int baseSoSBenefit, comparisonType type){
         this.baseTick = baseTick;
         this.baseSoSBenefit = baseSoSBenefit;
         this.type = type;
-        this.minTick = -1;
-        this.maxTick = -1;
+        this.minTick = Integer.MAX_VALUE;
+        this.maxTick = Integer.MIN_VALUE;
     }
 
     /**
@@ -86,6 +87,14 @@ public class BLTLChecker {
                 this.maxTick = res.getNumTicks();
         }
         return 0;
+    }
+
+    public void setNegation(){
+        this.negation = true;
+    }
+
+    public void setNotNegation(){
+        this.negation = false;
     }
 
     public int getMinTick(){

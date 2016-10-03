@@ -3,7 +3,7 @@ package kr.ac.kaist.se.simulator;
 /**
  * ManagerInterface.java
 
- * Author: Junho Kim <jhim@se.kaist.ac.kr>
+ * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
 
@@ -18,6 +18,5 @@ package kr.ac.kaist.se.simulator;
  */
 
 public interface ManagerInterface {
-    int getSoSLevelBenefit();
     void addSoSLevelBenefit(int SoSLevelBenefit);
 }

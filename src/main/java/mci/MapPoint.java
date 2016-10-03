@@ -1,7 +1,8 @@
-package kr.ac.kaist.se.simulator;
+package mci;
 
 /**
- * SimpleRandomNumberGenerator.java
+ * MapPoint.java
+ * Each Map point
 
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
@@ -16,6 +17,21 @@ package kr.ac.kaist.se.simulator;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
+public class MapPoint {
 
-public class SimpleRandomNumberGenerator {
+    private int xPos;
+    private RescueAction curAction;
+
+    public MapPoint(int xPos){
+        this.xPos = xPos;
+        this.curAction = null;
+    }
+
+    public void setCurAction(RescueAction a){
+        this.curAction = a;
+    }
+
+    public RescueAction getCurAction(){
+        return this.curAction;
+    }
 }

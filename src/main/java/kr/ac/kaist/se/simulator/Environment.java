@@ -1,9 +1,7 @@
 package kr.ac.kaist.se.simulator;
 
-import simulator.Action;
-import simulator.Constituent;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Simulator for System of Systems
@@ -21,11 +19,14 @@ public final class Environment {
     private ArrayList<BaseConstituent> csList = null; // 모든 CS list
     private ArrayList<BaseAction> actionList = null; // 모든 Action List
 
+    private boolean isPlanned; // action이 언제 발생할지 계획되어 있는가?
+
     public Environment(BaseConstituent[] CSs, BaseAction[] actions){
         this.csList = new ArrayList<BaseConstituent>();
         Collections.addAll(this.csList, CSs);
         this.actionList = new ArrayList<BaseAction>();
         Collections.addAll(this.actionList, actions);
+        this.isPlanned = false;
     }
 
     /**
@@ -45,11 +46,15 @@ public final class Environment {
          * 2. Generate a random number that how many actions will be raised
          * 3. Shuffle the possible action list and pick actions
          */
+
+        // Step 1
         ArrayList<String> possibleActionList = new ArrayList<String>();
         for(BaseAction a : this.actionList){
             if(a.getStatus() == BaseAction.Status.NOT_RAISED)
                 possibleActionList.add(a.getName());
         }
+
+        // Step 2 Randomly generate option
 
 //        int numRaisingActions = 0;
 //        if(possibleActionList.size() > 0){
