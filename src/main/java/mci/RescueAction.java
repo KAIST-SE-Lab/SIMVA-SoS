@@ -25,14 +25,18 @@ public class RescueAction extends BaseAction {
 
     private PatientStatus pStat;
     private int raisedLoc;
+    private int timeToDead; // Remaining time to dead patient
 
-    public RescueAction(int raisedLoc){
+    private boolean isAcknowledged;
+
+    public RescueAction(int raisedLoc, int timeToDead){
         this.raisedLoc = raisedLoc;
+        this.timeToDead = timeToDead;
     }
 
     @Override
-    public void addBenefit(int additionalBenefit) {
-
+    public void addBenefit(int additionalBenefit) { // ACK..
+        this.isAcknowledged = true;
     }
 
     @Override
@@ -43,6 +47,12 @@ public class RescueAction extends BaseAction {
     @Override
     public void reset() {
 
+    }
+
+    public void treatAction(int elapsedTime){
+        this.timeToDead -= elapsedTime;
+        if(timeToDead <= 0)
+            this.pStat = PatientStatus.Dead;
     }
 
     public int getRaisedLoc(){

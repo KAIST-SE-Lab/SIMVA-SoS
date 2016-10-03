@@ -74,6 +74,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
      */
     private void movePTS(int moveVal){
         this.curPos += moveVal;
+        this.currentAction.treatAction(moveVal);
     }
 
     /**
