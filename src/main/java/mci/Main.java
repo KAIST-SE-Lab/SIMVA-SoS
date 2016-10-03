@@ -22,6 +22,13 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args){
+
+        Hospital hos = new Hospital();
+        // Initialize Patient map
+        for(int i=0; i<=100; i++){
+            Hospital.GeoMap.add(new MapPoint(i));
+        }
+
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(150, 50);
         ArrayList<Integer> list = distributor.getDistributionArray(100);

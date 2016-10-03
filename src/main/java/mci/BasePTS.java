@@ -24,13 +24,55 @@ import kr.ac.kaist.se.simulator.ConstituentInterface;
 
 public abstract class BasePTS extends BaseConstituent implements ConstituentInterface{
 
+    private int curPos;
+    private RescueAction candidateAction;
+    private RescueAction currentAction;
+
+    private int PTS_STATUS; // 0: IDLE, 1: Go to Patient, 2: Return to Hospital
+
+    public BasePTS(){
+        this.curPos = 50;
+        this.candidateAction = null;
+        this.PTS_STATUS = 0;
+    }
+
     /**
      * normal Action method
+     * Rescue the patient
+     * The elapsedTime will never exceed the maximum distance of this PTS.
      * @param elapsedTime
      */
     @Override
     public void normalAction(int elapsedTime) {
+        if(this.PTS_STATUS == 1){ // Go to Patient
+            int patientPos = this.currentAction.getRaisedLoc();
+            patientPos = Math.abs(patientPos - 50); // 50 = Hospital location
 
+            if(elapsedTime > patientPos) {
+                // E.g., curPos = 59, patientPos = 70, elapsedTime = 30
+                movePTS(patientPos - this.curPos); // 70-59 = 11 & Reached!
+                int remainingTime = elapsedTime - (patientPos - this.curPos); // 30-11 = 19
+                this.PTS_STATUS = 2; // Return to hospital
+                movePTS((-1)*remainingTime);
+            }else{
+                // E.g., curPos = 59, patientPos = 70, elapsedTime = 10
+                movePTS(elapsedTime);
+            }
+        }else if(this.PTS_STATUS == 2){ // Go to Hospital
+            movePTS(elapsedTime);
+            if(this.curPos == 50){ // PTS has breached to the hospital!
+                this.updateCostBenefit(0, 1, 1);
+                this.PTS_STATUS = 0;
+            }
+        }
+    }
+
+    /**
+     * Move the PTS moveVal value in GeoMap
+     * @param moveVal
+     */
+    private void movePTS(int moveVal){
+        this.curPos += moveVal;
     }
 
     /**
@@ -41,10 +83,19 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
      */
     @Override
     public BaseAction immediateAction() {
-        if(this.getStatus() != Status.IDLE)
+        if(this.getStatus() != Status.IDLE || this.getStatus() != Status.SELECTION)
             return null;
-        RescueAction action = choosePatient();
-        return action;
+        if(this.getStatus() == Status.IDLE){
+            RescueAction action = choosePatient();
+            return action;
+        }else if(this.getStatus() == Status.SELECTION){
+            if(this.candidateAction.getStatus() == BaseAction.Status.RAISED){
+                this.currentAction = this.candidateAction;
+                this.gotoPatient();
+                return this.candidateAction;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -54,8 +105,27 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 
     @Override
     public BaseAction getCurrentAction() {
-        return null;
+        return this.currentAction;
     }
 
-    public abstract RescueAction choosePatient();
+    private void gotoPatient(){
+        this.PTS_STATUS = 1;
+        this.setStatus(Status.OPERATING);
+    }
+
+    public RescueAction choosePatient() {
+        RescueAction bestAction = null;
+        for(MapPoint map : Hospital.GeoMap){
+            RescueAction candidate = map.getCurAction();
+            if(candidate == null)
+                continue;
+            if(bestAction == null){
+                bestAction = candidate;
+            }else{
+                if(getUtility(candidate) > getUtility(bestAction))
+                    bestAction = candidate;
+            }
+        }
+        return bestAction;
+    }
 }

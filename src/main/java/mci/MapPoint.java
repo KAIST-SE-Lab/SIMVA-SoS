@@ -1,10 +1,8 @@
 package mci;
 
-import kr.ac.kaist.se.simulator.BaseAction;
-
 /**
- * NearestPTS.java
- * Nearest patient first PTS class
+ * MapPoint.java
+ * Each Map point
 
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
@@ -19,13 +17,21 @@ import kr.ac.kaist.se.simulator.BaseAction;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
-public class NearestPTS extends BasePTS{
+public class MapPoint {
 
-    @Override
-    public int getUtility(BaseAction a) {
-        RescueAction rA = (RescueAction) a;
-        int patientSavingBenefit = 70;
-        return patientSavingBenefit - (Math.abs(rA.getRaisedLoc() - 50) * 2);
+    private int xPos;
+    private RescueAction curAction;
+
+    public MapPoint(int xPos){
+        this.xPos = xPos;
+        this.curAction = null;
     }
 
+    public void setCurAction(RescueAction a){
+        this.curAction = a;
+    }
+
+    public RescueAction getCurAction(){
+        return this.curAction;
+    }
 }

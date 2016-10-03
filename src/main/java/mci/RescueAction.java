@@ -24,6 +24,11 @@ public class RescueAction extends BaseAction {
     public enum PatientStatus { Dangerous, Very_Dangerous }
 
     private PatientStatus pStat;
+    private int raisedLoc;
+
+    public RescueAction(int raisedLoc){
+        this.raisedLoc = raisedLoc;
+    }
 
     @Override
     public void addBenefit(int additionalBenefit) {
@@ -38,6 +43,10 @@ public class RescueAction extends BaseAction {
     @Override
     public void reset() {
 
+    }
+
+    public int getRaisedLoc(){
+        return this.raisedLoc;
     }
 
     public PatientStatus getPatientStatus(){

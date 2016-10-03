@@ -84,7 +84,7 @@ public abstract class BaseConstituent {
     }
 
     public void updateCapability(ArrayList<BaseAction> _list){
-        ArrayList<BaseAction> newList = new ArrayList<BaseAction>(this.capabilityList.size());
+        ArrayList<BaseAction> newList = new ArrayList<>(this.capabilityList.size());
         for(BaseAction target : _list){
             for(BaseAction a : this.capabilityList){
                 if(a.getName().equalsIgnoreCase(target.getName()))

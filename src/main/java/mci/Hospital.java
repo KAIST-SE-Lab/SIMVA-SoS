@@ -4,6 +4,8 @@ import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ManagerInterface;
 
+import java.util.ArrayList;
+
 /**
  * Hospital.java
  * Hospital class, this is an SoS manager class
@@ -22,6 +24,8 @@ import kr.ac.kaist.se.simulator.ManagerInterface;
  * furnished to do so, subject to the following conditions: TBD
  */
 public class Hospital extends BaseConstituent implements ManagerInterface {
+
+    public static ArrayList<MapPoint> GeoMap = new ArrayList<>();
 
     @Override
     public int getSoSLevelBenefit() {

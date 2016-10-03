@@ -23,15 +23,17 @@ public class SeverityPTS extends BasePTS{
 
     @Override
     public int getUtility(BaseAction a) {
-        return 0;
+        RescueAction rA = (RescueAction) a;
+        RescueAction.PatientStatus pStat = rA.getPatientStatus();
+
+        int patientSavingBenefit = -1;
+
+        if(pStat == RescueAction.PatientStatus.Dangerous)
+            patientSavingBenefit = 60;
+        else if(pStat == RescueAction.PatientStatus.Very_Dangerous)
+            patientSavingBenefit = 80;
+
+        return patientSavingBenefit - (Math.abs(rA.getRaisedLoc() - 50) * 2);
     }
 
-    @Override
-    public RescueAction choosePatient() {
-        return null;
-    }
-
-    private void getPatientInfo(){
-
-    }
 }
