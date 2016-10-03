@@ -18,6 +18,5 @@ package kr.ac.kaist.se.simulator;
  */
 
 public interface ManagerInterface {
-    int getSoSLevelBenefit();
     void addSoSLevelBenefit(int SoSLevelBenefit);
 }

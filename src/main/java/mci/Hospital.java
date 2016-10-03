@@ -26,16 +26,9 @@ import java.util.ArrayList;
 public class Hospital extends BaseConstituent implements ManagerInterface {
 
     public static ArrayList<MapPoint> GeoMap = new ArrayList<>();
+    private RescueAction currentAction = null;
 
-    @Override
-    public int getSoSLevelBenefit() {
-        return 0;
-    }
 
-    @Override
-    public void addSoSLevelBenefit(int SoSLevelBenefit) {
-
-    }
 
     /**
      * Normal action of Hospital
@@ -45,7 +38,14 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
      */
     @Override
     public void normalAction(int elapsedTime) {
-
+        if(this.getStatus() == Status.OPERATING){
+            RescueAction rA = this.currentAction;
+            rA.treatAction(elapsedTime);
+            if(rA.getPatientStatus() == RescueAction.PatientStatus.Dead){ // Hospital treats all the patient
+                this.setStatus(Status.IDLE);
+                this.currentAction = null;
+            }
+        }
     }
 
     /**
@@ -55,20 +55,26 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
      */
     @Override
     public BaseAction immediateAction() {
-        for(MapPoint eachMap : Hospital.GeoMap){
-            RescueAction rA = eachMap.getCurAction();
-            if(rA == null)
-                continue;
+        if(this.getStatus() == Status.IDLE) {
+            for (MapPoint eachMap : Hospital.GeoMap) {
+                RescueAction rA = eachMap.getCurAction();
+                if (rA == null)
+                    continue;
 
-            if(rA.getRemainTime() < 50){
-                rA.addBenefit(10); // Acknowledge
+                if (rA.getRemainTime() < 50) {
+                    rA.addBenefit(10); // Acknowledge
+                }
+
             }
-
+            RescueAction healAction = new RescueAction(50, 10);
+            healAction.addPerformer(this);
+            healAction.setStatus(BaseAction.Status.HANDLED);
+            this.currentAction = healAction;
+            this.setStatus(Status.OPERATING);
+            return healAction;
+        }else{
+            return null;
         }
-        RescueAction healAction = new RescueAction(50, 10);
-        healAction.addPerformer(this);
-        healAction.setStatus(BaseAction.Status.HANDLED);
-        return healAction;
     }
 
     @Override
@@ -78,6 +84,12 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
 
     @Override
     public BaseAction getCurrentAction() {
-        return null;
+        return this.currentAction;
+    }
+
+    @Deprecated
+    @Override
+    public void addSoSLevelBenefit(int SoSLevelBenefit) {
+        // Not used
     }
 }
