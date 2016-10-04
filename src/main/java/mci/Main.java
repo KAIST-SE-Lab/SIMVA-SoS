@@ -1,5 +1,7 @@
 package mci;
 
+import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.Environment;
 import kr.ac.kaist.se.simulator.NormalDistributor;
 
 import java.util.ArrayList;
@@ -28,6 +30,15 @@ public class Main {
         for(int i=0; i<=100; i++){
             Hospital.GeoMap.add(new MapPoint(i));
         }
+
+        NearestPTS np1 = new NearestPTS();
+        NearestPTS np2 = new NearestPTS();
+        SeverityPTS sp1 = new SeverityPTS();
+        SeverityPTS sp2 = new SeverityPTS();
+
+        BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
+
+        Environment env = new Environment(CSs, null);
 
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(150, 50);

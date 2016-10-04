@@ -27,7 +27,7 @@ public final class Simulator {
     private int endTick;
 
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env){
-        this.csList = new ArrayList<BaseConstituent>();
+        this.csList = new ArrayList<>();
         this.csList.addAll(Arrays.asList(CSs));
         this.manager = manager;
         this.env = env;
@@ -36,11 +36,12 @@ public final class Simulator {
 
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
         for(BaseConstituent CS: this.csList){
-            for(BaseAction a : CS.getCapability()) {
-                if (CS.getCost(a) < minimumActionCost)
-                    minimumActionCost = CS.getCost(a);
-            }
-
+            CS.getCapability().forEach(
+                (a)->{
+                    if(CS.getCost(a) < minimumActionCost)
+                        minimumActionCost = CS.getCost(a);
+                }
+            );
         }
     }
 
@@ -53,9 +54,7 @@ public final class Simulator {
      */
     public void execute(){
         this.result = null;
-        for(BaseConstituent CS: this.csList){
-            CS.reset();
-        }
+        this.csList.forEach((CS)->CS.reset());
         if(manager != null)
             manager.reset();
         this.procedure();
@@ -137,7 +136,6 @@ public final class Simulator {
         }
         if(this.tick >= endTick){
             verdict = true;
-//            System.out.println("2000 step is done");
         }
         return verdict;
     }

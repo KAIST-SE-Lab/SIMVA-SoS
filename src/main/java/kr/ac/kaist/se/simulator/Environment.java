@@ -20,13 +20,15 @@ public final class Environment {
     private ArrayList<BaseAction> actionList = null; // 모든 Action List
 
     private boolean isPlanned; // action이 언제 발생할지 계획되어 있는가?
+    private boolean isAlreadyGenerated; // action이 매번 발생하는가? random하게 생성되는가?
 
     public Environment(BaseConstituent[] CSs, BaseAction[] actions){
-        this.csList = new ArrayList<BaseConstituent>();
+        this.csList = new ArrayList<>();
         Collections.addAll(this.csList, CSs);
-        this.actionList = new ArrayList<BaseAction>();
+        this.actionList = new ArrayList<>();
         Collections.addAll(this.actionList, actions);
         this.isPlanned = false;
+        this.isAlreadyGenerated = true;
     }
 
     /**
@@ -46,15 +48,15 @@ public final class Environment {
          * 2. Generate a random number that how many actions will be raised
          * 3. Shuffle the possible action list and pick actions
          */
+        if(this.isAlreadyGenerated) {
+            // Step 1
+            ArrayList<String> possibleActionList = new ArrayList<>();
+            for (BaseAction a : this.actionList) {
+                if (a.getStatus() == BaseAction.Status.NOT_RAISED)
+                    possibleActionList.add(a.getName());
+            }
 
-        // Step 1
-        ArrayList<String> possibleActionList = new ArrayList<String>();
-        for(BaseAction a : this.actionList){
-            if(a.getStatus() == BaseAction.Status.NOT_RAISED)
-                possibleActionList.add(a.getName());
-        }
-
-        // Step 2 Randomly generate option
+            // Step 2 Randomly generate option
 
 //        int numRaisingActions = 0;
 //        if(possibleActionList.size() > 0){
@@ -79,19 +81,22 @@ public final class Environment {
 //            }
 //        }
 
-        ArrayList<BaseAction> selectedActionList = new ArrayList<BaseAction>();
-        for(String targetName : possibleActionList){
-            for(BaseAction a : this.actionList){
-                if(a.getName().equalsIgnoreCase(targetName)){
-                    a.setStatus(BaseAction.Status.RAISED);
-                    selectedActionList.add(a);
-                    break;
+            ArrayList<BaseAction> selectedActionList = new ArrayList<BaseAction>();
+            for (String targetName : possibleActionList) {
+                for (BaseAction a : this.actionList) {
+                    if (a.getName().equalsIgnoreCase(targetName)) {
+                        a.setStatus(BaseAction.Status.RAISED);
+                        selectedActionList.add(a);
+                        break;
+                    }
                 }
             }
-        }
-        updateActionStatus(selectedActionList);
+            updateActionStatus(selectedActionList);
 
-        return selectedActionList.size();
+            return selectedActionList.size();
+        }else{// Randomly generating the actions
+            return 0;
+        }
     }
 
     /**

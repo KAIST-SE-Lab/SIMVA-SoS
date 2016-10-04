@@ -47,4 +47,9 @@ public class Movement extends BaseAction {
     public void reset() {
 
     }
+
+    @Override
+    public void randomGenerate() {
+        // Not-used
+    }
 }

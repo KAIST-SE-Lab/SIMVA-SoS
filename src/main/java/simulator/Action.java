@@ -53,4 +53,9 @@ public class Action extends BaseAction{
         this.resetAction();
         this.setRaisedLocation();
     }
+
+    @Override
+    public void randomGenerate() {
+        // Do nothing
+    }
 }
