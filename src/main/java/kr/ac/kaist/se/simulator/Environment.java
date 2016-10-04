@@ -1,5 +1,7 @@
 package kr.ac.kaist.se.simulator;
 
+import mci.RescueAction;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -19,15 +21,14 @@ public final class Environment {
     private ArrayList<BaseConstituent> csList = null; // 모든 CS list
     private ArrayList<BaseAction> actionList = null; // 모든 Action List
 
-    private boolean isPlanned; // action이 언제 발생할지 계획되어 있는가?
     private boolean isAlreadyGenerated; // action이 매번 발생하는가? random하게 생성되는가?
+    private ArrayList<BaseAction> actionTemplate; // 랜덤하게 생성할 action 템플릿
 
     public Environment(BaseConstituent[] CSs, BaseAction[] actions){
         this.csList = new ArrayList<>();
         Collections.addAll(this.csList, CSs);
         this.actionList = new ArrayList<>();
         Collections.addAll(this.actionList, actions);
-        this.isPlanned = false;
         this.isAlreadyGenerated = true;
     }
 
@@ -81,7 +82,7 @@ public final class Environment {
 //            }
 //        }
 
-            ArrayList<BaseAction> selectedActionList = new ArrayList<BaseAction>();
+            ArrayList<BaseAction> selectedActionList = new ArrayList<>();
             for (String targetName : possibleActionList) {
                 for (BaseAction a : this.actionList) {
                     if (a.getName().equalsIgnoreCase(targetName)) {
@@ -95,6 +96,8 @@ public final class Environment {
 
             return selectedActionList.size();
         }else{// Randomly generating the actions
+            BaseAction nA = this.actionTemplate.remove(0);
+            nA.randomGenerate();
             return 0;
         }
     }
@@ -124,5 +127,10 @@ public final class Environment {
                 }
             }
         }
+    }
+
+    public void setPlannedGeneration(){
+        this.isAlreadyGenerated = true;
+        this.actionTemplate = this.actionList;
     }
 }

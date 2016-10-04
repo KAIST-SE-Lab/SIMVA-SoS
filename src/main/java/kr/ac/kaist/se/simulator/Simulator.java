@@ -19,12 +19,17 @@ public final class Simulator {
     private ArrayList<BaseConstituent> csList = null;
     private ArrayList<BaseAction> immediateActions = new ArrayList<>();
     private ArrayList<BaseAction> actions = new ArrayList<>();
+
     private SIMResult result = null;
     private BaseConstituent manager = null;
     private Environment env = null;
+
     private int tick;
     private int minimumActionCost;
     private int endTick;
+
+    private ArrayList<Integer> plannedActionTicks; // Raising actions following specific random distribution
+    private boolean isPlanned; // Checking the is Planned actions?
 
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env){
         this.csList = new ArrayList<>();
@@ -33,7 +38,7 @@ public final class Simulator {
         this.env = env;
         this.tick = 0;
         this.endTick = 0;
-
+        this.isPlanned = false;
         this.minimumActionCost = Integer.MAX_VALUE - 100000;
         for(BaseConstituent CS: this.csList){
             CS.getCapability().forEach(
@@ -71,43 +76,43 @@ public final class Simulator {
         this.tick = 0;
         boolean endCondition = false;
 
-        while(!endCondition){
-            actions.clear();
+            while(!endCondition){
+                actions.clear();
 
-            immediateActions.clear();
+                immediateActions.clear();
 
-            for(BaseConstituent cs : this.csList){ // Get immediate candidate action
-                BaseAction a = cs.step();
-                if(a == null)
-                    continue;
-                if(a.getDuration() == 0){ // This action is immediate
-                    // Immediate action: making a decision
-                    // insert to immediateAction set
-                    immediateActions.add(a);
-                }else {
-                    // insert to normal action set
-                    // Normal actions
-                    actions.add(a);
-                }
-            }
-
-            if(this.manager != null){
-                BaseAction a = this.manager.step();
-                if(a != null){
-                    if(a.getDuration() == 0) {
+                for(BaseConstituent cs : this.csList){ // Get immediate candidate action
+                    BaseAction a = cs.step();
+                    if(a == null)
+                        continue;
+                    if(a.getDuration() == 0){ // This action is immediate
+                        // Immediate action: making a decision
+                        // insert to immediateAction set
                         immediateActions.add(a);
-                    }
-                    else
+                    }else {
+                        // insert to normal action set
+                        // Normal actions
                         actions.add(a);
+                    }
                 }
-            }
 
-            Collections.shuffle(immediateActions);
-            this.progress(Action.TYPE.IMMEDIATE); // Choose
+                if(this.manager != null){
+                    BaseAction a = this.manager.step();
+                    if(a != null){
+                        if(a.getDuration() == 0) {
+                            immediateActions.add(a);
+                        }
+                        else
+                            actions.add(a);
+                    }
+                }
 
-            this.generateExogenousActions(); // Environment action
-            Collections.shuffle(actions);
-            this.progress(Action.TYPE.NORMAL);
+                Collections.shuffle(immediateActions);
+                this.progress(Action.TYPE.IMMEDIATE); // Choose
+
+                this.generateExogenousActions(); // Environment action
+                Collections.shuffle(actions);
+                this.progress(Action.TYPE.NORMAL);
 
             endCondition = this.evaluateProperties();
         }
@@ -145,9 +150,16 @@ public final class Simulator {
          * Generate randomly out action
          * Notify to CS that environment generate the actions
          */
-        if(env.generateAction() > 0)
-            env.notifyCS();
-
+        if(this.isPlanned && this.plannedActionTicks.size() > 0){
+            while(this.plannedActionTicks.size() > 0 && this.tick >= this.plannedActionTicks.get(0)){
+                env.generateAction();
+                env.notifyCS();
+                this.plannedActionTicks.remove(0);
+            }
+        }else{
+            if(env.generateAction() > 0)
+                env.notifyCS();
+        }
     }
 
     private void progress(BaseAction.TYPE type){
@@ -203,5 +215,11 @@ public final class Simulator {
             env.updateActionStatus(actions);
             actions.clear();
         }
+    }
+
+    public void setActionPlan(ArrayList<Integer> randomDistribution){
+        this.isPlanned = true;
+        this.plannedActionTicks = randomDistribution;
+        this.env.setPlannedGeneration();
     }
 }

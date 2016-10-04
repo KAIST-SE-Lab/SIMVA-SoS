@@ -1,8 +1,6 @@
 package mci;
 
-import kr.ac.kaist.se.simulator.BaseConstituent;
-import kr.ac.kaist.se.simulator.Environment;
-import kr.ac.kaist.se.simulator.NormalDistributor;
+import kr.ac.kaist.se.simulator.*;
 
 import java.util.ArrayList;
 
@@ -25,20 +23,17 @@ public class Main {
 
     public static void main(String[] args){
 
+        NearestPTS np1 = new NearestPTS();
+        NearestPTS np2 = new NearestPTS();
+        SeverityPTS sp1 = new SeverityPTS();
+        SeverityPTS sp2 = new SeverityPTS();
+        BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
+
         Hospital hos = new Hospital();
         // Initialize Patient map
         for(int i=0; i<=100; i++){
             Hospital.GeoMap.add(new MapPoint(i));
         }
-
-        NearestPTS np1 = new NearestPTS();
-        NearestPTS np2 = new NearestPTS();
-        SeverityPTS sp1 = new SeverityPTS();
-        SeverityPTS sp2 = new SeverityPTS();
-
-        BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
-
-        Environment env = new Environment(CSs, null);
 
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(150, 50);
@@ -46,6 +41,15 @@ public class Main {
         for(Integer i : list){
             System.out.println(i);
         }
+
+        ArrayList<RescueAction> rActions = new ArrayList<>();
+        for(int i=0; i<100; i++)
+            rActions.add(new RescueAction(0, 0));
+
+        Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
+        Simulator sim = new Simulator(CSs, hos, env);
+
+
     }
 
 

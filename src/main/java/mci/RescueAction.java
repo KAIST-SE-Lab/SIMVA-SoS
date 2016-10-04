@@ -2,6 +2,8 @@ package mci;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 
+import java.util.Random;
+
 /**
  * RescueAction.java
  * Rescue patient action class
@@ -50,14 +52,37 @@ public class RescueAction extends BaseAction {
     }
 
     @Override
-    public void randomGenerate() {
-        
+    public void randomGenerate() { // Location..?
+        Random ranGen = new Random();
+        int raisedLoc = ranGen.nextInt(101);
+        if(40 < raisedLoc && raisedLoc < 60){
+            raisedLoc = ranGen.nextInt(101);
+        }
+
+        this.raisedLoc = raisedLoc;
+
+        int severity = ranGen.nextInt(2); // 0: dangerous, 1 : Very Dangerous
+        if(severity == 0){
+            this.pStat = PatientStatus.Dangerous;
+        }else if(severity == 1){
+            this.pStat = PatientStatus.Very_Dangerous;
+        }
+
+        int timeToDead = ranGen.nextInt(60) + 50; // 50 ~ 110
+        this.timeToDead = timeToDead;
     }
 
     public void treatAction(int elapsedTime){
         this.timeToDead -= elapsedTime;
+        this.decreaseRemainingTime(elapsedTime);
         if(timeToDead <= 0)
             this.pStat = PatientStatus.Dead;
+    }
+
+    @Override
+    public void startHandle(){
+        this.setStatus(Status.HANDLED);
+        this.setRemainTime(timeToDead);
     }
 
     public int getRemainTime(){

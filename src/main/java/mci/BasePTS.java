@@ -114,6 +114,8 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     private void gotoPatient(){
         this.PTS_STATUS = 1;
         this.setStatus(Status.OPERATING);
+
+        this.currentAction.startHandle();
     }
 
     public RescueAction choosePatient() {
