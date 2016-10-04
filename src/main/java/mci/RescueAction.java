@@ -49,6 +49,11 @@ public class RescueAction extends BaseAction {
 
     }
 
+    @Override
+    public void randomGenerate() {
+        
+    }
+
     public void treatAction(int elapsedTime){
         this.timeToDead -= elapsedTime;
         if(timeToDead <= 0)
