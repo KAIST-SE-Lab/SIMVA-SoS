@@ -43,7 +43,7 @@ public final class Environment {
      * Raise the action whose status is exactly not_raised
      * If the number of actions to be raised is 0, then no action is raised.
      */
-    public int generateAction(){
+    public void generateAction(){
         /*
          * 1. Count the number of possible actions to be raised
          * 2. Generate a random number that how many actions will be raised
@@ -94,11 +94,9 @@ public final class Environment {
             }
             updateActionStatus(selectedActionList);
 
-            return selectedActionList.size();
         }else{// Randomly generating the actions
-            BaseAction nA = this.actionTemplate.remove(0);
+            BaseAction nA = this.actionTemplate.remove(0); // Always same as the number of to be raised actions and the size of action template
             nA.randomGenerate();
-            return 0;
         }
     }
 
