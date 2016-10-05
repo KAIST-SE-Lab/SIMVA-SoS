@@ -4,6 +4,8 @@ import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
 
+import java.util.ArrayList;
+
 /**
  * BasePTS.java
  * Basic PTS class
@@ -121,16 +123,29 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     public RescueAction choosePatient() {
         RescueAction bestAction = null;
         for(MapPoint map : Hospital.GeoMap){
-            RescueAction candidate = map.getCurAction();
-            if(candidate == null)
+            int candidateSize = map.getCurActions().size();
+            if(candidateSize == 0)
                 continue;
             if(bestAction == null){
-                bestAction = candidate;
+                bestAction = pickBest(map.getCurActions());
             }else{
-                if(getUtility(candidate) > getUtility(bestAction))
-                    bestAction = candidate;
+                if(getUtility(pickBest(map.getCurActions())) > getUtility(bestAction))
+                    bestAction = pickBest(map.getCurActions());
             }
         }
         return bestAction;
+    }
+
+    private RescueAction pickBest(ArrayList<RescueAction> aList){
+        if(aList.size() == 1)
+            return aList.get(0);
+        else{
+            RescueAction candidate = aList.get(0);
+            for(RescueAction a : aList){
+                if(getUtility(candidate) < getUtility(a))
+                    candidate = a;
+            }
+            return candidate;
+        }
     }
 }

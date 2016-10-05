@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public abstract class BaseAction {
 
+    public static int ID = 0;
     public enum Status {NOT_RAISED, RAISED, HANDLED}
     public enum TYPE {IMMEDIATE, NORMAL}
 
@@ -34,6 +35,10 @@ public abstract class BaseAction {
 
     private BaseConstituent performer = null; // Current performer
     private ArrayList<BaseConstituent> performerList = new ArrayList<>();
+
+    public BaseAction(){
+        this.name = Integer.toString(hashCode()) + Integer.toString(ID);
+    }
 
     public void startHandle(){
         this.setStatus(BaseAction.Status.HANDLED);
@@ -116,9 +121,6 @@ public abstract class BaseAction {
         this.remainTime = remainTime;
     }
 
-    public void setName(String name){
-        this.name = name;
-    }
     public String getName(){
         return this.name;
     }

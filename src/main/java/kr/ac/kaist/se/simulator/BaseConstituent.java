@@ -37,14 +37,12 @@ public abstract class BaseConstituent {
     private BaseAction currentAction;
     private ArrayList<BaseAction> capabilityList = null;
     private HashMap<String, Integer> capabilityMap = null; // 각 CS의 Action 당 사용되는 cost <Action_name, cost>
-    private HashMap<String, Integer> durationMap = null; // 각 CS의 Action 당 사용되는 duration
 
     protected BaseConstituent(){
         this.status = Status.IDLE;
         this.currentAction = null;
-        this.capabilityList = new ArrayList<BaseAction>();
-        this.capabilityMap = new HashMap<String, Integer>();
-        this.durationMap = new HashMap<String, Integer>();
+        this.capabilityList = new ArrayList<>();
+        this.capabilityMap = new HashMap<>();
     }
 
     protected void setType(Type type){
@@ -99,13 +97,6 @@ public abstract class BaseConstituent {
         this.capabilityMap.put(a.getName(), cost);
         if(this.requiredMinimumBudget < cost)
             this.requiredMinimumBudget = cost;
-    }
-
-    public HashMap<String, Integer> getDurationMap(){
-        return this.durationMap;
-    }
-    public void updateDurationMap(HashMap<String, Integer> _druationMap){
-        this.durationMap = _druationMap;
     }
 
     public int getAccumulatedSoSBenefit(){

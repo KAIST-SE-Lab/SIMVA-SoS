@@ -1,7 +1,5 @@
 package kr.ac.kaist.se.simulator;
 
-import mci.RescueAction;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -95,8 +93,11 @@ public final class Environment {
             updateActionStatus(selectedActionList);
 
         }else{// Randomly generating the actions
+            // 언제 발생할지는 알려져 있지만 어떻게 발생시킬지는 랜덤하게.
             BaseAction nA = this.actionTemplate.remove(0); // Always same as the number of to be raised actions and the size of action template
             nA.randomGenerate();
+            nA.setStatus(BaseAction.Status.RAISED);
+            updateActionStatus(nA);
         }
     }
 
@@ -123,6 +124,15 @@ public final class Environment {
                     this.actionList.set(i, a);
                     break;
                 }
+            }
+        }
+    }
+
+    public void updateActionStatus(BaseAction action){
+        for(int i = 0; i<this.actionList.size(); i++){
+            if(this.actionList.get(i).getName().equalsIgnoreCase(action.getName())){
+                this.actionList.set(i, action);
+                break;
             }
         }
     }

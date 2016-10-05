@@ -133,7 +133,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
                 newDurationMap.put(actionName, requiredDuration);
             }
         }
-        this.updateDurationMap(newDurationMap);
+//        this.updateDurationMap(newDurationMap);
     }
 
     public Constituent clone(){
@@ -144,7 +144,7 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
     public void reset(){
         super.reset();
 //        this.currentPosition = (int) (( Math.random() * 12) % 6);
-        this.getDurationMap().clear();
+//        this.getDurationMap().clear();
     }
 
     public Action step(){

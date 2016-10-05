@@ -1,12 +1,8 @@
 package kr.ac.kaist.se.simulator;
 
-import simulator.Action;
-import simulator.Constituent;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * System of Systems Simulator
@@ -85,7 +81,7 @@ public final class Simulator {
                     BaseAction a = cs.step();
                     if(a == null)
                         continue;
-                    if(a.getDuration() == 0){ // This action is immediate
+                    if(a.getActionType() == BaseAction.TYPE.IMMEDIATE){ // This action is immediate
                         // Immediate action: making a decision
                         // insert to immediateAction set
                         immediateActions.add(a);
@@ -99,7 +95,7 @@ public final class Simulator {
                 if(this.manager != null){
                     BaseAction a = this.manager.step();
                     if(a != null){
-                        if(a.getDuration() == 0) {
+                        if(a.getActionType() == BaseAction.TYPE.IMMEDIATE) {
                             immediateActions.add(a);
                         }
                         else
@@ -108,11 +104,11 @@ public final class Simulator {
                 }
 
                 Collections.shuffle(immediateActions);
-                this.progress(Action.TYPE.IMMEDIATE); // Choose
+                this.progress(BaseAction.TYPE.IMMEDIATE); // Choose
 
                 this.generateExogenousActions(); // Environment action
                 Collections.shuffle(actions);
-                this.progress(Action.TYPE.NORMAL);
+                this.progress(BaseAction.TYPE.NORMAL);
 
             endCondition = this.evaluateProperties();
         }
@@ -166,7 +162,7 @@ public final class Simulator {
         if(type == BaseAction.TYPE.IMMEDIATE){
             ArrayList<BaseAction> actionList = this.immediateActions;
             for(BaseAction a : actionList){
-                if(a.getActionType() == Action.TYPE.IMMEDIATE) {
+                if(a.getActionType() == BaseAction.TYPE.IMMEDIATE) {
                     BaseAction selectedAction = a.getPerformer().immediateAction(); // Select action
                     if(selectedAction != null)
                         actions.add(selectedAction);
@@ -189,10 +185,10 @@ public final class Simulator {
                     }
                 }
                 if(discreteCondition){ // To jump the tick
-                    for(BaseAction a : actionList){
+                    for(BaseAction a : actionList){// Calculate the minimum jump tick
                         if(minimumElapsedTime < a.getRemainingTime())
                             minimumElapsedTime = a.getRemainingTime();
-                    }// Calculate the minimum jump tick
+                    }
                 }else{ // If any one CS are not in operation, minimum tick will be one
                     minimumElapsedTime = 1;
                 }

@@ -6,7 +6,6 @@ public class Action extends BaseAction{
     private int additionalBenefit;
 
     public Action(String name, int benefit, int SoSBenefit){
-        this.setName(name);
         this.additionalBenefit = 0;
         this.setBenefit(benefit);
         this.setSoSBenefit(SoSBenefit);

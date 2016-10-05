@@ -48,7 +48,7 @@ public class Main {
 
         Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
         Simulator sim = new Simulator(CSs, hos, env);
-
+        sim.setActionPlan(list);
 
     }
 

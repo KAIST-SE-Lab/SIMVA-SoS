@@ -24,7 +24,6 @@ public class DummyAction extends BaseAction {
     private int additionalBenefit;
 
     public DummyAction(String name, int benefit, int SoSBenefit){
-        this.setName(name);
         this.additionalBenefit = 0;
         this.setBenefit(benefit);
         this.setSoSBenefit(SoSBenefit);
@@ -57,6 +56,11 @@ public class DummyAction extends BaseAction {
 
     public void reset(){
         this.resetAction();
+    }
+
+    @Override
+    public void randomGenerate() {
+        // Do nothing
     }
 
 

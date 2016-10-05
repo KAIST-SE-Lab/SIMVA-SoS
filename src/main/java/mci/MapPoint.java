@@ -1,5 +1,7 @@
 package mci;
 
+import java.util.ArrayList;
+
 /**
  * MapPoint.java
  * Each Map point
@@ -20,18 +22,23 @@ package mci;
 public class MapPoint {
 
     private int xPos;
-    private RescueAction curAction;
+    private ArrayList<RescueAction> aList;
 
     public MapPoint(int xPos){
+        this.aList = new ArrayList<>();
         this.xPos = xPos;
-        this.curAction = null;
     }
 
-    public void setCurAction(RescueAction a){
-        this.curAction = a;
+    public void addCurAction(RescueAction a){
+        this.aList.forEach((rA) ->{
+            if(rA.getName().equalsIgnoreCase(a.getName()))
+                return;
+            }
+        );
+        this.aList.add(a);
     }
 
-    public RescueAction getCurAction(){
-        return this.curAction;
+    public ArrayList<RescueAction> getCurActions(){
+        return this.aList;
     }
 }

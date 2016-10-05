@@ -1,5 +1,6 @@
 package simulator;
 
+import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.Simulator;
 import org.junit.Test;
 
@@ -9,7 +10,7 @@ public class SimulatorTest {
 
     @Test
     public void testConstructor(){
-        Constituent[] CSs = {};
+        BaseConstituent[] CSs = {};
 
         Simulator sim = new Simulator(CSs, null, null);
         assertNotNull(sim);

@@ -49,20 +49,24 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     /**
      * Immediate action of Hospital
      * Hospital find the patients who has limited death time. (< 50)
+     * Update the geoMap
      * @return
      */
     @Override
     public BaseAction immediateAction() {
         if(this.getStatus() == Status.IDLE) {
             for (MapPoint eachMap : Hospital.GeoMap) {
-                RescueAction rA = eachMap.getCurAction();
-                if (rA == null)
+                int rASize = eachMap.getCurActions().size();
+                if (rASize == 0)
                     continue;
 
-                if (rA.getRemainTime() < 50) {
-                    rA.addBenefit(10); // Acknowledge
-                }
-
+                ArrayList<RescueAction> aList = eachMap.getCurActions();
+                aList.forEach((rA) ->
+                {
+                    if (rA.getRemainTime() < 50) {
+                        rA.addBenefit(10); // Acknowledge
+                    }
+                });
             }
             RescueAction healAction = new RescueAction(50, 10);
             healAction.addPerformer(this);
@@ -83,6 +87,20 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     @Override
     public BaseAction getCurrentAction() {
         return this.currentAction;
+    }
+
+    /**
+     * This method is working on map update
+     * @param _list
+     */
+    @Override
+    public void updateCapability(ArrayList<BaseAction> _list){
+        for(BaseAction _a : _list){
+            RescueAction rA = (RescueAction) _a;
+            int raisedLoc = rA.getRaisedLoc();
+            MapPoint m = Hospital.GeoMap.get(raisedLoc);
+            m.addCurAction(rA);
+        }
     }
 
     @Deprecated

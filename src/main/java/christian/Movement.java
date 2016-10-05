@@ -23,7 +23,7 @@ import kr.ac.kaist.se.simulator.BaseAction;
 public class Movement extends BaseAction {
 
     public Movement(){
-        this.setName("Right move");
+//        this.setName("Right move");
         super.setDuration(1);
         super.setActionType(TYPE.NORMAL);
     }
