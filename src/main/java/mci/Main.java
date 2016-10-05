@@ -50,6 +50,8 @@ public class Main {
         Simulator sim = new Simulator(CSs, hos, env);
         sim.setActionPlan(list);
 
+        sim.execute();
+
     }
 
 
