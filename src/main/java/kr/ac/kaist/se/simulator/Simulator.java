@@ -157,8 +157,8 @@ public final class Simulator {
                 this.plannedActionTicks.remove(0);
             }
         }else{
-            if(env.generateAction() > 0)
-                env.notifyCS();
+            env.generateAction();
+            env.notifyCS();
         }
     }
 
