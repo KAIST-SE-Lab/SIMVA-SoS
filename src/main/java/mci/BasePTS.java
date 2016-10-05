@@ -27,14 +27,12 @@ import java.util.ArrayList;
 public abstract class BasePTS extends BaseConstituent implements ConstituentInterface{
 
     private int curPos;
-    private RescueAction candidateAction;
     private RescueAction currentAction;
 
     private int PTS_STATUS; // 0: IDLE, 1: Go to Patient, 2: Return to Hospital
 
     public BasePTS(){
         this.curPos = 50;
-        this.candidateAction = null;
         this.PTS_STATUS = 0;
     }
 
@@ -87,19 +85,25 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
      */
     @Override
     public BaseAction immediateAction() {
-        if(this.getStatus() != Status.IDLE || this.getStatus() != Status.SELECTION)
+        if(this.getStatus() != Status.IDLE && this.getStatus() != Status.SELECTION)
             return null;
-        if(this.getStatus() == Status.IDLE){
+        if(this.getStatus() == Status.SELECTION) {
             RescueAction action = choosePatient();
-            return action;
-        }else if(this.getStatus() == Status.SELECTION){
-            if(this.candidateAction.getStatus() == BaseAction.Status.RAISED){
-                this.currentAction = this.candidateAction;
+            if (action != null) {
+                this.currentAction = action;
                 this.currentAction.addPerformer(this);
                 this.gotoPatient();
-                return this.candidateAction;
             }
+            return action;
         }
+//        }else if(this.getStatus() == Status.SELECTION){
+//            if(this.candidateAction.getStatus() == BaseAction.Status.RAISED){
+//                this.currentAction = this.candidateAction;
+//                this.currentAction.addPerformer(this);
+//                this.gotoPatient();
+//                return this.candidateAction;
+//            }
+//        }
         return null;
     }
 
@@ -126,12 +130,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
             int candidateSize = map.getCurActions().size();
             if(candidateSize == 0)
                 continue;
-            if(bestAction == null){
-                bestAction = pickBest(map.getCurActions());
-            }else{
-                if(getUtility(pickBest(map.getCurActions())) > getUtility(bestAction))
-                    bestAction = pickBest(map.getCurActions());
-            }
+            bestAction = pickBest(map.getCurActions());
         }
         return bestAction;
     }
@@ -139,13 +138,17 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     private RescueAction pickBest(ArrayList<RescueAction> aList){
         if(aList.size() == 1)
             return aList.get(0);
-        else{
+        else if(aList.size() > 1){
             RescueAction candidate = aList.get(0);
             for(RescueAction a : aList){
+                if(a.getStatus() != BaseAction.Status.RAISED)
+                    continue;
                 if(getUtility(candidate) < getUtility(a))
                     candidate = a;
             }
             return candidate;
+        }else{
+            return null;
         }
     }
 }

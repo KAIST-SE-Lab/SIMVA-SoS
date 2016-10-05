@@ -68,7 +68,7 @@ public class RescueAction extends BaseAction {
             this.pStat = PatientStatus.Very_Dangerous;
         }
 
-        int timeToDead = ranGen.nextInt(60) + 50; // 50 ~ 110
+        int timeToDead = ranGen.nextInt(300) + 500; // 500 ~ 800
         this.timeToDead = timeToDead;
     }
 
