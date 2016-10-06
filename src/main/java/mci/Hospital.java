@@ -74,6 +74,9 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
             this.currentAction = healAction;
             this.setStatus(Status.OPERATING);
             return healAction;
+        }else if(this.getStatus() == Status.SELECTION) { // 에러 상태. 다시 원상 복구
+            this.setStatus(Status.IDLE);
+            return null;
         }else{
             return null;
         }
@@ -91,12 +94,14 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
 
     /**
      * This method is working on map update
-     * @param _list
+     * @param updatedActions
      */
     @Override
-    public void updateCapability(ArrayList<BaseAction> _list){
-        for(BaseAction _a : _list){
+    public void updateCapability(ArrayList<BaseAction> updatedActions){
+        for(BaseAction _a : updatedActions){
             RescueAction rA = (RescueAction) _a;
+            if(rA.getPatientStatus() == null)
+                continue;
             int raisedLoc = rA.getRaisedLoc();
             MapPoint m = Hospital.GeoMap.get(raisedLoc);
             m.addCurAction(rA);

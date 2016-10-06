@@ -94,6 +94,8 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                 this.currentAction.addPerformer(this);
                 this.gotoPatient();
             }
+            if(action == null) // 아무런 action을 찾지 못했으니 IDLE로 다시 돌림
+                this.setStatus(Status.IDLE);
             return action;
         }
 //        }else if(this.getStatus() == Status.SELECTION){
@@ -104,6 +106,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 //                return this.candidateAction;
 //            }
 //        }
+        this.setStatus(Status.IDLE);
         return null;
     }
 
@@ -136,7 +139,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     }
 
     private RescueAction pickBest(ArrayList<RescueAction> aList){
-        if(aList.size() == 1)
+        if(aList.size() == 1 && aList.get(0).getStatus() == BaseAction.Status.RAISED)
             return aList.get(0);
         else if(aList.size() > 1){
             RescueAction candidate = aList.get(0);

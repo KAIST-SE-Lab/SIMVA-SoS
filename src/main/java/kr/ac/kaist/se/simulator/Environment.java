@@ -112,6 +112,11 @@ public final class Environment {
         }
     }
 
+    public void notifyManager(BaseConstituent manager){
+        manager.updateCapability(this.actionList);
+    }
+
+
     /**
      * Update the status of actions executed by CSs
      * @param actionList the list of actions that are changed its status

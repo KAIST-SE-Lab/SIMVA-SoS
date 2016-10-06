@@ -150,6 +150,8 @@ public final class Simulator {
             while(this.plannedActionTicks.size() > 0 && this.tick >= this.plannedActionTicks.get(0)){
                 env.generateAction();
                 env.notifyCS();
+                if(this.manager != null)
+                    env.notifyManager(this.manager);
                 this.plannedActionTicks.remove(0);
             }
         }else{
