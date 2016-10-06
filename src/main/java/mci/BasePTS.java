@@ -45,24 +45,47 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     @Override
     public void normalAction(int elapsedTime) {
         if(this.PTS_STATUS == 1){ // Go to Patient
-            int patientPos = this.currentAction.getRaisedLoc();
-            patientPos = Math.abs(patientPos - 50); // 50 = Hospital location
-
-            if(elapsedTime > patientPos) {
-                // E.g., curPos = 59, patientPos = 70, elapsedTime = 30
-                movePTS(patientPos - this.curPos); // 70-59 = 11 & Reached!
-                int remainingTime = elapsedTime - (patientPos - this.curPos); // 30-11 = 19
-                this.PTS_STATUS = 2; // Return to hospital
-                movePTS((-1)*remainingTime);
+            if(this.currentAction.getRaisedLoc() < 50){
+                int distance = this.curPos - this.currentAction.getRaisedLoc();
+                if(elapsedTime > distance){
+                    movePTS( (-1) * distance );
+                    int remainTime = elapsedTime - distance;
+                    this.PTS_STATUS = 2;
+                    movePTS(remainTime);
+                }else{
+                    movePTS((-1) * elapsedTime);
+                }
             }else{
-                // E.g., curPos = 59, patientPos = 70, elapsedTime = 10
-                movePTS(elapsedTime);
+                int distance = this.currentAction.getRaisedLoc() - this.curPos;
+                if(elapsedTime > distance){
+                    movePTS(distance);
+                    int remainTime = elapsedTime - distance;
+                    this.PTS_STATUS = 2;
+                    movePTS((-1) * remainTime);
+                }else
+                    movePTS(elapsedTime);
             }
-        }else if(this.PTS_STATUS == 2){ // Go to Hospital
-            movePTS(elapsedTime);
-            if(this.curPos == 50){ // PTS has breached to the hospital!
-                if(this.currentAction.getPatientStatus() != RescueAction.PatientStatus.Dead) // Not dead
-                    this.updateCostBenefit(0, 1, 1); // save one patient!
+        }else if(this.PTS_STATUS == 2){ // 병원으로 돌아옴
+            if(this.curPos < 50){
+                int distance = 50 - this.curPos;
+                if(elapsedTime > distance){
+                    movePTS(distance);
+                }else{
+                    movePTS(elapsedTime);
+                }
+            }else if(this.curPos > 50){
+                int distance = this.curPos - 50;
+                if(elapsedTime > distance){
+                    movePTS((-1) * distance);
+                }else{
+                    movePTS((-1) * elapsedTime);
+                }
+            }
+            if(this.curPos == 50){// 병원 도착
+                RescueAction.PatientStatus pStat = this.currentAction.getPatientStatus();
+                if(pStat != RescueAction.PatientStatus.Dead){
+                    this.updateCostBenefit(0, 1, 1);
+                }
                 this.PTS_STATUS = 0;
             }
         }
@@ -91,7 +114,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
             return null;
         if(this.getStatus() == Status.SELECTION) {
             RescueAction action = choosePatient();
-            if (action != null) {
+            if (action != null && action.getStatus() == BaseAction.Status.RAISED) {
                 this.currentAction = action;
                 this.currentAction.addPerformer(this);
                 this.gotoPatient();
