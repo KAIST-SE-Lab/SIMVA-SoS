@@ -75,11 +75,13 @@ public class RescueAction extends BaseAction {
 
         int timeToDead = ranGen.nextInt(300) + 500; // 500 ~ 800
         this.timeToDead = timeToDead;
+
+        this.setActionType(TYPE.NORMAL);
     }
 
     public void treatAction(int elapsedTime){
-        this.timeToDead -= elapsedTime;
-        this.decreaseRemainingTime(elapsedTime);
+        this.timeToDead -= Math.abs(elapsedTime);
+        this.decreaseRemainingTime(Math.abs(elapsedTime));
         if(timeToDead <= 0)
             this.pStat = PatientStatus.Dead;
     }

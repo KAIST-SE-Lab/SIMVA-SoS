@@ -158,6 +158,10 @@ public abstract class BaseConstituent {
         return null;
     }
 
+    public void setCurrentAction(BaseAction a){
+        this.currentAction = a;
+    }
+
     /*
      * Abstract methods
      */

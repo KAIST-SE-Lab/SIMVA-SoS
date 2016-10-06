@@ -27,7 +27,6 @@ import java.util.ArrayList;
 public abstract class BasePTS extends BaseConstituent implements ConstituentInterface{
 
     private int curPos;
-    private RescueAction currentAction;
 
     private int PTS_STATUS; // 0: IDLE, 1: Go to Patient, 2: Return to Hospital
 
@@ -44,9 +43,10 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
      */
     @Override
     public void normalAction(int elapsedTime) {
+        RescueAction currentAction = (RescueAction) this.getCurrentAction();
         if(this.PTS_STATUS == 1){ // Go to Patient
-            if(this.currentAction.getRaisedLoc() < 50){
-                int distance = this.curPos - this.currentAction.getRaisedLoc();
+            if(currentAction.getRaisedLoc() < 50){
+                int distance = this.curPos - currentAction.getRaisedLoc();
                 if(elapsedTime > distance){
                     movePTS( (-1) * distance );
                     int remainTime = elapsedTime - distance;
@@ -56,7 +56,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                     movePTS((-1) * elapsedTime);
                 }
             }else{
-                int distance = this.currentAction.getRaisedLoc() - this.curPos;
+                int distance = currentAction.getRaisedLoc() - this.curPos;
                 if(elapsedTime > distance){
                     movePTS(distance);
                     int remainTime = elapsedTime - distance;
@@ -82,7 +82,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                 }
             }
             if(this.curPos == 50){// 병원 도착
-                RescueAction.PatientStatus pStat = this.currentAction.getPatientStatus();
+                RescueAction.PatientStatus pStat = currentAction.getPatientStatus();
                 if(pStat != RescueAction.PatientStatus.Dead){
                     this.updateCostBenefit(0, 1, 1);
                 }
@@ -96,10 +96,11 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
      * @param moveVal
      */
     private void movePTS(int moveVal){
+        RescueAction currentAction = (RescueAction) this.getCurrentAction();
         this.curPos += moveVal;
         if(this.PTS_STATUS == 2) //병원으로 갈 때는 같이 이동
-            this.currentAction.setCurPos(curPos);
-        this.currentAction.treatAction(moveVal);
+            currentAction.setCurPos(curPos);
+        currentAction.treatAction(moveVal);
     }
 
     /**
@@ -115,22 +116,14 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         if(this.getStatus() == Status.SELECTION) {
             RescueAction action = choosePatient();
             if (action != null && action.getStatus() == BaseAction.Status.RAISED) {
-                this.currentAction = action;
-                this.currentAction.addPerformer(this);
+                this.setCurrentAction(action);
+                action.addPerformer(this);
                 this.gotoPatient();
             }
             if(action == null) // 아무런 action을 찾지 못했으니 IDLE로 다시 돌림
                 this.setStatus(Status.IDLE);
             return action;
         }
-//        }else if(this.getStatus() == Status.SELECTION){
-//            if(this.candidateAction.getStatus() == BaseAction.Status.RAISED){
-//                this.currentAction = this.candidateAction;
-//                this.currentAction.addPerformer(this);
-//                this.gotoPatient();
-//                return this.candidateAction;
-//            }
-//        }
         this.setStatus(Status.IDLE);
         return null;
     }
@@ -140,16 +133,13 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         return null;
     }
 
-    @Override
-    public BaseAction getCurrentAction() {
-        return this.currentAction;
-    }
-
     private void gotoPatient(){
         this.PTS_STATUS = 1;
         this.setStatus(Status.OPERATING);
 
-        this.currentAction.startHandle();
+        RescueAction currentAction = (RescueAction) this.getCurrentAction();
+
+        currentAction.startHandle();
     }
 
     public RescueAction choosePatient() {
