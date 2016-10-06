@@ -146,7 +146,7 @@ public final class Simulator {
          * Generate randomly out action
          * Notify to CS that environment generate the actions
          */
-        if(this.isPlanned && this.plannedActionTicks.size() > 0){
+        if(this.isPlanned){
             while(this.plannedActionTicks.size() > 0 && this.tick >= this.plannedActionTicks.get(0)){
                 env.generateAction();
                 env.notifyCS();

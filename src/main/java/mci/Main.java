@@ -38,9 +38,6 @@ public class Main {
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(150, 50);
         ArrayList<Integer> list = distributor.getDistributionArray(100);
-        for(Integer i : list){
-            System.out.println(i);
-        }
 
         ArrayList<RescueAction> rActions = new ArrayList<>();
         for(int i=0; i<100; i++)
