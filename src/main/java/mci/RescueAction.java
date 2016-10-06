@@ -43,7 +43,8 @@ public class RescueAction extends BaseAction {
 
     @Override
     public BaseAction clone() {
-        return null;
+        RescueAction cA = new RescueAction(this.raisedLoc, this.timeToDead);
+        return cA;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class RescueAction extends BaseAction {
     public void randomGenerate() { // Location..?
         Random ranGen = new Random();
         int raisedLoc = ranGen.nextInt(101);
-        if(40 < raisedLoc && raisedLoc < 60){
+        while(40 < raisedLoc && raisedLoc < 60){
             raisedLoc = ranGen.nextInt(101);
         }
 

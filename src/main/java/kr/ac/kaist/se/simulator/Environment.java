@@ -47,7 +47,7 @@ public final class Environment {
          * 2. Generate a random number that how many actions will be raised
          * 3. Shuffle the possible action list and pick actions
          */
-        if(this.isAlreadyGenerated) {
+        if(!this.isAlreadyGenerated) {
             // Step 1
             ArrayList<String> possibleActionList = new ArrayList<>();
             for (BaseAction a : this.actionList) {
@@ -139,6 +139,9 @@ public final class Environment {
 
     public void setPlannedGeneration(){
         this.isAlreadyGenerated = true;
-        this.actionTemplate = this.actionList;
+        this.actionTemplate = new ArrayList<>();
+        for(int i=0; i<this.actionList.size(); i++){
+            this.actionTemplate.add(this.actionList.get(i).clone());
+        }
     }
 }

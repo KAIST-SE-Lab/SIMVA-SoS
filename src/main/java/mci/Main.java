@@ -50,6 +50,7 @@ public class Main {
         Simulator sim = new Simulator(CSs, hos, env);
         sim.setActionPlan(list);
 
+        sim.setEndTick(10000);
         sim.execute();
 
     }
