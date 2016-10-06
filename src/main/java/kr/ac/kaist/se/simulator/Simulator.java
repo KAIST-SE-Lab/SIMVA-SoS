@@ -21,7 +21,6 @@ public final class Simulator {
     private Environment env = null;
 
     private int tick;
-    private int minimumActionCost;
     private int endTick;
 
     private ArrayList<Integer> plannedActionTicks; // Raising actions following specific random distribution
@@ -35,15 +34,7 @@ public final class Simulator {
         this.tick = 0;
         this.endTick = 0;
         this.isPlanned = false;
-        this.minimumActionCost = Integer.MAX_VALUE - 100000;
-        for(BaseConstituent CS: this.csList){
-            CS.getCapability().forEach(
-                (a)->{
-                    if(CS.getCost(a) < minimumActionCost)
-                        minimumActionCost = CS.getCost(a);
-                }
-            );
-        }
+
     }
 
     public void setEndTick(int tick){

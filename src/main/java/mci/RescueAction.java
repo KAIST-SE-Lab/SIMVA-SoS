@@ -28,6 +28,7 @@ public class RescueAction extends BaseAction {
     private PatientStatus pStat;
     private int raisedLoc;
     private int timeToDead; // Remaining time to dead patient
+    private int curPos;
 
     private boolean isAcknowledged;
 
@@ -63,6 +64,7 @@ public class RescueAction extends BaseAction {
         }
 
         this.raisedLoc = raisedLoc;
+        this.curPos = raisedLoc;
 
         int severity = ranGen.nextInt(2); // 0: dangerous, 1 : Very Dangerous
         if(severity == 0){
@@ -100,7 +102,41 @@ public class RescueAction extends BaseAction {
         return this.raisedLoc;
     }
 
+    public void setCurPos(int curPos){
+        this.curPos = curPos;
+    }
+
     public PatientStatus getPatientStatus(){
         return this.pStat;
+    }
+
+    @Override
+    public int getRemainingTime(){
+        int remainDistance = this.getRemainDistanceToHospital();
+        return remainDistance > this.getRemainTime() ? this.getRemainTime() : remainDistance;
+    }
+
+    private int getRemainDistanceToHospital(){
+        BasePTS pts = (BasePTS) this.getPerformer();
+        int mode = pts.getPTS_STATUS(); // 1: go to patient, 2: Return to Hospital
+
+        if(mode == 2){ // 병원으로 오고 있으면 같이 오는 Action과 같이 이동..
+            if(this.curPos > 50){
+                return this.curPos - 50;
+            }else if(this.curPos < 50){
+                return 50 - this.curPos;
+            }
+        }else if(mode == 1){// 아직 도착도 안함.. PTS 거리만큼 빼줘야함.
+            int curPerformerPos = pts.getCurPos();
+            if(this.curPos > 50){
+                int remainToPatient = this.curPos - curPerformerPos;
+                return this.curPos - 50 + remainToPatient;
+            } else if (this.curPos < 50) {
+                int remainToPatient = curPerformerPos - this.curPos;
+                return 50 - this.curPos + remainToPatient;
+            }
+        }
+        return 0;
+
     }
 }

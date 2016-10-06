@@ -74,6 +74,8 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
      */
     private void movePTS(int moveVal){
         this.curPos += moveVal;
+        if(this.PTS_STATUS == 2) //병원으로 갈 때는 같이 이동
+            this.currentAction.setCurPos(curPos);
         this.currentAction.treatAction(moveVal);
     }
 
@@ -153,5 +155,13 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         }else{
             return null;
         }
+    }
+
+    public int getPTS_STATUS(){
+        return this.PTS_STATUS;
+    }
+
+    public int getCurPos(){
+        return this.curPos;
     }
 }
