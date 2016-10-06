@@ -44,8 +44,10 @@ public class RescueAction extends BaseAction {
     @Override
     public BaseAction clone() {
         RescueAction cA = new RescueAction(this.raisedLoc, this.timeToDead);
+        cA.setName(this.getName());
         return cA;
     }
+
 
     @Override
     public void reset() {
