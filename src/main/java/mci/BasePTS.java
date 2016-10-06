@@ -85,6 +85,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                 RescueAction.PatientStatus pStat = currentAction.getPatientStatus();
                 if(pStat != RescueAction.PatientStatus.Dead){
                     this.updateCostBenefit(0, 1, 1);
+                    readyForPatient();
                 }
                 this.PTS_STATUS = 0;
             }
@@ -176,5 +177,11 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 
     public int getCurPos(){
         return this.curPos;
+    }
+
+    private void readyForPatient(){
+        this.setStatus(Status.IDLE);
+        this.PTS_STATUS = 0;
+        this.setCurrentAction(null);
     }
 }

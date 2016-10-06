@@ -161,6 +161,9 @@ public abstract class BaseConstituent {
     public void setCurrentAction(BaseAction a){
         this.currentAction = a;
     }
+    public BaseAction getCurrentAction(){
+        return this.currentAction;
+    }
 
     /*
      * Abstract methods
@@ -168,6 +171,4 @@ public abstract class BaseConstituent {
     public abstract void normalAction(int elapsedTime);
     public abstract BaseAction immediateAction();
     public abstract BaseConstituent clone();
-    public abstract BaseAction getCurrentAction();
-
 }
