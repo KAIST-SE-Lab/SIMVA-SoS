@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args){
-        for(int j = 0; j < 100; j++) {
+        for(int j = 0; j < 1; j++) {
             NearestPTS np1 = new NearestPTS();
             NearestPTS np2 = new NearestPTS();
             SeverityPTS sp1 = new SeverityPTS();
@@ -36,7 +36,7 @@ public class Main {
             }
 
             NormalDistributor distributor = new NormalDistributor();
-            distributor.setNormalDistParams(1000, 200);
+            distributor.setNormalDistParams(1000, 300);
             ArrayList<Integer> list = distributor.getDistributionArray(100);
 
             ArrayList<RescueAction> rActions = new ArrayList<>();

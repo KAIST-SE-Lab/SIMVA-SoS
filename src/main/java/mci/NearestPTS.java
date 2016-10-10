@@ -26,7 +26,7 @@ public class NearestPTS extends BasePTS{
         RescueAction rA = (RescueAction) a;
         int patientSavingBenefit = 70;
         if(rA.isAcknowledged())
-            patientSavingBenefit += 10;
+            patientSavingBenefit += 20;
 
         int distance = rA.getRaisedLoc() > 50? rA.getRaisedLoc()-50 : 50 - rA.getRaisedLoc();
         distance *= 2;

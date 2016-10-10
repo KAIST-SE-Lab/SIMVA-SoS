@@ -84,7 +84,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
             if(this.curPos == 50){// 병원 도착
                 RescueAction.PatientStatus pStat = currentAction.getPatientStatus();
                 if(pStat != RescueAction.PatientStatus.Dead){
-//                    System.out.println(this + " PTS saved a patient!");
+                    System.out.println(this + " PTS saved a patient!");
                     this.updateCostBenefit(0, 1, 1);
                     readyForPatient();
                 }
@@ -196,10 +196,10 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                 RescueAction rA = aList.get(iterator);
                 if(rA.getStatus() == BaseAction.Status.RAISED){
                     if(candidate == null){
-                        if(getUtility(rA) > 0)
+                        if(rA.getPatientStatus()!= RescueAction.PatientStatus.Dead && getUtility(rA) > 0)
                             candidate = rA;
                     }else{// 비교군이 있음
-                        if(getUtility(candidate) < getUtility(rA)){
+                        if(rA.getPatientStatus()!= RescueAction.PatientStatus.Dead && getUtility(candidate) < getUtility(rA)){
                             candidate = rA;
                         }
                     }

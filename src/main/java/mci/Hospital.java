@@ -60,7 +60,7 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
             for (MapPoint eachMap : Hospital.GeoMap) {
                 ArrayList<RescueAction> aList = eachMap.getCurActions();
                 for(RescueAction rA : aList){
-                   if(rA.getRemainTime() < 300){
+                   if(rA.getRemainTime() < 400 && rA.getRemainTime() > 0){
                        rA.addBenefit(10);
 //                       System.out.println("ACK!");
                    }
@@ -111,8 +111,10 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     private void updatePatientInfo(){
         for(MapPoint map : Hospital.GeoMap){
             for(RescueAction rA : map.getCurActions()){
-                if(rA.getStatus() != BaseAction.Status.HANDLED){
+                if(rA.getStatus() == BaseAction.Status.RAISED && rA.getPatientStatus() != RescueAction.PatientStatus.Dead){
                     rA.treatAction(10);
+                    if(rA.getRemainTime() == 0)
+                        System.out.println("One patient is dead");
                 }
             }
         }
