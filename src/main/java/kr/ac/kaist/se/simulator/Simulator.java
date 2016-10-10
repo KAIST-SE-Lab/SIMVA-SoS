@@ -129,8 +129,6 @@ public final class Simulator {
         if(this.tick >= endTick){
             verdict = true;
         }
-        if(this.tick > 1000)
-            System.out.println();
         return verdict;
     }
 

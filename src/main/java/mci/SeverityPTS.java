@@ -23,6 +23,7 @@ public class SeverityPTS extends BasePTS{
 
     @Override
     public int getUtility(BaseAction a) {
+        //Utility는 항상 발생한 자리에서 선택이 되기 때문에 Raised Location을 기준으로 선택함
         RescueAction rA = (RescueAction) a;
         RescueAction.PatientStatus pStat = rA.getPatientStatus();
 
@@ -36,7 +37,10 @@ public class SeverityPTS extends BasePTS{
         if(rA.isAcknowledged())
             patientSavingBenefit += 10;
 
-        return patientSavingBenefit - (Math.abs(rA.getRaisedLoc() - 50) * 2);
+        int distance = rA.getRaisedLoc() > 50? rA.getRaisedLoc()-50 : 50 - rA.getRaisedLoc();
+        distance *= 2;
+
+        return patientSavingBenefit - distance;
     }
 
 }
