@@ -30,11 +30,12 @@ public class MapPoint {
     }
 
     public void addCurAction(RescueAction a){
-        this.aList.forEach((rA) ->{
-            if(rA.getName().equalsIgnoreCase(a.getName()))
+        // 이름이 제대로 걸러지지 않음..
+        for(RescueAction rA : this.aList){
+            if(rA.getName().equalsIgnoreCase(a.getName())){
                 return;
             }
-        );
+        }
         this.aList.add(a);
     }
 

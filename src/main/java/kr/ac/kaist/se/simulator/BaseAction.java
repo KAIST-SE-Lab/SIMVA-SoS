@@ -78,6 +78,7 @@ public abstract class BaseAction {
         this.status = status;
     }
     public void addPerformer(BaseConstituent performer){
+        // 메소드가 너무 여러개 들어감
         if(!this.performerList.contains(performer))
             this.performerList.add(performer);
 
