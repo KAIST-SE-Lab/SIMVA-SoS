@@ -22,34 +22,35 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args){
+        for(int j = 0; j < 100; j++) {
+            NearestPTS np1 = new NearestPTS();
+            NearestPTS np2 = new NearestPTS();
+            SeverityPTS sp1 = new SeverityPTS();
+            SeverityPTS sp2 = new SeverityPTS();
+            BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
+    //        BaseConstituent[] CSs = new BaseConstituent[]{np1};
+            Hospital hos = new Hospital();
+            // Initialize Patient map
+            for (int i = 0; i <= 100; i++) {
+                Hospital.GeoMap.add(new MapPoint(i));
+            }
 
-        NearestPTS np1 = new NearestPTS();
-        NearestPTS np2 = new NearestPTS();
-        SeverityPTS sp1 = new SeverityPTS();
-        SeverityPTS sp2 = new SeverityPTS();
-        BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
-//        BaseConstituent[] CSs = new BaseConstituent[]{np1};
-        Hospital hos = new Hospital();
-        // Initialize Patient map
-        for(int i=0; i<=100; i++){
-            Hospital.GeoMap.add(new MapPoint(i));
+            NormalDistributor distributor = new NormalDistributor();
+            distributor.setNormalDistParams(1000, 200);
+            ArrayList<Integer> list = distributor.getDistributionArray(100);
+
+            ArrayList<RescueAction> rActions = new ArrayList<>();
+            for (int i = 0; i < 100; i++)
+                rActions.add(new RescueAction(0, 0));
+
+            Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
+            Simulator sim = new Simulator(CSs, hos, env);
+            sim.setActionPlan(list);
+
+            sim.setEndTick(10000);
+            sim.execute();
+            System.out.println(sim.getResult().getSoSBenefit());
         }
-
-        NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(150, 50);
-        ArrayList<Integer> list = distributor.getDistributionArray(100);
-
-        ArrayList<RescueAction> rActions = new ArrayList<>();
-        for(int i=0; i<100; i++)
-            rActions.add(new RescueAction(0, 0));
-
-        Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
-        Simulator sim = new Simulator(CSs, hos, env);
-        sim.setActionPlan(list);
-
-        sim.setEndTick(100000);
-        sim.execute();
-
     }
 
 

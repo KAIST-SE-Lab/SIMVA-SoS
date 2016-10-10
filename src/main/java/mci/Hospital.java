@@ -26,7 +26,6 @@ import java.util.ArrayList;
 public class Hospital extends BaseConstituent implements ManagerInterface {
 
     public static ArrayList<MapPoint> GeoMap = new ArrayList<>();
-    private RescueAction currentAction = null;
 
     /**
      * Normal action of Hospital
@@ -37,11 +36,11 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     @Override
     public void normalAction(int elapsedTime) {
         if(this.getStatus() == Status.OPERATING){
-            RescueAction rA = this.currentAction;
+            RescueAction rA = (RescueAction) this.getCurrentAction();
             rA.treatAction(elapsedTime);
-            if(rA.getPatientStatus() == RescueAction.PatientStatus.Dead){ // Hospital treats all the patient
+            if(rA.getRemainTime() <= 0){ // Hospital treats all the patient
                 this.setStatus(Status.IDLE);
-                this.currentAction = null;
+                this.setCurrentAction(null);
             }
         }
     }
@@ -54,29 +53,25 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
      */
     @Override
     public BaseAction immediateAction() {
-        if(this.getStatus() == Status.IDLE) {
-            for (MapPoint eachMap : Hospital.GeoMap) {
-                int rASize = eachMap.getCurActions().size();
-                if (rASize == 0)
-                    continue;
+        if(this.getStatus() == Status.SELECTION) {
 
+            updatePatientInfo(); // Handle 되고 있지 않은 환자 전체 10씩 생존 시간 감소
+
+            for (MapPoint eachMap : Hospital.GeoMap) {
                 ArrayList<RescueAction> aList = eachMap.getCurActions();
-                aList.forEach((rA) ->
-                {
-                    if (rA.getRemainTime() < 300) {
-                        rA.addBenefit(10); // Acknowledge
-                    }
-                });
+                for(RescueAction rA : aList){
+                   if(rA.getRemainTime() < 300){
+                       rA.addBenefit(10);
+//                       System.out.println("ACK!");
+                   }
+                }
             }
             RescueAction healAction = new RescueAction(50, 10);
             healAction.addPerformer(this);
             healAction.setStatus(BaseAction.Status.HANDLED);
-            this.currentAction = healAction;
+            this.setCurrentAction(healAction);
             this.setStatus(Status.OPERATING);
             return healAction;
-        }else if(this.getStatus() == Status.SELECTION) { // 에러 상태. 다시 원상 복구
-            this.setStatus(Status.IDLE);
-            return null;
         }else{
             return null;
         }
@@ -87,11 +82,6 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
         return null;
     }
 
-    @Override
-    public BaseAction getCurrentAction() {
-        return this.currentAction;
-    }
-
     /**
      * This method is working on map update
      * @param updatedActions
@@ -99,12 +89,16 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     @Override
     public void updateCapability(ArrayList<BaseAction> updatedActions){
         for(BaseAction _a : updatedActions){
-            RescueAction rA = (RescueAction) _a;
-            if(rA.getPatientStatus() == null)
+            try {
+                RescueAction rA = (RescueAction) _a;
+                if(rA.getPatientStatus() == null)
+                    continue;
+                int raisedLoc = rA.getRaisedLoc();
+                MapPoint m = Hospital.GeoMap.get(raisedLoc);
+                m.addCurAction(rA);
+            }catch(ClassCastException e){
                 continue;
-            int raisedLoc = rA.getRaisedLoc();
-            MapPoint m = Hospital.GeoMap.get(raisedLoc);
-            m.addCurAction(rA);
+            }
         }
     }
 
@@ -112,5 +106,15 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     @Override
     public void addSoSLevelBenefit(int SoSLevelBenefit) {
         // Not used
+    }
+
+    private void updatePatientInfo(){
+        for(MapPoint map : Hospital.GeoMap){
+            for(RescueAction rA : map.getCurActions()){
+                if(rA.getStatus() != BaseAction.Status.HANDLED){
+                    rA.treatAction(10);
+                }
+            }
+        }
     }
 }

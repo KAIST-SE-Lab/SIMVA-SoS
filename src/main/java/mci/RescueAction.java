@@ -59,7 +59,7 @@ public class RescueAction extends BaseAction {
     public void randomGenerate() { // Location..?
         Random ranGen = new Random();
         int raisedLoc = ranGen.nextInt(101);
-        while(40 < raisedLoc && raisedLoc < 60){
+        while(45 < raisedLoc && raisedLoc < 55){
             raisedLoc = ranGen.nextInt(101);
         }
 
@@ -73,7 +73,7 @@ public class RescueAction extends BaseAction {
             this.pStat = PatientStatus.Very_Dangerous;
         }
 
-        int timeToDead = ranGen.nextInt(300) + 500; // 500 ~ 800
+        int timeToDead = ranGen.nextInt(500) + 1000; // 1000 ~ 1500
         this.timeToDead = timeToDead;
 
         this.setActionType(TYPE.NORMAL);
@@ -114,8 +114,12 @@ public class RescueAction extends BaseAction {
 
     @Override
     public int getRemainingTime(){
-        int remainDistance = this.getRemainDistanceToHospital();
-        return remainDistance > this.getRemainTime() ? this.getRemainTime() : remainDistance;
+        if( this.getPerformer() instanceof BasePTS) {
+            int remainDistance = this.getRemainDistanceToHospital();
+            return remainDistance > this.getRemainTime() ? this.getRemainTime() : remainDistance;
+        }else{
+            return timeToDead;
+        }
     }
 
     private int getRemainDistanceToHospital(){
