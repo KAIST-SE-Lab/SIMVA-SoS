@@ -84,7 +84,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
             if(this.curPos == 50){// 병원 도착
                 RescueAction.PatientStatus pStat = currentAction.getPatientStatus();
                 if(pStat != RescueAction.PatientStatus.Dead){
-                    System.out.println(this.hashCode() + " PTS saved a patient!");
+                    System.out.println(this + " PTS saved a patient!");
                     this.updateCostBenefit(0, 1, 1);
                     readyForPatient();
                 }
@@ -99,7 +99,13 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
      */
     private void movePTS(int moveVal){
         RescueAction currentAction = (RescueAction) this.getCurrentAction();
+        int before = this.curPos;
         this.curPos += moveVal;
+        if(before < 50 && this.curPos > 50){ // Defend code
+            this.curPos = 50;
+        }else if(before > 50 && this.curPos < 50){
+            this.curPos = 50;
+        }// 값 보정
         if(this.PTS_STATUS == 2) //병원으로 갈 때는 같이 이동
             currentAction.setCurPos(curPos);
         currentAction.treatAction(moveVal);
@@ -122,10 +128,15 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                 action.addPerformer(this);
                 this.gotoPatient();
             }else{ // 이미 다른애가 가져감
+                if(action != null) System.out.println("[LOG] " + this + " takes nothing." );
+                if(action != null)
+                    System.out.println(action.getStatus());
                 action = null;
             }
-            if(action == null) // 아무런 action을 찾지 못했으니 IDLE로 다시 돌림
+            if(action == null) { // 아무런 action을 찾지 못했으니 IDLE로 다시 돌림
                 this.setStatus(Status.IDLE);
+                System.out.println("[LOG] " + this + " takes nothing." );
+            }
             return action;
         }
         this.setStatus(Status.IDLE);
@@ -144,43 +155,59 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         RescueAction currentAction = (RescueAction) this.getCurrentAction();
 
         currentAction.startHandle();
+//        System.out.println(this + " chooses an action");
     }
 
     public RescueAction choosePatient() {
         RescueAction bestAction = null;
-        int start = 0;
-        int end = Hospital.GeoMap.size();
-        for(; start > end ; start++, end--){
-            int candidateSize = Hospital.GeoMap.get(start).getCurActions().size();
+        for(int lb = 40, ub = 60; lb != 0 || ub != 100  ; lb--, ub++){
+            int candidateSize = Hospital.GeoMap.get(lb).getCurActions().size();
             if(candidateSize == 0) {
-                candidateSize = Hospital.GeoMap.get(end).getCurActions().size();
+                candidateSize = Hospital.GeoMap.get(ub).getCurActions().size();
                 if(candidateSize == 0)
                     continue;
-                bestAction = pickBest(Hospital.GeoMap.get(end).getCurActions());
+                bestAction = pickBest(Hospital.GeoMap.get(ub).getCurActions());
             }else{
-                bestAction = pickBest(Hospital.GeoMap.get(start).getCurActions());
+                bestAction = pickBest(Hospital.GeoMap.get(lb).getCurActions());
             }
             if(bestAction == null)
                 continue;
+            if(lb == 0 || ub == 100){
+                System.out.println("[LOG] " + this + " has breached end");
+            }
+            break;
         } // 맵의 양 극단에서부터 candidateAction을 뽑아오기
         return bestAction;
     }
 
     private RescueAction pickBest(ArrayList<RescueAction> aList){
-        if(aList.size() == 1 && aList.get(0).getStatus() == BaseAction.Status.RAISED)
-            return aList.get(0);
-        else if(aList.size() > 1){
-            RescueAction candidate = aList.get(0);
-            for(RescueAction a : aList){
-                if(a.getStatus() != BaseAction.Status.RAISED)
-                    continue;
-                if(getUtility(candidate) < getUtility(a))
-                    candidate = a;
-            }
+        RescueAction candidate = null;
+
+        if(aList.size() == 0)
             return candidate;
-        }else{
-            return null;
+        else if(aList.size() == 1) {
+            if (aList.get(0).getStatus() == BaseAction.Status.RAISED) {
+                if (getUtility(aList.get(0)) > 0)
+                    return aList.get(0);
+            }
         }
+        else{
+            for(int iterator = 0; iterator< aList.size(); iterator++){
+                RescueAction rA = aList.get(iterator);
+                if(rA.getStatus() == BaseAction.Status.RAISED){
+                    if(candidate == null){
+                        if(getUtility(rA) > 0)
+                            candidate = rA;
+                    }else{// 비교군이 있음
+                        if(getUtility(candidate) < getUtility(rA)){
+                            candidate = rA;
+                        }
+                    }
+                }
+            }
+        }
+
+        return candidate;
     }
 
     public int getPTS_STATUS(){

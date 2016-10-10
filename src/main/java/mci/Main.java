@@ -28,7 +28,7 @@ public class Main {
         SeverityPTS sp1 = new SeverityPTS();
         SeverityPTS sp2 = new SeverityPTS();
         BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
-
+//        BaseConstituent[] CSs = new BaseConstituent[]{np1};
         Hospital hos = new Hospital();
         // Initialize Patient map
         for(int i=0; i<=100; i++){
@@ -47,7 +47,7 @@ public class Main {
         Simulator sim = new Simulator(CSs, hos, env);
         sim.setActionPlan(list);
 
-        sim.setEndTick(10000);
+        sim.setEndTick(100000);
         sim.execute();
 
     }

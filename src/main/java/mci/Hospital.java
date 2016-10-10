@@ -63,7 +63,7 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
                 ArrayList<RescueAction> aList = eachMap.getCurActions();
                 aList.forEach((rA) ->
                 {
-                    if (rA.getRemainTime() < 100) {
+                    if (rA.getRemainTime() < 300) {
                         rA.addBenefit(10); // Acknowledge
                     }
                 });
