@@ -58,10 +58,11 @@ public class RescueAction extends BaseAction {
     @Override
     public void randomGenerate() { // Location..?
         Random ranGen = new Random();
-        int raisedLoc = ranGen.nextInt(101);
-        while(49 < raisedLoc && raisedLoc < 51){
-            raisedLoc = ranGen.nextInt(101);
-        }
+//        int raisedLoc = ranGen.nextInt(101);
+//        while(49 < raisedLoc && raisedLoc < 51){
+//            raisedLoc = ranGen.nextInt(101);
+//        }
+        int raisedLoc = 60; // For test
 
         this.raisedLoc = raisedLoc;
         this.curPos = raisedLoc;
