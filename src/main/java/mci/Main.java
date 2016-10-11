@@ -39,9 +39,9 @@ public class Main {
             distributor.setNormalDistParams(1000, 300);
             ArrayList<Integer> list = distributor.getDistributionArray(100);
 
-            list.clear();
-            for(int i=0; i<100; i++)
-                list.add(i*100); // For testing the correctness of PTS
+//            list.clear();
+//            for(int i=0; i<100; i++)
+//                list.add(i*100); // For testing the correctness of PTS
 
             ArrayList<RescueAction> rActions = new ArrayList<>();
             for (int i = 0; i < 100; i++)
