@@ -1,6 +1,8 @@
 package mci;
 
+import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.*;
+import kr.ac.kaist.se.simulator.method.SPRTMethod;
 
 import java.util.ArrayList;
 
@@ -22,6 +24,10 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args){
+
+        BaseChecker checker = new BaseChecker(10000, 60, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+        SPRTMethod method = new SPRTMethod(0.01, 0.01, 0.005);
+        int[] boundArr = {50, 55, 60, 65, 70, 75, 80};
         for(int j = 0; j < 1; j++) {
             NearestPTS np1 = new NearestPTS();
             NearestPTS np2 = new NearestPTS();

@@ -113,8 +113,8 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
             for(RescueAction rA : map.getCurActions()){
                 if(rA.getStatus() == BaseAction.Status.RAISED && rA.getPatientStatus() != RescueAction.PatientStatus.Dead){
                     rA.treatAction(10);
-                    if(rA.getRemainTime() == 0)
-                        System.out.println("One patient is dead");
+//                    if(rA.getRemainTime() == 0)
+//                        System.out.println("One patient is dead");
                 }
             }
         }

@@ -84,7 +84,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
             if(this.curPos == 50){// 병원 도착
                 RescueAction.PatientStatus pStat = currentAction.getPatientStatus();
                 if(pStat != RescueAction.PatientStatus.Dead){
-                    System.out.println(this + " PTS saved a patient!");
+//                    System.out.println(this + " PTS saved a patient!");
                     this.updateCostBenefit(0, 1, 1);
                     readyForPatient();
                 }
@@ -172,9 +172,6 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
             }
             if(bestAction == null)
                 continue;
-            if(lb == 0 || ub == 100){
-                System.out.println("[LOG] " + this + " has breached end");
-            }
             break;
         } // 맵의 양 극단에서부터 candidateAction을 뽑아오기
         return bestAction;
