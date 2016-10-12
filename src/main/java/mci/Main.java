@@ -1,9 +1,13 @@
 package mci;
 
+import com.opencsv.CSVWriter;
 import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.*;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 /**
@@ -23,44 +27,84 @@ import java.util.ArrayList;
  */
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
 
-        BaseChecker checker = new BaseChecker(10000, 60, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
-        SPRTMethod method = new SPRTMethod(0.01, 0.01, 0.005);
         int[] boundArr = {50, 55, 60, 65, 70, 75, 80};
-        for(int j = 0; j < 1; j++) {
-            NearestPTS np1 = new NearestPTS();
-            NearestPTS np2 = new NearestPTS();
-            SeverityPTS sp1 = new SeverityPTS();
-            SeverityPTS sp2 = new SeverityPTS();
-            BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
-    //        BaseConstituent[] CSs = new BaseConstituent[]{np1};
-            Hospital hos = new Hospital();
-            // Initialize Patient map
-            for (int i = 0; i <= 100; i++) {
-                Hospital.GeoMap.add(new MapPoint(i));
+        for(int bound : boundArr) {
+
+            String outputName = "mci_result/MCI_" + bound + ".csv";
+            CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
+            cw.writeNext(new String[] {"prob", "num_of_samples", "execution_time", "min_tick", "max_tick", "result"});
+            ArrayList<SMCResult> resList = new ArrayList<>();
+
+            System.out.println("----------------------------------------------------");
+            System.out.println("SoS-level benefit is greater than "+bound + ".");
+            BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+            SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.01); // 신뢰도 99%
+
+            for(int t=1; t<100; t++) {
+                double theta = 0.01 * t; // theta
+                long start = System.currentTimeMillis();
+                sprt.setExpression(theta);
+
+                while(!sprt.checkStopCondition()) {
+
+                    NearestPTS np1 = new NearestPTS();
+                    NearestPTS np2 = new NearestPTS();
+                    SeverityPTS sp1 = new SeverityPTS();
+                    SeverityPTS sp2 = new SeverityPTS();
+                    BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
+                    Hospital hos = new Hospital();
+
+                    // Initialize Patient map
+                    for (int i = 0; i <= 100; i++) {
+                        Hospital.GeoMap.add(new MapPoint(i));
+                    }
+
+                    NormalDistributor distributor = new NormalDistributor();
+                    distributor.setNormalDistParams(1000, 300);
+                    ArrayList<Integer> list = distributor.getDistributionArray(100);
+
+                    ArrayList<RescueAction> rActions = new ArrayList<>();
+                    for (int i = 0; i < 100; i++)
+                        rActions.add(new RescueAction(0, 0));
+
+                    Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
+                    Simulator sim = new Simulator(CSs, hos, env);
+                    sim.setActionPlan(list);
+
+                    sim.setEndTick(10000);
+                    sim.execute();
+                    SIMResult res = sim.getResult();
+                    int checkResult = checker.evaluateSample(res);
+                    sprt.updateResult(checkResult);
+                }
+
+                boolean h0 = sprt.getResult(); // Result
+                int numSamples = sprt.getNumSamples();
+
+                long exec_time = System.currentTimeMillis() - start; //exec time
+                int minTick = checker.getMinTick();
+                int maxTick = checker.getMaxTick();
+                sprt.reset();
+                resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
+                if(h0) System.out.print("T");
+                else System.out.print("F");
+
             }
-
-            NormalDistributor distributor = new NormalDistributor();
-            distributor.setNormalDistParams(1000, 300);
-            ArrayList<Integer> list = distributor.getDistributionArray(100);
-
-//            list.clear();
-//            for(int i=0; i<100; i++)
-//                list.add(i*100); // For testing the correctness of PTS
-
-            ArrayList<RescueAction> rActions = new ArrayList<>();
-            for (int i = 0; i < 100; i++)
-                rActions.add(new RescueAction(0, 0));
-
-            Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
-            Simulator sim = new Simulator(CSs, hos, env);
-            sim.setActionPlan(list);
-
-            sim.setEndTick(10000);
-            sim.execute();
-            System.out.println(sim.getResult().getSoSBenefit());
+            System.out.println();
+            System.out.print("w");
+            for(SMCResult r : resList){
+                System.out.print(".");
+                cw.writeNext(r.getArr());
+            }
+            cw.close();
+            resList.clear();
+            System.out.println();
         }
+        
+        System.out.println("Finished");
+
     }
 
 
