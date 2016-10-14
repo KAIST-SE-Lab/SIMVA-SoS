@@ -149,4 +149,17 @@ public final class Environment {
             this.actionTemplate.add(this.actionList.get(i).clone());
         }
     }
+
+    public void reset(){
+        if(!this.isAlreadyGenerated) {
+            ;
+        }else{
+            this.actionList.forEach((a)->reset());
+            this.actionTemplate.clear();
+        }
+    }
+
+    public void setActionList(ArrayList<BaseAction> actions){
+        this.actionList = actions;
+    }
 }

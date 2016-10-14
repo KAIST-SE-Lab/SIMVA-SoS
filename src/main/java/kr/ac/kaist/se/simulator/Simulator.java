@@ -45,11 +45,15 @@ public final class Simulator {
      * simulate the model, reset the environment and states
      */
     public void execute(){
+        this.procedure();
+    }
+
+    public void reset(){
         this.result = null;
+        this.env.reset();
         this.csList.forEach((CS)->CS.reset());
         if(manager != null)
             manager.reset();
-        this.procedure();
     }
 
     public SIMResult getResult(){

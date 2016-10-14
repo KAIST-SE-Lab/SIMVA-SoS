@@ -35,6 +35,18 @@ public class Main {
         BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
         Hospital hos = new Hospital();
 
+        NormalDistributor distributor = new NormalDistributor();
+        distributor.setNormalDistParams(1000, 300);
+
+        ArrayList<RescueAction> rActions = new ArrayList<>();
+        for (int i = 0; i < 100; i++)
+            rActions.add(new RescueAction(0, 0));
+
+        Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
+
+        Simulator sim = new Simulator(CSs, hos, env);
+
+
         int[] boundArr = {45, 50, 55, 60, 65, 70, 75};
         for(int bound : boundArr) {
 
@@ -55,32 +67,28 @@ public class Main {
 
                 while(!sprt.checkStopCondition()) {
 
-
                     // Initialize Patient map
                     for (int i = 0; i <= 100; i++) {
                         Hospital.GeoMap.add(new MapPoint(i));
                     }
 
-                    NormalDistributor distributor = new NormalDistributor();
-                    distributor.setNormalDistParams(1000, 300);
-                    ArrayList<Integer> list = distributor.getDistributionArray(100);
-
-                    ArrayList<RescueAction> rActions = new ArrayList<>();
-                    for (int i = 0; i < 100; i++)
-                        rActions.add(new RescueAction(0, 0));
-
-                    Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
-                    Simulator sim = new Simulator(CSs, hos, env);
+                    // 매번 다른 distribution이 필요함
+                    ArrayList<Integer> list = new ArrayList<>();
+                    list.clear();
+                    list = distributor.getDistributionArray(100);
                     sim.setActionPlan(list);
-
                     sim.setEndTick(10000);
-                    sim.execute();
+
+
                     SIMResult res = sim.getResult();
                     int checkResult = checker.evaluateSample(res);
                     sprt.updateResult(checkResult);
 
-                    System.gc();
+//                    System.gc();
 
+                    sim.reset();
+                    sim.setActionPlan(list);
+//                    env.setActionList(rActions);
                 }
 
                 boolean h0 = sprt.getResult(); // Result

@@ -52,7 +52,13 @@ public class RescueAction extends BaseAction {
 
     @Override
     public void reset() {
-
+        super.resetAction();
+        this.curPos = 0;
+        this.timeToDead = 0;
+        this.raisedLoc = 0;
+        this.isAcknowledged = false;
+        this.pStat = null;
+        this.setActionType(null);
     }
 
     @Override
