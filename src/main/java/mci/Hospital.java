@@ -119,4 +119,14 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
             }
         }
     }
+
+    @Override
+    public void reset(){
+        super.reset();
+        Hospital.clearMap();
+    }
+
+    public static void clearMap(){
+        Hospital.GeoMap.clear();
+    }
 }

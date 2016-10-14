@@ -220,4 +220,12 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         this.PTS_STATUS = 0;
         this.setCurrentAction(null);
     }
+
+    @Override
+    public void reset(){
+        super.reset();
+        this.curPos = 50;
+        this.PTS_STATUS = 0;
+        this.setCurrentAction(null);
+    }
 }

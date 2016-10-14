@@ -5,7 +5,6 @@ import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.*;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -29,7 +28,14 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
 
-        int[] boundArr = {50, 55, 60, 65, 70, 75, 80};
+        NearestPTS np1 = new NearestPTS();
+        NearestPTS np2 = new NearestPTS();
+        SeverityPTS sp1 = new SeverityPTS();
+        SeverityPTS sp2 = new SeverityPTS();
+        BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
+        Hospital hos = new Hospital();
+
+        int[] boundArr = {45, 50, 55, 60, 65, 70, 75};
         for(int bound : boundArr) {
 
             String outputName = "mci_result/MCI_" + bound + ".csv";
@@ -49,12 +55,6 @@ public class Main {
 
                 while(!sprt.checkStopCondition()) {
 
-                    NearestPTS np1 = new NearestPTS();
-                    NearestPTS np2 = new NearestPTS();
-                    SeverityPTS sp1 = new SeverityPTS();
-                    SeverityPTS sp2 = new SeverityPTS();
-                    BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
-                    Hospital hos = new Hospital();
 
                     // Initialize Patient map
                     for (int i = 0; i <= 100; i++) {
@@ -78,6 +78,9 @@ public class Main {
                     SIMResult res = sim.getResult();
                     int checkResult = checker.evaluateSample(res);
                     sprt.updateResult(checkResult);
+
+                    System.gc();
+
                 }
 
                 boolean h0 = sprt.getResult(); // Result
@@ -102,7 +105,7 @@ public class Main {
             resList.clear();
             System.out.println();
         }
-        
+
         System.out.println("Finished");
 
     }

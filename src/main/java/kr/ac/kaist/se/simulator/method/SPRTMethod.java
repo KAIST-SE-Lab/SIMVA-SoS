@@ -67,7 +67,7 @@ public class SPRTMethod {
      * @return true - we can decide smc is done.
      */
     public boolean checkStopCondition(){
-        if(this.numSamples < 5) // Minimum required samples
+        if(this.numSamples < 2) // Minimum required samples
             return false;
 
         BigDecimal pRatioA = new BigDecimal(String.valueOf(1));
@@ -124,6 +124,9 @@ public class SPRTMethod {
             this.p0m = this.p0.pow(this.dm);
             this.p0m = this.p0m.multiply(p0m_before);
         }
+
+        if(numSamples == 100000)
+            System.out.println("샘플 수가 10만개가 넘었음.");
     }
 
     /**
