@@ -1,5 +1,7 @@
 package kr.ac.kaist.se.simulator;
 
+import kr.ac.kaist.se.simulator.method.DummyAction;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -123,6 +125,8 @@ public final class Environment {
      */
     public void updateActionStatus(ArrayList<BaseAction> actionList){
         for(BaseAction a : actionList){
+            if( a instanceof DummyAction )
+                continue;
             String targetName = a.getName();
             for(int i=0; i<this.actionList.size() ;i++){
                 if(this.actionList.get(i).getName().equalsIgnoreCase(targetName)){
@@ -136,6 +140,8 @@ public final class Environment {
     public void updateActionStatus(BaseAction action){
         for(int i = 0; i<this.actionList.size(); i++){
             if(this.actionList.get(i).getName().equalsIgnoreCase(action.getName())){
+                if(action instanceof DummyAction)
+                    break;
                 this.actionList.set(i, action);
                 break;
             }
