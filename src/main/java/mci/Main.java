@@ -36,7 +36,7 @@ public class Main {
         Hospital hos = new Hospital();
 
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(1000, 300);
+        distributor.setNormalDistParams(2000, 700);
 
         ArrayList<RescueAction> rActions = new ArrayList<>();
         for (int i = 0; i < 100; i++)
@@ -47,7 +47,7 @@ public class Main {
         Simulator sim = new Simulator(CSs, hos, env);
 
 
-        int[] boundArr = {45, 50, 55, 60, 65, 70, 75};
+        int[] boundArr = {40, 45, 50, 55, 60, 65, 70};
         for(int bound : boundArr) {
 
             String outputName = "mci_result/MCI_" + bound + ".csv";
@@ -56,7 +56,7 @@ public class Main {
             ArrayList<SMCResult> resList = new ArrayList<>();
 
             System.out.println("----------------------------------------------------");
-            System.out.println("SoS-level benefit is greater than "+bound + ".");
+            System.out.println("SoS-level benefit is greater than and equal to "+bound + ".");
             BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.01); // 신뢰도 99%
 

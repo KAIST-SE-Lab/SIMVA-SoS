@@ -29,7 +29,7 @@ public class SPRTMethod {
 
     private BigDecimal alpha; // 0.01
     private BigDecimal beta; // 0.01
-    private BigDecimal delta; // 0.005
+    private BigDecimal delta; // 0.01
     private BigDecimal theta; // (0,1)
 
     private BigDecimal p0; // theta + delta
@@ -95,11 +95,11 @@ public class SPRTMethod {
         this.theta = new BigDecimal(String.valueOf(theta));
         if(condition)
         {
-            this.p1 = this.theta.subtract(this.delta);
-            this.p0 = this.theta.add(this.delta);
+            this.p1 = this.theta.subtract(this.delta).add(new BigDecimal(Double.toString(Double.MIN_VALUE)));
+            this.p0 = this.theta.add(this.delta).subtract(new BigDecimal(Double.toString(Double.MIN_VALUE)));
         }else{
-            this.p0 = this.theta.subtract(this.delta);
-            this.p1 = this.theta.add(this.delta);
+            this.p0 = this.theta.subtract(this.delta).add(new BigDecimal(Double.toString(Double.MIN_VALUE)));
+            this.p1 = this.theta.add(this.delta).subtract(new BigDecimal(Double.toString(Double.MIN_VALUE)));
         }
 
     }
