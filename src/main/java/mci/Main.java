@@ -83,9 +83,9 @@ public class Main {
 
                     SIMResult res = sim.getResult();
                     int checkResult = checker.evaluateSample(res);
-                    if(checkResult == 0)
-                        System.out.print("What is this?");
-                    System.out.print(" " + checkResult);
+//                    if(checkResult == 0)
+//                        System.out.print("What is this?");
+//                    System.out.print(" " + checkResult);
                     sprt.updateResult(checkResult);
 
 //                    System.gc();
@@ -103,7 +103,6 @@ public class Main {
                 int maxTick = checker.getMaxTick();
                 sprt.reset();
                 resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
-                System.out.println();
                 System.out.print("Theta: " + theta);
                 if(h0) {
                     System.out.print(" Result: T");
