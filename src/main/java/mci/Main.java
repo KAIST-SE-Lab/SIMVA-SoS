@@ -79,6 +79,7 @@ public class Main {
                     sim.setActionPlan(list);
                     sim.setEndTick(10000);
 
+                    sim.execute();
 
                     SIMResult res = sim.getResult();
                     int checkResult = checker.evaluateSample(res);
@@ -99,12 +100,17 @@ public class Main {
                 int maxTick = checker.getMaxTick();
                 sprt.reset();
                 resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
-                if(h0) System.out.print("T");
-                else System.out.print("F");
+                System.out.print("Theta: " + theta);
+                if(h0) {
+                    System.out.print(" Result: T");
+                }
+                else {
+                    System.out.print(" Result: F");
+                }
+                System.out.println(" with n of samples: " + numSamples);
 
             }
             System.out.println();
-            System.out.print("w");
             for(SMCResult r : resList){
                 System.out.print(".");
                 cw.writeNext(r.getArr());

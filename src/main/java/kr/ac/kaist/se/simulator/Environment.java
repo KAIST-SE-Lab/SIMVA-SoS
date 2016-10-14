@@ -154,7 +154,8 @@ public final class Environment {
         if(!this.isAlreadyGenerated) {
             ;
         }else{
-            this.actionList.forEach((a)->reset());
+            for(BaseAction a: this.actionList)
+                a.reset();
             this.actionTemplate.clear();
         }
     }
