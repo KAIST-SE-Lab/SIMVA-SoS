@@ -36,7 +36,7 @@ public class Main {
         Hospital hos = new Hospital();
 
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(2000, 700);
+        distributor.setNormalDistParams(2000, 600);
 
         ArrayList<RescueAction> rActions = new ArrayList<>();
         for (int i = 0; i < 100; i++)
@@ -47,7 +47,8 @@ public class Main {
         Simulator sim = new Simulator(CSs, hos, env);
 
 
-        int[] boundArr = {40, 45, 50, 55, 60, 65, 70};
+//        int[] boundArr = {55, 60, 65, 70, 75};
+        int[] boundArr = {75};
         for(int bound : boundArr) {
 
             String outputName = "mci_result/MCI_" + bound + ".csv";
@@ -110,7 +111,8 @@ public class Main {
                 else {
                     System.out.print(" Result: F");
                 }
-                System.out.println(" with n of samples: " + numSamples);
+                System.out.print(" with n of samples: " + numSamples);
+                System.out.println(" in " + numSamples/100 + " secs");
 
             }
             System.out.println();
