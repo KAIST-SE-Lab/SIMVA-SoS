@@ -112,7 +112,7 @@ public class Main {
                     System.out.print(" Result: F");
                 }
                 System.out.print(" with n of samples: " + numSamples);
-                System.out.println(" in " + numSamples/100 + " secs");
+                System.out.println(" in " + String.format("%.2f", exec_time/1000.0) + " secs");
 
             }
             System.out.println();
