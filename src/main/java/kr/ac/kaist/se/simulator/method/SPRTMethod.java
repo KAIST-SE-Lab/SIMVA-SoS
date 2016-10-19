@@ -45,6 +45,9 @@ public class SPRTMethod {
 
     private boolean condition; // True -> more than, False -> less than
 
+    private BigDecimal pRatioA = null;
+    private BigDecimal pRatioB = null;
+
     public SPRTMethod(double alpha, double beta, double delta){
         this.alpha = new BigDecimal(String.valueOf(alpha));
         this.beta = new BigDecimal(String.valueOf(beta));
@@ -52,6 +55,11 @@ public class SPRTMethod {
         this.numSamples = 0;
         this.dm = 0;
         this.condition = true;
+
+        pRatioA = new BigDecimal(String.valueOf(1));
+        pRatioA = pRatioA.subtract(this.beta);
+        pRatioA = pRatioA.divide(this.alpha, MathContext.DECIMAL128);
+        pRatioB = this.beta.divide(new BigDecimal(String.valueOf(1)).subtract(this.alpha), MathContext.DECIMAL128);
     }
 
     public void setBigCheck(){
@@ -69,11 +77,6 @@ public class SPRTMethod {
     public boolean checkStopCondition(){
         if(this.numSamples < 2) // Minimum required samples
             return false;
-
-        BigDecimal pRatioA = new BigDecimal(String.valueOf(1));
-        pRatioA = pRatioA.subtract(this.beta);
-        pRatioA = pRatioA.divide(this.alpha, MathContext.DECIMAL128);
-        BigDecimal pRatioB = this.beta.divide(new BigDecimal(String.valueOf(1)).subtract(this.alpha), MathContext.DECIMAL128);
 
         if( this.p1m.divide(this.p0m, MathContext.DECIMAL128).compareTo(pRatioB) <= 0){
             h0decision = true;

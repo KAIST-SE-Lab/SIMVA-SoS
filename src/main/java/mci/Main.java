@@ -4,6 +4,8 @@ import com.opencsv.CSVWriter;
 import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.*;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -26,31 +28,30 @@ import java.util.ArrayList;
  */
 public class Main {
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     public static void main(String[] args) throws Exception{
 
+        // Globally used (no need to replicate in concurrency)
+        NormalDistributor distributor = new NormalDistributor();
+        distributor.setNormalDistParams(2000, 600);
+
+        // Set #1
         NearestPTS np1 = new NearestPTS();
         NearestPTS np2 = new NearestPTS();
         SeverityPTS sp1 = new SeverityPTS();
         SeverityPTS sp2 = new SeverityPTS();
         BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
         Hospital hos = new Hospital();
-
-        NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(2000, 600);
-
         ArrayList<RescueAction> rActions = new ArrayList<>();
         for (int i = 0; i < 100; i++)
             rActions.add(new RescueAction(0, 0));
-
         Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
-
         Simulator sim = new Simulator(CSs, hos, env);
 
-
-//        int[] boundArr = {55, 60, 65, 70, 75};
+//        int[] boundArr = {60, 65, 70, 75};
         int[] boundArr = {75};
         for(int bound : boundArr) {
-
             String outputName = "mci_result/MCI_" + bound + ".csv";
             CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
             cw.writeNext(new String[] {"prob", "num_of_samples", "execution_time", "min_tick", "max_tick", "result"});
@@ -60,19 +61,16 @@ public class Main {
             System.out.println("SoS-level benefit is greater than and equal to "+bound + ".");
             BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.01); // 신뢰도 99%
-
             for(int t=1; t<100; t++) {
                 double theta = 0.01 * t; // theta
                 long start = System.currentTimeMillis();
                 sprt.setExpression(theta);
 
                 while(!sprt.checkStopCondition()) {
-
                     // Initialize Patient map
                     for (int i = 0; i <= 100; i++) {
                         Hospital.GeoMap.add(new MapPoint(i));
                     }
-
                     // 매번 다른 distribution이 필요함
                     ArrayList<Integer> list = new ArrayList<>();
                     list.clear();
@@ -80,20 +78,22 @@ public class Main {
                     sim.setActionPlan(list);
                     sim.setEndTick(10000);
 
+                    logger.info("Initialize :" + String.format("%.2f", (System.currentTimeMillis()-start)/1000.0));
+
                     sim.execute();
+
+                    logger.info("Execution :" + String.format("%.2f", (System.currentTimeMillis()-start)/1000.0));
 
                     SIMResult res = sim.getResult();
                     int checkResult = checker.evaluateSample(res);
-//                    if(checkResult == 0)
-//                        System.out.print("What is this?");
-//                    System.out.print(" " + checkResult);
                     sprt.updateResult(checkResult);
 
-//                    System.gc();
+                    System.gc();
 
                     sim.reset();
                     sim.setActionPlan(list);
-//                    env.setActionList(rActions);
+
+                    logger.info("Calculation :" + String.format("%.2f", (System.currentTimeMillis()-start)/1000.0));
                 }
 
                 boolean h0 = sprt.getResult(); // Result
