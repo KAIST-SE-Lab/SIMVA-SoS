@@ -66,7 +66,11 @@ public class Main {
                 long start = System.currentTimeMillis();
                 sprt.setExpression(theta);
 
+                long local_start = System.currentTimeMillis();
+
                 while(!sprt.checkStopCondition()) {
+                    logger.info("CheckStopCondition :" + String.format("%.4f", (System.currentTimeMillis()-local_start)/1000.0));
+
                     // Initialize Patient map
                     for (int i = 0; i <= 100; i++) {
                         Hospital.GeoMap.add(new MapPoint(i));
@@ -78,11 +82,11 @@ public class Main {
                     sim.setActionPlan(list);
                     sim.setEndTick(10000);
 
-                    logger.info("Initialize :" + String.format("%.2f", (System.currentTimeMillis()-start)/1000.0));
+                    logger.info("Initialize :" + String.format("%.4f", (System.currentTimeMillis()-local_start)/1000.0));
 
                     sim.execute();
 
-                    logger.info("Execution :" + String.format("%.2f", (System.currentTimeMillis()-start)/1000.0));
+                    logger.info("Simulator Execution :" + String.format("%.4f", (System.currentTimeMillis()-local_start)/1000.0));
 
                     SIMResult res = sim.getResult();
                     int checkResult = checker.evaluateSample(res);
@@ -93,7 +97,9 @@ public class Main {
                     sim.reset();
                     sim.setActionPlan(list);
 
-                    logger.info("Calculation :" + String.format("%.2f", (System.currentTimeMillis()-start)/1000.0));
+                    logger.info("SPRT Calculation :" + String.format("%.2f", (System.currentTimeMillis()-local_start)/1000.0));
+
+                    local_start = System.currentTimeMillis();
                 }
 
                 boolean h0 = sprt.getResult(); // Result

@@ -6,7 +6,7 @@
     <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>log-${bySecond}.txt</file>
-        <append>true</append>
+        <!--<append>true</append>-->
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
@@ -15,7 +15,7 @@
     </appender>
 
     <logger name="mci.Main" level="INFO"/>
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="FILE" />
     </root>
 </configuration>
