@@ -65,7 +65,8 @@ public class Main {
                 double theta = 0.01 * t; // theta
                 long start = System.currentTimeMillis();
                 sprt.setExpression(theta);
-
+                logger.info("--------------------------------------------- Theta : "
+                        + String.format("%.2f",theta) + " -----------------------------------------------------");
                 long local_start = System.currentTimeMillis();
 
                 while(!sprt.checkStopCondition()) {
