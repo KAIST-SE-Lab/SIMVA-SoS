@@ -10,11 +10,23 @@
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%-5level %logger{20} - %msg%n</pattern>
+            <pattern>%logger{20}    %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="mci.Main" level="INFO"/>
+    <!--<appender name="ANALYTICS-FILE" class="ch.qos.logback.core.FileAppender">-->
+        <!--<file>analytics.log</file>-->
+        <!--<append>true</append>-->
+        <!--<encoder>-->
+            <!--<pattern>%logger{9}    %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+
+    <logger name="mci.Main" level="INFO" />
+    <!--<logger name="simulator" level="INFO" additivity="false">-->
+        <!--<appender-ref ref="ANALYTICS-FILE" />-->
+    <!--</logger>-->
     <root level="INFO">
         <appender-ref ref="FILE" />
     </root>

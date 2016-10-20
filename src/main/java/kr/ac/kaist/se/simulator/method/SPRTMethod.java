@@ -58,8 +58,8 @@ public class SPRTMethod {
 
         pRatioA = new BigDecimal(String.valueOf(1));
         pRatioA = pRatioA.subtract(this.beta);
-        pRatioA = pRatioA.divide(this.alpha, MathContext.DECIMAL128);
-        pRatioB = this.beta.divide(new BigDecimal(String.valueOf(1)).subtract(this.alpha), MathContext.DECIMAL128);
+        pRatioA = pRatioA.divide(this.alpha, MathContext.DECIMAL64);
+        pRatioB = this.beta.divide(new BigDecimal(String.valueOf(1)).subtract(this.alpha), MathContext.DECIMAL64);
     }
 
     public void setBigCheck(){
@@ -78,11 +78,11 @@ public class SPRTMethod {
         if(this.numSamples < 2) // Minimum required samples
             return false;
 
-        if( this.p1m.divide(this.p0m, MathContext.DECIMAL128).compareTo(pRatioB) <= 0){
+        if( this.p1m.divide(this.p0m, MathContext.DECIMAL64).compareTo(pRatioB) <= 0){
             h0decision = true;
             return true;
         }
-        else if( this.p1m.divide(this.p0m, MathContext.DECIMAL128).compareTo(pRatioA) >= 0){
+        else if( this.p1m.divide(this.p0m, MathContext.DECIMAL64).compareTo(pRatioA) >= 0){
             h0decision = false;
             return true;
         }else{
@@ -116,20 +116,17 @@ public class SPRTMethod {
         if(numSamples > 1){
             BigDecimal p1m_before = new BigDecimal(String.valueOf(1));
             p1m_before = p1m_before.subtract(this.p1);
-            p1m_before = p1m_before.pow(this.numSamples-this.dm);
-            this.p1m = this.p1.pow(this.dm);
-            this.p1m = this.p1m.multiply(p1m_before);
+            p1m_before = p1m_before.pow(this.numSamples-this.dm, MathContext.DECIMAL64);
+            this.p1m = this.p1.pow(this.dm, MathContext.DECIMAL64);
+            this.p1m = this.p1m.multiply(p1m_before, MathContext.DECIMAL64);
 
             BigDecimal p0m_before = new BigDecimal(String.valueOf(1));
             p0m_before = p0m_before.subtract(this.p0);
-            p0m_before = p0m_before.pow(this.numSamples - this.dm);
+            p0m_before = p0m_before.pow(this.numSamples - this.dm, MathContext.DECIMAL64);
 
-            this.p0m = this.p0.pow(this.dm);
-            this.p0m = this.p0m.multiply(p0m_before);
+            this.p0m = this.p0.pow(this.dm, MathContext.DECIMAL64);
+            this.p0m = this.p0m.multiply(p0m_before, MathContext.DECIMAL64);
         }
-
-        if(numSamples == 100000)
-            System.out.println("샘플 수가 10만개가 넘었음.");
     }
 
     /**

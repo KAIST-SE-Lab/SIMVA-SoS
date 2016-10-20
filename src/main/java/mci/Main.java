@@ -61,7 +61,7 @@ public class Main {
             System.out.println("SoS-level benefit is greater than and equal to "+bound + ".");
             BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.01); // 신뢰도 99%
-            for(int t=1; t<100; t++) {
+            for(int t=1; t<99; t++) {
                 double theta = 0.01 * t; // theta
                 long start = System.currentTimeMillis();
                 sprt.setExpression(theta);
@@ -81,7 +81,7 @@ public class Main {
                     list.clear();
                     list = distributor.getDistributionArray(100);
                     sim.setActionPlan(list);
-                    sim.setEndTick(10000);
+                    sim.setEndTick(7000);
 
                     logger.info("Initialize :" + String.format("%.4f", (System.currentTimeMillis()-local_start)/1000.0));
 

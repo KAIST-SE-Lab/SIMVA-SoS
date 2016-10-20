@@ -1,5 +1,8 @@
 package kr.ac.kaist.se.simulator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -102,6 +105,7 @@ public final class Simulator {
                 this.progress(BaseAction.TYPE.IMMEDIATE); // Choose
 
                 this.generateExogenousActions(); // Environment action
+
                 Collections.shuffle(actions);
                 this.progress(BaseAction.TYPE.NORMAL);
 
@@ -158,6 +162,7 @@ public final class Simulator {
     private void progress(BaseAction.TYPE type){
         if(type == BaseAction.TYPE.IMMEDIATE){
             ArrayList<BaseAction> actionList = this.immediateActions;
+            // TODO: 2016-10-20 CS기준으로 수정
             for(BaseAction a : actionList){
                 if(a.getActionType() == BaseAction.TYPE.IMMEDIATE) {
                     BaseAction selectedAction = a.getPerformer().immediateAction(); // Select action
@@ -189,6 +194,7 @@ public final class Simulator {
                 }else{ // If any one CS are not in operation, minimum tick will be one
                     minimumElapsedTime = 1;
                 }
+                // TODO: 2016-10-20 CS 기준으로 수정
                 for(BaseAction a: actionList){ // List로 수정하면 이부분 수정해야함..
 //                    a.getPerformer().normalAction(minimumElapsedTime);
                     BaseConstituent[] tmpArr = a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
