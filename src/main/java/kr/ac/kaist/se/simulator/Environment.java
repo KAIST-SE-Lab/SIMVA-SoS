@@ -29,7 +29,7 @@ public final class Environment {
         Collections.addAll(this.csList, CSs);
         this.actionList = new ArrayList<>();
         Collections.addAll(this.actionList, actions);
-        this.isAlreadyGenerated = true;
+        this.isAlreadyGenerated = false;
     }
 
     /**
