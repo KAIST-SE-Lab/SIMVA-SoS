@@ -51,14 +51,14 @@ public class Main {
         Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
         Simulator sim = new Simulator(CSs, hos, env);
 
-
+        double alpha_beta = 0.001;
         int bound = 70;
 
         Date nowDate = new Date();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         String pre = transFormat.format(nowDate);
-
-        String outputName = pre + "_mci_result/MCI_" + bound + ".csv";
+//        String conf_format = String.format("%.3f", alpha_beta).replace('.','_');
+        String outputName = "mci_result/" + pre + "_MCI_" + bound + "_" + String.format("%.3f", alpha_beta) + ".csv";
         CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
         cw.writeNext(new String[] {"prob", "num_of_samples", "execution_time", "result"});
         ArrayList<SMCResult> resList = new ArrayList<>();
@@ -68,9 +68,9 @@ public class Main {
         BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
         SPRTMethod sprt = new SPRTMethod(0.001, 0.001, 0.01); // 신뢰도 99%
 
-        int thetaSet[] = {68,70,72,74};
+//        int thetaSet[] = {68,70,72,74};
 
-        for(int t: thetaSet) {
+        for(int t=1; t<100; t++) {
             double theta = 0.01 * t; // theta
             long start = System.currentTimeMillis();
             sprt.setExpression(theta);
