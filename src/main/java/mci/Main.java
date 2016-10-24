@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Main.java
@@ -52,15 +54,19 @@ public class Main {
 
         int bound = 70;
 
-        String outputName = "mci_result/MCI_" + bound + ".csv";
+        Date nowDate = new Date();
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String pre = transFormat.format(nowDate);
+
+        String outputName = pre + "_mci_result/MCI_" + bound + ".csv";
         CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
-        cw.writeNext(new String[] {"prob", "num_of_samples", "execution_time", "min_tick", "max_tick", "result"});
+        cw.writeNext(new String[] {"prob", "num_of_samples", "execution_time", "result"});
         ArrayList<SMCResult> resList = new ArrayList<>();
 
         System.out.println("----------------------------------------------------");
         System.out.println("SoS-level benefit is greater than and equal to "+bound + ".");
         BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
-        SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.01); // 신뢰도 99%
+        SPRTMethod sprt = new SPRTMethod(0.001, 0.001, 0.01); // 신뢰도 99%
 
         int thetaSet[] = {68,70,72,74};
 
