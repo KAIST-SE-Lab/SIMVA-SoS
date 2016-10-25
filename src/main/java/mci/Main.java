@@ -51,7 +51,7 @@ public class Main {
         Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
         Simulator sim = new Simulator(CSs, hos, env);
 
-        double alpha_beta = 0.001;
+        double alpha_beta = 0.01;
         int bound = 70;
 
         Date nowDate = new Date();
@@ -66,7 +66,7 @@ public class Main {
         System.out.println("----------------------------------------------------");
         System.out.println("SoS-level benefit is greater than and equal to "+bound + ".");
         BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
-        SPRTMethod sprt = new SPRTMethod(0.001, 0.001, 0.01); // 신뢰도 99%
+        SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.01); // 신뢰도 99%
 
 //        int thetaSet[] = {68,70,72,74};
 
