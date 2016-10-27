@@ -73,7 +73,7 @@ public class LargeScaleMCIMain {
         bounds.add(275);
         bounds.add(300);
         bounds.add(325);
-        
+
         for(int bound: bounds) {
 
             Date nowDate = new Date();
@@ -123,6 +123,8 @@ public class LargeScaleMCIMain {
                     SIMResult res = sim.getResult();
                     int checkResult = checker.evaluateSample(res);
                     sprt.updateResult(checkResult);
+
+                    logger.info("The result is " + String.valueOf(res.getSoSBenefit()));
 
                     System.gc();
 
