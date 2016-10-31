@@ -137,6 +137,10 @@ public final class Environment {
         }
     }
 
+    /**
+     * Update the status of actions executed by CSs
+     * @param action a single action that are changed its status
+     */
     public void updateActionStatus(BaseAction action){
         for(int i = 0; i<this.actionList.size(); i++){
             if(this.actionList.get(i).getName().equalsIgnoreCase(action.getName())){
