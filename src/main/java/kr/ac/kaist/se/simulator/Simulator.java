@@ -154,18 +154,17 @@ public final class Simulator {
                 this.plannedActionTicks.remove(0);
             }
         }else{
-            env.generateAction();
-            env.notifyCS();
-        }
-    }
+                    env.generateAction();
+                    env.notifyCS();
+                }
+            }
 
-    private void progress(BaseAction.TYPE type){
-        if(type == BaseAction.TYPE.IMMEDIATE){
-            ArrayList<BaseAction> actionList = this.immediateActions;
-            // TODO: 2016-10-20 CS기준으로 수정
-            for(BaseAction a : actionList){
-                if(a.getActionType() == BaseAction.TYPE.IMMEDIATE) {
-                    BaseAction selectedAction = a.getPerformer().immediateAction(); // Select action
+        private void progress(BaseAction.TYPE type){
+            if(type == BaseAction.TYPE.IMMEDIATE){
+                ArrayList<BaseAction> actionList = this.immediateActions;
+                for(BaseAction a : actionList){
+                    if(a.getActionType() == BaseAction.TYPE.IMMEDIATE) {
+                        BaseAction selectedAction = a.getPerformer().immediateAction(); // Select action
                     if(selectedAction != null)
                         actions.add(selectedAction);
                 }
@@ -180,6 +179,7 @@ public final class Simulator {
             int minimumElapsedTime = -1;
             if(!actionList.isEmpty()){ // If the action list is not empty
                 boolean discreteCondition = true;
+                minimumElapsedTime = 1;
                 for(BaseConstituent CS: this.csList){ // To get all CS are in operation.
                     if(CS.getStatus() != BaseConstituent.Status.OPERATING){
                         discreteCondition = false;
@@ -188,13 +188,11 @@ public final class Simulator {
                 }
                 if(discreteCondition){ // To jump the tick
                     for(BaseAction a : actionList){// Calculate the minimum jump tick
-                        if(minimumElapsedTime < a.getRemainingTime())
-                            minimumElapsedTime = a.getRemainingTime();
+                        int rTime = a.getRemainingTime();
+                        if(minimumElapsedTime < rTime)
+                            minimumElapsedTime = rTime;
                     }
-                }else{ // If any one CS are not in operation, minimum tick will be one
-                    minimumElapsedTime = 1;
                 }
-                // TODO: 2016-10-20 CS 기준으로 수정
                 for(BaseAction a: actionList){ // List로 수정하면 이부분 수정해야함..
 //                    a.getPerformer().normalAction(minimumElapsedTime);
                     BaseConstituent[] tmpArr = a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
