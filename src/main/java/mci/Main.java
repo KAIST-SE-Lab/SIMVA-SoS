@@ -58,88 +58,92 @@ public class Main {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
-            String outputName = "mci_result/" + pre + "_MCI_" + bound + "_" + String.format("%.3f", alpha_beta) + ".csv";
-            CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
-            cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
-            ArrayList<SMCResult> resList = new ArrayList<>();
+            for (int trial = 1; trial <= 10; trial++) {
 
-            System.out.println("----------------------------------------------------");
-            System.out.println("SoS-level benefit is greater than and equal to " + bound + ".");
-            BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
-            SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
+                String outputName = "mci_result/" + pre + "_MCI_" + bound + "_" + String.format("%.3f", alpha_beta) + "t"+ String.valueOf(trial) +".csv";
+                CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
+                cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
+                ArrayList<SMCResult> resList = new ArrayList<>();
+
+                System.out.println("----------------------------------------------------");
+                System.out.println("SoS-level benefit is greater than and equal to " + bound + ".");
+                BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+                SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
 
 //        int thetaSet[] = {70,90,95,99};
 
-            for (int t = 99; t > 0; t--) {
-                double theta = 0.01 * t; // theta
-                long start = System.currentTimeMillis();
-                sprt.setExpression(theta);
-                logger.info("--------------------------------------------- Theta : "
-                        + String.format("%.2f", theta) + " -----------------------------------------------------");
-                long local_start = System.currentTimeMillis();
+                for (int t = 1; t < 100; t++) {
+                    double theta = 0.01 * t; // theta
+                    long start = System.currentTimeMillis();
+                    sprt.setExpression(theta);
+                    logger.info("--------------------------------------------- Theta : "
+                            + String.format("%.2f", theta) + " -----------------------------------------------------");
+                    long local_start = System.currentTimeMillis();
 
-                while (!sprt.checkStopCondition()) {
-                    logger.info("CheckStopCondition :" + String.format("%.4f", (System.currentTimeMillis() - local_start) / 1000.0));
+                    while (!sprt.checkStopCondition()) {
+                        logger.info("CheckStopCondition :" + String.format("%.4f", (System.currentTimeMillis() - local_start) / 1000.0));
 
-                    // Initialize Patient map
-                    for (int i = 0; i <= 100; i++) {
-                        Hospital.GeoMap.add(new MapPoint(i));
+                        // Initialize Patient map
+                        for (int i = 0; i <= 100; i++) {
+                            Hospital.GeoMap.add(new MapPoint(i));
+                        }
+                        // 매번 다른 distribution이 필요함
+                        ArrayList<Integer> list = new ArrayList<>();
+                        list.clear();
+                        list = distributor.getDistributionArray(100);
+                        sim.setActionPlan(list);
+                        sim.setEndTick(10000);
+
+                        logger.info("Initialize :" + String.format("%.4f", (System.currentTimeMillis() - local_start) / 1000.0));
+
+                        sim.execute();
+
+                        logger.info("Simulator Execution :" + String.format("%.4f", (System.currentTimeMillis() - local_start) / 1000.0));
+
+                        SIMResult res = sim.getResult();
+                        int checkResult = checker.evaluateSample(res);
+                        sprt.updateResult(checkResult);
+
+                        System.gc();
+
+                        sim.reset();
+                        sim.setActionPlan(list);
+
+                        logger.info("SPRT Calculation :" + String.format("%.2f", (System.currentTimeMillis() - local_start) / 1000.0));
+
+                        local_start = System.currentTimeMillis();
                     }
-                    // 매번 다른 distribution이 필요함
-                    ArrayList<Integer> list = new ArrayList<>();
-                    list.clear();
-                    list = distributor.getDistributionArray(100);
-                    sim.setActionPlan(list);
-                    sim.setEndTick(10000);
 
-                    logger.info("Initialize :" + String.format("%.4f", (System.currentTimeMillis() - local_start) / 1000.0));
+                    boolean h0 = sprt.getResult(); // Result
+                    int numSamples = sprt.getNumSamples();
 
-                    sim.execute();
+                    long exec_time = System.currentTimeMillis() - start; //exec time
+                    int minTick = checker.getMinTick();
+                    int maxTick = checker.getMaxTick();
+                    sprt.reset();
+                    resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
+                    System.out.print("Theta: " + theta);
+                    if (h0) {
+                        System.out.print(" Result: T");
+                    } else {
+                        System.out.print(" Result: F");
+                    }
+                    System.out.print(" with n of samples: " + numSamples);
+                    System.out.println(" in " + String.format("%.2f", exec_time / 1000.0) + " secs");
 
-                    logger.info("Simulator Execution :" + String.format("%.4f", (System.currentTimeMillis() - local_start) / 1000.0));
-
-                    SIMResult res = sim.getResult();
-                    int checkResult = checker.evaluateSample(res);
-                    sprt.updateResult(checkResult);
-
-                    System.gc();
-
-                    sim.reset();
-                    sim.setActionPlan(list);
-
-                    logger.info("SPRT Calculation :" + String.format("%.2f", (System.currentTimeMillis() - local_start) / 1000.0));
-
-                    local_start = System.currentTimeMillis();
                 }
-
-                boolean h0 = sprt.getResult(); // Result
-                int numSamples = sprt.getNumSamples();
-
-                long exec_time = System.currentTimeMillis() - start; //exec time
-                int minTick = checker.getMinTick();
-                int maxTick = checker.getMaxTick();
-                sprt.reset();
-                resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
-                System.out.print("Theta: " + theta);
-                if (h0) {
-                    System.out.print(" Result: T");
-                } else {
-                    System.out.print(" Result: F");
+                System.out.println();
+                for (SMCResult r : resList) {
+                    System.out.print(".");
+                    cw.writeNext(r.getArr());
                 }
-                System.out.print(" with n of samples: " + numSamples);
-                System.out.println(" in " + String.format("%.2f", exec_time / 1000.0) + " secs");
+                cw.close();
+                resList.clear();
+                System.out.println();
+
+                System.out.println("Finished");
 
             }
-            System.out.println();
-            for (SMCResult r : resList) {
-                System.out.print(".");
-                cw.writeNext(r.getArr());
-            }
-            cw.close();
-            resList.clear();
-            System.out.println();
-
-            System.out.println("Finished");
         }
     }
 
