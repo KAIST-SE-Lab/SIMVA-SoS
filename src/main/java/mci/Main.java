@@ -36,15 +36,13 @@ public class Main {
 
         // Globally used (no need to replicate in concurrency)
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(2000, 600);
+        distributor.setNormalDistParams(2000, 500);
 
         // Set #1
         NearestPTS np1 = new NearestPTS();
         NearestPTS np2 = new NearestPTS();
-        NearestPTS np3 = new NearestPTS();
         SeverityPTS sp1 = new SeverityPTS();
         SeverityPTS sp2 = new SeverityPTS();
-        SeverityPTS sp3 = new SeverityPTS();
         BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
         Hospital hos = new Hospital();
         ArrayList<RescueAction> rActions = new ArrayList<>();
@@ -60,7 +58,6 @@ public class Main {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
-//        String conf_format = String.format("%.3f", alpha_beta).replace('.','_');
             String outputName = "mci_result/" + pre + "_MCI_" + bound + "_" + String.format("%.3f", alpha_beta) + ".csv";
             CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
             cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
@@ -71,7 +68,7 @@ public class Main {
             BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
 
-//        int thetaSet[] = {68,70,72,74};
+//        int thetaSet[] = {70,90,95,99};
 
             for (int t = 99; t > 0; t--) {
                 double theta = 0.01 * t; // theta

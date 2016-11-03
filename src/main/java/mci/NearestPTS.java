@@ -24,7 +24,7 @@ public class NearestPTS extends BasePTS{
     @Override
     public int getUtility(BaseAction a) {
         RescueAction rA = (RescueAction) a;
-        int patientSavingBenefit = 80;
+        int patientSavingBenefit = 75;
         if(rA.isAcknowledged())
             patientSavingBenefit += 15;
 
