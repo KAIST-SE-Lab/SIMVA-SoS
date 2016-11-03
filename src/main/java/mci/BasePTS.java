@@ -1,5 +1,6 @@
 package mci;
 
+import jdk.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
@@ -160,7 +161,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 
     public RescueAction choosePatient() {
         RescueAction bestAction = null;
-        for(int lb = 45, ub = 55; lb != 0 || ub != 100  ; lb--, ub++){
+        for(int lb = 49, ub = 51; lb != 0 || ub != 100  ; lb--, ub++){
             int candidateSize = Hospital.GeoMap.get(lb).getCurActions().size();
             if(candidateSize == 0) {
                 candidateSize = Hospital.GeoMap.get(ub).getCurActions().size();
@@ -177,7 +178,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         return bestAction;
     }
 
-    private RescueAction pickBest(ArrayList<RescueAction> aList){
+    RescueAction pickBest(ArrayList<RescueAction> aList){
         RescueAction candidate = null;
 
         if(aList.size() == 0)
@@ -197,6 +198,9 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                             candidate = rA;
                     }else{// 비교군이 있음
                         if(rA.getPatientStatus()!= RescueAction.PatientStatus.Dead && getUtility(candidate) < getUtility(rA)){
+                            candidate = rA;
+                        }else if(getUtility(candidate) == getUtility(rA) && candidate.getPatientStatus() != RescueAction.PatientStatus.Very_Dangerous &&
+                                rA.getPatientStatus() == RescueAction.PatientStatus.Very_Dangerous){
                             candidate = rA;
                         }
                     }

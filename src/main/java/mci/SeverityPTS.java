@@ -30,9 +30,9 @@ public class SeverityPTS extends BasePTS{
         int patientSavingBenefit = -1;
 
         if(pStat == RescueAction.PatientStatus.Dangerous)
-            patientSavingBenefit = 60;
+            patientSavingBenefit = 70;
         else if(pStat == RescueAction.PatientStatus.Very_Dangerous)
-            patientSavingBenefit = 80;
+            patientSavingBenefit = 90;
 
         if(rA.isAcknowledged())
             patientSavingBenefit += 20;
@@ -41,6 +41,34 @@ public class SeverityPTS extends BasePTS{
         distance *= 2;
 
         return patientSavingBenefit - distance;
+    }
+
+    @Override
+    public RescueAction choosePatient() {
+        RescueAction bestAction = super.choosePatient();
+
+        if(bestAction != null && bestAction.getPatientStatus() == RescueAction.PatientStatus.Dangerous){
+            int pPos = bestAction.getRaisedLoc();
+            for(int i = 1; i<10; i++){
+                int candidateSize = Hospital.GeoMap.get(pPos-i <= 0 ? 0 : pPos-i).getCurActions().size();
+                if(candidateSize == 0) {
+                    candidateSize = Hospital.GeoMap.get(pPos+i >= 100 ? 100 : pPos+i).getCurActions().size();
+                    if(candidateSize == 0)
+                        continue;
+                    bestAction = pickBest(Hospital.GeoMap.get(pPos+i >= 100 ? 100 : pPos+i).getCurActions());
+                }else{
+                    bestAction = pickBest(Hospital.GeoMap.get(pPos-i <= 0 ? 0 : pPos-i).getCurActions());
+                }
+                if(bestAction == null)
+                    continue;
+                else if(bestAction.getPatientStatus() == RescueAction.PatientStatus.Dangerous && i != 9){
+                    continue;
+                }
+                break;
+            }
+        }
+
+        return bestAction;
     }
 
 }

@@ -36,13 +36,15 @@ public class Main {
 
         // Globally used (no need to replicate in concurrency)
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(2000, 800);
+        distributor.setNormalDistParams(2000, 600);
 
         // Set #1
         NearestPTS np1 = new NearestPTS();
         NearestPTS np2 = new NearestPTS();
+        NearestPTS np3 = new NearestPTS();
         SeverityPTS sp1 = new SeverityPTS();
         SeverityPTS sp2 = new SeverityPTS();
+        SeverityPTS sp3 = new SeverityPTS();
         BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
         Hospital hos = new Hospital();
         ArrayList<RescueAction> rActions = new ArrayList<>();
@@ -71,7 +73,7 @@ public class Main {
 
 //        int thetaSet[] = {68,70,72,74};
 
-            for (int t = 1; t < 100; t++) {
+            for (int t = 99; t > 0; t--) {
                 double theta = 0.01 * t; // theta
                 long start = System.currentTimeMillis();
                 sprt.setExpression(theta);

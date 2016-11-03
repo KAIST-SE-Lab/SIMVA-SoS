@@ -81,9 +81,9 @@ public class BaseChecker {
                         return 1;
                     break;
             }
-            if(this.minTick > res.getNumTicks())
+            if(this.minTick >= res.getNumTicks())
                 this.minTick = res.getNumTicks();
-            else if(this.maxTick < res.getNumTicks())
+            else if(this.maxTick <= res.getNumTicks())
                 this.maxTick = res.getNumTicks();
         }
         return 0;
