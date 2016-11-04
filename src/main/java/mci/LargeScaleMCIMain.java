@@ -33,7 +33,7 @@ public class LargeScaleMCIMain {
 
     public static void main(String[] args) throws Exception {
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(25000, 3000);
+        distributor.setNormalDistParams(8000, 2500);
 
         NearestPTS np1 = new NearestPTS();
         NearestPTS np2 = new NearestPTS();
@@ -45,6 +45,12 @@ public class LargeScaleMCIMain {
         NearestPTS np8 = new NearestPTS();
         NearestPTS np9 = new NearestPTS();
         NearestPTS np10 = new NearestPTS();
+        NearestPTS np11 = new NearestPTS();
+        NearestPTS np12 = new NearestPTS();
+        NearestPTS np13 = new NearestPTS();
+        NearestPTS np14 = new NearestPTS();
+        NearestPTS np15 = new NearestPTS();
+
 
         SeverityPTS sp1 = new SeverityPTS();
         SeverityPTS sp2 = new SeverityPTS();
@@ -56,8 +62,14 @@ public class LargeScaleMCIMain {
         SeverityPTS sp8 = new SeverityPTS();
         SeverityPTS sp9 = new SeverityPTS();
         SeverityPTS sp10 = new SeverityPTS();
+        SeverityPTS sp11 = new SeverityPTS();
+        SeverityPTS sp12 = new SeverityPTS();
+        SeverityPTS sp13 = new SeverityPTS();
+        SeverityPTS sp14 = new SeverityPTS();
+        SeverityPTS sp15 = new SeverityPTS();
 
         BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, np3, np4, np5, np6, np7, np8, np9, np10,
+                np11, np12, np13, np14, np15, sp11, sp12, sp13, sp14, sp15,
                 sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8, sp9, sp10};
 
         Hospital hos = new Hospital();
@@ -68,7 +80,7 @@ public class LargeScaleMCIMain {
         Simulator sim = new Simulator(CSs, hos, env);
 
         double[] alpha_betas = {0.01, 0.001};
-        int bound = 350;
+        int bound = 280;
         for (double alpha_beta : alpha_betas) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -83,7 +95,7 @@ public class LargeScaleMCIMain {
 
                 System.out.println("----------------------------------------------------");
                 System.out.println("SoS-level benefit is greater than and equal to " + bound + ".");
-                BaseChecker checker = new BaseChecker(50000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+                BaseChecker checker = new BaseChecker(20000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
                 SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
 
                 for (int t = 1; t < 100; t++) {
@@ -109,7 +121,7 @@ public class LargeScaleMCIMain {
                         list = distributor.getDistributionArray(500); // Action 수 만큼 증가
 
                         sim.setActionPlan(list);
-                        sim.setEndTick(50000);
+                        sim.setEndTick(20000);
 
                         logger.info("Initialize :" + String.format("%.4f", (System.currentTimeMillis() - local_start) / 1000.0));
 

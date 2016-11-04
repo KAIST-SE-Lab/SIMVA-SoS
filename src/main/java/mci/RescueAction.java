@@ -70,6 +70,8 @@ public class RescueAction extends BaseAction {
         }
 //        int raisedLoc = 60; // For test
 
+//        raisedLoc = 60;
+
         this.raisedLoc = raisedLoc;
         this.curPos = raisedLoc;
 
