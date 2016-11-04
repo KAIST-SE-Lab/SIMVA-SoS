@@ -51,7 +51,6 @@ public class Main {
         Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
         Simulator sim = new Simulator(CSs, hos, env);
 
-//        double alpha_beta = 0.01;
         double[] albes = {0.01, 0.001};
         int bound = 70;
         for(double alpha_beta : albes) {
