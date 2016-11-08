@@ -1,6 +1,7 @@
 package mci;
 
 import com.opencsv.CSVWriter;
+import kr.ac.kaist.se.Util;
 import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.*;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
@@ -36,17 +37,8 @@ public class Main {
     public static void main(String[] args) throws Exception{
 
         // To prepare the result_directory
-        File directory = new File("mci_result");
-        if(directory.exists()){
-            if(!directory.isDirectory())
-                throw new Exception("The result file cannot be created!");
-        }else{
-            try{
-                directory.mkdirs();
-            }catch(SecurityException e){
-                e.printStackTrace();
-            }
-        }
+        Util.create_result_directory("mci_result");
+
 
         // Globally used (no need to replicate in concurrency)
         NormalDistributor distributor = new NormalDistributor();
