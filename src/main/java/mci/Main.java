@@ -7,6 +7,7 @@ import kr.ac.kaist.se.simulator.method.SPRTMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
@@ -33,6 +34,19 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception{
+
+        // To prepare the result_directory
+        File directory = new File("mci_result");
+        if(directory.exists()){
+            if(!directory.isDirectory())
+                throw new Exception("The result file cannot be created!");
+        }else{
+            try{
+                directory.mkdirs();
+            }catch(SecurityException e){
+                e.printStackTrace();
+            }
+        }
 
         // Globally used (no need to replicate in concurrency)
         NormalDistributor distributor = new NormalDistributor();
