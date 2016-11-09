@@ -75,6 +75,9 @@ public final class Simulator {
 
                 immediateActions.clear();
 
+                // Environment actions first
+                this.generateExogenousActions(); // Environment action
+
                 for(BaseConstituent cs : this.csList){ // Get immediate candidate action
                     BaseAction a = cs.step();
                     if(a == null)
@@ -103,8 +106,6 @@ public final class Simulator {
 
                 Collections.shuffle(immediateActions);
                 this.progress(BaseAction.TYPE.IMMEDIATE); // Choose
-
-                this.generateExogenousActions(); // Environment action
 
                 Collections.shuffle(actions);
                 this.progress(BaseAction.TYPE.NORMAL);
