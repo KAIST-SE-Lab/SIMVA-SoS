@@ -6,8 +6,6 @@ import kr.ac.kaist.se.simulator.NormalDistributor;
 import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
-import mci.Hospital;
-import mci.MapPoint;
 import mci.SMCResult;
 
 import java.io.FileOutputStream;
@@ -69,8 +67,6 @@ public class Executor {
 
                     while (!sprt.checkStopCondition()) {
 
-                        // Custom initialize part
-
                         // Initialize Patient map
                         sim.getScenario().init();
 
@@ -103,6 +99,7 @@ public class Executor {
                     int maxTick = checker.getMaxTick();
                     sprt.reset();
                     resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
+
                     System.out.print("Theta: " + theta);
                     if (h0) {
                         System.out.print(" Result: T");
