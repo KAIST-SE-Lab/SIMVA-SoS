@@ -88,6 +88,26 @@ public class RescueAction extends BaseAction {
         this.setActionType(TYPE.NORMAL);
     }
 
+    @Override
+    public String getDebugTrace() {
+        if(this.getStatus() == null ||this.getStatus() == Status.NOT_RAISED || this.pStat == PatientStatus.Dead){
+            return "";
+        }
+        if(this.getPerformer().getClass() == Hospital.class) // Ignore the heal action of the hospital
+            return "";
+
+        String ret_str = "Patient " + String.valueOf(this_ID);
+        ret_str += " ";
+        ret_str += String.valueOf(this.curPos);
+        ret_str += "/";
+        ret_str += String.valueOf(this.timeToDead);
+        if(isAcknowledged)
+            ret_str += "/ack";
+        else
+            ret_str += "/not_ack";
+        return ret_str;
+    }
+
     public void treatAction(int elapsedTime){
         this.timeToDead -= Math.abs(elapsedTime);
         this.decreaseRemainingTime(Math.abs(elapsedTime));
