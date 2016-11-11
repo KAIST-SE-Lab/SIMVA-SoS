@@ -31,7 +31,8 @@ public class LargeMCIScenario extends BaseScenario {
     private Environment env;
     private ArrayList<BaseAction> actionList;
 
-    public LargeMCIScenario(int num_of_cs){
+    public LargeMCIScenario(int num_of_cs, int num_of_patients){
+        this.csList = new ArrayList<>();
         for(int i=0; i<num_of_cs; i++){
             this.csList.add(new SeverityPTS());
             this.csList.add(new NearestPTS());
@@ -39,7 +40,7 @@ public class LargeMCIScenario extends BaseScenario {
         this.manager = new Hospital();
 
         this.actionList = new ArrayList<>();
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < num_of_patients; i++)
             this.actionList.add(new RescueAction(0, 0));
 
         BaseConstituent[] CSs = new BaseConstituent[this.csList.size()];

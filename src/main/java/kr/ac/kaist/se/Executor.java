@@ -73,7 +73,7 @@ public class Executor {
                         // 매번 다른 distribution 이 필요함
                         ArrayList<Integer> list = new ArrayList<>();
                         list.clear();
-                        list = distributor.getDistributionArray(100);
+                        list = distributor.getDistributionArray(sim.getScenario().getActionList().size());
                         sim.setActionPlan(list);
 
                         sim.setEndTick(endTick);
