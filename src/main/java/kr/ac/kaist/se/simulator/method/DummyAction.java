@@ -63,5 +63,10 @@ public class DummyAction extends BaseAction {
         // Do nothing
     }
 
+    @Override
+    public String getDebugTrace() {
+        return "";
+    }
+
 
 }
