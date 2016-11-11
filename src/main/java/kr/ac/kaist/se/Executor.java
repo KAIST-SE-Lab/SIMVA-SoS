@@ -14,17 +14,18 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Executor.java
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
- *
+ * <p>
  * Simulation Executor class
- *
+ * <p>
  * The MIT License (MIT)
- *
+ * <p>
  * Copyright (c) 2016 Junho Kim
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -35,20 +36,19 @@ import java.util.Date;
 
 public class Executor {
 
+    public static double[] ARR_ALPHA_BETA = {0.01, 0.001};
 
-    public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException{
-
-        double[] albes = {0.01, 0.001};
+    public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException {
 
         int endTick = 10000;
-        for(double alpha_beta : albes) {
+        for (double alpha_beta : ARR_ALPHA_BETA) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
 
             for (int trial = 1; trial <= 10; trial++) {
 
-                String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t"+ String.valueOf(trial) +".csv";
+                String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
                 CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
                 cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
 
@@ -126,4 +126,43 @@ public class Executor {
             }
         }
     }
+
+    public static void Perform_Debug_Experiment(NormalDistributor distributor, Simulator sim, String caseName, ArrayList<String> csv_rows) throws IOException {
+        int endTick = 10000;
+        for (double alpha_beta : ARR_ALPHA_BETA) {
+            Date nowDate = new Date();
+            SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            String pre = transFormat.format(nowDate);
+
+            String outputName = caseName + "_debug_result/" + pre + caseName + String.format("%.3f", alpha_beta) + ".csv";
+            CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
+
+            String[] rows = {};
+            csv_rows.add(0, "Time_tick"); // Add first information (@ every tick)
+            csv_rows.toArray(rows);
+            cw.writeNext(rows);
+
+            // Initialize Patient map
+            sim.getScenario().init();
+
+            // 매번 다른 distribution 이 필요함
+            ArrayList<Integer> list = new ArrayList<>();
+            list.clear();
+            list = distributor.getDistributionArray(100);
+            sim.setActionPlan(list);
+
+            sim.setEndTick(endTick);
+
+            sim.execute(); // Simulation!
+            HashMap<Integer, String> debugTraces = sim.getDebugTraces();
+
+            sim.reset();
+            sim.setActionPlan(list);
+
+            cw.close();
+        }
+
+    }
+
+
 }
