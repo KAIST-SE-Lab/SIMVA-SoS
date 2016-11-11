@@ -1,6 +1,9 @@
 package kr.ac.kaist.se.simulator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * System of Systems Simulator
@@ -25,7 +28,7 @@ public final class Simulator {
     private boolean isPlanned; // Checking the is Planned actions?
     private boolean DEBUG; // DEBUG mode
 
-    private HashMap<Integer, List<String>> debugTraces;
+    private HashMap<Integer, String> debugTraces;
     private BaseScenario scenario;
 
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env) {
@@ -123,13 +126,9 @@ public final class Simulator {
             this.progress(BaseAction.TYPE.NORMAL);
 
             if(this.DEBUG){
-                ArrayList<String> aL = new ArrayList<>();
                 for(BaseAction a : this.actions){
-                    if(a.getDebugTrace().length() < 2)
-                        continue;
-                    aL.add(a.getDebugTrace());
+                    this.debugTraces.put(this.tick, a.getDebugTrace());
                 }
-                this.debugTraces.put(this.tick, aL);
             }
 
             actions.clear();
@@ -257,7 +256,7 @@ public final class Simulator {
         this.debugTraces = new HashMap<>();
     }
 
-    public HashMap<Integer, List<String>> getDebugTraces(){
+    public HashMap<Integer, String> getDebugTraces(){
         return this.debugTraces;
     }
 }
