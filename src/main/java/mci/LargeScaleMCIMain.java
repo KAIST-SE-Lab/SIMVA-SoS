@@ -39,7 +39,7 @@ public class LargeScaleMCIMain {
         ArrayList<String> csv_rows = new ArrayList<>();
         csv_rows.add("action_info");
 
-        Executor.Perform_Debug_Experiment(distributor, sim, "large_MCI", csv_rows);
+        Executor.Perform_Debug_Experiment(distributor, sim, "mci", csv_rows);
 
     }
 }

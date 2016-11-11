@@ -135,7 +135,7 @@ public class Executor {
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
 
-            String outputName = caseName + "_debug_result/" + pre + caseName + String.format("%.3f", alpha_beta) + ".csv";
+            String outputName = caseName + "_result/" + pre + caseName + String.format("%.3f", alpha_beta) + "_debug.csv";
             CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
 
             String[] rows = {};
@@ -159,7 +159,7 @@ public class Executor {
             for(Map.Entry<Integer, String> entry: debugTraces.entrySet()){
                 String[] en = {String.valueOf(entry.getKey()), entry.getValue()};
                 cw.writeNext(en);
-                System.out.println(en);
+                System.out.println(en[0]+ " " +en[1]);
             }
             sim.reset();
             sim.setActionPlan(list);
