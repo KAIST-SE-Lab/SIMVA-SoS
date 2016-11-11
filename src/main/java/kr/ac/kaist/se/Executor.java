@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Executor.java
@@ -155,7 +156,11 @@ public class Executor {
 
             sim.execute(); // Simulation!
             HashMap<Integer, String> debugTraces = sim.getDebugTraces();
-
+            for(Map.Entry<Integer, String> entry: debugTraces.entrySet()){
+                String[] en = {String.valueOf(entry.getKey()), entry.getValue()};
+                cw.writeNext(en);
+                System.out.println(en);
+            }
             sim.reset();
             sim.setActionPlan(list);
 
