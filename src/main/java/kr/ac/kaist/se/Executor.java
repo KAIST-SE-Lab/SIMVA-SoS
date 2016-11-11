@@ -12,10 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Executor.java
@@ -155,11 +152,16 @@ public class Executor {
             sim.setEndTick(endTick);
 
             sim.execute(); // Simulation!
-            HashMap<Integer, String> debugTraces = sim.getDebugTraces();
-            for(Map.Entry<Integer, String> entry: debugTraces.entrySet()){
-                String[] en = {String.valueOf(entry.getKey()), entry.getValue()};
-                cw.writeNext(en);
-                System.out.println(en[0]+ " " +en[1]);
+            HashMap<Integer, List<String>> debugTraces = sim.getDebugTraces();
+            for(Map.Entry<Integer, List<String>> entry: debugTraces.entrySet()){
+                List<String> each_tick_trace_list = entry.getValue();
+                if(list.size() > 0){
+                    for(String each : each_tick_trace_list){
+                        String[] en = {String.valueOf(entry.getKey()), each};
+                        cw.writeNext(en);
+                        System.out.println(en[0]+ " " +en[1]);
+                    }
+                }
             }
             sim.reset();
             sim.setActionPlan(list);
