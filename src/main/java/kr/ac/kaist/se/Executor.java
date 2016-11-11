@@ -36,14 +36,16 @@ import java.util.Date;
 public class Executor {
 
 
-    public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName) throws IOException{
+    public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException{
+
         double[] albes = {0.01, 0.001};
-        int bound = 70;
+
         int endTick = 10000;
         for(double alpha_beta : albes) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
+
             for (int trial = 1; trial <= 10; trial++) {
 
                 String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t"+ String.valueOf(trial) +".csv";
