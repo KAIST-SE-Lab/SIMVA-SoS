@@ -2,16 +2,17 @@ package kr.ac.kaist.se;
 
 import com.opencsv.CSVWriter;
 import kr.ac.kaist.se.mc.BaseChecker;
-import kr.ac.kaist.se.simulator.*;
+import kr.ac.kaist.se.simulator.NormalDistributor;
+import kr.ac.kaist.se.simulator.SIMResult;
+import kr.ac.kaist.se.simulator.Simulator;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 import mci.Hospital;
-import mci.Main;
 import mci.MapPoint;
 import mci.SMCResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +41,7 @@ public class Executor {
     public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName) throws IOException{
         double[] albes = {0.01, 0.001};
         int bound = 70;
+        int endTick = 10000;
         for(double alpha_beta : albes) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -49,11 +51,13 @@ public class Executor {
                 String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t"+ String.valueOf(trial) +".csv";
                 CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
                 cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
+
                 ArrayList<SMCResult> resList = new ArrayList<>();
 
                 System.out.println("----------------------------------------------------");
                 System.out.println("SoS-level benefit is greater than and equal to " + bound + ".");
-                BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+
+                BaseChecker checker = new BaseChecker(endTick, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
                 SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
 
 //        int thetaSet[] = {70,90,95,99};
@@ -65,16 +69,18 @@ public class Executor {
 
                     while (!sprt.checkStopCondition()) {
 
+                        // Custom initialize part
+
                         // Initialize Patient map
-                        for (int i = 0; i <= 100; i++) {
-                            Hospital.GeoMap.add(new MapPoint(i));
-                        }
+                        sim.getScenario().init();
+
                         // 매번 다른 distribution 이 필요함
                         ArrayList<Integer> list = new ArrayList<>();
                         list.clear();
                         list = distributor.getDistributionArray(100);
                         sim.setActionPlan(list);
-                        sim.setEndTick(10000);
+
+                        sim.setEndTick(endTick);
 
                         sim.execute();
 

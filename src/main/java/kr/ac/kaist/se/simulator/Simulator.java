@@ -29,6 +29,8 @@ public final class Simulator {
     private ArrayList<Integer> plannedActionTicks; // Raising actions following specific random distribution
     private boolean isPlanned; // Checking the is Planned actions?
 
+    private BaseScenario scenario;
+
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env){
         this.csList = new ArrayList<>();
         this.csList.addAll(Arrays.asList(CSs));
@@ -38,6 +40,17 @@ public final class Simulator {
         this.endTick = 0;
         this.isPlanned = false;
 
+    }
+
+    public Simulator(BaseScenario sc){
+        this.csList = sc.getCSList();
+        this.manager = sc.getManager();
+        this.env = sc.getEnvironment();
+
+        this.tick = 0;
+        this.endTick = 0;
+        this.isPlanned = false;
+        this.scenario = sc;
     }
 
     public void setEndTick(int tick){
@@ -219,5 +232,9 @@ public final class Simulator {
         this.isPlanned = true;
         this.plannedActionTicks = randomDistribution;
         this.env.setPlannedGeneration();
+    }
+
+    public BaseScenario getScenario(){
+        return this.scenario;
     }
 }
