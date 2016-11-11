@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public abstract class BaseAction {
 
     public static int ID = 0;
+    public int this_ID;
     public enum Status {NOT_RAISED, RAISED, HANDLED}
     public enum TYPE {IMMEDIATE, NORMAL}
 
@@ -38,6 +39,7 @@ public abstract class BaseAction {
 
     public BaseAction(){
         this.name = Integer.toString(hashCode()) + Integer.toString(ID);
+        this.this_ID = ID++;
     }
 
     public void startHandle(){
@@ -136,4 +138,5 @@ public abstract class BaseAction {
     public abstract BaseAction clone();
     public abstract void reset();
     public abstract void randomGenerate();
+    public abstract String getDebugTrace();
 }

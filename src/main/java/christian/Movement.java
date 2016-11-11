@@ -52,4 +52,9 @@ public class Movement extends BaseAction {
     public void randomGenerate() {
         // Not-used
     }
+
+    @Override
+    public String getDebugTrace() {
+        return null;
+    }
 }

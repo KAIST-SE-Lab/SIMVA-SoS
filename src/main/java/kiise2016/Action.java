@@ -49,4 +49,9 @@ public class Action extends BaseAction{
     public void randomGenerate() {
         // Not-used
     }
+
+    @Override
+    public String getDebugTrace() {
+        return null;
+    }
 }
