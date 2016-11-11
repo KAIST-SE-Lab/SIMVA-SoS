@@ -35,6 +35,7 @@ public class Main {
         MCIScenario mci = new MCIScenario();
 
         Simulator sim = new Simulator(mci);
+        sim.setDEBUG();
 
         Executor.Perform_Experiment(distributor, sim, "mci");
 
