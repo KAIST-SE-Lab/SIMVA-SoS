@@ -31,62 +31,19 @@ public class LargeMCIScenario extends BaseScenario {
     private Environment env;
     private ArrayList<BaseAction> actionList;
 
-    public LargeMCIScenario(){
-        NearestPTS np1 = new NearestPTS();
-        NearestPTS np2 = new NearestPTS();
-        NearestPTS np3 = new NearestPTS();
-        NearestPTS np4 = new NearestPTS();
-        NearestPTS np5 = new NearestPTS();
-        NearestPTS np6 = new NearestPTS();
-        NearestPTS np7 = new NearestPTS();
-        NearestPTS np8 = new NearestPTS();
-        NearestPTS np9 = new NearestPTS();
-        NearestPTS np10 = new NearestPTS();
-        NearestPTS np11 = new NearestPTS();
-        NearestPTS np12 = new NearestPTS();
-        NearestPTS np13 = new NearestPTS();
-        NearestPTS np14 = new NearestPTS();
-        NearestPTS np15 = new NearestPTS();
-        NearestPTS np16 = new NearestPTS();
-        NearestPTS np17 = new NearestPTS();
-        NearestPTS np18 = new NearestPTS();
-        NearestPTS np19 = new NearestPTS();
-        NearestPTS np20 = new NearestPTS();
-
-
-        SeverityPTS sp1 = new SeverityPTS();
-        SeverityPTS sp2 = new SeverityPTS();
-        SeverityPTS sp3 = new SeverityPTS();
-        SeverityPTS sp4 = new SeverityPTS();
-        SeverityPTS sp5 = new SeverityPTS();
-        SeverityPTS sp6 = new SeverityPTS();
-        SeverityPTS sp7 = new SeverityPTS();
-        SeverityPTS sp8 = new SeverityPTS();
-        SeverityPTS sp9 = new SeverityPTS();
-        SeverityPTS sp10 = new SeverityPTS();
-        SeverityPTS sp11 = new SeverityPTS();
-        SeverityPTS sp12 = new SeverityPTS();
-        SeverityPTS sp13 = new SeverityPTS();
-        SeverityPTS sp14 = new SeverityPTS();
-        SeverityPTS sp15 = new SeverityPTS();
-        SeverityPTS sp16 = new SeverityPTS();
-        SeverityPTS sp17 = new SeverityPTS();
-        SeverityPTS sp18 = new SeverityPTS();
-        SeverityPTS sp19 = new SeverityPTS();
-        SeverityPTS sp20 = new SeverityPTS();
-
-        BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, np3, np4, np5, np6, np7, np8, np9, np10,
-                np11, np12, np13, np14, np15, sp11, sp12, sp13, sp14, sp15, np16, np17, np18, np19, np20,
-                sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8, sp9, sp10, sp16, sp17, sp18, sp19, sp20};
-
-        this.csList = new ArrayList<>();
-        this.csList.addAll(Arrays.asList(CSs));
+    public LargeMCIScenario(int num_of_cs){
+        for(int i=0; i<num_of_cs; i++){
+            this.csList.add(new SeverityPTS());
+            this.csList.add(new NearestPTS());
+        }
         this.manager = new Hospital();
 
         this.actionList = new ArrayList<>();
         for (int i = 0; i < 500; i++)
             this.actionList.add(new RescueAction(0, 0));
 
+        BaseConstituent[] CSs = new BaseConstituent[this.csList.size()];
+        CSs = this.csList.toArray(CSs);
         this.env = new Environment(CSs, this.actionList.toArray(new BaseAction[this.actionList.size()]));
     }
 
