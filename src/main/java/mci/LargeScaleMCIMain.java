@@ -5,6 +5,8 @@ import kr.ac.kaist.se.Util;
 import kr.ac.kaist.se.simulator.NormalDistributor;
 import kr.ac.kaist.se.simulator.Simulator;
 
+import java.util.ArrayList;
+
 /**
  * LargeScaleMCIMain.java
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
@@ -34,7 +36,10 @@ public class LargeScaleMCIMain {
         Simulator sim = new Simulator(lMCI);
         sim.setDEBUG();
 
-        Executor.Perform_Experiment(distributor, sim, "large_MCI", 270);
+        ArrayList<String> csv_rows = new ArrayList<>();
+        csv_rows.add("action_info");
+
+        Executor.Perform_Debug_Experiment(distributor, sim, "large_MCI", csv_rows);
 
     }
 }
