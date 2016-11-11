@@ -146,16 +146,17 @@ public class Executor {
             // 매번 다른 distribution 이 필요함
             ArrayList<Integer> list = new ArrayList<>();
             list.clear();
-            list = distributor.getDistributionArray(100);
+            list = distributor.getDistributionArray(500);
             sim.setActionPlan(list);
 
             sim.setEndTick(endTick);
 
             sim.execute(); // Simulation!
+            SIMResult res = sim.getResult();
             HashMap<Integer, List<String>> debugTraces = sim.getDebugTraces();
             for(Map.Entry<Integer, List<String>> entry: debugTraces.entrySet()){
                 List<String> each_tick_trace_list = entry.getValue();
-                if(list.size() > 0){
+                if(each_tick_trace_list.size() > 0){
                     for(String each : each_tick_trace_list){
                         String[] en = {String.valueOf(entry.getKey()), each};
                         cw.writeNext(en);
