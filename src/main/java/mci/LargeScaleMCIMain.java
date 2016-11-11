@@ -35,7 +35,7 @@ public class LargeScaleMCIMain {
         Util.create_result_directory("mci_result");
 
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(2500, 800);
+        distributor.setNormalDistParams(2500, 700);
 
         NearestPTS np1 = new NearestPTS();
         NearestPTS np2 = new NearestPTS();
@@ -92,7 +92,7 @@ public class LargeScaleMCIMain {
         Simulator sim = new Simulator(CSs, hos, env);
 
         double[] alpha_betas = {0.01, 0.001};
-        int bound = 280;
+        int bound = 275;
         for (double alpha_beta : alpha_betas) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");

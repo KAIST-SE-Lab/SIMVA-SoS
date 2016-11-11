@@ -1,6 +1,7 @@
 package mci;
 
 import com.opencsv.CSVWriter;
+import kr.ac.kaist.se.Executor;
 import kr.ac.kaist.se.Util;
 import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.*;
@@ -39,7 +40,6 @@ public class Main {
         // To prepare the result_directory
         Util.create_result_directory("mci_result");
 
-
         // Globally used (no need to replicate in concurrency)
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(2000, 500);
@@ -50,13 +50,25 @@ public class Main {
         SeverityPTS sp1 = new SeverityPTS();
         SeverityPTS sp2 = new SeverityPTS();
         BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
+
         Hospital hos = new Hospital();
-        ArrayList<RescueAction> rActions = new ArrayList<>();
+        ArrayList<BaseAction> rActions = new ArrayList<>();
         for (int i = 0; i < 100; i++)
             rActions.add(new RescueAction(0, 0));
         Environment env = new Environment(CSs, rActions.toArray(new BaseAction[rActions.size()]));
-        Simulator sim = new Simulator(CSs, hos, env);
 
+
+        ArrayList<BaseConstituent> CSAList = new ArrayList<>();
+        CSAList.add(np1);
+        CSAList.add(np2);
+        CSAList.add(sp1);
+        CSAList.add(sp2);
+
+        Executor executor = new Executor();
+        executor.addCSs(CSAList);
+        executor.addActions(rActions);
+
+        Simulator sim = new Simulator(CSs, hos, env);
         double[] albes = {0.01, 0.001};
         int bound = 70;
         for(double alpha_beta : albes) {
