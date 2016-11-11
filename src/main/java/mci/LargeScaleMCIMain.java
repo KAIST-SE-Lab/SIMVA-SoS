@@ -1,18 +1,9 @@
 package mci;
 
-import com.opencsv.CSVWriter;
 import kr.ac.kaist.se.Executor;
 import kr.ac.kaist.se.Util;
-import kr.ac.kaist.se.mc.BaseChecker;
-import kr.ac.kaist.se.simulator.*;
-import kr.ac.kaist.se.simulator.method.SPRTMethod;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import kr.ac.kaist.se.simulator.NormalDistributor;
+import kr.ac.kaist.se.simulator.Simulator;
 
 /**
  * LargeScaleMCIMain.java
@@ -44,6 +35,6 @@ public class LargeScaleMCIMain {
         sim.setDEBUG();
 
         Executor.Perform_Experiment(distributor, sim, "large_MCI", 270);
-        
+
     }
 }
