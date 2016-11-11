@@ -3,6 +3,7 @@ package kr.ac.kaist.se.simulator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * System of Systems Simulator
@@ -27,7 +28,7 @@ public final class Simulator {
     private boolean isPlanned; // Checking the is Planned actions?
     private boolean DEBUG; // DEBUG mode
 
-
+    private HashMap<Integer, String> debugTraces;
     private BaseScenario scenario;
 
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env) {
@@ -69,6 +70,8 @@ public final class Simulator {
         this.csList.forEach((CS) -> CS.reset());
         if (manager != null)
             manager.reset();
+        if (this.DEBUG)
+            this.debugTraces.clear();
     }
 
     public SIMResult getResult() {
@@ -118,9 +121,18 @@ public final class Simulator {
             Collections.shuffle(immediateActions);
             this.progress(BaseAction.TYPE.IMMEDIATE); // Choose
 
+
             Collections.shuffle(actions);
             this.progress(BaseAction.TYPE.NORMAL);
 
+            if(this.DEBUG){
+                for(BaseAction a : this.actions){
+                    this.debugTraces.put(this.tick, a.getDebugTrace());
+                }
+            }
+
+            actions.clear();
+            immediateActions.clear();
             endCondition = this.evaluateProperties();
         }
         int SoSBenefit = 0;
@@ -224,10 +236,8 @@ public final class Simulator {
         }
         if (type == BaseAction.TYPE.IMMEDIATE) {
             env.updateActionStatus(immediateActions);
-            immediateActions.clear();
         } else {
             env.updateActionStatus(actions);
-            actions.clear();
         }
     }
 
@@ -243,5 +253,10 @@ public final class Simulator {
 
     public void setDEBUG() {
         this.DEBUG = true;
+        this.debugTraces = new HashMap<>();
+    }
+
+    public HashMap<Integer, String> getDebugTraces(){
+        return this.debugTraces;
     }
 }
