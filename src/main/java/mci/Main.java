@@ -2,9 +2,9 @@ package mci;
 
 import kr.ac.kaist.se.Executor;
 import kr.ac.kaist.se.Util;
-import kr.ac.kaist.se.simulator.*;
-
-import java.util.ArrayList;
+import kr.ac.kaist.se.simulator.NormalDistributor;
+import kr.ac.kaist.se.simulator.Simulator;
+import mci.scenario.MCIScenario;
 
 /**
  * Main.java
