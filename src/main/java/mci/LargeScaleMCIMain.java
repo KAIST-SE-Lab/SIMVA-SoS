@@ -44,10 +44,7 @@ public class LargeScaleMCIMain {
         Simulator sim = new Simulator(lMCI);
         sim.setDEBUG();
 
-        ArrayList<String> csv_rows = new ArrayList<>();
-        csv_rows.add("action_info");
-
-        Executor.Perform_Debug_Experiment(distributor, sim, "mci", csv_rows);
+        Executor.Perform_Debug_Experiment(distributor, sim, "mci");
 
     }
 

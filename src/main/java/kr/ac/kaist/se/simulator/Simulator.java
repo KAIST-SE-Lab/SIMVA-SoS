@@ -125,12 +125,15 @@ public final class Simulator {
 
             if (this.DEBUG) {
                 ArrayList<String> aL = new ArrayList<>();
+                for(BaseConstituent cs: this.csList){
+                    aL.add(cs.getDebugTrace());
+                }
                 for (BaseAction a : this.actions) {
                     if (a.getDebugTrace().length() < 2)
                         continue;
                     aL.add(a.getDebugTrace());
                 }
-                if (aL.size() > 0)
+                if (aL.size() > this.csList.size())
                     this.debugTraces.put(this.tick, aL);
             }
 

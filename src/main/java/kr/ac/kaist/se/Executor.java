@@ -125,7 +125,7 @@ public class Executor {
         }
     }
 
-    public static void Perform_Debug_Experiment(NormalDistributor distributor, Simulator sim, String caseName, ArrayList<String> csv_rows) throws IOException {
+    public static void Perform_Debug_Experiment(NormalDistributor distributor, Simulator sim, String caseName) throws IOException {
         int endTick = 10000;
         for (double alpha_beta : ARR_ALPHA_BETA) {
             Date nowDate = new Date();
@@ -134,11 +134,6 @@ public class Executor {
 
             String outputName = caseName + "_result/" + pre + caseName + String.format("%.3f", alpha_beta) + "_debug.csv";
             CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
-
-            String[] rows = {};
-            csv_rows.add(0, "Time_tick"); // Add first information (@ every tick)
-            csv_rows.toArray(rows);
-            cw.writeNext(rows);
 
             // Initialize Patient map
             sim.getScenario().init();
@@ -157,11 +152,15 @@ public class Executor {
             for(Map.Entry<Integer, List<String>> entry: debugTraces.entrySet()){
                 List<String> each_tick_trace_list = entry.getValue();
                 if(each_tick_trace_list.size() > 0){
+                    String output = String.valueOf(entry.getKey()) + " ";
                     for(String each : each_tick_trace_list){
-                        String[] en = {String.valueOf(entry.getKey()), each};
-                        cw.writeNext(en);
-                        System.out.println(en[0]+ " " +en[1]);
+                        output += each;
+                        output += " ";
+//                        String[] en = {String.valueOf(entry.getKey()), each};
+//                        cw.writeNext(en);
+//                        System.out.println(en[0]+ " " +en[1]);
                     }
+                    cw.writeNext(new String[]{output});
                 }
             }
             sim.reset();

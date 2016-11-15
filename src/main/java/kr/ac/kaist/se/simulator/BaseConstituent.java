@@ -165,6 +165,19 @@ public abstract class BaseConstituent {
         return this.currentAction;
     }
 
+    public String getDebugTrace(){
+        String debugTrace = "";
+        switch(this.getStatus()){
+            case IDLE: debugTrace += "IDLE"; break;
+            case SELECTION: debugTrace += "SEL"; break;
+            case OPERATING: debugTrace += "OP"; break;
+            case END: debugTrace += "END"; break;
+        }
+        if(this.getCurrentAction() != null)
+            debugTrace += " " + this.getCurrentAction().getName();
+        return debugTrace;
+    }
+
     /*
      * Abstract methods
      */
