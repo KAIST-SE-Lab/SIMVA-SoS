@@ -28,6 +28,7 @@ public final class Simulator {
     private HashMap<Integer, List<String>> debugTraces;
     private BaseScenario scenario;
 
+    @Deprecated
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env) {
         this.csList = new ArrayList<>();
         this.csList.addAll(Arrays.asList(CSs));
