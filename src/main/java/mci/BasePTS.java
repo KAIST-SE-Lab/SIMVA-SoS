@@ -161,7 +161,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 
     public RescueAction choosePatient() {
         RescueAction bestAction = null;
-        for(int lb = 49, ub = 51; lb != 0 || ub != 100  ; lb--, ub++){
+        for(int lb = 49, ub = 51; (lb >= 0) || (ub <= 100)  ; lb--, ub++){
             int candidateSize = Hospital.GeoMap.get(lb).getCurActions().size();
             if(candidateSize == 0) {
                 candidateSize = Hospital.GeoMap.get(ub).getCurActions().size();

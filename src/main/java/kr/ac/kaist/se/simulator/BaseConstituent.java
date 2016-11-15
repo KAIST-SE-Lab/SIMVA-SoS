@@ -174,7 +174,7 @@ public abstract class BaseConstituent {
             case END: debugTrace += "END"; break;
         }
         if(this.getCurrentAction() != null)
-            debugTrace += " " + this.getCurrentAction().getName();
+            debugTrace += "/" + this.getCurrentAction().getName();
         return debugTrace;
     }
 
