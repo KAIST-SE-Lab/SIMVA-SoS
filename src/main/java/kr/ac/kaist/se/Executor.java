@@ -44,7 +44,7 @@ public class Executor {
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
 
-            for (int trial = 1; trial <= 3; trial++) {
+            for (int trial = 1; trial <= 1; trial++) {
 
                 String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
                 CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');

@@ -53,15 +53,15 @@ public class LargeScaleMCIMain {
         distributor.setNormalDistParams(2500, 650);
 
         // Experiment # 1  Total # of CSs 10
-//        LargeMCIScenario lMCI = new LargeMCIScenario(5, 250);
-//        Simulator sim = new Simulator(lMCI);
-//        Executor.Perform_Experiment(distributor, sim, "mci", 150);
+        LargeMCIScenario lMCI = new LargeMCIScenario(5, 250);
+        Simulator sim = new Simulator(lMCI);
+        Executor.Perform_Experiment(distributor, sim, "mci", 150);
 
         // Experiment # 2  Total # of CSs 20
-//        LargeMCIScenario lMCI1 = new LargeMCIScenario(10, 400);
-//        sim = new Simulator(lMCI1);
-//        Executor.Perform_Experiment(distributor, sim, "mci", 240);
-        Simulator sim;
+        LargeMCIScenario lMCI1 = new LargeMCIScenario(10, 400);
+        sim = new Simulator(lMCI1);
+        Executor.Perform_Experiment(distributor, sim, "mci", 240);
+
         // Experiment # 3  Total # of CSs 30
         LargeMCIScenario lMCI2 = new LargeMCIScenario(15, 750);
         sim = new Simulator(lMCI2);

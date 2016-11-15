@@ -55,16 +55,21 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                     movePTS(remainTime);
                 }else{
                     movePTS((-1) * elapsedTime);
+                    if(this.curPos == currentAction.getRaisedLoc())
+                        this.PTS_STATUS = 2;
                 }
-            }else{
+            }else{ // CurrentAction raisedLoc >= 50
                 int distance = currentAction.getRaisedLoc() - this.curPos;
                 if(elapsedTime > distance){
                     movePTS(distance);
                     int remainTime = elapsedTime - distance;
                     this.PTS_STATUS = 2;
                     movePTS((-1) * remainTime);
-                }else
+                }else {
                     movePTS(elapsedTime);
+                    if(this.curPos == currentAction.getRaisedLoc())
+                        this.PTS_STATUS = 2;
+                }
             }
         }else if(this.PTS_STATUS == 2){ // 병원으로 돌아옴
             if(this.curPos < 50){
@@ -161,7 +166,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 
     public RescueAction choosePatient() {
         RescueAction bestAction = null;
-        for(int lb = 49, ub = 51; (lb >= 0) || (ub <= 100)  ; lb--, ub++){
+        for(int lb = 49, ub = 51; (lb >= 0) && (ub <= 100); lb--, ub++){
             int candidateSize = Hospital.GeoMap.get(lb).getCurActions().size();
             if(candidateSize == 0) {
                 candidateSize = Hospital.GeoMap.get(ub).getCurActions().size();

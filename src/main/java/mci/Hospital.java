@@ -68,6 +68,7 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
                 }
             }
             RescueAction healAction = new RescueAction(50, 10);
+            healAction.setName("HealAction");
             healAction.addPerformer(this);
             healAction.setStatus(BaseAction.Status.HANDLED);
             this.setCurrentAction(healAction);
