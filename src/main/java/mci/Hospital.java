@@ -60,7 +60,7 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
             for (MapPoint eachMap : Hospital.GeoMap) {
                 ArrayList<RescueAction> aList = eachMap.getCurActions();
                 for(RescueAction rA : aList){
-                   if(rA.getRemainTime() < 500 && rA.getRemainTime() > 0){
+                   if(rA.getRemainTime() < 300 && rA.getRemainTime() > 0){
                        // 공식적으로 HP가 50% 이하로 떨어진 것.
                        rA.addBenefit(10);
 //                       System.out.println("ACK!");

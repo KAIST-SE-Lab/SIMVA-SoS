@@ -37,13 +37,13 @@ public class Main {
 
     public static void experimentMain() throws IOException{
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(1500, 300);
+        distributor.setNormalDistParams(1500, 400);
 
         MCIScenario mci = new MCIScenario();
 
         Simulator sim = new Simulator(mci);
 
-        Executor.Perform_Experiment(distributor, sim, "mci", 80);
+        Executor.Perform_Experiment(distributor, sim, "mci", 90);
     }
 
     public static void debugMain() throws IOException {

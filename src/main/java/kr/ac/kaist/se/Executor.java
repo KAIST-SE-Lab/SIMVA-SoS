@@ -44,23 +44,17 @@ public class Executor {
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
 
-            for (int trial = 1; trial <= 1; trial++) {
-
-                String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
-                CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
-                cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
-
-                ArrayList<SMCResult> resList = new ArrayList<>();
+            for (int trial = 1; trial <= 3; trial++) {
 
                 System.out.println("----------------------------------------------------");
                 System.out.println("SoS-level benefit is greater than and equal to " + bound + ".");
 
                 BaseChecker checker = new BaseChecker(endTick, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
                 SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
-
+                ArrayList<SMCResult> resList = new ArrayList<>();
 //        int thetaSet[] = {70,90,95,99};
 
-                for (int t = 99; t > 0; t--) {
+                for (int t = 0; t < 100; t++) {
                     double theta = 0.01 * t; // theta
                     long start = System.currentTimeMillis();
                     sprt.setExpression(theta);
@@ -110,6 +104,11 @@ public class Executor {
                     System.out.println(" in " + String.format("%.2f", exec_time / 1000.0) + " secs");
 
                 }
+
+                String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
+                CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
+                cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
+
                 System.out.println();
                 for (SMCResult r : resList) {
                     System.out.print(".");

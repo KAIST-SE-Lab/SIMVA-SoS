@@ -32,10 +32,10 @@ public class SeverityPTS extends BasePTS{
         if(pStat == RescueAction.PatientStatus.Dangerous)
             patientSavingBenefit = 70;
         else if(pStat == RescueAction.PatientStatus.Very_Dangerous)
-            patientSavingBenefit = 85;
+            patientSavingBenefit = 90;
 
         if(rA.isAcknowledged())
-            patientSavingBenefit += 15;
+            patientSavingBenefit += 10;
 
         int distance = rA.getRaisedLoc() > 50? rA.getRaisedLoc()-50 : 50 - rA.getRaisedLoc();
         distance *= 2;

@@ -65,7 +65,7 @@ public class RescueAction extends BaseAction {
     public void randomGenerate() { // Location..?
         Random ranGen = new Random();
         int raisedLoc = Math.abs(ranGen.nextInt(101)); // 0 - 100
-        while(raisedLoc == 49 || raisedLoc == 50 || raisedLoc == 51){ // 49, 50, 51
+        while(raisedLoc > 47 && raisedLoc < 53){ // 48, 49, 50, 51, 52
             raisedLoc = Math.abs(ranGen.nextInt(101));
         }
 //        int raisedLoc = 60; // For test
@@ -82,7 +82,7 @@ public class RescueAction extends BaseAction {
             this.pStat = PatientStatus.Very_Dangerous;
         }
 
-        int timeToDead = Math.abs(ranGen.nextInt(1000)) + 1500; // 1500 ~ 2500
+        int timeToDead = Math.abs(ranGen.nextInt(700)) + 800; // 1500 ~ 2500
         this.timeToDead = timeToDead;
 
         this.setActionType(TYPE.NORMAL);
