@@ -133,7 +133,7 @@ public final class Simulator {
                         continue;
                     aL.add(a.getDebugTrace());
                 }
-                if (aL.size() > this.csList.size())
+//                if (aL.size() > this.csList.size())
                     this.debugTraces.put(this.tick, aL);
             }
 

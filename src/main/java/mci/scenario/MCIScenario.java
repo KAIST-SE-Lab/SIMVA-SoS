@@ -45,7 +45,7 @@ public class MCIScenario extends BaseScenario {
 
         this.actionList = new ArrayList<>();
         for (int i = 0; i < 100; i++)
-            this.actionList.add(new RescueAction(0, 0));
+            this.actionList.add(new RescueAction(50, 0));
 
         this.env = new Environment(CSs, this.actionList.toArray(new BaseAction[this.actionList.size()]));
 

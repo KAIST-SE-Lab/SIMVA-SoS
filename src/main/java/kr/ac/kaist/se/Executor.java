@@ -34,7 +34,7 @@ import java.util.*;
 
 public class Executor {
 
-    public static double[] ARR_ALPHA_BETA = {0.01, 0.001};
+    public static double[] ARR_ALPHA_BETA = {0.01};
 
     public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException {
 
@@ -141,7 +141,7 @@ public class Executor {
             // 매번 다른 distribution 이 필요함
             ArrayList<Integer> list = new ArrayList<>();
             list.clear();
-            list = distributor.getDistributionArray(500);
+            list = distributor.getDistributionArray(sim.getScenario().getActionList().size());
             sim.setActionPlan(list);
 
             sim.setEndTick(endTick);
