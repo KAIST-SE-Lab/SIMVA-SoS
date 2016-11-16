@@ -132,7 +132,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
             if (action != null && action.getStatus() == BaseAction.Status.RAISED) { // 내가 먹을 수 있어!
                 this.setCurrentAction(action);
                 action.addPerformer(this);
-                System.out.println("Pick Patient"+action.getName() + " at" + action.getRaisedLoc());
+//                System.out.println("Pick Patient"+action.getName() + " at" + action.getRaisedLoc());
                 this.gotoPatient();
             }else{ // 이미 다른애가 가져감
 //                if(action != null) System.out.println("[LOG] " + this + " takes nothing." );
