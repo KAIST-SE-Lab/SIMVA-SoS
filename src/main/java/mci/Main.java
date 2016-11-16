@@ -31,19 +31,19 @@ public class Main {
         Util.create_result_directory("mci_result");
 
         // Globally used (no need to replicate in concurrency)
-        debugMain();
-
+//        debugMain();
+        experimentMain();
     }
 
     public static void experimentMain() throws IOException{
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(2000, 500);
+        distributor.setNormalDistParams(1500, 300);
 
         MCIScenario mci = new MCIScenario();
 
         Simulator sim = new Simulator(mci);
 
-        Executor.Perform_Experiment(distributor, sim, "mci", 70);
+        Executor.Perform_Experiment(distributor, sim, "mci", 80);
     }
 
     public static void debugMain() throws IOException {

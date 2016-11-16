@@ -34,11 +34,11 @@ import java.util.*;
 
 public class Executor {
 
-    public static double[] ARR_ALPHA_BETA = {0.01};
+    public static double[] ARR_ALPHA_BETA = {0.01, 0.001};
 
     public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException {
 
-        int endTick = 10000;
+        int endTick = 5000;
         for (double alpha_beta : ARR_ALPHA_BETA) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -60,7 +60,7 @@ public class Executor {
 
 //        int thetaSet[] = {70,90,95,99};
 
-                for (int t = 1; t < 100; t++) {
+                for (int t = 99; t > 0; t--) {
                     double theta = 0.01 * t; // theta
                     long start = System.currentTimeMillis();
                     sprt.setExpression(theta);

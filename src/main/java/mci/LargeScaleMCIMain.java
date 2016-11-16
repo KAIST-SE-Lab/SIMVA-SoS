@@ -50,27 +50,27 @@ public class LargeScaleMCIMain {
 
     public static void experimentMain() throws IOException{
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(2500, 650);
+        distributor.setNormalDistParams(2000, 500);
 
         // Experiment # 1  Total # of CSs 10
         LargeMCIScenario lMCI = new LargeMCIScenario(5, 250);
         Simulator sim = new Simulator(lMCI);
-        Executor.Perform_Experiment(distributor, sim, "mci", 150);
+        Executor.Perform_Experiment(distributor, sim, "mci", 200);
 
         // Experiment # 2  Total # of CSs 20
         LargeMCIScenario lMCI1 = new LargeMCIScenario(10, 400);
         sim = new Simulator(lMCI1);
-        Executor.Perform_Experiment(distributor, sim, "mci", 240);
+        Executor.Perform_Experiment(distributor, sim, "mci", 320);
 
         // Experiment # 3  Total # of CSs 30
         LargeMCIScenario lMCI2 = new LargeMCIScenario(15, 750);
         sim = new Simulator(lMCI2);
-        Executor.Perform_Experiment(distributor, sim, "mci", 450);
+        Executor.Perform_Experiment(distributor, sim, "mci", 600);
 
         // Experiment # 4  Total # of CSs 40
         LargeMCIScenario lMCI3 = new LargeMCIScenario(20, 1000);
         sim = new Simulator(lMCI3);
-        Executor.Perform_Experiment(distributor, sim, "mci", 600);
+        Executor.Perform_Experiment(distributor, sim, "mci", 800);
 
     }
 }
