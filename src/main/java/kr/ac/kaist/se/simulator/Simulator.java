@@ -151,6 +151,8 @@ public final class Simulator {
     private void increaseTick(int minimumElapsedTime) {
         if (minimumElapsedTime > 0)
             this.tick += minimumElapsedTime;
+        if(this.tick > this.endTick)
+            this.tick = this.endTick;
     }
 
     private boolean evaluateProperties() {
