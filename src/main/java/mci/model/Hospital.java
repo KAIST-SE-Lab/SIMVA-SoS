@@ -1,4 +1,4 @@
-package mci;
+package mci.model;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;

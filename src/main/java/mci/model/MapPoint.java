@@ -1,4 +1,4 @@
-package mci;
+package mci.model;
 
 import java.util.ArrayList;
 

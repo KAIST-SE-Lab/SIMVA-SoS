@@ -1,6 +1,5 @@
-package mci;
+package mci.model;
 
-import jdk.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;

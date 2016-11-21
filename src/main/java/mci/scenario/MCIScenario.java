@@ -4,7 +4,7 @@ import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.BaseScenario;
 import kr.ac.kaist.se.simulator.Environment;
-import mci.*;
+import mci.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
