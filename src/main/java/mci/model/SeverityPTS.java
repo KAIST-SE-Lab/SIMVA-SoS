@@ -1,4 +1,4 @@
-package mci;
+package mci.model;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 
@@ -35,7 +35,7 @@ public class SeverityPTS extends BasePTS{
             patientSavingBenefit = 90;
 
         if(rA.isAcknowledged())
-            patientSavingBenefit += 20;
+            patientSavingBenefit += 10;
 
         int distance = rA.getRaisedLoc() > 50? rA.getRaisedLoc()-50 : 50 - rA.getRaisedLoc();
         distance *= 2;

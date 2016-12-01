@@ -1,15 +1,16 @@
-package mci;
+package mci.scenario;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.BaseScenario;
 import kr.ac.kaist.se.simulator.Environment;
+import mci.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * MCIScenario.java
+ * LargeMCIScenario.java
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
@@ -24,30 +25,28 @@ import java.util.Arrays;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class MCIScenario extends BaseScenario {
+public class LargeMCIScenario extends BaseScenario {
 
     private ArrayList<BaseConstituent> csList;
     private BaseConstituent manager;
     private Environment env;
     private ArrayList<BaseAction> actionList;
 
-    public MCIScenario(){
-        NearestPTS np1 = new NearestPTS();
-        NearestPTS np2 = new NearestPTS();
-        SeverityPTS sp1 = new SeverityPTS();
-        SeverityPTS sp2 = new SeverityPTS();
-        BaseConstituent[] CSs = new BaseConstituent[]{np1, np2, sp1, sp2};
-
+    public LargeMCIScenario(int num_of_cs, int num_of_patients){
         this.csList = new ArrayList<>();
-        this.csList.addAll(Arrays.asList(CSs));
+        for(int i=0; i<num_of_cs; i++){
+            this.csList.add(new SeverityPTS());
+            this.csList.add(new NearestPTS());
+        }
         this.manager = new Hospital();
 
         this.actionList = new ArrayList<>();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < num_of_patients; i++)
             this.actionList.add(new RescueAction(0, 0));
 
+        BaseConstituent[] CSs = new BaseConstituent[this.csList.size()];
+        CSs = this.csList.toArray(CSs);
         this.env = new Environment(CSs, this.actionList.toArray(new BaseAction[this.actionList.size()]));
-
     }
 
     @Override

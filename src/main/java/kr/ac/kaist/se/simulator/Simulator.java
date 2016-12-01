@@ -28,6 +28,7 @@ public final class Simulator {
     private HashMap<Integer, List<String>> debugTraces;
     private BaseScenario scenario;
 
+    @Deprecated
     public Simulator(BaseConstituent[] CSs, BaseConstituent manager, Environment env) {
         this.csList = new ArrayList<>();
         this.csList.addAll(Arrays.asList(CSs));
@@ -122,14 +123,18 @@ public final class Simulator {
             Collections.shuffle(actions);
             this.progress(BaseAction.TYPE.NORMAL);
 
-            if(this.DEBUG){
+            if (this.DEBUG) {
                 ArrayList<String> aL = new ArrayList<>();
-                for(BaseAction a : this.actions){
-                    if(a.getDebugTrace().length() < 2)
+                for(BaseConstituent cs: this.csList){
+                    aL.add(cs.getDebugTrace());
+                }
+                for (BaseAction a : this.actions) {
+                    if (a.getDebugTrace().length() < 2)
                         continue;
                     aL.add(a.getDebugTrace());
                 }
-                this.debugTraces.put(this.tick, aL);
+//                if (aL.size() > this.csList.size())
+                    this.debugTraces.put(this.tick, aL);
             }
 
             actions.clear();
@@ -146,6 +151,8 @@ public final class Simulator {
     private void increaseTick(int minimumElapsedTime) {
         if (minimumElapsedTime > 0)
             this.tick += minimumElapsedTime;
+        if(this.tick > this.endTick)
+            this.tick = this.endTick;
     }
 
     private boolean evaluateProperties() {
@@ -202,37 +209,33 @@ public final class Simulator {
              */
             ArrayList<BaseAction> actionList = this.actions;
             int minimumElapsedTime = -1;
-            if(!this.DEBUG) {
-                if (!actionList.isEmpty()) { // If the action list is not empty
-                    boolean discreteCondition = true;
-                    minimumElapsedTime = 1;
-                    for (BaseConstituent CS : this.csList) { // To get all CS are in operation.
-                        if (CS.getStatus() != BaseConstituent.Status.OPERATING) {
-                            discreteCondition = false;
-                            break;
-                        }
-                    }
-                    if (discreteCondition) { // To jump the tick
-                        for (BaseAction a : actionList) {// Calculate the minimum jump tick
-                            int rTime = a.getRemainingTime();
-                            if (minimumElapsedTime < rTime)
-                                minimumElapsedTime = rTime;
-                        }
-                    }
-                    for (BaseAction a : actionList) { // List로 수정하면 이부분 수정해야함..
-//                    a.getPerformer().normalAction(minimumElapsedTime);
-                        BaseConstituent[] tmpArr = a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
-                        for (int i = 0; i < tmpArr.length; i++) {
-                            // Real normal action happens.
-                            tmpArr[i].normalAction(minimumElapsedTime);
-                        }
-                    }
-                } else
-                    minimumElapsedTime = 1;
-            }else {
-                // Debug MODE -> trace every tick
+            if (!actionList.isEmpty()) { // If the action list is not empty
+                boolean discreteCondition = true;
                 minimumElapsedTime = 1;
-            }
+                for (BaseConstituent CS : this.csList) { // To get all CS are in operation.
+                    if (CS.getStatus() != BaseConstituent.Status.OPERATING) {
+                        discreteCondition = false;
+                        break;
+                    }
+                }
+                if (!this.DEBUG && discreteCondition) { // To jump the tick
+                    for (BaseAction a : actionList) {// Calculate the minimum jump tick
+                        int rTime = a.getRemainingTime();
+                        if (minimumElapsedTime < rTime)
+                            minimumElapsedTime = rTime;
+                    }
+                }
+                for (BaseAction a : actionList) { // List로 수정하면 이부분 수정해야함..
+//                    a.getPerformer().normalAction(minimumElapsedTime);
+                    BaseConstituent[] tmpArr = a.getPerformerList().toArray(new BaseConstituent[a.getPerformerList().size()]);
+                    for (int i = 0; i < tmpArr.length; i++) {
+                        // Real normal action happens.
+                        tmpArr[i].normalAction(minimumElapsedTime);
+                    }
+                }
+            } else
+                minimumElapsedTime = 1;
+
             increaseTick(minimumElapsedTime);
         }
         if (type == BaseAction.TYPE.IMMEDIATE) {
@@ -257,7 +260,7 @@ public final class Simulator {
         this.debugTraces = new HashMap<>();
     }
 
-    public HashMap<Integer, List<String>> getDebugTraces(){
+    public HashMap<Integer, List<String>> getDebugTraces() {
         return this.debugTraces;
     }
 }

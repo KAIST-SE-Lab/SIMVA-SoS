@@ -2,9 +2,11 @@ package mci;
 
 import kr.ac.kaist.se.Executor;
 import kr.ac.kaist.se.Util;
-import kr.ac.kaist.se.simulator.*;
+import kr.ac.kaist.se.simulator.NormalDistributor;
+import kr.ac.kaist.se.simulator.Simulator;
+import mci.scenario.MCIScenario;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 /**
  * Main.java
@@ -29,14 +31,31 @@ public class Main {
         Util.create_result_directory("mci_result");
 
         // Globally used (no need to replicate in concurrency)
+//        debugMain();
+        experimentMain();
+    }
+
+    public static void experimentMain() throws IOException{
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(2000, 500);
+        distributor.setNormalDistParams(1500, 400);
 
         MCIScenario mci = new MCIScenario();
 
         Simulator sim = new Simulator(mci);
 
-        Executor.Perform_Experiment(distributor, sim, "mci", 70);
+        Executor.Perform_Experiment(distributor, sim, "mci", 90);
+    }
+
+    public static void debugMain() throws IOException {
+        NormalDistributor distributor = new NormalDistributor();
+        distributor.setNormalDistParams(2000, 500);
+
+        MCIScenario lMCI = new MCIScenario();
+
+        Simulator sim = new Simulator(lMCI);
+        sim.setDEBUG();
+
+        Executor.Perform_Debug_Experiment(distributor, sim, "mci");
 
     }
 

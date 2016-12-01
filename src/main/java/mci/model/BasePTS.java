@@ -1,6 +1,5 @@
-package mci;
+package mci.model;
 
-import jdk.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
@@ -55,16 +54,21 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
                     movePTS(remainTime);
                 }else{
                     movePTS((-1) * elapsedTime);
+                    if(this.curPos == currentAction.getRaisedLoc())
+                        this.PTS_STATUS = 2;
                 }
-            }else{
+            }else{ // CurrentAction raisedLoc >= 50
                 int distance = currentAction.getRaisedLoc() - this.curPos;
                 if(elapsedTime > distance){
                     movePTS(distance);
                     int remainTime = elapsedTime - distance;
                     this.PTS_STATUS = 2;
                     movePTS((-1) * remainTime);
-                }else
+                }else {
                     movePTS(elapsedTime);
+                    if(this.curPos == currentAction.getRaisedLoc())
+                        this.PTS_STATUS = 2;
+                }
             }
         }else if(this.PTS_STATUS == 2){ // 병원으로 돌아옴
             if(this.curPos < 50){
@@ -127,6 +131,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
             if (action != null && action.getStatus() == BaseAction.Status.RAISED) { // 내가 먹을 수 있어!
                 this.setCurrentAction(action);
                 action.addPerformer(this);
+//                System.out.println("Pick Patient"+action.getName() + " at" + action.getRaisedLoc());
                 this.gotoPatient();
             }else{ // 이미 다른애가 가져감
 //                if(action != null) System.out.println("[LOG] " + this + " takes nothing." );
@@ -161,18 +166,22 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 
     public RescueAction choosePatient() {
         RescueAction bestAction = null;
-        for(int lb = 49, ub = 51; lb != 0 || ub != 100  ; lb--, ub++){
-            int candidateSize = Hospital.GeoMap.get(lb).getCurActions().size();
-            if(candidateSize == 0) {
-                candidateSize = Hospital.GeoMap.get(ub).getCurActions().size();
-                if(candidateSize == 0)
-                    continue;
-                bestAction = pickBest(Hospital.GeoMap.get(ub).getCurActions());
-            }else{
-                bestAction = pickBest(Hospital.GeoMap.get(lb).getCurActions());
+        for(int lb = 47, ub = 53; (lb >= 0) && (ub <= 100); lb--, ub++){
+            int candidateSize = Hospital.GeoMap.get(lb).getCurActions().size(); // 왼쪽 탐색
+            if(candidateSize != 0) { // 왼쪽 비어있지 않으면
+                bestAction = pickBest(Hospital.GeoMap.get(lb).getCurActions()); // 왼쪽 선택
             }
-            if(bestAction == null)
+            if(bestAction != null)
+                break;
+
+            candidateSize = Hospital.GeoMap.get(ub).getCurActions().size(); // 오른쪽 검사
+            if(candidateSize != 0){
+                bestAction = pickBest(Hospital.GeoMap.get(ub).getCurActions()); // 오른쪽 선택
+            }
+
+            if(bestAction == null) // 맵에서 선택할만한거 없으면 다음으로 블락으로
                 continue;
+
             break;
         } // 맵의 양 극단에서부터 candidateAction을 뽑아오기
         return bestAction;
@@ -181,19 +190,19 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     RescueAction pickBest(ArrayList<RescueAction> aList){
         RescueAction candidate = null;
 
-        if(aList.size() == 0)
+        if(aList.size() == 0) // 없으면 널
             return candidate;
-        else if(aList.size() == 1) {
-            if (aList.get(0).getStatus() == BaseAction.Status.RAISED) {
+        else if(aList.size() == 1) { // 한개인 경우
+            if (aList.get(0).getStatus() == BaseAction.Status.RAISED) { // 환자 상태가 발생한 상태
                 if (getUtility(aList.get(0)) > 0)
                     return aList.get(0);
             }
         }
-        else{
+        else{ // 맵 포인트에 환자가 2명 이상
             for(int iterator = 0; iterator< aList.size(); iterator++){
-                RescueAction rA = aList.get(iterator);
-                if(rA.getStatus() == BaseAction.Status.RAISED){
-                    if(candidate == null){
+                RescueAction rA = aList.get(iterator); // Candidate
+                if(rA.getStatus() == BaseAction.Status.RAISED){ // If this patient is raised.
+                    if(candidate == null){ // no 비교군
                         if(rA.getPatientStatus()!= RescueAction.PatientStatus.Dead && getUtility(rA) > 0)
                             candidate = rA;
                     }else{// 비교군이 있음

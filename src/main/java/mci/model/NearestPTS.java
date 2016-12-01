@@ -1,4 +1,4 @@
-package mci;
+package mci.model;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 
@@ -24,9 +24,9 @@ public class NearestPTS extends BasePTS{
     @Override
     public int getUtility(BaseAction a) {
         RescueAction rA = (RescueAction) a;
-        int patientSavingBenefit = 75;
+        int patientSavingBenefit = 80;
         if(rA.isAcknowledged())
-            patientSavingBenefit += 15;
+            patientSavingBenefit += 20;
 
         int distance = rA.getRaisedLoc() > 50? rA.getRaisedLoc()-50 : 50 - rA.getRaisedLoc();
         distance *= 2;

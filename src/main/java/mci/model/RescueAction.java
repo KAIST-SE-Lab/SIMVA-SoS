@@ -1,4 +1,4 @@
-package mci;
+package mci.model;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 
@@ -65,7 +65,7 @@ public class RescueAction extends BaseAction {
     public void randomGenerate() { // Location..?
         Random ranGen = new Random();
         int raisedLoc = Math.abs(ranGen.nextInt(101)); // 0 - 100
-        while(48 < raisedLoc && raisedLoc < 52){ // 49, 50, 51
+        while(raisedLoc > 47 && raisedLoc < 53){ // 48, 49, 50, 51, 52
             raisedLoc = Math.abs(ranGen.nextInt(101));
         }
 //        int raisedLoc = 60; // For test
@@ -82,7 +82,7 @@ public class RescueAction extends BaseAction {
             this.pStat = PatientStatus.Very_Dangerous;
         }
 
-        int timeToDead = Math.abs(ranGen.nextInt(1000)) + 2500; // 1500 ~ 2500
+        int timeToDead = Math.abs(ranGen.nextInt(700)) + 750; // 1500 ~ 2500
         this.timeToDead = timeToDead;
 
         this.setActionType(TYPE.NORMAL);
@@ -95,9 +95,8 @@ public class RescueAction extends BaseAction {
         }
         if(this.getPerformer().getClass() == Hospital.class) // Ignore the heal action of the hospital
             return "";
-
-        String ret_str = "Patient " + String.valueOf(this_ID);
-        ret_str += " ";
+        String ret_str = "Patient#" + this.getName();
+        ret_str += "/";
         ret_str += String.valueOf(this.curPos);
         ret_str += "/";
         ret_str += String.valueOf(this.timeToDead);
@@ -114,6 +113,10 @@ public class RescueAction extends BaseAction {
         if(timeToDead <= 0) {
             this.pStat = PatientStatus.Dead;
             this.timeToDead = 0;
+//            if(this.getName().equalsIgnoreCase("HealAction"))
+//                return;
+//            System.out.println("Patient#" + this.getName() + " is dead raised at " + this.raisedLoc
+//                    + " curPos at " + this.curPos);
         }
     }
 

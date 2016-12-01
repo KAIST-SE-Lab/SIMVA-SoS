@@ -4,7 +4,9 @@ import kr.ac.kaist.se.Executor;
 import kr.ac.kaist.se.Util;
 import kr.ac.kaist.se.simulator.NormalDistributor;
 import kr.ac.kaist.se.simulator.Simulator;
+import mci.scenario.LargeMCIScenario;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -28,18 +30,47 @@ public class LargeScaleMCIMain {
 
         Util.create_result_directory("mci_result");
 
+//        debugMain();
+        experimentMain();
+
+    }
+
+    public static void debugMain() throws IOException{
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(2500, 700);
 
-        LargeMCIScenario lMCI = new LargeMCIScenario();
+        LargeMCIScenario lMCI = new LargeMCIScenario(20, 500);
 
         Simulator sim = new Simulator(lMCI);
         sim.setDEBUG();
 
-        ArrayList<String> csv_rows = new ArrayList<>();
-        csv_rows.add("action_info");
+        Executor.Perform_Debug_Experiment(distributor, sim, "mci");
 
-        Executor.Perform_Debug_Experiment(distributor, sim, "mci", csv_rows);
+    }
+
+    public static void experimentMain() throws IOException{
+        NormalDistributor distributor = new NormalDistributor();
+        distributor.setNormalDistParams(1500, 400);
+
+        // Experiment # 1  Total # of CSs 10
+//        LargeMCIScenario lMCI = new LargeMCIScenario(5, 250);
+//        Simulator sim = new Simulator(lMCI);
+//        Executor.Perform_Experiment(distributor, sim, "mci", 235);
+//
+//        // Experiment # 2  Total # of CSs 20
+//        LargeMCIScenario lMCI1 = new LargeMCIScenario(10, 400);
+//        sim = new Simulator(lMCI1);
+//        Executor.Perform_Experiment(distributor, sim, "mci", 380);
+//
+//        // Experiment # 3  Total # of CSs 30
+        LargeMCIScenario lMCI2 = new LargeMCIScenario(15, 1500);
+        Simulator sim = new Simulator(lMCI2);
+        Executor.Perform_Experiment(distributor, sim, "mci", 1230);
+
+        // Experiment # 4  Total # of CSs 40
+//        LargeMCIScenario lMCI3 = new LargeMCIScenario(20, 2000);
+//        Simulator sim = new Simulator(lMCI3);
+//        Executor.Perform_Experiment(distributor, sim, "mci", 1750);
 
     }
 }
