@@ -1,6 +1,7 @@
 package kiise2016;
 
 import kr.ac.kaist.se.simulator.BaseAction;
+import kr.ac.kaist.se.simulator.DebugProperty;
 
 public class Action extends BaseAction{
     private int additionalBenefit;
@@ -52,6 +53,11 @@ public class Action extends BaseAction{
 
     @Override
     public String getDebugTrace() {
+        return null;
+    }
+
+    @Override
+    public DebugProperty getDebugProperty() {
         return null;
     }
 }

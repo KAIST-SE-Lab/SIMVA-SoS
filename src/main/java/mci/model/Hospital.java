@@ -2,6 +2,7 @@ package mci.model;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.DebugProperty;
 import kr.ac.kaist.se.simulator.ManagerInterface;
 
 import java.util.ArrayList;
@@ -130,5 +131,9 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
 
     public static void clearMap(){
         Hospital.GeoMap.clear();
+    }
+    @Override
+    public DebugProperty getDebugProperty(){
+        return null;
     }
 }

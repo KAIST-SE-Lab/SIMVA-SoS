@@ -1,6 +1,7 @@
 package mci.model;
 
 import kr.ac.kaist.se.simulator.BaseAction;
+import kr.ac.kaist.se.simulator.DebugProperty;
 
 import java.util.Random;
 
@@ -105,6 +106,11 @@ public class RescueAction extends BaseAction {
         else
             ret_str += "/not_ack";
         return ret_str;
+    }
+
+    @Override
+    public DebugProperty getDebugProperty() {
+        return null;
     }
 
     public void treatAction(int elapsedTime){

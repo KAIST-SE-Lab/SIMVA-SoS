@@ -26,6 +26,7 @@ public final class Simulator {
     private boolean DEBUG; // DEBUG mode
 
     private HashMap<Integer, List<String>> debugTraces;
+    private HashMap<Integer, DebugTick> debugTraceMap;
     private BaseScenario scenario;
 
     @Deprecated
@@ -124,17 +125,11 @@ public final class Simulator {
             this.progress(BaseAction.TYPE.NORMAL);
 
             if (this.DEBUG) {
-                ArrayList<String> aL = new ArrayList<>();
+                DebugTick debugTick = new DebugTick(this.tick);
                 for(BaseConstituent cs: this.csList){
-                    aL.add(cs.getDebugTrace());
                 }
                 for (BaseAction a : this.actions) {
-                    if (a.getDebugTrace().length() < 2)
-                        continue;
-                    aL.add(a.getDebugTrace());
                 }
-//                if (aL.size() > this.csList.size())
-                    this.debugTraces.put(this.tick, aL);
             }
 
             actions.clear();
@@ -258,6 +253,7 @@ public final class Simulator {
     public void setDEBUG() {
         this.DEBUG = true;
         this.debugTraces = new HashMap<>();
+        this.debugTraceMap = new HashMap<>();
     }
 
     public HashMap<Integer, List<String>> getDebugTraces() {

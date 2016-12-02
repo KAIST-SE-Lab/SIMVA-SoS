@@ -3,6 +3,7 @@ package mci.model;
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
 import kr.ac.kaist.se.simulator.ConstituentInterface;
+import kr.ac.kaist.se.simulator.DebugProperty;
 
 import java.util.ArrayList;
 
@@ -240,5 +241,10 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         this.curPos = 50;
         this.PTS_STATUS = 0;
         this.setCurrentAction(null);
+    }
+
+    @Override
+    public DebugProperty getDebugProperty(){
+        return null;
     }
 }

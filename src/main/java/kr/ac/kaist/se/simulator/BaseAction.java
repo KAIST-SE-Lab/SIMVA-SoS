@@ -139,4 +139,5 @@ public abstract class BaseAction {
     public abstract void reset();
     public abstract void randomGenerate();
     public abstract String getDebugTrace();
+    public abstract DebugProperty getDebugProperty();
 }

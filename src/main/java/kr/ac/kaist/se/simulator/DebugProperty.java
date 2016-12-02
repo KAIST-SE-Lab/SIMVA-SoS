@@ -1,9 +1,11 @@
 package kr.ac.kaist.se.simulator;
 
-/**
- * SIMResult.java
+import java.util.HashMap;
 
- * Author: Junho Kim <jhkim@se.kaist.ac.kr>
+/**
+ * DebugProperty.java
+
+ * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
 
@@ -17,25 +19,24 @@ package kr.ac.kaist.se.simulator;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class SIMResult {
-    /*
-     * Simulation SIMResult class
-     */
+public class DebugProperty {
 
-    private int numTicks;
-    private int SoSBenefit;
+    private HashMap<String, Object> properties;
 
-    public SIMResult(int numTicks, int SoSBenefit){
-        this.numTicks = numTicks;
-        this.SoSBenefit = SoSBenefit;
+    public DebugProperty(){
+        this.properties = new HashMap<>();
     }
 
-    public int getNumTicks(){
-        return this.numTicks;
+    public void putProperty(String k, Object o){
+        this.properties.put(k, o);
     }
 
-    public int getSoSBenefit(){
-        return this.SoSBenefit;
+    public Object getProperty(String k){
+        return this.properties.get(k);
+    }
+
+    public HashMap<String, Object> getProperties(){
+        return this.properties;
     }
 
 }

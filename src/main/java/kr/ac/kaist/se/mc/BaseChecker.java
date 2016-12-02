@@ -19,7 +19,7 @@ import kr.ac.kaist.se.simulator.SIMResult;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class BaseChecker {
+public class BaseChecker implements CheckerInterface{
 
     /*
      * BLTL Model Checker for SIMSoS
@@ -40,7 +40,7 @@ public class BaseChecker {
     /**
      * Constructor for BLTL model Checker
      * @param baseTick baseline of the time tick, BLTL Checker will evaluate the sample sequence based on this tick
-     * @param baseSoSBenefit baseline of SoS benefit, BLTL Checeker will evaluate the sample seuqence based on this SoS benefit
+     * @param baseSoSBenefit baseline of SoS benefit, BLTL Checker will evaluate the sample sequence based on this SoS benefit
      */
     public BaseChecker(int baseTick, int baseSoSBenefit, comparisonType type){
         this.baseTick = baseTick;

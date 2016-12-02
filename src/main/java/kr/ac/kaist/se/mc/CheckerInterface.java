@@ -1,9 +1,11 @@
-package kr.ac.kaist.se.simulator;
+package kr.ac.kaist.se.mc;
+
+import kr.ac.kaist.se.simulator.SIMResult;
 
 /**
- * SIMResult.java
+ * CheckerInterface.java
 
- * Author: Junho Kim <jhkim@se.kaist.ac.kr>
+ * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
  * The MIT License (MIT)
 
@@ -17,25 +19,8 @@ package kr.ac.kaist.se.simulator;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class SIMResult {
-    /*
-     * Simulation SIMResult class
-     */
-
-    private int numTicks;
-    private int SoSBenefit;
-
-    public SIMResult(int numTicks, int SoSBenefit){
-        this.numTicks = numTicks;
-        this.SoSBenefit = SoSBenefit;
-    }
-
-    public int getNumTicks(){
-        return this.numTicks;
-    }
-
-    public int getSoSBenefit(){
-        return this.SoSBenefit;
-    }
-
+public interface CheckerInterface {
+    int evaluateSample(SIMResult res);
+    int getMinTick();
+    int getMaxTick();
 }
