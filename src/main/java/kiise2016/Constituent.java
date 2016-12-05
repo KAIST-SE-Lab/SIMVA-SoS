@@ -175,4 +175,9 @@ public class Constituent extends BaseConstituent implements ConstituentInterface
         return null;
     }
 
+    @Override
+    public String getName() {
+        return null;
+    }
+
 }

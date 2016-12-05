@@ -119,4 +119,9 @@ public class Robot extends BaseConstituent{
     public DebugProperty getDebugProperty(){
         return null;
     }
+
+    @Override
+    public String getName() {
+        return null;
+    }
 }

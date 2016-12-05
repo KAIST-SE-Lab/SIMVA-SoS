@@ -127,9 +127,12 @@ public final class Simulator {
             if (this.DEBUG) {
                 DebugTick debugTick = new DebugTick(this.tick);
                 for(BaseConstituent cs: this.csList){
+                    debugTick.putDebugTrace(cs.getName(), cs.getDebugProperty());
                 }
                 for (BaseAction a : this.actions) {
+                    debugTick.putDebugTrace(a.getName(), a.getDebugProperty());
                 }
+                this.debugTraceMap.put(this.tick, debugTick);
             }
 
             actions.clear();

@@ -119,10 +119,6 @@ public class RescueAction extends BaseAction {
         if(timeToDead <= 0) {
             this.pStat = PatientStatus.Dead;
             this.timeToDead = 0;
-//            if(this.getName().equalsIgnoreCase("HealAction"))
-//                return;
-//            System.out.println("Patient#" + this.getName() + " is dead raised at " + this.raisedLoc
-//                    + " curPos at " + this.curPos);
         }
     }
 

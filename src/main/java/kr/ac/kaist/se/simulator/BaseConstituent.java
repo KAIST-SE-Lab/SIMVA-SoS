@@ -185,4 +185,5 @@ public abstract class BaseConstituent {
     public abstract BaseAction immediateAction();
     public abstract BaseConstituent clone();
     public abstract DebugProperty getDebugProperty();
+    public abstract String getName();
 }

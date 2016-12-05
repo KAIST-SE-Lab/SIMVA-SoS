@@ -1,6 +1,7 @@
 package kr.ac.kaist.se.simulator.method;
 
 import kr.ac.kaist.se.simulator.BaseAction;
+import kr.ac.kaist.se.simulator.DebugProperty;
 
 /**
  * DummyAction.java
@@ -66,6 +67,11 @@ public class DummyAction extends BaseAction {
     @Override
     public String getDebugTrace() {
         return "";
+    }
+
+    @Override
+    public DebugProperty getDebugProperty() {
+        return null;
     }
 
 

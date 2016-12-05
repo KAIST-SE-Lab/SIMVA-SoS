@@ -136,4 +136,9 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     public DebugProperty getDebugProperty(){
         return null;
     }
+
+    @Override
+    public String getName() {
+        return null;
+    }
 }

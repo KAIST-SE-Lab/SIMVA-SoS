@@ -247,4 +247,9 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     public DebugProperty getDebugProperty(){
         return null;
     }
+
+    @Override
+    public String getName(){
+        return "";
+    }
 }
