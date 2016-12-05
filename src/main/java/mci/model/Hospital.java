@@ -139,6 +139,6 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
 
     @Override
     public String getName() {
-        return null;
+        return "HOSPITAL";
     }
 }

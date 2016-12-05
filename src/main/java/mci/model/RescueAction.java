@@ -110,7 +110,13 @@ public class RescueAction extends BaseAction {
 
     @Override
     public DebugProperty getDebugProperty() {
-        return null;
+        if(this.getPerformer().getClass() == Hospital.class) // Ignore the heal action of the hospital
+            return null;
+        DebugProperty prop = new DebugProperty();
+        prop.putProperty("name", ("Patient#" + this.getName()));
+        prop.putProperty("curPos", this.curPos);
+        prop.putProperty("stat", RescueAction.getPatientStatusString(this.pStat));
+        return prop;
     }
 
     public void treatAction(int elapsedTime){
@@ -180,5 +186,15 @@ public class RescueAction extends BaseAction {
         }
         return 0;
 
+    }
+
+    public static String getPatientStatusString(PatientStatus pStat){
+        if(pStat == PatientStatus.Dangerous)
+            return "Dangerous";
+        else if(pStat == PatientStatus.Very_Dangerous)
+            return "Very_Dangerous";
+        else if(pStat == PatientStatus.Dead)
+            return "DEAD";
+        return "";
     }
 }

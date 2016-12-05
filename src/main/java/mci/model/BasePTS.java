@@ -27,11 +27,14 @@ import java.util.ArrayList;
 
 public abstract class BasePTS extends BaseConstituent implements ConstituentInterface{
 
-    private int curPos;
+    public static int num;
 
+    private int curPos;
+    private String name;
     private int PTS_STATUS; // 0: IDLE, 1: Go to Patient, 2: Return to Hospital
 
     public BasePTS(){
+        this.name = "PTS" + String.valueOf(BasePTS.num++);
         this.curPos = 50;
         this.PTS_STATUS = 0;
     }
@@ -235,6 +238,17 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
         this.setCurrentAction(null);
     }
 
+    public String getStatusString(){
+        if(this.getPTS_STATUS() == 0)
+            return "IDLE";
+        else if(this.getPTS_STATUS() == 1)
+            return "GO_PATIENT";
+        else if(this.getPTS_STATUS() == 2)
+            return "RETURN_HOSPITAL";
+        return "";
+    }
+
+
     @Override
     public void reset(){
         super.reset();
@@ -245,11 +259,14 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
 
     @Override
     public DebugProperty getDebugProperty(){
-        return null;
+        DebugProperty prop = new DebugProperty();
+        prop.putProperty("status", this.getStatusString());
+        prop.putProperty("position", this.curPos);
+        return prop;
     }
 
     @Override
     public String getName(){
-        return "";
+        return this.name;
     }
 }
