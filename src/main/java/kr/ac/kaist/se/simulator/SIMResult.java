@@ -1,5 +1,7 @@
 package kr.ac.kaist.se.simulator;
 
+import java.util.HashMap;
+
 /**
  * SIMResult.java
 
@@ -24,6 +26,7 @@ public class SIMResult {
 
     private int numTicks;
     private int SoSBenefit;
+    private HashMap<Integer, DebugTick> debugTraces;
 
     public SIMResult(int numTicks, int SoSBenefit){
         this.numTicks = numTicks;
@@ -36,6 +39,14 @@ public class SIMResult {
 
     public int getSoSBenefit(){
         return this.SoSBenefit;
+    }
+
+    public void setDebugTraces(HashMap<Integer, DebugTick> debugTraces){
+        this.debugTraces = debugTraces;
+    }
+
+    public HashMap<Integer, DebugTick> getDebugTraces(){
+        return this.debugTraces;
     }
 
 }

@@ -144,6 +144,7 @@ public final class Simulator {
             SoSBenefit += CS.getAccumulatedSoSBenefit();
         }
         this.result = new SIMResult(this.tick, SoSBenefit);
+        if(this.DEBUG) this.result.setDebugTraces(this.debugTraceMap);
     }
 
     private void increaseTick(int minimumElapsedTime) {
@@ -259,7 +260,7 @@ public final class Simulator {
         this.debugTraceMap = new HashMap<>();
     }
 
-    public HashMap<Integer, List<String>> getDebugTraces() {
-        return this.debugTraces;
+    public HashMap<Integer, DebugTick> getDebugTraces() {
+        return this.debugTraceMap;
     }
 }
