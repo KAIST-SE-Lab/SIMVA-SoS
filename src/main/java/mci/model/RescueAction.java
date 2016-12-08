@@ -1,6 +1,7 @@
 package mci.model;
 
 import kr.ac.kaist.se.simulator.BaseAction;
+import kr.ac.kaist.se.simulator.DebugProperty;
 
 import java.util.Random;
 
@@ -107,16 +108,23 @@ public class RescueAction extends BaseAction {
         return ret_str;
     }
 
+    @Override
+    public DebugProperty getDebugProperty() {
+        if(this.getPerformer().getClass() == Hospital.class) // Ignore the heal action of the hospital
+            return null;
+        DebugProperty prop = new DebugProperty();
+        prop.putProperty("name", ("Patient#" + this.getName()));
+        prop.putProperty("curPos", this.curPos);
+        prop.putProperty("stat", RescueAction.getPatientStatusString(this.pStat));
+        return prop;
+    }
+
     public void treatAction(int elapsedTime){
         this.timeToDead -= Math.abs(elapsedTime);
         this.decreaseRemainingTime(Math.abs(elapsedTime));
         if(timeToDead <= 0) {
             this.pStat = PatientStatus.Dead;
             this.timeToDead = 0;
-//            if(this.getName().equalsIgnoreCase("HealAction"))
-//                return;
-//            System.out.println("Patient#" + this.getName() + " is dead raised at " + this.raisedLoc
-//                    + " curPos at " + this.curPos);
         }
     }
 
@@ -178,5 +186,15 @@ public class RescueAction extends BaseAction {
         }
         return 0;
 
+    }
+
+    public static String getPatientStatusString(PatientStatus pStat){
+        if(pStat == PatientStatus.Dangerous)
+            return "Dangerous";
+        else if(pStat == PatientStatus.Very_Dangerous)
+            return "Very_Dangerous";
+        else if(pStat == PatientStatus.Dead)
+            return "DEAD";
+        return "";
     }
 }

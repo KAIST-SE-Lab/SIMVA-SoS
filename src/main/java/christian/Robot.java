@@ -2,6 +2,7 @@ package christian;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.DebugProperty;
 import kr.ac.kaist.se.simulator.method.DummyAction;
 
 import java.util.Random;
@@ -112,5 +113,15 @@ public class Robot extends BaseConstituent{
         this.xpos = 10;
         this.token = false;
         super.reset();
+    }
+
+    @Override
+    public DebugProperty getDebugProperty(){
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }

@@ -3,7 +3,7 @@ package kr.ac.kaist.se.simulator;
 import java.util.HashMap;
 
 /**
- * SIMResult.java
+ * DebugTick.java
 
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
 
@@ -19,34 +19,29 @@ import java.util.HashMap;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class SIMResult {
-    /*
-     * Simulation SIMResult class
-     */
+public class DebugTick {
 
-    private int numTicks;
-    private int SoSBenefit;
-    private HashMap<Integer, DebugTick> debugTraces;
+    private HashMap<String, DebugProperty> debugInfoMap; // E.g.,
+    private int timeTick;
 
-    public SIMResult(int numTicks, int SoSBenefit){
-        this.numTicks = numTicks;
-        this.SoSBenefit = SoSBenefit;
+    public DebugTick(int timeTick){
+        this.timeTick = timeTick;
     }
 
-    public int getNumTicks(){
-        return this.numTicks;
+    public void putDebugTrace(String name, DebugProperty property){
+        this.debugInfoMap.put(name, property);
     }
 
-    public int getSoSBenefit(){
-        return this.SoSBenefit;
+    public DebugProperty getDebugTrace(String name){
+        return this.debugInfoMap.get(name);
     }
 
-    public void setDebugTraces(HashMap<Integer, DebugTick> debugTraces){
-        this.debugTraces = debugTraces;
+    public HashMap<String, DebugProperty> getDebugInfoMap(){
+        return this.debugInfoMap;
     }
 
-    public HashMap<Integer, DebugTick> getDebugTraces(){
-        return this.debugTraces;
+    public int getTimeTick(){
+        return this.timeTick;
     }
 
 }

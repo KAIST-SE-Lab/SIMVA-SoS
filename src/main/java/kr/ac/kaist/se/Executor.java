@@ -2,6 +2,7 @@ package kr.ac.kaist.se;
 
 import com.opencsv.CSVWriter;
 import kr.ac.kaist.se.mc.BaseChecker;
+import kr.ac.kaist.se.simulator.DebugTick;
 import kr.ac.kaist.se.simulator.NormalDistributor;
 import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
@@ -125,7 +126,7 @@ public class Executor {
     }
 
     public static void Perform_Debug_Experiment(NormalDistributor distributor, Simulator sim, String caseName) throws IOException {
-        int endTick = 10000;
+        int endTick = 6000;
         for (double alpha_beta : ARR_ALPHA_BETA) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -142,26 +143,12 @@ public class Executor {
             list.clear();
             list = distributor.getDistributionArray(500);
             sim.setActionPlan(list);
-
             sim.setEndTick(endTick);
 
             sim.execute(); // Simulation!
             SIMResult res = sim.getResult();
-            HashMap<Integer, List<String>> debugTraces = sim.getDebugTraces();
-            for(Map.Entry<Integer, List<String>> entry: debugTraces.entrySet()){
-                List<String> each_tick_trace_list = entry.getValue();
-                if(each_tick_trace_list.size() > 0){
-                    String output = String.valueOf(entry.getKey()) + " ";
-                    for(String each : each_tick_trace_list){
-                        output += each;
-                        output += " ";
-//                        String[] en = {String.valueOf(entry.getKey()), each};
-//                        cw.writeNext(en);
-//                        System.out.println(en[0]+ " " +en[1]);
-                    }
-                    cw.writeNext(new String[]{output});
-                }
-            }
+            HashMap<Integer, DebugTick> debugTraces = sim.getDebugTraces();
+
             sim.reset();
             sim.setActionPlan(list);
 

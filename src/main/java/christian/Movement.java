@@ -1,6 +1,7 @@
 package christian;
 
 import kr.ac.kaist.se.simulator.BaseAction;
+import kr.ac.kaist.se.simulator.DebugProperty;
 
 /**
  * Movement.java
@@ -55,6 +56,11 @@ public class Movement extends BaseAction {
 
     @Override
     public String getDebugTrace() {
+        return null;
+    }
+
+    @Override
+    public DebugProperty getDebugProperty() {
         return null;
     }
 }

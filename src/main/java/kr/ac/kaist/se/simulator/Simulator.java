@@ -26,6 +26,7 @@ public final class Simulator {
     private boolean DEBUG; // DEBUG mode
 
     private HashMap<Integer, List<String>> debugTraces;
+    private HashMap<Integer, DebugTick> debugTraceMap;
     private BaseScenario scenario;
 
     @Deprecated
@@ -124,17 +125,14 @@ public final class Simulator {
             this.progress(BaseAction.TYPE.NORMAL);
 
             if (this.DEBUG) {
-                ArrayList<String> aL = new ArrayList<>();
+                DebugTick debugTick = new DebugTick(this.tick);
                 for(BaseConstituent cs: this.csList){
-                    aL.add(cs.getDebugTrace());
+                    debugTick.putDebugTrace(cs.getName(), cs.getDebugProperty());
                 }
                 for (BaseAction a : this.actions) {
-                    if (a.getDebugTrace().length() < 2)
-                        continue;
-                    aL.add(a.getDebugTrace());
+                    debugTick.putDebugTrace(a.getName(), a.getDebugProperty());
                 }
-//                if (aL.size() > this.csList.size())
-                    this.debugTraces.put(this.tick, aL);
+                this.debugTraceMap.put(this.tick, debugTick);
             }
 
             actions.clear();
@@ -146,6 +144,7 @@ public final class Simulator {
             SoSBenefit += CS.getAccumulatedSoSBenefit();
         }
         this.result = new SIMResult(this.tick, SoSBenefit);
+        if(this.DEBUG) this.result.setDebugTraces(this.debugTraceMap);
     }
 
     private void increaseTick(int minimumElapsedTime) {
@@ -258,9 +257,10 @@ public final class Simulator {
     public void setDEBUG() {
         this.DEBUG = true;
         this.debugTraces = new HashMap<>();
+        this.debugTraceMap = new HashMap<>();
     }
 
-    public HashMap<Integer, List<String>> getDebugTraces() {
-        return this.debugTraces;
+    public HashMap<Integer, DebugTick> getDebugTraces() {
+        return this.debugTraceMap;
     }
 }

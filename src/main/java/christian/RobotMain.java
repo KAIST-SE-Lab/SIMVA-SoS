@@ -51,7 +51,7 @@ public class RobotMain {
         sim.setEndTick(12);
 
         BaseChecker checker = new BaseChecker(12, 3, BaseChecker.comparisonType.EQUAL_TO);
-        SPRTMethod sprt = new SPRTMethod(0.05, 0.05, 0.025);
+        SPRTMethod sprt = new SPRTMethod(0.05, 0.05, 0.01);
         sprt.setLessCheck();
         for(int j=0; j < 10; j++) {
             String outputName = "robot_result/SIM_robot_"+j+".csv";

@@ -2,6 +2,7 @@ package kiise2016;
 
 import kr.ac.kaist.se.simulator.BaseAction;
 import kr.ac.kaist.se.simulator.BaseConstituent;
+import kr.ac.kaist.se.simulator.DebugProperty;
 import kr.ac.kaist.se.simulator.ManagerInterface;
 
 import java.util.ArrayList;
@@ -121,6 +122,16 @@ public class SoS extends BaseConstituent implements ManagerInterface{
     public SoS clone(){
         // TO be implemented
 //        SoSManager newManager = new SoSManager(this.name, csList, actionList);
+        return null;
+    }
+
+    @Override
+    public DebugProperty getDebugProperty() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
         return null;
     }
 
