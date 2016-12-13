@@ -44,9 +44,11 @@ public class Robot extends BaseConstituent{
 
     @Override
     public void normalAction(int elapsedTime) {
-        int ranNum = this.ranNumGenerator.nextInt(100);
-        if(ranNum == 0){
-            token = false; // loose its token;
+        if(xpos != 10) {
+            int ranNum = this.ranNumGenerator.nextInt(100);
+            if (ranNum == 0) {
+                token = false; // loose its token;
+            }
         }
 
         if(token) {
