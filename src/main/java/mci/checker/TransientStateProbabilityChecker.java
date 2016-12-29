@@ -44,6 +44,13 @@ public class TransientStateProbabilityChecker implements CheckerInterface {
         return "After Q, P holds after t_u ticks with a probability () than p.";
     }
 
+    /**
+     * evaluateSample Method
+     * Evaluate a given property satisfies Transient State Probability property
+     * Check whether after some ticks, P holds after t_u ticks with a probability () than p.
+     * @param res Simulation result class which contains debugTick Map
+     * @return 1, Transient State Probability of property is guaranteed, otherwise 0
+     */
     @Override
     public int evaluateSample(SIMResult res) {
         HashMap<Integer, DebugTick> traceMap = res.getDebugTraces();
