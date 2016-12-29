@@ -26,7 +26,7 @@ import java.util.Arrays;
  */
 
 public class LargeMCIScenario extends BaseScenario {
-
+    private int endTick;
     private ArrayList<BaseConstituent> csList;
     private BaseConstituent manager;
     private Environment env;
@@ -47,6 +47,8 @@ public class LargeMCIScenario extends BaseScenario {
         BaseConstituent[] CSs = new BaseConstituent[this.csList.size()];
         CSs = this.csList.toArray(CSs);
         this.env = new Environment(CSs, this.actionList.toArray(new BaseAction[this.actionList.size()]));
+
+        this.endTick = 6000;
     }
 
     @Override
@@ -55,6 +57,9 @@ public class LargeMCIScenario extends BaseScenario {
             Hospital.GeoMap.add(new MapPoint(i));
         }
     }
+
+    @Override
+    public String getDescription() { return "MCI (Large)"; }
 
     @Override
     public ArrayList<BaseConstituent> getCSList() {
@@ -98,5 +103,15 @@ public class LargeMCIScenario extends BaseScenario {
         else
             this.csList = new ArrayList<>();
         this.csList.addAll(Arrays.asList(CSs));
+    }
+
+    @Override
+    public int getEndTick() {
+        return endTick;
+    }
+
+    @Override
+    public void setEndTick(int endTick) {
+        this.endTick = endTick;
     }
 }

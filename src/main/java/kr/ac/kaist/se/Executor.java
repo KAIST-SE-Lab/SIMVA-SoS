@@ -1,13 +1,14 @@
 package kr.ac.kaist.se;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.opencsv.CSVWriter;
-import kr.ac.kaist.se.mc.BaseChecker;
 import kr.ac.kaist.se.simulator.DebugTick;
 import kr.ac.kaist.se.simulator.NormalDistributor;
 import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 import mci.SMCResult;
+import mci.checker.ExistenceChecker;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,19 +39,32 @@ public class Executor {
     public static double[] ARR_ALPHA_BETA = {0.001};
 
     public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException {
+        int endTick = sim.getScenario().getEndTick();
 
-        int endTick = 6000;
+        ExistenceChecker checker = new ExistenceChecker();
+        checker.init(endTick, bound, ExistenceChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+
+        System.out.println("==========================================\n" +
+                            "[ Simulation Description ]\n" +
+                            "Scenario: " + sim.getScenario().getDescription() + "\n" +
+                            "Checker: " + checker.getName() + "\n" +
+                            "Statement: " + checker.getDescription());
+
+        System.out.println("==========================================\n" +
+                            "[ Simulation Log ]");
+
+        long totalstart = System.currentTimeMillis();
+        long totaltime = 0;
+        int totalsamples = 0;
+
         for (double alpha_beta : ARR_ALPHA_BETA) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
 
             for (int trial = 1; trial <= 3; trial++) {
-
-                System.out.println("----------------------------------------------------");
-                System.out.println("SoS-level benefit is greater than and equal to " + bound + ".");
-
-                BaseChecker checker = new BaseChecker(endTick, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+                System.out.println("Trial " + trial + " is Started");
+                checker.init(endTick, bound, ExistenceChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
                 SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
                 ArrayList<SMCResult> resList = new ArrayList<>();
 //        int thetaSet[] = {70,90,95,99};
@@ -71,7 +85,7 @@ public class Executor {
                         list = distributor.getDistributionArray(sim.getScenario().getActionList().size());
                         sim.setActionPlan(list);
 
-                        sim.setEndTick(endTick);
+                        //sim.setEndTick(endTick);
 
                         sim.execute();
 
@@ -92,25 +106,30 @@ public class Executor {
                     long exec_time = System.currentTimeMillis() - start; //exec time
                     int minTick = checker.getMinTick();
                     int maxTick = checker.getMaxTick();
+
+                    totaltime += exec_time;
+                    totalsamples += numSamples;
+
                     sprt.reset();
                     resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
 
-                    System.out.print("Theta: " + theta);
-                    if (h0) {
-                        System.out.print(" Result: T");
-                    } else {
-                        System.out.print(" Result: F");
-                    }
-                    System.out.print(" with n of samples: " + numSamples);
-                    System.out.println(" in " + String.format("%.2f", exec_time / 1000.0) + " secs");
+                    System.out.print("The statement is");
 
+                    if (h0) {
+                        System.out.print(" TRUE");
+                    } else {
+                        System.out.print(" FALSE");
+                    }
+
+                    System.out.print(" for theta: " + String.format("%.2f", theta));
+                    System.out.print(" by examining " + numSamples + " samples");
+                    System.out.println(" [Time to Decide: " + String.format("%.2f", exec_time / 1000.0) + " secs]");
                 }
 
                 String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
                 CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
                 cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
 
-                System.out.println();
                 for (SMCResult r : resList) {
                     System.out.print(".");
                     cw.writeNext(r.getArr());
@@ -119,14 +138,23 @@ public class Executor {
                 resList.clear();
                 System.out.println();
 
-                System.out.println("Finished");
-
+                System.out.println("Trial " + trial + " is Finished");
             }
         }
+
+        System.out.println("==========================================\n" +
+                            "[ Simulation Result ]\n" +
+                            "Result: The statement is --- with a probability --- than --.\n" +
+                            "Total Examined Samples: " + totalsamples + " samples\n" +
+                            "Total Time to Decide: " + String.format("%.2f", totaltime / 1000.0) + " secs\n" +
+                            "Total Elapsed Time: " + String.format("%.2f", (System.currentTimeMillis() - totalstart) / 1000.0) + " secs\n" +
+                            "==========================================\n" +
+                            "Finished.");
     }
 
     public static void Perform_Debug_Experiment(NormalDistributor distributor, Simulator sim, String caseName) throws IOException {
         int endTick = 6000;
+
         for (double alpha_beta : ARR_ALPHA_BETA) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -143,7 +171,6 @@ public class Executor {
             list.clear();
             list = distributor.getDistributionArray(500);
             sim.setActionPlan(list);
-            sim.setEndTick(endTick);
 
             sim.execute(); // Simulation!
             SIMResult res = sim.getResult();
@@ -154,8 +181,6 @@ public class Executor {
 
             cw.close();
         }
-
     }
-
 
 }

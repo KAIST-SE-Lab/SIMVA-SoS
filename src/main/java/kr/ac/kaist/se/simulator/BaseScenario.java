@@ -5,7 +5,6 @@ import java.util.ArrayList;
 /**
  * BaseScenario.java
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>
-
  * The MIT License (MIT)
 
  * Copyright (c) 2016 Junho Kim
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 public abstract class BaseScenario {
 
     public abstract void init();
+    public abstract String getDescription();
     public abstract ArrayList<BaseConstituent> getCSList();
     public abstract BaseConstituent getManager();
     public abstract void setCSList(BaseConstituent[] csList);
@@ -29,4 +29,6 @@ public abstract class BaseScenario {
     public abstract Environment getEnvironment();
     public abstract ArrayList<BaseAction> getActionList();
     public abstract void setActionList(ArrayList<BaseAction> aList);
+    public abstract int getEndTick();
+    public abstract void setEndTick(int endTick);
 }

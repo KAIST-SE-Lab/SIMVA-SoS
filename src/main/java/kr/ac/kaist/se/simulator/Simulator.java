@@ -35,10 +35,15 @@ public final class Simulator {
         this.csList.addAll(Arrays.asList(CSs));
         this.manager = manager;
         this.env = env;
+
         this.tick = 0;
         this.endTick = 0;
         this.isPlanned = false;
+    }
 
+    @Deprecated
+    public void setEndTick(int endTick) {
+        this.endTick = endTick;
     }
 
     public Simulator(BaseScenario sc) {
@@ -47,13 +52,9 @@ public final class Simulator {
         this.env = sc.getEnvironment();
 
         this.tick = 0;
-        this.endTick = 0;
+        this.endTick = sc.getEndTick();
         this.isPlanned = false;
         this.scenario = sc;
-    }
-
-    public void setEndTick(int tick) {
-        this.endTick = tick;
     }
 
     /**
