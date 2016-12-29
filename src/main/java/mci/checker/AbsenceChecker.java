@@ -37,21 +37,21 @@ public class AbsenceChecker implements CheckerInterface{
      */
     public String getDescription() { return "Globally, it is never the case that P holds [time(P)] with a probability () than p."; }
 
-                /**
-                 * evaluateSample Method
-                 * Evaluate a given property satisfies absence property
-                 * Check all time ticks whether there is a patient whose status changes
-                 * from DEAD to other status (Dangerous or Very_Dangerous)
-                 * @param res Simulation result class which contains debugTick Map
-                 * @return 1, there is an absence, otherwise 0
-                 */
-                @Override
-                public int evaluateSample(SIMResult res) {
-                    HashMap<Integer, DebugTick> traceMap = res.getDebugTraces();
-                    HashMap<String, String> patientStatusMap = new HashMap<>(); // Additional map
+    /**
+     * evaluateSample Method
+     * Evaluate a given property satisfies absence property
+     * Check all time ticks whether there is a patient whose status changes
+     * from DEAD to other status (Dangerous or Very_Dangerous)
+     * @param res Simulation result class which contains debugTick Map
+     * @return 1, there is an absence, otherwise 0
+     */
+    @Override
+    public int evaluateSample(SIMResult res) {
+        HashMap<Integer, DebugTick> traceMap = res.getDebugTraces();
+        HashMap<String, String> patientStatusMap = new HashMap<>(); // Additional map
 
-                    for(Map.Entry <Integer,DebugTick> t: traceMap.entrySet()){
-                        for(Map.Entry<String, DebugProperty> debugTick: t.getValue().getDebugInfoMap().entrySet()){
+        for(Map.Entry <Integer,DebugTick> t: traceMap.entrySet()){
+            for(Map.Entry<String, DebugProperty> debugTick: t.getValue().getDebugInfoMap().entrySet()){
                 String name = debugTick.getKey();
                 if(name.contains("Patient")){
                     String stat = (String) debugTick.getValue().getProperty("stat");

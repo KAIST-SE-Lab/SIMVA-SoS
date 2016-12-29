@@ -133,6 +133,14 @@ public final class Simulator {
                 for (BaseAction a : this.actions) {
                     debugTick.putDebugTrace(a.getName(), a.getDebugProperty());
                 }
+
+                DebugProperty prop = new DebugProperty();
+                int SoS_benefit = 0;
+                for(BaseConstituent cs: this.csList)
+                    SoS_benefit += cs.getAccumulatedSoSBenefit();
+                prop.putProperty("SoS_level_benefit", SoS_benefit);
+                debugTick.putDebugTrace("SoS_level_benefit", prop);
+
                 this.debugTraceMap.put(this.tick, debugTick);
             }
 
