@@ -1,5 +1,13 @@
 package mci.checker;
 
+import kr.ac.kaist.se.mc.CheckerInterface;
+import kr.ac.kaist.se.simulator.DebugProperty;
+import kr.ac.kaist.se.simulator.DebugTick;
+import kr.ac.kaist.se.simulator.SIMResult;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * UniversalityChecker.java
 
@@ -16,5 +24,49 @@ package mci.checker;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class UniversalityChecker {
+public class UniversalityChecker implements CheckerInterface{
+
+    @Override
+    public String getName() {
+        return "Universality Checker";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Globally, it is always the case that P holds [time(P)] with a probability () than p.";
+    }
+
+    /**
+     * evaluateSample Method
+     * Evaluate a given property satisfies universality property
+     * Check all time ticks whether all PTSs are in the operation area, which is 0-100.
+     * @param res Simulation result class which contains debugTick Map
+     * @return 1, Universality is guaranteed, otherwise 0
+     */
+    @Override
+    public int evaluateSample(SIMResult res) {
+        HashMap<Integer, DebugTick> traceMap = res.getDebugTraces();
+
+        for(Map.Entry <Integer,DebugTick> t: traceMap.entrySet()){
+            for(Map.Entry<String, DebugProperty> debugTick: t.getValue().getDebugInfoMap().entrySet()){
+                String name = debugTick.getKey();
+                if(name.contains("PTS")){
+                    int pos = (Integer) debugTick.getValue().getProperty("position");
+                    if(pos < 0 || pos > 100)
+                        return 0;
+                }
+            }
+        }
+        return 1;
+    }
+
+    @Override
+    public int getMinTick() {
+            return 0;
+    }
+
+    @Override
+    public int getMaxTick() {
+        return 0;
+    }
 }

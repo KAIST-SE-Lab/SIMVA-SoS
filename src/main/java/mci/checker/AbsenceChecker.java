@@ -48,7 +48,7 @@ public class AbsenceChecker implements CheckerInterface{
     @Override
     public int evaluateSample(SIMResult res) {
         HashMap<Integer, DebugTick> traceMap = res.getDebugTraces();
-        HashMap<String, String> patientStatusMap = new HashMap<>();
+        HashMap<String, String> patientStatusMap = new HashMap<>(); // Additional map
 
         for(Map.Entry <Integer,DebugTick> t: traceMap.entrySet()){
             for(Map.Entry<String, DebugProperty> debugTick: t.getValue().getDebugInfoMap().entrySet()){
