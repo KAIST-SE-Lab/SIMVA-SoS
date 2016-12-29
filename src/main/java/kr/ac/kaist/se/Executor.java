@@ -53,12 +53,17 @@ public class Executor {
         System.out.println("==========================================\n" +
                             "[ Simulation Log ]");
 
+        long totalstart = System.currentTimeMillis();
+        long totaltime = 0;
+        int totalsamples = 0;
+
         for (double alpha_beta : ARR_ALPHA_BETA) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
 
             for (int trial = 1; trial <= 3; trial++) {
+                System.out.println("Trial " + trial + " is Started");
                 checker.init(endTick, bound, ExistenceChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
                 SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
                 ArrayList<SMCResult> resList = new ArrayList<>();
@@ -101,6 +106,10 @@ public class Executor {
                     long exec_time = System.currentTimeMillis() - start; //exec time
                     int minTick = checker.getMinTick();
                     int maxTick = checker.getMaxTick();
+
+                    totaltime += exec_time;
+                    totalsamples += numSamples;
+
                     sprt.reset();
                     resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
 
@@ -112,7 +121,7 @@ public class Executor {
                         System.out.print(" FALSE");
                     }
 
-                    System.out.print(" for theta(p ??): " + String.format("%.2f", theta));
+                    System.out.print(" for theta: " + String.format("%.2f", theta));
                     System.out.print(" by examining " + numSamples + " samples");
                     System.out.println(" [Time to Decide: " + String.format("%.2f", exec_time / 1000.0) + " secs]");
                 }
@@ -121,7 +130,6 @@ public class Executor {
                 CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
                 cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
 
-                System.out.println();
                 for (SMCResult r : resList) {
                     System.out.print(".");
                     cw.writeNext(r.getArr());
@@ -130,22 +138,23 @@ public class Executor {
                 resList.clear();
                 System.out.println();
 
-                System.out.println("Finished");
-
+                System.out.println("Trial " + trial + " is Finished");
             }
         }
 
         System.out.println("==========================================\n" +
                             "[ Simulation Result ]\n" +
                             "Result: The statement is --- with a probability --- than --.\n" +
-                            "Total Required Samples: ---- samples\n" +
-                            "Total Elapsed Time: ---.-- secs\n" +
+                            "Total Examined Samples: " + totalsamples + " samples\n" +
+                            "Total Time to Decide: " + String.format("%.2f", totaltime / 1000.0) + " secs\n" +
+                            "Total Elapsed Time: " + String.format("%.2f", (System.currentTimeMillis() - totalstart) / 1000.0) + " secs\n" +
                             "==========================================\n" +
                             "Finished.");
     }
 
     public static void Perform_Debug_Experiment(NormalDistributor distributor, Simulator sim, String caseName) throws IOException {
         int endTick = 6000;
+
         for (double alpha_beta : ARR_ALPHA_BETA) {
             Date nowDate = new Date();
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -173,8 +182,6 @@ public class Executor {
 
             cw.close();
         }
-
     }
-
 
 }
