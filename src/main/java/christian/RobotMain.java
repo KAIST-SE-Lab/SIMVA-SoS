@@ -54,7 +54,7 @@ public class RobotMain {
         SPRTMethod sprt = new SPRTMethod(0.05, 0.05, 0.01);
         sprt.setLessCheck();
         for(int j=0; j < 10; j++) {
-            String outputName = "robot_result/SIM_robot_"+j+".csv";
+            String outputName = "robot_result/SIM_robot_"+(j+1)+".csv";
             CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
             cw.writeNext(new String[]{"prob", "num_of_samples", "result"});
             ArrayList<RobotResult> resList = new ArrayList<>();
