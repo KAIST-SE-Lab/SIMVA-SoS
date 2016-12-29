@@ -31,27 +31,12 @@ import java.util.ArrayList;
 
 public class RobotMain {
     public static void main(String[] args) throws IOException{
+        RobotScenario robot = new RobotScenario();
 
-        Movement right_move = new Movement();
-
-        Robot r1 = new Robot(0, right_move);
-        Robot r2 = new Robot(1, right_move);
-        Robot r3 = new Robot(2, right_move);
-
-        r1.addCapability(right_move, 1);
-        r2.addCapability(right_move, 1);
-        r3.addCapability(right_move, 1);
-
-        Robot[] robots = new Robot[] {r1, r2, r3};
-
-        Movement[] moves = new Movement[] {right_move};
-
-        Environment env = new Environment(robots, moves);
-        Simulator sim = new Simulator(robots, null, env);
-        sim.setEndTick(12);
+        Simulator sim = new Simulator(robot);
 
         BaseChecker checker = new BaseChecker();
-        checker.init(12, 3, BaseChecker.comparisonType.EQUAL_TO);
+        checker.init(sim.getScenario().getEndTick(), 3, BaseChecker.comparisonType.EQUAL_TO);
         SPRTMethod sprt = new SPRTMethod(0.05, 0.05, 0.01);
         sprt.setLessCheck();
         for(int j=0; j < 10; j++) {

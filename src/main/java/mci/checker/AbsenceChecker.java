@@ -35,7 +35,7 @@ public class AbsenceChecker implements CheckerInterface{
     /**
      * Return the description
      */
-    public String getDescription() { return "Globally, P holds eventually [time(P)] with a probability (<, <=, >, >=) than p."; }
+    public String getDescription() { return "Globally, it is never the case that P holds [time(P)] with a probability () than p."; }
 
     /**
      * evaluateSample Method

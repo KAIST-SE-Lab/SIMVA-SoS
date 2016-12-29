@@ -41,19 +41,20 @@ public final class Simulator {
         this.isPlanned = false;
     }
 
+    @Deprecated
+    public void setEndTick(int endTick) {
+        this.endTick = endTick;
+    }
+
     public Simulator(BaseScenario sc) {
         this.csList = sc.getCSList();
         this.manager = sc.getManager();
         this.env = sc.getEnvironment();
 
         this.tick = 0;
-        this.endTick = 0;
+        this.endTick = sc.getEndTick();
         this.isPlanned = false;
         this.scenario = sc;
-    }
-
-    public void setEndTick(int tick) {
-        this.endTick = tick;
     }
 
     /**

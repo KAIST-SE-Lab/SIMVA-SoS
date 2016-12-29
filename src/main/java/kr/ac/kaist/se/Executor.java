@@ -39,7 +39,7 @@ public class Executor {
     public static double[] ARR_ALPHA_BETA = {0.001};
 
     public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException {
-        int endTick = 6000;
+        int endTick = sim.getScenario().getEndTick();
 
         ExistenceChecker checker = new ExistenceChecker();
         checker.init(endTick, bound, ExistenceChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
@@ -85,7 +85,7 @@ public class Executor {
                         list = distributor.getDistributionArray(sim.getScenario().getActionList().size());
                         sim.setActionPlan(list);
 
-                        sim.setEndTick(endTick);
+                        //sim.setEndTick(endTick);
 
                         sim.execute();
 
@@ -171,7 +171,6 @@ public class Executor {
             list.clear();
             list = distributor.getDistributionArray(500);
             sim.setActionPlan(list);
-            sim.setEndTick(endTick);
 
             sim.execute(); // Simulation!
             SIMResult res = sim.getResult();

@@ -29,4 +29,6 @@ public abstract class BaseScenario {
     public abstract Environment getEnvironment();
     public abstract ArrayList<BaseAction> getActionList();
     public abstract void setActionList(ArrayList<BaseAction> aList);
+    public abstract int getEndTick();
+    public abstract void setEndTick(int endTick);
 }

@@ -26,7 +26,7 @@ import java.util.Arrays;
  */
 
 public class MCIScenario extends BaseScenario {
-
+    private int endTick;
     private ArrayList<BaseConstituent> csList;
     private BaseConstituent manager;
     private Environment env;
@@ -49,6 +49,7 @@ public class MCIScenario extends BaseScenario {
 
         this.env = new Environment(CSs, this.actionList.toArray(new BaseAction[this.actionList.size()]));
 
+        this.endTick = 6000;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class MCIScenario extends BaseScenario {
 
     @Override
     public ArrayList<BaseConstituent> getCSList() {
-        return csList;
+        return this.csList;
     }
 
     @Override
@@ -97,9 +98,19 @@ public class MCIScenario extends BaseScenario {
     }
 
     @Override
+    public int getEndTick() {
+        return endTick;
+    }
+
+    @Override
+    public void setEndTick(int endTick) {
+        this.endTick = endTick;
+    }
+
+    @Override
     public void setCSList(BaseConstituent[] CSs){
-        if(csList != null)
-            csList.clear();
+        if(this.csList != null)
+            this.csList.clear();
         else
             this.csList = new ArrayList<>();
         this.csList.addAll(Arrays.asList(CSs));

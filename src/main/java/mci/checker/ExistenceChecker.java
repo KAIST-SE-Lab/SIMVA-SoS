@@ -62,7 +62,7 @@ public class ExistenceChecker implements CheckerInterface{
      */
     public String getDescription() {
         // "SoS-level benefit is greater than and equal to " + this,baseSoSBenefit
-        return "Globally, it is never the case that P holds [time(P)] with a probability () than p.";
+        return "Globally, P holds eventually [time(P)] with a probability (<, <=, >, >=) than p.";
     }
 
     /**
