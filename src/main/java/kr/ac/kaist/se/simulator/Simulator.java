@@ -35,10 +35,10 @@ public final class Simulator {
         this.csList.addAll(Arrays.asList(CSs));
         this.manager = manager;
         this.env = env;
+
         this.tick = 0;
         this.endTick = 0;
         this.isPlanned = false;
-
     }
 
     public Simulator(BaseScenario sc) {

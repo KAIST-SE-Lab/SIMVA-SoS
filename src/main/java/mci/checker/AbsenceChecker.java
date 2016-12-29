@@ -28,6 +28,16 @@ import java.util.Map;
 public class AbsenceChecker implements CheckerInterface{
 
     /**
+     * Return the name
+     */
+    public String getName() { return "Absence Checker"; }
+
+    /**
+     * Return the description
+     */
+    public String getDescription() { return "Globally, P holds eventually [time(P)] with a probability (<, <=, >, >=) than p."; }
+
+    /**
      * evaluateSample Method
      * Evaluate a given property satisfies absence property
      * Check all time ticks whether there is a patient whose status changes

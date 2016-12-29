@@ -29,6 +29,7 @@ public class BLTLChecker extends BaseChecker{
      * @param type
      */
     public BLTLChecker(int baseTick, int baseSoSBenefit, comparisonType type) {
-        super(baseTick, baseSoSBenefit, type);
+        super();
+        super.init(baseTick, baseSoSBenefit, type);
     }
 }
