@@ -6,7 +6,6 @@ import kr.ac.kaist.se.simulator.SIMResult;
  * CheckerInterface.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
-
  * The MIT License (MIT)
 
  * Copyright (c) 2016 Junho Kim
@@ -20,6 +19,8 @@ import kr.ac.kaist.se.simulator.SIMResult;
  */
 
 public interface CheckerInterface {
+    String getName();
+    String getDescription();
     int evaluateSample(SIMResult res);
     int getMinTick();
     int getMaxTick();

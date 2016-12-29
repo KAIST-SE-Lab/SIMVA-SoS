@@ -6,7 +6,6 @@ import kr.ac.kaist.se.simulator.SIMResult;
  * BaseChecker.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
-
  * The MIT License (MIT)
 
  * Copyright (c) 2016 Junho Kim
@@ -38,16 +37,30 @@ public class BaseChecker implements CheckerInterface{
     private boolean negation = false;
 
     /**
-     * Constructor for BLTL model Checker
+     * Return the name
+     */
+    public String getName() { return "Existence Checker"; }
+
+    /**
+     * Return the description
+     */
+    public String getDescription() {
+        // "SoS-level benefit is greater than and equal to " + this,baseSoSBenefit
+        return "Globally, it is never the case that P holds [time(P)] with a probability () than p.";
+    }
+
+    /**
+     * Initialize params of BLTL model Checker
      * @param baseTick baseline of the time tick, BLTL Checker will evaluate the sample sequence based on this tick
      * @param baseSoSBenefit baseline of SoS benefit, BLTL Checker will evaluate the sample sequence based on this SoS benefit
      */
-    public BaseChecker(int baseTick, int baseSoSBenefit, comparisonType type){
+    public void init(int baseTick, int baseSoSBenefit, comparisonType type){
         this.baseTick = baseTick;
         this.baseSoSBenefit = baseSoSBenefit;
         this.type = type;
         this.minTick = Integer.MAX_VALUE;
         this.maxTick = Integer.MIN_VALUE;
+        this.negation = false;
     }
 
     /**

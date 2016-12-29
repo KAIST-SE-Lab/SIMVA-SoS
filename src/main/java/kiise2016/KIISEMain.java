@@ -51,7 +51,8 @@ public class KIISEMain {
 
             System.out.println("----------------------------------------------------");
             System.out.println("SoS-level benefit is greater than "+bound + ".");
-            BaseChecker checker = new BaseChecker(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+            BaseChecker checker = new BaseChecker();
+            checker.init(10000, bound, BaseChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
             SPRTMethod sprt = new SPRTMethod(0.01, 0.01, 0.005);
 
             for(int i=1; i<100; i++){

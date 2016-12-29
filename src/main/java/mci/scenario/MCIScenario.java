@@ -59,6 +59,9 @@ public class MCIScenario extends BaseScenario {
     }
 
     @Override
+    public String getDescription() { return "MCI (4 PTSs)"; }
+
+    @Override
     public ArrayList<BaseConstituent> getCSList() {
         return csList;
     }

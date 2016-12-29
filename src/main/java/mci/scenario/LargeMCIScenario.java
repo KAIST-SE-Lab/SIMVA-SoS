@@ -57,6 +57,9 @@ public class LargeMCIScenario extends BaseScenario {
     }
 
     @Override
+    public String getDescription() { return "MCI (Large)"; }
+
+    @Override
     public ArrayList<BaseConstituent> getCSList() {
         return csList;
     }

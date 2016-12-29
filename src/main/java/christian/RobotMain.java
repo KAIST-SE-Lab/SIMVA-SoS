@@ -50,7 +50,8 @@ public class RobotMain {
         Simulator sim = new Simulator(robots, null, env);
         sim.setEndTick(12);
 
-        BaseChecker checker = new BaseChecker(12, 3, BaseChecker.comparisonType.EQUAL_TO);
+        BaseChecker checker = new BaseChecker();
+        checker.init(12, 3, BaseChecker.comparisonType.EQUAL_TO);
         SPRTMethod sprt = new SPRTMethod(0.05, 0.05, 0.01);
         sprt.setLessCheck();
         for(int j=0; j < 10; j++) {
