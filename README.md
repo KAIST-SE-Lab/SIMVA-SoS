@@ -1,6 +1,7 @@
 # SIMSoS
 
 [![Build Status](https://travis-ci.org/SESoS/SIMSoS.svg?branch=develop)](https://travis-ci.org/SESoS/SIMSoS)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Feedback
 
