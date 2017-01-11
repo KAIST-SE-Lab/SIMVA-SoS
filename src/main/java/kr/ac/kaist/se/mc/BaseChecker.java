@@ -49,6 +49,12 @@ public class BaseChecker implements CheckerInterface{
         return "Globally, it is never the case that P holds [time(P)] with a probability () than p.";
     }
 
+    @Override
+    public void init(String[] params) {
+        // params[0]: checker name
+        // params[1]: probability
+    }
+
     /**
      * Initialize params of BLTL model Checker
      * @param baseTick baseline of the time tick, BLTL Checker will evaluate the sample sequence based on this tick

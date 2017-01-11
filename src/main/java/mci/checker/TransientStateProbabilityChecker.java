@@ -29,9 +29,17 @@ public class TransientStateProbabilityChecker implements CheckerInterface {
     private int t_u; // untill time tick
     private int target_benefit;
 
-    public TransientStateProbabilityChecker(int t_u, int target_benefit){
+    public void init(int t_u, int target_benefit) {
         this.t_u = t_u;
         this.target_benefit = target_benefit;
+    }
+
+    @Override
+    public void init(String[] params) {
+        // params[0]: checker name
+        // params[1]: probability
+        this.t_u = Integer.parseInt(params[2]);
+        this.target_benefit = Integer.parseInt(params[3]);
     }
 
     @Override
@@ -54,22 +62,27 @@ public class TransientStateProbabilityChecker implements CheckerInterface {
     @Override
     public int evaluateSample(SIMResult res) {
         HashMap<Integer, DebugTick> traceMap = res.getDebugTraces();
-        int satisfied_tick = 0;
+        int satisfied_transient = 0;
 
         for(Map.Entry <Integer,DebugTick> t: traceMap.entrySet()){
             for(Map.Entry<String, DebugProperty> debugTick: t.getValue().getDebugInfoMap().entrySet()){
                 String name = debugTick.getKey();
                 if(name.contains("SoS_level_benefit")){
                     int benefit = (Integer) debugTick.getValue().getProperty("SoS_level_benefit");
-                    if(benefit >= target_benefit){
-                        satisfied_tick++;
-                    }else if(satisfied_tick > 0 && benefit < target_benefit){
+
+                    if (satisfied_transient == 0) {
+                        if (t.getKey() <= t_u && benefit >= target_benefit) {
+                            satisfied_transient = 1;
+                        } else if (t.getKey() > t_u) {
+                            return 0;
+                        }
+                    } else if (benefit < target_benefit)
                         return 0;
-                    }
                 }
             }
         }
-        return satisfied_tick >= this.t_u? 1 : 0;
+
+        return 1;
     }
 
     @Override

@@ -25,6 +25,8 @@ import java.util.Map;
  */
 
 public class UniversalityChecker implements CheckerInterface{
+    private int minRange;
+    private int maxRange;
 
     @Override
     public String getName() {
@@ -33,7 +35,15 @@ public class UniversalityChecker implements CheckerInterface{
 
     @Override
     public String getDescription() {
-        return "Globally, it is always the case that P holds [time(P)] with a probability () than p.";
+        return "Globally, it is always the case that \"Every PTS exists within the range between " + this.minRange + " and " + this.maxRange + "\" holds [time(P)] with a probability () than p.";
+    }
+
+    @Override
+    public void init(String[] params) {
+        // params[0]: checker name
+        // params[1]: probability
+        this.minRange = Integer.parseInt(params[2]);
+        this.maxRange = Integer.parseInt(params[3]);
     }
 
     /**
@@ -52,7 +62,7 @@ public class UniversalityChecker implements CheckerInterface{
                 String name = debugTick.getKey();
                 if(name.contains("PTS")){
                     int pos = (Integer) debugTick.getValue().getProperty("position");
-                    if(pos < 0 || pos > 100)
+                    if(pos < this.minRange || pos > maxRange)
                         return 0;
                 }
             }

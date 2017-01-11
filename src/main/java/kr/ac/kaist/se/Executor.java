@@ -1,14 +1,16 @@
 package kr.ac.kaist.se;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import christian.RobotScenario;
 import com.opencsv.CSVWriter;
+import kr.ac.kaist.se.mc.CheckerInterface;
 import kr.ac.kaist.se.simulator.DebugTick;
 import kr.ac.kaist.se.simulator.NormalDistributor;
 import kr.ac.kaist.se.simulator.SIMResult;
 import kr.ac.kaist.se.simulator.Simulator;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 import mci.SMCResult;
-import mci.checker.ExistenceChecker;
+import mci.checker.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +38,139 @@ import java.util.*;
 
 public class Executor {
 
-    public static double[] ARR_ALPHA_BETA = {0.001};
+    public static double[] ARR_ALPHA_BETA = {0.05}; // 0.001 for MCI, 0.05 for Robot
+
+    public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, String params) throws IOException {
+        String args[] = params.split(",");
+
+        CheckerInterface checker = null;
+        if (args[0].equalsIgnoreCase("Existence")) {
+            checker = new ExistenceChecker();
+        } else if (args[0].equalsIgnoreCase("Absence")) {
+            checker = new AbsenceChecker();
+        } else if (args[0].equalsIgnoreCase("Universality")) {
+            checker = new UniversalityChecker();
+        } else if (args[0].equalsIgnoreCase("TransientStateProbability")) {
+            checker = new TransientStateProbabilityChecker();
+        } else if (args[0].equalsIgnoreCase("Robot")) {
+            sim = new Simulator(new RobotScenario());
+            checker = new RobotChecker();
+        } else {
+            // Undefined Checker
+        }
+
+        checker.init(args);
+
+        System.out.println("==========================================\n" +
+                "[ Simulation Description ]\n" +
+                "Scenario: " + sim.getScenario().getDescription() + "\n" +
+                "Parameters: " + params + "\n" +
+                "Checker: " + checker.getName() + "\n" +
+                "Statement: " + checker.getDescription());
+
+        System.out.println("==========================================\n" +
+                "[ Simulation Log ]");
+
+        long totalstart = System.currentTimeMillis();
+        long totaltime = 0;
+        int totalsamples = 0;
+        String finalres = "True";
+
+        for (double alpha_beta : ARR_ALPHA_BETA) {
+            Date nowDate = new Date();
+            SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            String pre = transFormat.format(nowDate);
+
+            for (int trial = 1; trial <= 1; trial++) { // originally, 3 times test
+                System.out.println("Trial " + trial + " is Started");
+                checker.init(args);
+                SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
+                ArrayList<SMCResult> resList = new ArrayList<>();
+//        int thetaSet[] = {70,90,95,99};
+
+                for (int t = 1; t < 100; t++) {
+                    double theta = 0.01 * t; // theta
+                    long start = System.currentTimeMillis();
+                    sprt.setExpression(theta);
+
+                    while (!sprt.checkStopCondition()) {
+
+                        // Initialize Patient map
+                        sim.getScenario().init();
+
+                        // 매번 다른 distribution 이 필요함
+                        ArrayList<Integer> list = new ArrayList<>();
+                        list.clear();
+                        list = distributor.getDistributionArray(sim.getScenario().getActionList().size());
+                        sim.setActionPlan(list);
+
+                        //sim.setEndTick(endTick);
+
+                        sim.execute();
+
+                        SIMResult res = sim.getResult();
+                        int checkResult = checker.evaluateSample(res);
+                        sprt.updateResult(checkResult);
+
+                        System.gc();
+
+                        sim.reset();
+                        sim.setActionPlan(list);
+                    }
+
+                    boolean h0 = sprt.getResult(); // Result
+                    int numSamples = sprt.getNumSamples();
+
+                    long exec_time = System.currentTimeMillis() - start; //exec time
+                    int minTick = checker.getMinTick();
+                    int maxTick = checker.getMaxTick();
+
+                    totaltime += exec_time;
+                    totalsamples += numSamples;
+
+                    sprt.reset();
+                    resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
+
+                    System.out.print("The statement is");
+
+                    if (h0) {
+                        System.out.print(" TRUE");
+                    } else {
+                        System.out.print(" FALSE");
+                        if (theta <= Double.parseDouble(args[1]))
+                            finalres = "False";
+                    }
+
+                    System.out.print(" for theta: " + String.format("%.2f", theta));
+                    System.out.print(" by examining " + numSamples + " samples");
+                    System.out.println(" [Time to Decide: " + String.format("%.2f", exec_time / 1000.0) + " secs]");
+                }
+
+//                String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
+//                CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
+//                cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
+//
+//                for (SMCResult r : resList) {
+//                    System.out.print(".");
+//                    cw.writeNext(r.getArr());
+//                }
+//                cw.close();
+                resList.clear();
+                System.out.println();
+
+                System.out.println("Trial " + trial + " is Finished");
+            }
+        }
+
+        System.out.println("==========================================\n" +
+                "[ Simulation Result ]\n" +
+                "Result: The statement <" + checker.getDescription() + "> is " + finalres + " with a probability <= than " + args[1] + ".\n" +
+                "Total Examined Samples: " + totalsamples + " samples\n" +
+                "Total Time to Decide: " + String.format("%.2f", totaltime / 1000.0) + " secs\n" +
+                "Total Elapsed Time: " + String.format("%.2f", (System.currentTimeMillis() - totalstart) / 1000.0) + " secs\n" +
+                "==========================================\n" +
+                "Finished.");
+    }
 
     public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException {
         int endTick = sim.getScenario().getEndTick();

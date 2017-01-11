@@ -20,7 +20,7 @@ import kr.ac.kaist.se.simulator.SIMResult;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class ExistenceChecker implements CheckerInterface{
+public class RobotChecker implements CheckerInterface{
 
     /*
      * BLTL Model Checker for SIMSoS
@@ -56,20 +56,20 @@ public class ExistenceChecker implements CheckerInterface{
     public void init(String[] params) {
         // params[0]: checker name
         // params[1]: probability
-        init(Integer.parseInt(params[2]), Integer.parseInt(params[3]), comparisonType.GREATER_THAN_AND_EQUAL_TO);
+        init(Integer.parseInt(params[2]), Integer.parseInt(params[3]), comparisonType.EQUAL_TO);
     }
 
     /**
      * Return the name
      */
-    public String getName() { return "Existence Checker"; }
+    public String getName() { return "Existence Checker (Robot)"; }
 
     /**
      * Return the description
      */
     public String getDescription() {
         // "SoS-level benefit is greater than and equal to " + this,baseSoSBenefit
-        return "Globally, \"SoS-level benefit is greater than or equal to " + this.baseSoSBenefit + "\" holds eventually by " + this.baseTick + " ticks";
+        return "Globally, \"SoS-level benefit is equal to " + this.baseSoSBenefit + "\" holds eventually by " + this.baseTick + " ticks";
     }
 
     /**
@@ -84,23 +84,23 @@ public class ExistenceChecker implements CheckerInterface{
             switch(this.type){
                 case LESS_THAN:
                     if(sampleBenefit < this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
                 case GREATER_THAN:
                     if(sampleBenefit > this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
                 case EQUAL_TO:
                     if(sampleBenefit == this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
                 case LESS_THAN_AND_EQUAL_TO:
                     if(sampleBenefit <= this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
                 case GREATER_THAN_AND_EQUAL_TO:
                     if(sampleBenefit >= this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
             }
             if(this.minTick >= res.getNumTicks())
@@ -108,7 +108,7 @@ public class ExistenceChecker implements CheckerInterface{
             else if(this.maxTick <= res.getNumTicks())
                 this.maxTick = res.getNumTicks();
         }
-        return 0;
+        return 1;
     }
 
     public void setNegation(){
