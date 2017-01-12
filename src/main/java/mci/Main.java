@@ -5,6 +5,7 @@ import kr.ac.kaist.se.Util;
 import kr.ac.kaist.se.simulator.NormalDistributor;
 import kr.ac.kaist.se.simulator.Simulator;
 import mci.scenario.MCIScenario;
+import java.io.*;
 
 import java.io.IOException;
 
@@ -44,8 +45,12 @@ public class Main {
         MCIScenario mci = new MCIScenario();
 
         Simulator sim = new Simulator(mci);
+        sim.setDEBUG();
 
-        Executor.Perform_Experiment(distributor, sim, "mci", 90);
+        BufferedReader in = new BufferedReader(new FileReader("input.csv"));
+        String params;
+        while ((params = in.readLine()) != null)
+            Executor.Perform_Experiment(distributor, sim, "mci", params);
     }
 
     public static void debugMain() throws IOException {

@@ -21,6 +21,7 @@ import kr.ac.kaist.se.simulator.SIMResult;
 public interface CheckerInterface {
     String getName();
     String getDescription();
+    void init(String[] params);
     int evaluateSample(SIMResult res);
     int getMinTick();
     int getMaxTick();
