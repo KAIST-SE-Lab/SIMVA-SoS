@@ -44,12 +44,12 @@ public class MCIScenario extends BaseScenario {
         this.manager = new Hospital();
 
         this.actionList = new ArrayList<>();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 50; i++)
             this.actionList.add(new RescueAction(50, 0));
 
         this.env = new Environment(CSs, this.actionList.toArray(new BaseAction[this.actionList.size()]));
 
-        this.endTick = 6000;
+        this.endTick = 2000;
     }
 
     @Override
