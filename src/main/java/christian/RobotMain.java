@@ -31,30 +31,16 @@ import java.util.ArrayList;
 
 public class RobotMain {
     public static void main(String[] args) throws IOException{
+        RobotScenario robot = new RobotScenario(0);
 
-        Movement right_move = new Movement();
+        Simulator sim = new Simulator(robot);
 
-        Robot r1 = new Robot(0, right_move);
-        Robot r2 = new Robot(1, right_move);
-        Robot r3 = new Robot(2, right_move);
-
-        r1.addCapability(right_move, 1);
-        r2.addCapability(right_move, 1);
-        r3.addCapability(right_move, 1);
-
-        Robot[] robots = new Robot[] {r1, r2, r3};
-
-        Movement[] moves = new Movement[] {right_move};
-
-        Environment env = new Environment(robots, moves);
-        Simulator sim = new Simulator(robots, null, env);
-        sim.setEndTick(12);
-
-        BaseChecker checker = new BaseChecker(12, 3, BaseChecker.comparisonType.EQUAL_TO);
+        BaseChecker checker = new BaseChecker();
+        checker.init(sim.getScenario().getEndTick(), 3, BaseChecker.comparisonType.EQUAL_TO);
         SPRTMethod sprt = new SPRTMethod(0.05, 0.05, 0.01);
         sprt.setLessCheck();
         for(int j=0; j < 10; j++) {
-            String outputName = "robot_result/SIM_robot_"+j+".csv";
+            String outputName = "robot_result/SIM_robot_"+(j+1)+".csv";
             CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
             cw.writeNext(new String[]{"prob", "num_of_samples", "result"});
             ArrayList<RobotResult> resList = new ArrayList<>();

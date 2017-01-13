@@ -5,6 +5,7 @@ import kr.ac.kaist.se.Util;
 import kr.ac.kaist.se.simulator.NormalDistributor;
 import kr.ac.kaist.se.simulator.Simulator;
 import mci.scenario.MCIScenario;
+import java.io.*;
 
 import java.io.IOException;
 
@@ -24,33 +25,33 @@ import java.io.IOException;
  * furnished to do so, subject to the following conditions: TBD
  */
 public class Main {
-
     public static void main(String[] args) throws Exception{
 
         // To prepare the result_directory
-        Util.create_result_directory("mci_result");
+        //Util.create_result_directory("mci_result");
 
         // Globally used (no need to replicate in concurrency)
 //        debugMain();
-        experimentMain();
+        experimentMain(args);
     }
 
-    public static void experimentMain() throws IOException{
+    public static void experimentMain(String[] args) throws IOException{
+        System.out.println("==========================================\n" +
+                            "Welcome to Simulator for System of Systems");
         NormalDistributor distributor = new NormalDistributor();
-        distributor.setNormalDistParams(1500, 400);
+        distributor.setNormalDistParams(600, 150);
 
-        MCIScenario mci = new MCIScenario();
-
-        Simulator sim = new Simulator(mci);
-
-        Executor.Perform_Experiment(distributor, sim, "mci", 90);
+        BufferedReader in = new BufferedReader(new FileReader(args[0]));
+        String params = in.readLine();
+        while ((params = in.readLine()) != null)
+            Executor.Perform_Experiment(distributor, params);
     }
 
     public static void debugMain() throws IOException {
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(2000, 500);
 
-        MCIScenario lMCI = new MCIScenario();
+        MCIScenario lMCI = new MCIScenario(6000, 100);
 
         Simulator sim = new Simulator(lMCI);
         sim.setDEBUG();

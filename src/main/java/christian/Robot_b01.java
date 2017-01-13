@@ -25,7 +25,7 @@ import java.util.Random;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class Robot extends BaseConstituent{
+public class Robot_b01 extends Robot {
 
     private int xpos;
     private int ypos;
@@ -33,8 +33,10 @@ public class Robot extends BaseConstituent{
     private Movement move;
     private Random ranNumGenerator;
 
-    public Robot(int ypos, Movement move){
-        this.xpos = 10;
+    public Robot_b01(int ypos, Movement move){
+        super(ypos, move);
+
+        this.xpos = 0;
         this.ypos = ypos;
         this.token = false;
         this.move = move;

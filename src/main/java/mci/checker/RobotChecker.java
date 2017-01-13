@@ -1,11 +1,13 @@
-package kr.ac.kaist.se.mc;
+package mci.checker;
 
+import kr.ac.kaist.se.mc.CheckerInterface;
 import kr.ac.kaist.se.simulator.SIMResult;
 
 /**
- * BaseChecker.java
+ * ExistenceChecker.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
+
  * The MIT License (MIT)
 
  * Copyright (c) 2016 Junho Kim
@@ -18,7 +20,7 @@ import kr.ac.kaist.se.simulator.SIMResult;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class BaseChecker implements CheckerInterface{
+public class RobotChecker implements CheckerInterface{
 
     /*
      * BLTL Model Checker for SIMSoS
@@ -37,25 +39,6 @@ public class BaseChecker implements CheckerInterface{
     private boolean negation = false;
 
     /**
-     * Return the name
-     */
-    public String getName() { return "Existence Checker"; }
-
-    /**
-     * Return the description
-     */
-    public String getDescription() {
-        // "SoS-level benefit is greater than and equal to " + this,baseSoSBenefit
-        return "Globally, it is never the case that P holds [time(P)] with a probability () than p.";
-    }
-
-    @Override
-    public void init(String[] params) {
-        // params[0]: checker name
-        // params[1]: probability
-    }
-
-    /**
      * Initialize params of BLTL model Checker
      * @param baseTick baseline of the time tick, BLTL Checker will evaluate the sample sequence based on this tick
      * @param baseSoSBenefit baseline of SoS benefit, BLTL Checker will evaluate the sample sequence based on this SoS benefit
@@ -67,6 +50,26 @@ public class BaseChecker implements CheckerInterface{
         this.minTick = Integer.MAX_VALUE;
         this.maxTick = Integer.MIN_VALUE;
         this.negation = false;
+    }
+
+    @Override
+    public void init(String[] params) {
+        // params[0]: checker name
+        // params[1]: probability
+        init(Integer.parseInt(params[3]), Integer.parseInt(params[4]), comparisonType.EQUAL_TO);
+    }
+
+    /**
+     * Return the name
+     */
+    public String getName() { return "Existence Checker (Robot)"; }
+
+    /**
+     * Return the description
+     */
+    public String getDescription() {
+        // "SoS-level benefit is greater than and equal to " + this,baseSoSBenefit
+        return "Globally, \"The total benefit is equal to " + this.baseSoSBenefit + "\" holds eventually by " + this.baseTick + " ticks";
     }
 
     /**
@@ -81,23 +84,23 @@ public class BaseChecker implements CheckerInterface{
             switch(this.type){
                 case LESS_THAN:
                     if(sampleBenefit < this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
                 case GREATER_THAN:
                     if(sampleBenefit > this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
                 case EQUAL_TO:
                     if(sampleBenefit == this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
                 case LESS_THAN_AND_EQUAL_TO:
                     if(sampleBenefit <= this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
                 case GREATER_THAN_AND_EQUAL_TO:
                     if(sampleBenefit >= this.baseSoSBenefit)
-                        return 1;
+                        return 0;
                     break;
             }
             if(this.minTick >= res.getNumTicks())
@@ -105,7 +108,7 @@ public class BaseChecker implements CheckerInterface{
             else if(this.maxTick <= res.getNumTicks())
                 this.maxTick = res.getNumTicks();
         }
-        return 0;
+        return 1;
     }
 
     public void setNegation(){

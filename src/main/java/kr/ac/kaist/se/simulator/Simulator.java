@@ -35,10 +35,15 @@ public final class Simulator {
         this.csList.addAll(Arrays.asList(CSs));
         this.manager = manager;
         this.env = env;
+
         this.tick = 0;
         this.endTick = 0;
         this.isPlanned = false;
+    }
 
+    @Deprecated
+    public void setEndTick(int endTick) {
+        this.endTick = endTick;
     }
 
     public Simulator(BaseScenario sc) {
@@ -47,13 +52,9 @@ public final class Simulator {
         this.env = sc.getEnvironment();
 
         this.tick = 0;
-        this.endTick = 0;
+        this.endTick = sc.getEndTick();
         this.isPlanned = false;
         this.scenario = sc;
-    }
-
-    public void setEndTick(int tick) {
-        this.endTick = tick;
     }
 
     /**
@@ -132,6 +133,14 @@ public final class Simulator {
                 for (BaseAction a : this.actions) {
                     debugTick.putDebugTrace(a.getName(), a.getDebugProperty());
                 }
+
+                DebugProperty prop = new DebugProperty();
+                int SoS_benefit = 0;
+                for(BaseConstituent cs: this.csList)
+                    SoS_benefit += cs.getAccumulatedSoSBenefit();
+                prop.putProperty("SoS_level_benefit", SoS_benefit);
+                debugTick.putDebugTrace("SoS_level_benefit", prop);
+
                 this.debugTraceMap.put(this.tick, debugTick);
             }
 

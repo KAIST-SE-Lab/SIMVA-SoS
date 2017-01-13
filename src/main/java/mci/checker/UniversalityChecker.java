@@ -9,10 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * AbsenceChecker.java
+ * UniversalityChecker.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
-
  * The MIT License (MIT)
 
  * Copyright (c) 2016 Junho Kim
@@ -25,51 +24,46 @@ import java.util.Map;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class AbsenceChecker implements CheckerInterface{
+public class UniversalityChecker implements CheckerInterface{
+    private int minRange;
+    private int maxRange;
 
-    /**
-     * Return the name
-     */
-    public String getName() { return "Absence Checker"; }
+    @Override
+    public String getName() {
+        return "Universality Checker";
+    }
 
-    /**
-     * Return the description
-     */
+    @Override
     public String getDescription() {
-        return "Globally, it is never the case that \"Dead patients become alive again\" holds";
+        return "Globally, it is always the case that \"Every PTS exists within the range between " + this.minRange + " and " + this.maxRange + "\" holds [time(P)] with a probability () than p.";
     }
 
     @Override
     public void init(String[] params) {
         // params[0]: checker name
         // params[1]: probability
+        this.minRange = Integer.parseInt(params[5]);
+        this.maxRange = Integer.parseInt(params[6]);
     }
 
     /**
      * evaluateSample Method
-     * Evaluate a given property satisfies absence property
-     * Check all time ticks whether there is a patient whose status changes
-     * from DEAD to other status (Dangerous or Very_Dangerous)
+     * Evaluate a given property satisfies universality property
+     * Check all time ticks whether all PTSs are in the operation area, which is 0-100.
      * @param res Simulation result class which contains debugTick Map
-     * @return 1, there is an absence, otherwise 0
+     * @return 1, Universality is guaranteed, otherwise 0
      */
     @Override
     public int evaluateSample(SIMResult res) {
         HashMap<Integer, DebugTick> traceMap = res.getDebugTraces();
-        HashMap<String, String> patientStatusMap = new HashMap<>(); // Additional map
 
         for(Map.Entry <Integer,DebugTick> t: traceMap.entrySet()){
             for(Map.Entry<String, DebugProperty> debugTick: t.getValue().getDebugInfoMap().entrySet()){
                 String name = debugTick.getKey();
-                if(name.contains("Patient")){
-                    String stat = (String) debugTick.getValue().getProperty("stat");
-                    if(patientStatusMap.containsKey(name)){
-                        String beforeStat = patientStatusMap.get(name);
-                        if(beforeStat.equalsIgnoreCase("DEAD") && !stat.equalsIgnoreCase("DEAD"))
-                            return 0;
-                    }else{
-                        patientStatusMap.put(name, stat);
-                    }
+                if(name.contains("PTS")){
+                    int pos = (Integer) debugTick.getValue().getProperty("position");
+                    if(pos < this.minRange || pos > maxRange)
+                        return 0;
                 }
             }
         }
@@ -78,7 +72,7 @@ public class AbsenceChecker implements CheckerInterface{
 
     @Override
     public int getMinTick() {
-        return 0;
+            return 0;
     }
 
     @Override

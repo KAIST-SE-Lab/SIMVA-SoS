@@ -25,7 +25,7 @@ import java.util.Random;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class Robot extends BaseConstituent{
+public class Robot_b04 extends Robot{
 
     private int xpos;
     private int ypos;
@@ -33,7 +33,9 @@ public class Robot extends BaseConstituent{
     private Movement move;
     private Random ranNumGenerator;
 
-    public Robot(int ypos, Movement move){
+    public Robot_b04(int ypos, Movement move){
+        super(ypos, move);
+
         this.xpos = 10;
         this.ypos = ypos;
         this.token = false;
@@ -46,7 +48,7 @@ public class Robot extends BaseConstituent{
     public void normalAction(int elapsedTime) {
         if(xpos != 10) {
             int ranNum = this.ranNumGenerator.nextInt(100);
-            if (ranNum == 0) {
+            if (ranNum != 0) {
                 token = false; // loose its token;
             }
         }

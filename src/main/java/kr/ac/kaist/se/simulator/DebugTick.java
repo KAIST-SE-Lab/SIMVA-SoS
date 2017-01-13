@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class DebugTick {
 
-    private HashMap<String, DebugProperty> debugInfoMap; // E.g.,
+    private HashMap<String, DebugProperty> debugInfoMap = new HashMap<>(); // E.g.,
     private int timeTick;
 
     public DebugTick(int timeTick){
