@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Insert the current time formatted as "yyyyMMdd'T'HHmmss" under
+     the key "bySecond" into the logger context. This value will be
+     available to all subsequent configuration elements. -->
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/log-${bySecond}.txt</file>
+        <!--<append>true</append>-->
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%logger{20}    %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--<appender name="ANALYTICS-FILE" class="ch.qos.logback.core.FileAppender">-->
+        <!--<file>analytics.log</file>-->
+        <!--<append>true</append>-->
+        <!--<encoder>-->
+            <!--<pattern>%logger{9}    %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+
+    <logger name="mci.Main" level="INFO" />
+    <!--<logger name="simulator" level="INFO" additivity="false">-->
+        <!--<appender-ref ref="ANALYTICS-FILE" />-->
+    <!--</logger>-->
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
