@@ -290,7 +290,16 @@ public class Executor {
                     System.out.println(" [Time to Decide: " + String.format("%.2f", exec_time / 1000.0) + " secs]");
                 }
 
-                String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
+                String outputName = caseName
+                        + "_result/"
+                        + pre
+                        + caseName
+                        + bound
+                        + "_"
+                        + String.format("%.3f", alpha_beta)
+                        + "t"
+                        + String.valueOf(trial)
+                        + ".csv";
                 CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
                 cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
 
