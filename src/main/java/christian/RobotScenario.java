@@ -18,12 +18,35 @@ public class RobotScenario  extends BaseScenario {
     private Environment env;
     private ArrayList<BaseAction> actionList;
 
-    public RobotScenario() {
+    public RobotScenario(int type) {
         Movement right_move = new Movement();
 
-        Robot r1 = new Robot(0, right_move);
-        Robot r2 = new Robot(1, right_move);
-        Robot r3 = new Robot(2, right_move);
+        Robot r1, r2, r3;
+        if (type == 1) {
+            r1 = new Robot_b01(0, right_move);
+            r2 = new Robot_b01(1, right_move);
+            r3 = new Robot_b01(2, right_move);
+        } else if (type == 2) {
+            r1 = new Robot_b02(0, right_move);
+            r2 = new Robot_b02(1, right_move);
+            r3 = new Robot_b02(2, right_move);
+        } else if (type == 3) {
+            r1 = new Robot_b03(0, right_move);
+            r2 = new Robot_b03(1, right_move);
+            r3 = new Robot_b03(2, right_move);
+        } else if (type == 4) {
+            r1 = new Robot_b04(0, right_move);
+            r2 = new Robot_b04(1, right_move);
+            r3 = new Robot_b04(2, right_move);
+        } else if (type == 5) {
+            r1 = new Robot_b05(0, right_move);
+            r2 = new Robot_b05(1, right_move);
+            r3 = new Robot_b05(2, right_move);
+        } else {
+            r1 = new Robot(0, right_move);
+            r2 = new Robot(1, right_move);
+            r3 = new Robot(2, right_move);
+        }
 
         r1.addCapability(right_move, 1);
         r2.addCapability(right_move, 1);

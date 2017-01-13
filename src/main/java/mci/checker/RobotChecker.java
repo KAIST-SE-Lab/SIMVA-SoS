@@ -56,7 +56,7 @@ public class RobotChecker implements CheckerInterface{
     public void init(String[] params) {
         // params[0]: checker name
         // params[1]: probability
-        init(Integer.parseInt(params[2]), Integer.parseInt(params[3]), comparisonType.EQUAL_TO);
+        init(Integer.parseInt(params[3]), Integer.parseInt(params[4]), comparisonType.EQUAL_TO);
     }
 
     /**
@@ -69,7 +69,7 @@ public class RobotChecker implements CheckerInterface{
      */
     public String getDescription() {
         // "SoS-level benefit is greater than and equal to " + this,baseSoSBenefit
-        return "Globally, \"SoS-level benefit is equal to " + this.baseSoSBenefit + "\" holds eventually by " + this.baseTick + " ticks";
+        return "Globally, \"The total benefit is equal to " + this.baseSoSBenefit + "\" holds eventually by " + this.baseTick + " ticks";
     }
 
     /**

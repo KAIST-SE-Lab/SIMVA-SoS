@@ -27,12 +27,13 @@ import java.util.Arrays;
 
 public class MCIScenario extends BaseScenario {
     private int endTick;
+    private int expectedPatients;
     private ArrayList<BaseConstituent> csList;
     private BaseConstituent manager;
     private Environment env;
     private ArrayList<BaseAction> actionList;
 
-    public MCIScenario(){
+    public MCIScenario(int endTick, int expectedPatients){
         NearestPTS np1 = new NearestPTS();
         NearestPTS np2 = new NearestPTS();
         SeverityPTS sp1 = new SeverityPTS();
@@ -44,12 +45,13 @@ public class MCIScenario extends BaseScenario {
         this.manager = new Hospital();
 
         this.actionList = new ArrayList<>();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < expectedPatients; i++)
             this.actionList.add(new RescueAction(50, 0));
 
         this.env = new Environment(CSs, this.actionList.toArray(new BaseAction[this.actionList.size()]));
 
-        this.endTick = 6000;
+        this.endTick = endTick;
+        this.expectedPatients = expectedPatients;
     }
 
     @Override

@@ -38,8 +38,8 @@ public class TransientStateProbabilityChecker implements CheckerInterface {
     public void init(String[] params) {
         // params[0]: checker name
         // params[1]: probability
-        this.t_u = Integer.parseInt(params[2]);
-        this.target_benefit = Integer.parseInt(params[3]);
+        this.t_u = Integer.parseInt(params[5]);
+        this.target_benefit = Integer.parseInt(params[6]);
     }
 
     @Override

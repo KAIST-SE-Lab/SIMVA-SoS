@@ -4,13 +4,11 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import christian.RobotScenario;
 import com.opencsv.CSVWriter;
 import kr.ac.kaist.se.mc.CheckerInterface;
-import kr.ac.kaist.se.simulator.DebugTick;
-import kr.ac.kaist.se.simulator.NormalDistributor;
-import kr.ac.kaist.se.simulator.SIMResult;
-import kr.ac.kaist.se.simulator.Simulator;
+import kr.ac.kaist.se.simulator.*;
 import kr.ac.kaist.se.simulator.method.SPRTMethod;
 import mci.SMCResult;
 import mci.checker.*;
+import mci.scenario.MCIScenario;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,36 +35,66 @@ import java.util.*;
  */
 
 public class Executor {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
 
     public static double[] ARR_ALPHA_BETA = {0.05}; // 0.001 for MCI, 0.05 for Robot
 
-    public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, String params) throws IOException {
+    public static void Perform_Experiment(NormalDistributor distributor, String params) throws IOException {
+        //Simulator sim, String caseName
         String args[] = params.split(",");
 
+        BaseScenario bs = null;
+        Simulator sim = null;
+        if (args[0].equalsIgnoreCase("Robot")) {
+            bs = new RobotScenario(0);
+        } else if (args[0].equalsIgnoreCase("Robot_b1")) {
+            bs = new RobotScenario(1);
+        } else if (args[0].equalsIgnoreCase("Robot_b2")) {
+            bs = new RobotScenario(2);
+        } else if (args[0].equalsIgnoreCase("Robot_b3")) {
+            bs = new RobotScenario(3);
+        } else if (args[0].equalsIgnoreCase("Robot_b4")) {
+            bs = new RobotScenario(4);
+        } else if (args[0].equalsIgnoreCase("Robot_b5")) {
+            bs = new RobotScenario(5);
+        } else if (args[0].equalsIgnoreCase("MCI")) {
+            bs = new MCIScenario(Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+        } else {
+            // undefined scenario
+        }
+        sim = new Simulator(bs);
+        sim.setDEBUG();
+
         CheckerInterface checker = null;
-        if (args[0].equalsIgnoreCase("Existence")) {
-            checker = new ExistenceChecker();
-        } else if (args[0].equalsIgnoreCase("Absence")) {
-            checker = new AbsenceChecker();
-        } else if (args[0].equalsIgnoreCase("Universality")) {
-            checker = new UniversalityChecker();
-        } else if (args[0].equalsIgnoreCase("TransientStateProbability")) {
-            checker = new TransientStateProbabilityChecker();
-        } else if (args[0].equalsIgnoreCase("Robot")) {
-            sim = new Simulator(new RobotScenario());
+        if (args[0].startsWith("Robot")) {
             checker = new RobotChecker();
+        } else if (args[1].equalsIgnoreCase("Existence")) {
+            checker = new ExistenceChecker();
+        } else if (args[1].equalsIgnoreCase("Absence")) {
+            checker = new AbsenceChecker();
+        } else if (args[1].equalsIgnoreCase("Universality")) {
+            checker = new UniversalityChecker();
+        } else if (args[1].equalsIgnoreCase("TransientStateProbability")) {
+            checker = new TransientStateProbabilityChecker();
         } else {
             // Undefined Checker
         }
-
         checker.init(args);
 
         System.out.println("==========================================\n" +
                 "[ Simulation Description ]\n" +
-                "Scenario: " + sim.getScenario().getDescription() + "\n" +
                 "Parameters: " + params + "\n" +
+                "Scenario: " + sim.getScenario().getDescription() + "\n" +
                 "Checker: " + checker.getName() + "\n" +
-                "Statement: " + checker.getDescription());
+                "Statement: " + ANSI_RED + checker.getDescription() + ANSI_RESET);
 
         System.out.println("==========================================\n" +
                 "[ Simulation Log ]");
@@ -135,9 +163,11 @@ public class Executor {
 
                     if (h0) {
                         System.out.print(" TRUE");
+                        if (theta > Double.parseDouble(args[2]))
+                            finalres = "False";
                     } else {
                         System.out.print(" FALSE");
-                        if (theta <= Double.parseDouble(args[1]))
+                        if (theta <= Double.parseDouble(args[2]))
                             finalres = "False";
                     }
 
@@ -164,7 +194,7 @@ public class Executor {
 
         System.out.println("==========================================\n" +
                 "[ Simulation Result ]\n" +
-                "Result: The statement <" + checker.getDescription() + "> is " + finalres + " with a probability <= than " + args[1] + ".\n" +
+                "Result: The statement <" + checker.getDescription() + "> is " + ANSI_RED + finalres + ANSI_RESET + " with a probability <= than " + ANSI_RED + args[2] + ANSI_RESET + ".\n" +
                 "Total Examined Samples: " + totalsamples + " samples\n" +
                 "Total Time to Decide: " + String.format("%.2f", totaltime / 1000.0) + " secs\n" +
                 "Total Elapsed Time: " + String.format("%.2f", (System.currentTimeMillis() - totalstart) / 1000.0) + " secs\n" +

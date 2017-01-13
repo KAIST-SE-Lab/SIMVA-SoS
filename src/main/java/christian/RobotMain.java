@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 public class RobotMain {
     public static void main(String[] args) throws IOException{
-        RobotScenario robot = new RobotScenario();
+        RobotScenario robot = new RobotScenario(0);
 
         Simulator sim = new Simulator(robot);
 

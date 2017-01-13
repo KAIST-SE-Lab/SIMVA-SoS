@@ -42,8 +42,8 @@ public class UniversalityChecker implements CheckerInterface{
     public void init(String[] params) {
         // params[0]: checker name
         // params[1]: probability
-        this.minRange = Integer.parseInt(params[2]);
-        this.maxRange = Integer.parseInt(params[3]);
+        this.minRange = Integer.parseInt(params[5]);
+        this.maxRange = Integer.parseInt(params[6]);
     }
 
     /**
