@@ -266,7 +266,7 @@ public class Executor {
                 ArrayList<SMCResult> resList = new ArrayList<>();
 //        int thetaSet[] = {70,90,95,99};
 
-                for (int t = 1; t < 100; t++) {
+                for (int t = 80; t < 81; t++) {
                     double theta = 0.01 * t; // theta
                     long start = System.currentTimeMillis();
                     sprt.setExpression(theta);
