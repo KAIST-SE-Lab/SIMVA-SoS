@@ -51,6 +51,8 @@ public class Executor {
         //Simulator sim, String caseName
         String args[] = params.split(",");
 
+        int scenarioType = 2; // MCI
+
         BaseScenario bs = null;
         Simulator sim = null;
         if (args[0].equalsIgnoreCase("Robot")) {
@@ -76,6 +78,7 @@ public class Executor {
         CheckerInterface checker = null;
         if (args[0].startsWith("Robot")) {
             checker = new RobotChecker();
+            scenarioType = 1; // Robot
         } else if (args[1].equalsIgnoreCase("Existence")) {
             checker = new ExistenceChecker();
         } else if (args[1].equalsIgnoreCase("Absence")) {
@@ -109,17 +112,23 @@ public class Executor {
             SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String pre = transFormat.format(nowDate);
 
-            for (int trial = 1; trial <= 1; trial++) { // originally, 3 times test
-                System.out.println("Trial " + trial + " is Started");
-                checker.init(args);
-                SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
-                ArrayList<SMCResult> resList = new ArrayList<>();
-//        int thetaSet[] = {70,90,95,99};
+            checker.init(args);
+            SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
+//            ArrayList<SMCResult> resList = new ArrayList<>();
 
-                for (int t = 1; t < 100; t++) {
-                    double theta = 0.01 * t; // theta
+            for (int t = 1; t <= 95; ) {
+                double theta = 0.01 * t; // theta
+
+                int h0 = 0;
+                int h1 = 0;
+                int numThetaSamples = 0;
+                long exec_ThetaTime = 0;
+
+                for (int i = 0; i < 100; ) {
                     long start = System.currentTimeMillis();
+
                     sprt.setExpression(theta);
+                    sprt.reset();
 
                     while (!sprt.checkStopCondition()) {
 
@@ -140,61 +149,85 @@ public class Executor {
                         int checkResult = checker.evaluateSample(res);
                         sprt.updateResult(checkResult);
 
-                        System.gc();
+//                        System.gc();
 
                         sim.reset();
                         sim.setActionPlan(list);
                     }
 
-                    boolean h0 = sprt.getResult(); // Result
-                    int numSamples = sprt.getNumSamples();
+                    boolean res = sprt.getResult();
 
+                    if (res) {
+                        h0++;
+//                        System.out.print("T");
+                    } else {
+                        h1++;
+//                        System.out.print("F");
+                    }
+
+                    int numSamples = sprt.getNumSamples();
                     long exec_time = System.currentTimeMillis() - start; //exec time
                     int minTick = checker.getMinTick();
                     int maxTick = checker.getMaxTick();
 
-                    totaltime += exec_time;
+                    numThetaSamples += numSamples;
+                    exec_ThetaTime += exec_time;
+
                     totalsamples += numSamples;
+                    totaltime += exec_time;
 
-                    sprt.reset();
-                    resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, h0));
-
-                    System.out.print("The statement is");
-
-                    if (h0) {
-                        System.out.print(" TRUE");
-                        if (theta > Double.parseDouble(args[2]))
-                            finalres = "False";
-                    } else {
-                        System.out.print(" FALSE");
-                        if (theta <= Double.parseDouble(args[2]))
-                            finalres = "False";
-                    }
-
-                    System.out.print(" for theta: " + String.format("%.2f", theta));
-                    System.out.print(" by examining " + numSamples + " samples");
-                    System.out.println(" [Time to Decide: " + String.format("%.2f", exec_time / 1000.0) + " secs]");
+//                    resList.add(new SMCResult(theta, numSamples, exec_time, minTick, maxTick, res));
+                    if (scenarioType == 1)
+                        i++;
+                    else
+                        i += 34;
                 }
 
-//                String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
-//                CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
-//                cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
-//
-//                for (SMCResult r : resList) {
-//                    System.out.print(".");
-//                    cw.writeNext(r.getArr());
-//                }
-//                cw.close();
-                resList.clear();
-                System.out.println();
+                System.out.print("The statement is");
 
-                System.out.println("Trial " + trial + " is Finished");
+                if (h0 >= h1) {
+                    System.out.print(" TRUE\t");
+                    if (theta > Double.parseDouble(args[2]))
+                        finalres = "False";
+                } else {
+                    System.out.print(" FALSE\t");
+                    if (theta <= Double.parseDouble(args[2]))
+                        finalres = "False";
+                }
+
+                System.out.print("for theta: " + String.format("%.2f", theta));
+                if (scenarioType == 1)
+                    System.out.print(" by examining " + (numThetaSamples/100) + " samples\t");
+                else
+                    System.out.print(" by examining " + (numThetaSamples/3) + " samples\t");
+
+                //if (scenarioType == 1)
+                System.out.print("(T: " + String.format("%03d", h0) + ", F: " + String.format("%03d", h1) + ")\t");
+
+                System.out.println("[Time to Decide: " + String.format("%.2f", exec_ThetaTime / 1000.0) + " secs]");
+
+                if (scenarioType == 1)
+                    t++;
+                else
+                    t++;
             }
+
+//            String outputName = caseName + "_result/" + pre + caseName + bound + "_" + String.format("%.3f", alpha_beta) + "t" + String.valueOf(trial) + ".csv";
+//            CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
+//            cw.writeNext(new String[]{"prob", "num_of_samples", "execution_time", "result"});
+//
+//            for (SMCResult r : resList) {
+//                System.out.print(".");
+//                cw.writeNext(r.getArr());
+//            }
+//            cw.close();
+//            resList.clear();
+            System.out.println();
         }
 
         System.out.println("==========================================\n" +
                 "[ Simulation Result ]\n" +
-                "Result: The statement <" + checker.getDescription() + "> is " + ANSI_RED + finalres + ANSI_RESET + " with a probability <= than " + ANSI_RED + args[2] + ANSI_RESET + ".\n" +
+                "Result: The statement <" + checker.getDescription() + "> is " + ANSI_RED + finalres + ANSI_RESET + " with a probability <= " + ANSI_RED + args[2] + ANSI_RESET + ".\n" +
                 "Total Examined Samples: " + totalsamples + " samples\n" +
                 "Total Time to Decide: " + String.format("%.2f", totaltime / 1000.0) + " secs\n" +
                 "Total Elapsed Time: " + String.format("%.2f", (System.currentTimeMillis() - totalstart) / 1000.0) + " secs\n" +
