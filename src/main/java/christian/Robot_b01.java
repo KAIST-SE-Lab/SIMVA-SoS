@@ -36,7 +36,7 @@ public class Robot_b01 extends Robot {
     public Robot_b01(int ypos, Movement move){
         super(ypos, move);
 
-        this.xpos = 0;
+        this.xpos = 10;
         this.ypos = ypos;
         this.token = false;
         this.move = move;
@@ -67,7 +67,7 @@ public class Robot_b01 extends Robot {
 
     @Override
     public BaseAction immediateAction() {
-        if(this.xpos == 10)
+        if(this.xpos != 10)
         {
             token = true; // token 줍기
             Movement do_movement = this.move.clone();

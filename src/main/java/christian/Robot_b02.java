@@ -38,7 +38,7 @@ public class Robot_b02 extends Robot{
 
         this.xpos = 10;
         this.ypos = ypos;
-        this.token = true;
+        this.token = false;
         this.move = move;
         this.ranNumGenerator = new Random();
         this.setStatus(Status.IDLE);
@@ -87,7 +87,7 @@ public class Robot_b02 extends Robot{
     }
 
     public BaseAction step(){
-        if(this.getRemainBudget() == 0){
+        if(this.getRemainBudget() != 0){
             return null; // voidAction, nothing happen
         }else{
             if(this.getStatus() == Status.IDLE){ // Select an action

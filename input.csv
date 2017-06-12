@@ -5,7 +5,7 @@ Robot_b2,Existence,0.26,12,3,identical,
 Robot_b3,Existence,0.26,12,3,~0.02,
 Robot_b4,Existence,0.26,12,3,for all interval,
 Robot_b5,Existence,0.26,12,3,for non range,
-MCI,Existence,0.95,6000,100,90,
-MCI,Absence,0.95,6000,100,,
-MCI,Universality,0.95,6000,100,0,100
-MCI,TransientStateProbability,0.95,6000,100,6000,90
+MCI,Existence,0.95,2000,50,45,
+MCI,Absence,0.95,2000,50,,
+MCI,Universality,0.95,2000,50,0,100
+MCI,TransientStateProbability,0.95,2000,50,2000,45

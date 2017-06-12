@@ -83,7 +83,10 @@ public class TransientStateProbabilityChecker implements CheckerInterface {
             }
         }
 
-        return 1;
+        if (satisfied_transient == 1)
+            return 1;
+        else
+            return 0;
     }
 
     @Override
