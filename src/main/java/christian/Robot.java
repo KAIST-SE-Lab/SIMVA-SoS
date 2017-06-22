@@ -47,6 +47,7 @@ public class Robot extends BaseConstituent{
         if(xpos != 10) {
             int ranNum = this.ranNumGenerator.nextInt(100);
             if (ranNum == 0) {
+                System.out.println(this.getName() + ", Dropped!");
                 token = false; // loose its token;
             }
         }
@@ -57,6 +58,7 @@ public class Robot extends BaseConstituent{
         }
         else
             this.setStatus(Status.END);
+
         if(this.xpos > 20){
             this.updateCostBenefit(0, 0, 1); // SoS-benefit is complete the task
             this.setStatus(Status.END);
@@ -124,6 +126,6 @@ public class Robot extends BaseConstituent{
 
     @Override
     public String getName() {
-        return null;
+        return "R" + (ypos+1) + ", " + this.getStatus() + ", " + token;
     }
 }

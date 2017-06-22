@@ -72,7 +72,7 @@ public class SPRTMethod {
 
     /**
      *
-     * @return true - we can decide smc is done.
+     * @return true - we can decide sa is done.
      */
     public boolean checkStopCondition(){
         if(this.numSamples < 2) // Minimum required samples

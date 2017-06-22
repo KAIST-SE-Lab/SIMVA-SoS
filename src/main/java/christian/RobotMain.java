@@ -44,12 +44,13 @@ public class RobotMain {
             CSVWriter cw = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputName), "UTF-8"), ',', '"');
             cw.writeNext(new String[]{"prob", "num_of_samples", "result"});
             ArrayList<RobotResult> resList = new ArrayList<>();
-//            for (int trial = 1; trial <= 200; trial++) {
+            for (int trial = 1; trial <= 200; trial++) {
                 for (int i = 1; i < 100; i++) {
                     double theta = 0.01 * i;
                     sprt.setExpression(theta);
                     while (!sprt.checkStopCondition()) {
                         sim.execute();
+                        System.out.println(checker.evaluateSample(sim.getResult()));
                         int result = checker.evaluateSample(sim.getResult());
                         if (result == 1) result = 0;
                         else result = 1;
@@ -72,7 +73,7 @@ public class RobotMain {
                     }
                 }
                 System.out.println();
-//            }
+            }
             for (RobotResult r : resList) {
                 System.out.print(".");
                 cw.writeNext(r.getArr());

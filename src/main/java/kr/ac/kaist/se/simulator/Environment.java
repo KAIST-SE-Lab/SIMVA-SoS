@@ -7,7 +7,7 @@ import java.util.Collections;
 
 /**
  * Simulator for System of Systems
- * Environment Class
+ * World Class
  * Raise actions that are handled by CSs
  * Send a message to CSs that the action is raised
  */
