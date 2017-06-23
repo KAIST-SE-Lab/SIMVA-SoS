@@ -1,7 +1,6 @@
 package simsos.scenario.robot;
 
 import simsos.simulation.component.Scenario;
-import simsos.simulation.component.World;
 
 /**
  * Created by mgjin on 2017-06-22.

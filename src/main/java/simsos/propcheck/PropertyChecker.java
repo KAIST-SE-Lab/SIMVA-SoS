@@ -1,7 +1,6 @@
 package simsos.propcheck;
 
 import simsos.simulation.component.Snapshot;
-import simsos.simulation.component.World;
 
 import java.util.ArrayList;
 

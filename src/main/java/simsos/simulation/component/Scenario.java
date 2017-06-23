@@ -1,7 +1,6 @@
 package simsos.simulation.component;
 
 import simsos.propcheck.PropertyChecker;
-import simsos.simulation.component.World;
 
 /**
  * Created by mgjin on 2017-06-22.

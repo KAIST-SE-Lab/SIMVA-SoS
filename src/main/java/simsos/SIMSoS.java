@@ -1,11 +1,9 @@
 package simsos;
 
 import simsos.propcheck.PropertyChecker;
-import simsos.scenario.robot.Robot;
 import simsos.sa.method.SPRT;
 import simsos.scenario.robot.RobotScenario;
 import simsos.simulation.Simulator;
-import simsos.simulation.component.Agent;
 import simsos.simulation.component.Scenario;
 import simsos.simulation.component.Snapshot;
 import simsos.simulation.component.World;
