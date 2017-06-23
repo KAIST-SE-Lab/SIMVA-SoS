@@ -1,13 +1,14 @@
 package simsos.simulation.component;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Created by mgjin on 2017-06-21.
  */
 public class World {
     private ArrayList<Agent> agents = new ArrayList<Agent>();
-    private int time;
+    private int time = 0;
 
     public ArrayList<Agent> getAgents() {
         return agents;
@@ -34,5 +35,22 @@ public class World {
 
     public int getTime() {
         return this.time;
+    }
+
+    public Snapshot getCurrentSnapshot() {
+        // Environment - Property - Value
+        // Agent1 - Property - Value
+        // Agent2 - Property - Value
+
+        Snapshot snapshot = new Snapshot();
+
+        LinkedHashMap<String, Object> worldProperties = new LinkedHashMap<String, Object>();
+        worldProperties.put("Time", time);
+        snapshot.addProperties(null, worldProperties);
+
+        for (Agent agent : agents)
+            snapshot.addProperties(agent, agent.getProperties());
+
+        return snapshot;
     }
 }

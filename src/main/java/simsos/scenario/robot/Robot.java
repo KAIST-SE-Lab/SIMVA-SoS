@@ -1,9 +1,11 @@
-package simsos.modelparsing.modeling;
+package simsos.scenario.robot;
 
 import simsos.simulation.component.Action;
 import simsos.simulation.component.Agent;
 import simsos.simulation.component.World;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Random;
 
 /**
@@ -74,7 +76,7 @@ public class Robot extends Agent{
     @Override
     public void reset() {
         this.xpos = 10;
-        this.token = false;
+        this.token = true;
         this.immediateStep = true;
         this.move = new Action(1) {
 
@@ -92,6 +94,15 @@ public class Robot extends Agent{
 
     @Override
     public String getName() {
-        return this.name + ", " + xpos + ", " + token;
+        return this.name;
+    }
+
+    @Override
+    public HashMap<String, Object> getProperties() {
+        LinkedHashMap<String, Object> agentProperties = new LinkedHashMap<String, Object>();
+        agentProperties.put("xpos", xpos);
+        agentProperties.put("token", token);
+
+        return agentProperties;
     }
 }

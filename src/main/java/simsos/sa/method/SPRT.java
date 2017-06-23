@@ -1,12 +1,14 @@
 package simsos.sa.method;
 
+import simsos.sa.StatisticalAnalyzer;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 
 /**
  * Created by mgjin on 2017-06-21.
  */
-public class SPRT {
+public class SPRT extends StatisticalAnalyzer {
     private final static int MINIMUM_SAMPLES = 2;
 
     private BigDecimal alpha = new BigDecimal("0.05");

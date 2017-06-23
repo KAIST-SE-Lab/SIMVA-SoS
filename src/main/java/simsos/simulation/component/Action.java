@@ -6,7 +6,7 @@ package simsos.simulation.component;
 public abstract class Action {
     private boolean immediate = false;
     private int duration = 0;
-    public String name;
+    public String name = "";
 
     public Action(int duration) {
         this.duration = duration;

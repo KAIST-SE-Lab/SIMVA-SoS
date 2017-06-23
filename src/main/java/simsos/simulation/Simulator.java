@@ -2,6 +2,7 @@ package simsos.simulation;
 
 import simsos.simulation.component.Action;
 import simsos.simulation.component.Agent;
+import simsos.simulation.component.Snapshot;
 import simsos.simulation.component.World;
 
 import java.util.ArrayList;
@@ -12,22 +13,22 @@ import java.util.LinkedHashSet;
  * Created by mgjin on 2017-06-21.
  */
 public class Simulator {
-    public static void execute(World world, int endOfTime) {
+    public static ArrayList<Snapshot> execute(World world, int endOfTime) {
+        ArrayList<Snapshot> simulationLog = new ArrayList<Snapshot>();
+
         boolean stoppingCondition = false;
         ArrayList<Action> actions = new ArrayList();
         ArrayList<Action> immediateActions = new ArrayList();
 
         world.reset();
+        simulationLog.add(world.getCurrentSnapshot()); // Initial snapshot
 
         while (!stoppingCondition) {
-//            System.out.println("World Time: " + world.getTime());
-
             actions.clear();
             do {
                 immediateActions.clear();
                 for (Agent agent : world.getAgents()) {
                     Action action = agent.step();
-//                    System.out.println(agent.getName() + ", " + action.getName());
 
                     if (action.isImmediate()) {
                         immediateActions.add(action);
@@ -47,10 +48,13 @@ public class Simulator {
             Collections.shuffle(actions);
             progress(actions);
             world.progress(1);
+            simulationLog.add(world.getCurrentSnapshot());
             // Verdict - evaluateProperties();
             if (world.getTime() >= endOfTime)
                 stoppingCondition = true;
         }
+
+        return simulationLog;
     }
 
     private static void progress(ArrayList<Action> actions) {

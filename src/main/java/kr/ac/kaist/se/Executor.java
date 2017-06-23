@@ -79,13 +79,13 @@ public class Executor {
         if (args[0].startsWith("Robot")) {
             checker = new RobotChecker();
             scenarioType = 1; // Robot
-        } else if (args[1].equalsIgnoreCase("Existence")) {
+        } else if (args[1].equalsIgnoreCase("ExistenceChecker")) {
             checker = new ExistenceChecker();
-        } else if (args[1].equalsIgnoreCase("Absence")) {
+        } else if (args[1].equalsIgnoreCase("AbsenceChecker")) {
             checker = new AbsenceChecker();
-        } else if (args[1].equalsIgnoreCase("Universality")) {
+        } else if (args[1].equalsIgnoreCase("UniversalityChecker")) {
             checker = new UniversalityChecker();
-        } else if (args[1].equalsIgnoreCase("TransientStateProbability")) {
+        } else if (args[1].equalsIgnoreCase("TransientStateProbabilityChecker")) {
             checker = new TransientStateProbabilityChecker();
         } else {
             // Undefined Checker

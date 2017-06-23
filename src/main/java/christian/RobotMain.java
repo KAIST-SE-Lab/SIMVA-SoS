@@ -12,7 +12,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 /**
- * RobotMain.java
+ * RobotScenario.java
  * This class example is came from "Simulation and Statistical Model Checking of Logic-Based Multi-Agent System Models", Christian Kroib
 
  * Author: Junho Kim <jhkim@se.kaist.ac.kr>

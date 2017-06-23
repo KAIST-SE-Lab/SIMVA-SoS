@@ -1,10 +1,12 @@
 package simsos.simulation.component;
 
+import java.util.HashMap;
+
 /**
  * Created by mgjin on 2017-06-21.
  */
 public abstract class Agent {
-    private World world = null;
+    protected World world = null;
 
     public Agent(World world) {
         this.world = world;
@@ -13,4 +15,6 @@ public abstract class Agent {
     public abstract Action step();
     public abstract void reset();
     public abstract String getName();
+
+    public abstract HashMap<String, Object> getProperties();
 }

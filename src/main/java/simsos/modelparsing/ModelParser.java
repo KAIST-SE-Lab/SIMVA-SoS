@@ -3,5 +3,5 @@ package simsos.modelparsing;
 /**
  * Created by mgjin on 2017-06-21.
  */
-public class ModelParser {
+public abstract class ModelParser {
 }

@@ -30,7 +30,7 @@ public class UniversalityChecker implements CheckerInterface{
 
     @Override
     public String getName() {
-        return "Universality Checker";
+        return "UniversalityChecker Checker";
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UniversalityChecker implements CheckerInterface{
      * Evaluate a given property satisfies universality property
      * Check all time ticks whether all PTSs are in the operation area, which is 0-100.
      * @param res Simulation result class which contains debugTick Map
-     * @return 1, Universality is guaranteed, otherwise 0
+     * @return 1, UniversalityChecker is guaranteed, otherwise 0
      */
     @Override
     public int evaluateSample(SIMResult res) {

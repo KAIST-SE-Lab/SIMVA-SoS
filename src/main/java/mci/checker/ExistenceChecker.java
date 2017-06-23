@@ -62,7 +62,7 @@ public class ExistenceChecker implements CheckerInterface{
     /**
      * Return the name
      */
-    public String getName() { return "Existence Checker"; }
+    public String getName() { return "ExistenceChecker Checker"; }
 
     /**
      * Return the description

@@ -62,7 +62,7 @@ public class RobotChecker implements CheckerInterface{
     /**
      * Return the name
      */
-    public String getName() { return "Existence Checker (Robot)"; }
+    public String getName() { return "ExistenceChecker Checker (Robot)"; }
 
     /**
      * Return the description

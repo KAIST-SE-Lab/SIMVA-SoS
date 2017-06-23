@@ -30,7 +30,7 @@ public class AbsenceChecker implements CheckerInterface{
     /**
      * Return the name
      */
-    public String getName() { return "Absence Checker"; }
+    public String getName() { return "AbsenceChecker Checker"; }
 
     /**
      * Return the description
