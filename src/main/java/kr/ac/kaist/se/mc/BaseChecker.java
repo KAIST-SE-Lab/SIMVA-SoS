@@ -39,7 +39,7 @@ public class BaseChecker implements CheckerInterface{
     /**
      * Return the name
      */
-    public String getName() { return "ExistenceChecker Checker"; }
+    public String getName() { return "Existence Checker"; }
 
     /**
      * Return the description

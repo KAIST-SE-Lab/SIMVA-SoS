@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
- * TransientStateProbabilityChecker.java
+ * TransientStateProbability.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
-public class TransientStateProbabilityChecker implements CheckerInterface {
+public class TransientStateProbability implements CheckerInterface {
 
     private int t_u; // untill time tick
     private int target_benefit;

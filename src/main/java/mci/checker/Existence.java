@@ -4,7 +4,7 @@ import kr.ac.kaist.se.mc.CheckerInterface;
 import kr.ac.kaist.se.simulator.SIMResult;
 
 /**
- * ExistenceChecker.java
+ * Existence.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
@@ -20,7 +20,7 @@ import kr.ac.kaist.se.simulator.SIMResult;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class ExistenceChecker implements CheckerInterface{
+public class Existence implements CheckerInterface{
 
     /*
      * BLTL Model Checker for SIMSoS
@@ -62,7 +62,7 @@ public class ExistenceChecker implements CheckerInterface{
     /**
      * Return the name
      */
-    public String getName() { return "ExistenceChecker Checker"; }
+    public String getName() { return "Existence Checker"; }
 
     /**
      * Return the description

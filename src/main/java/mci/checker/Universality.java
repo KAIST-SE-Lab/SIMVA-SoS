@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * UniversalityChecker.java
+ * Universality.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
  * The MIT License (MIT)
@@ -24,13 +24,13 @@ import java.util.Map;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class UniversalityChecker implements CheckerInterface{
+public class Universality implements CheckerInterface{
     private int minRange;
     private int maxRange;
 
     @Override
     public String getName() {
-        return "UniversalityChecker Checker";
+        return "Universality Checker";
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UniversalityChecker implements CheckerInterface{
      * Evaluate a given property satisfies universality property
      * Check all time ticks whether all PTSs are in the operation area, which is 0-100.
      * @param res Simulation result class which contains debugTick Map
-     * @return 1, UniversalityChecker is guaranteed, otherwise 0
+     * @return 1, Universality is guaranteed, otherwise 0
      */
     @Override
     public int evaluateSample(SIMResult res) {

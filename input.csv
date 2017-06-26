@@ -1,10 +1,4 @@
 Scenario,Checker,Probability,Optional1,Optional2,,
-Robot,Existence,0.26,12,3,,
-Robot_b1,Existence,0.26,12,3,identical,
-Robot_b2,Existence,0.26,12,3,identical,
-Robot_b3,Existence,0.26,12,3,~0.02,
-Robot_b4,Existence,0.26,12,3,for all interval,
-Robot_b5,Existence,0.26,12,3,for non range,
 MCI,Existence,0.95,2000,50,45,
 MCI,Absence,0.95,2000,50,,
 MCI,Universality,0.95,2000,50,0,100

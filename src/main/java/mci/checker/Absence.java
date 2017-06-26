@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * AbsenceChecker.java
+ * Absence.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
@@ -25,12 +25,12 @@ import java.util.Map;
  * furnished to do so, subject to the following conditions: TBD
  */
 
-public class AbsenceChecker implements CheckerInterface{
+public class Absence implements CheckerInterface{
 
     /**
      * Return the name
      */
-    public String getName() { return "AbsenceChecker Checker"; }
+    public String getName() { return "Absence Checker"; }
 
     /**
      * Return the description

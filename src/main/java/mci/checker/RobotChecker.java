@@ -4,7 +4,7 @@ import kr.ac.kaist.se.mc.CheckerInterface;
 import kr.ac.kaist.se.simulator.SIMResult;
 
 /**
- * ExistenceChecker.java
+ * Existence.java
 
  * Author: Junho Kim <jhim@se.kaist.ac.kr>
 
@@ -62,7 +62,7 @@ public class RobotChecker implements CheckerInterface{
     /**
      * Return the name
      */
-    public String getName() { return "ExistenceChecker Checker (Robot)"; }
+    public String getName() { return "Existence Checker (Robot)"; }
 
     /**
      * Return the description

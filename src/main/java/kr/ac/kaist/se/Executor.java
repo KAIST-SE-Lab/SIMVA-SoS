@@ -1,6 +1,5 @@
 package kr.ac.kaist.se;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import christian.RobotScenario;
 import com.opencsv.CSVWriter;
 import kr.ac.kaist.se.mc.CheckerInterface;
@@ -79,14 +78,14 @@ public class Executor {
         if (args[0].startsWith("Robot")) {
             checker = new RobotChecker();
             scenarioType = 1; // Robot
-        } else if (args[1].equalsIgnoreCase("ExistenceChecker")) {
-            checker = new ExistenceChecker();
-        } else if (args[1].equalsIgnoreCase("AbsenceChecker")) {
-            checker = new AbsenceChecker();
-        } else if (args[1].equalsIgnoreCase("UniversalityChecker")) {
-            checker = new UniversalityChecker();
-        } else if (args[1].equalsIgnoreCase("TransientStateProbabilityChecker")) {
-            checker = new TransientStateProbabilityChecker();
+        } else if (args[1].equalsIgnoreCase("Existence")) {
+            checker = new Existence();
+        } else if (args[1].equalsIgnoreCase("Absence")) {
+            checker = new Absence();
+        } else if (args[1].equalsIgnoreCase("Universality")) {
+            checker = new Universality();
+        } else if (args[1].equalsIgnoreCase("TransientStateProbability")) {
+            checker = new TransientStateProbability();
         } else {
             // Undefined Checker
         }
@@ -238,8 +237,8 @@ public class Executor {
     public static void Perform_Experiment(NormalDistributor distributor, Simulator sim, String caseName, int bound) throws IOException {
         int endTick = sim.getScenario().getEndTick();
 
-        ExistenceChecker checker = new ExistenceChecker();
-        checker.init(endTick, bound, ExistenceChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+        Existence checker = new Existence();
+        checker.init(endTick, bound, Existence.comparisonType.GREATER_THAN_AND_EQUAL_TO);
 
         System.out.println("==========================================\n" +
                             "[ Simulation Description ]\n" +
@@ -261,7 +260,7 @@ public class Executor {
 
             for (int trial = 1; trial <= 3; trial++) {
                 System.out.println("Trial " + trial + " is Started");
-                checker.init(endTick, bound, ExistenceChecker.comparisonType.GREATER_THAN_AND_EQUAL_TO);
+                checker.init(endTick, bound, Existence.comparisonType.GREATER_THAN_AND_EQUAL_TO);
                 SPRTMethod sprt = new SPRTMethod(alpha_beta, alpha_beta, 0.01); // 신뢰도 99%
                 ArrayList<SMCResult> resList = new ArrayList<>();
 //        int thetaSet[] = {70,90,95,99};
