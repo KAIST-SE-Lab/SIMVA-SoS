@@ -6,16 +6,12 @@ import java.util.LinkedHashMap;
 /**
  * Created by mgjin on 2017-06-21.
  */
-public class World {
+public abstract class World {
     private ArrayList<Agent> agents = new ArrayList<Agent>();
     private int time = 0;
 
     public ArrayList<Agent> getAgents() {
         return agents;
-    }
-
-    public ArrayList<Action> generateExogenousActions() {
-        return new ArrayList<Action>();
     }
 
     public void addAgent(Agent agent) {
@@ -53,4 +49,6 @@ public class World {
 
         return snapshot;
     }
+
+    public abstract ArrayList<Action> generateExogenousActions();
 }

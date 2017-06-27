@@ -6,7 +6,7 @@ import simsos.propcheck.PropertyChecker;
  * Created by mgjin on 2017-06-22.
  */
 public abstract class Scenario {
-    protected World world = new World();
+    protected World world = null;
     protected PropertyChecker checker = null;
 
     public World getWorld() {

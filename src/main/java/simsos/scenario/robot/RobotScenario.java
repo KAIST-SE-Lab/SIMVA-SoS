@@ -9,6 +9,8 @@ public class RobotScenario extends Scenario {
     public RobotScenario(int nRobot) {
         super();
 
+        this.world = new RobotWorld();
+
         for (int i = 1; i <= nRobot; i++)
             this.world.addAgent(new Robot(this.world, "R" + i));
 
