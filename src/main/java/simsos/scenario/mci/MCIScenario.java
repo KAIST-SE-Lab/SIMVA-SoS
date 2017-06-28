@@ -7,7 +7,7 @@ import simsos.simulation.component.Scenario;
  */
 public class MCIScenario extends Scenario {
     public MCIScenario() {
-        this.world = new MCIWorld();
+        this.world = new MCIWorld(100);
 
 //        this.world.addAgent(Hospitals);
 //        this.world.addAgent(PTSs);
