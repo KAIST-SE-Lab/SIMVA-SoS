@@ -7,8 +7,8 @@ import java.util.LinkedHashMap;
  * Created by mgjin on 2017-06-21.
  */
 public abstract class World {
-    private ArrayList<Agent> agents = new ArrayList<Agent>();
-    private int time = 0;
+    protected ArrayList<Agent> agents = new ArrayList<Agent>();
+    protected int time = 0;
 
     public ArrayList<Agent> getAgents() {
         return agents;

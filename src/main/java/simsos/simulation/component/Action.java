@@ -4,9 +4,9 @@ package simsos.simulation.component;
  * Created by mgjin on 2017-06-21.
  */
 public abstract class Action {
-    private boolean immediate = false;
-    private int duration = 0;
-    public String name = "";
+    protected boolean immediate = false;
+    protected int duration = 0;
+    protected String name = "";
 
     public Action(int duration) {
         this.duration = duration;

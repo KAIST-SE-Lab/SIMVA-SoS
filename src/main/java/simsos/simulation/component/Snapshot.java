@@ -8,7 +8,7 @@ import java.util.Map;
  * Created by mgjin on 2017-06-23.
  */
 public class Snapshot {
-    private ArrayList<PropertyValue> properties = new ArrayList<PropertyValue>();
+    protected ArrayList<PropertyValue> properties = new ArrayList<PropertyValue>();
 
     public void addProperties(Agent agent, HashMap<String, Object> propertyValues) {
         for (Map.Entry<String, Object> property : propertyValues.entrySet()) {
