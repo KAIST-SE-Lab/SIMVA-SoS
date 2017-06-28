@@ -24,6 +24,8 @@ public class Simulator {
         simulationLog.add(world.getCurrentSnapshot()); // Initial snapshot
 
         while (!stoppingCondition) {
+            System.out.println("World Time: " + world.getTime());
+
             actions.clear();
             do {
                 immediateActions.clear();
