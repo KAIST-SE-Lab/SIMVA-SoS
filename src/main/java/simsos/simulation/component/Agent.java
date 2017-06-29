@@ -16,5 +16,7 @@ public abstract class Agent {
     public abstract void reset();
     public abstract String getName();
 
+    public abstract void messageIn(Message msg);
+
     public abstract HashMap<String, Object> getProperties();
 }

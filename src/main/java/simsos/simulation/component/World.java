@@ -1,5 +1,6 @@
 package simsos.simulation.component;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -8,6 +9,8 @@ import java.util.LinkedHashMap;
  */
 public abstract class World {
     protected ArrayList<Agent> agents = new ArrayList<Agent>();
+    protected ArrayList<Message> messageQueue = new ArrayList<Message>();
+
     protected int time = 0;
 
     public ArrayList<Agent> getAgents() {
@@ -21,6 +24,7 @@ public abstract class World {
     public void reset() {
         for (Agent agent : this.agents)
             agent.reset();
+        this.messageQueue.clear();
 
         this.time = 0;
     }
@@ -50,5 +54,16 @@ public abstract class World {
         return snapshot;
     }
 
+    public void messageOut(Message msg) {
+        this.messageQueue.add(msg);
+    }
+
+    public ArrayList<Action> getMessageQueue() {
+        ArrayList<Action> msgQueue = new ArrayList<Action>();
+        msgQueue.addAll(this.messageQueue);
+        this.messageQueue.clear();
+
+        return msgQueue;
+    }
     public abstract ArrayList<Action> generateExogenousActions();
 }
