@@ -1,5 +1,6 @@
 package simsos.scenario.mci;
 
+import simsos.sa.StatisticalAnalyzer;
 import simsos.simulation.component.Action;
 import simsos.simulation.component.Agent;
 import simsos.simulation.component.World;
@@ -17,7 +18,10 @@ public class Patient extends Agent {
     private String name;
     private Status status;
     private Severity severity;
+    private int lifePoint;
     private Location location;
+
+    private Action bleed;
 
     public Patient(World world, String name) {
         super(world);
@@ -26,23 +30,30 @@ public class Patient extends Agent {
         this.reset();
     }
 
+    @Deprecated
     public Location getLocation() {
         return this.location;
     }
 
     @Override
     public Action step() {
-        return new Action(1){
-            @Override
-            public void execute() {
+        if (this.status == Status.Initial)
+            return new Action(1) {
 
-            }
+                @Override
+                public void execute() {
+                    status = Status.Waiting;
+                }
 
-            @Override
-            public String getName() {
-                return null;
-            }
-        };
+                @Override
+                public String getName() {
+                    return "Call for Rescue";
+                }
+            };
+        else if (this.status == Status.Healing)
+            return Action.getNullAction(1, "Stable");
+        else
+            return this.bleed;
     }
 
     @Override
@@ -54,7 +65,22 @@ public class Patient extends Agent {
             this.severity = Severity.Delayed;
         else
             this.severity = Severity.Immediate;
+        this.lifePoint = 150 + (rd.nextInt(30) - 15); // 150 +- 15
         this.location = new Location(rd.nextInt(9), rd.nextInt(9));
+
+        this.bleed = new Action(1) {
+
+            @Override
+            public void execute() {
+                if (lifePoint > 0)
+                    lifePoint--;
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+        };
     }
 
     @Override
