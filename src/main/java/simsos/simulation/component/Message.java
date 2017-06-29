@@ -5,8 +5,8 @@ import java.util.ArrayList;
 /**
  * Created by mgjin on 2017-06-29.
  */
-public abstract class Message extends Action {
-    private enum Purpose {InfoRequest, InfoReply, InfoDelivery, Suggest, SuggestReply, Order}
+public class Message extends Action {
+    public enum Purpose {InfoRequest, InfoReply, InfoDelivery, Suggest, SuggestReply, Order}
 
     private final ArrayList<Agent> receiverCandidates;
 
