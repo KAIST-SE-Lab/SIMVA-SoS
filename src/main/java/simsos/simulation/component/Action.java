@@ -20,4 +20,19 @@ public abstract class Action {
 
     public abstract void execute();
     public abstract String getName();
+
+    public static Action getNullAction(int duration, String nullActionName) {
+        return new Action(duration) {
+
+            @Override
+            public void execute() {
+
+            }
+
+            @Override
+            public String getName() {
+                return nullActionName;
+            }
+        };
+    }
 }
