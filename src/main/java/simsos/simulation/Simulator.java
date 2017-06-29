@@ -52,6 +52,9 @@ public class Simulator {
             Collections.shuffle(actions);
             progress(actions);
 
+            msgActions = world.getMessageQueue();
+            progress(msgActions);
+
             world.progress(1);
             simulationLog.add(world.getCurrentSnapshot());
             // Verdict - evaluateProperties();
@@ -64,6 +67,7 @@ public class Simulator {
 
     private static void progress(ArrayList<Action> actions) {
         for (Action action : actions) {
+            System.out.println(action.getName());
             action.execute();
         }
     }

@@ -15,11 +15,12 @@ public abstract class Message extends Action {
 
     public Purpose purpose;
 
-    public Message(World world, Purpose purpose) {
+    public Message(World world, Purpose purpose, String name) {
         super(1);
 
         this.receiverCandidates = world.getAgents();
         this.purpose = purpose;
+        this.name = name;
     }
 
     public void setSender(String name) {
@@ -46,6 +47,10 @@ public abstract class Message extends Action {
 
     @Override
     public String getName() {
-        return "Message";
+        ArrayList<String> receiverNames = new ArrayList<String>();
+        for (Agent agent : this.receivers)
+            receiverNames.add(agent.getName());
+
+        return "Message <" + this.name + "> from: " + this.sender + " to: " + String.join(",", receiverNames);
     }
 }

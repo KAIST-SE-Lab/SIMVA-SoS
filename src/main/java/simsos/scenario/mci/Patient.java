@@ -3,6 +3,7 @@ package simsos.scenario.mci;
 import simsos.sa.StatisticalAnalyzer;
 import simsos.simulation.component.Action;
 import simsos.simulation.component.Agent;
+import simsos.simulation.component.Message;
 import simsos.simulation.component.World;
 
 import java.util.HashMap;
@@ -37,21 +38,19 @@ public class Patient extends Agent {
 
     @Override
     public Action step() {
-        if (this.status == Status.Initial)
-            return new Action(1) {
+        Patient patient = this;
 
-                @Override
-                public void execute() {
-                    status = Status.Waiting;
-                }
+        if (this.status == Status.Initial) {
+            status = Status.Waiting;
+            Message msg = new Message(world, Message.Purpose.Suggest, "Call For Rescue");
+            msg.setSender(patient.getName());
+            msg.setReceiver("Control Tower");
 
-                @Override
-                public String getName() {
-                    return "Call for Rescue";
-                }
-            };
-        else if (this.status == Status.Healing)
-            return Action.getNullAction(1, "Stable");
+            world.messageOut(msg);
+        }
+
+        if (this.status == Status.Healing)
+            return Action.getNullAction(1, patient.getName() + ": Stable");
         else
             return this.bleed;
     }
@@ -78,7 +77,7 @@ public class Patient extends Agent {
 
             @Override
             public String getName() {
-                return null;
+                return Patient.this.getName() + ": Bleed";
             }
         };
     }
@@ -86,6 +85,12 @@ public class Patient extends Agent {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public void messageIn(Message msg) {
+        if (msg.purpose == Message.Purpose.SuggestReply)
+            this.status = Status.Healing;
     }
 
     @Override

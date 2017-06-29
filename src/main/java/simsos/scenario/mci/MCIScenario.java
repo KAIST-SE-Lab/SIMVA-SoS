@@ -9,6 +9,7 @@ public class MCIScenario extends Scenario {
     public MCIScenario() {
         this.world = new MCIWorld(100);
 
+        this.world.addAgent(new ControlTower(this.world, "Control Tower"));
 //        this.world.addAgent(Hospitals);
 //        this.world.addAgent(PTSs);
 

@@ -2,6 +2,7 @@ package simsos.scenario.mci;
 
 import simsos.simulation.component.Action;
 import simsos.simulation.component.Agent;
+import simsos.simulation.component.Message;
 import simsos.simulation.component.World;
 
 import java.util.ArrayList;
@@ -63,6 +64,11 @@ public class Hospital extends Agent {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public void messageIn(Message msg) {
+
     }
 
     @Override
