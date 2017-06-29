@@ -43,12 +43,15 @@ public class Simulator {
                 progress(immediateActions);
             } while (immediateActions.size() > 0);
 
+            ArrayList<Action> msgActions = world.getMessageQueue();
+            progress(msgActions);
+
             ArrayList<Action> exoActions = world.generateExogenousActions();
             actions.addAll(exoActions);
             actions = new ArrayList<Action>(new LinkedHashSet<Action>(actions)); // Remove duplicates
-
             Collections.shuffle(actions);
             progress(actions);
+
             world.progress(1);
             simulationLog.add(world.getCurrentSnapshot());
             // Verdict - evaluateProperties();
