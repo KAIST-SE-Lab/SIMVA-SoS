@@ -17,7 +17,7 @@ public class MCIWorld extends World {
 
     public MCIWorld(int nPatient) {
         ArrayList<Integer> raiseTime = new ArrayList<>();
-        NormalDistribution nd = new NormalDistribution(30, 15);
+        NormalDistribution nd = new NormalDistribution(1, 1); // 30, 15
 
         for(int i=0; i< nPatient; i++)
             raiseTime.add(new Double(nd.sample()).intValue());
@@ -52,12 +52,11 @@ public class MCIWorld extends World {
                         patientNumbering++;
                         Patient p = new Patient(world, "Patient" + patientNumbering);
                         agents.add(p);
-                        System.out.println(p.getName() + " " + p.getLocation());
                     }
 
                     @Override
                     public String getName() {
-                        return "Generate a Patient";
+                        return "World: Generate a Patient";
                     }
                 });
 

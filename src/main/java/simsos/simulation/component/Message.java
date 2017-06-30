@@ -1,6 +1,7 @@
 package simsos.simulation.component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by mgjin on 2017-06-29.
@@ -14,6 +15,8 @@ public class Message extends Action {
     public ArrayList<Agent> receivers = new ArrayList<Agent>();
 
     public Purpose purpose;
+
+    public HashMap<String, Object> payload = new HashMap<String, Object>();
 
     public Message(World world, Purpose purpose, String name) {
         super(1);

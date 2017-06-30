@@ -13,8 +13,8 @@ import java.util.Random;
  * Created by mgjin on 2017-06-28.
  */
 public class Patient extends Agent {
-    private enum Status {Initial, Waiting, OnPTS, Healing}
-    private enum Severity {Delayed, Immediate}
+    private enum Status {Initial, Waiting, Healing, Dead}
+    public enum Severity {Delayed, Immediate}
 
     private String name;
     private Status status;
@@ -38,20 +38,22 @@ public class Patient extends Agent {
 
     @Override
     public Action step() {
-        Patient patient = this;
-
         if (this.status == Status.Initial) {
             status = Status.Waiting;
             Message msg = new Message(world, Message.Purpose.Suggest, "Call For Rescue");
-            msg.setSender(patient.getName());
+            msg.setSender(Patient.this.getName());
             msg.setReceiver("Control Tower");
+            msg.payload.put("PatientSeverity", this.severity);
+            msg.payload.put("PatientLocation", this.location);
 
             world.messageOut(msg);
         }
 
         if (this.status == Status.Healing)
-            return Action.getNullAction(1, patient.getName() + ": Stable");
-        else
+            return Action.getNullAction(1, Patient.this.getName() + ": Stable");
+        else if (this.status == Status.Dead)
+            return Action.getNullAction(1, Patient.this.getName() + ": Dead");
+        else // if (this.status == Status.Waiting)
             return this.bleed;
     }
 
@@ -73,6 +75,8 @@ public class Patient extends Agent {
             public void execute() {
                 if (lifePoint > 0)
                     lifePoint--;
+                else
+                    Patient.this.status = Status.Dead;
             }
 
             @Override
@@ -89,8 +93,18 @@ public class Patient extends Agent {
 
     @Override
     public void messageIn(Message msg) {
-        if (msg.purpose == Message.Purpose.SuggestReply)
-            this.status = Status.Healing;
+        if (msg.purpose == Message.Purpose.Order) {
+            if (msg.sender.startsWith("PTS")) {
+                Location ptsLocation = (Location) msg.payload.get("PTSLocation");
+                this.location = ptsLocation;
+            } else if (msg.sender.equals("Central Hospital")) {
+                Location hospitalLocation = (Location) msg.payload.get("HospitalLocation");
+                this.location = hospitalLocation;
+
+                this.status = Status.Healing;
+            }
+        } else if (msg.purpose == Message.Purpose.SuggestReply)
+            ; // this.status = Status.Healing;
     }
 
     @Override

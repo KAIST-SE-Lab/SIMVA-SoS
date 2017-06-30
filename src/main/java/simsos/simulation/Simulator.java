@@ -24,6 +24,8 @@ public class Simulator {
         simulationLog.add(world.getCurrentSnapshot()); // Initial snapshot
 
         while (!stoppingCondition) {
+            System.out.println();
+            System.out.println();
             System.out.println("World Time: " + world.getTime());
 
             actions.clear();
@@ -43,16 +45,13 @@ public class Simulator {
                 progress(immediateActions);
             } while (immediateActions.size() > 0);
 
-            ArrayList<Action> msgActions = world.getMessageQueue();
-            progress(msgActions);
-
             ArrayList<Action> exoActions = world.generateExogenousActions();
             actions.addAll(exoActions);
             actions = new ArrayList<Action>(new LinkedHashSet<Action>(actions)); // Remove duplicates
             Collections.shuffle(actions);
             progress(actions);
 
-            msgActions = world.getMessageQueue();
+            ArrayList<Action> msgActions = world.getMessageQueue();
             progress(msgActions);
 
             world.progress(1);
