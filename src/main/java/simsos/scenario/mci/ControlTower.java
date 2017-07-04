@@ -45,9 +45,11 @@ public class ControlTower extends Agent {
     @Override
     public Action step() {
         if (world.getTime() == 0) {
-            Message msg = new Message(world, Message.Purpose.InfoRequest, "Request Bed Capacity");
+            Message msg = new Message(world, Message.Purpose.InfoRequest, "Request Hospital Information");
             msg.setSender(this.getName());
             msg.setReceiver(Hospital.class);
+            msg.payload.put("Location", null);
+            msg.payload.put("BedCapacity", null);
             world.messageOut(msg);
         }
 
@@ -69,23 +71,17 @@ public class ControlTower extends Agent {
 
             if (rp.stage == RescueProcess.Stage.UtilityCollected) {
                 if (rp.utilities.size() > 0) {
-                    Collections.sort(rp.utilities, new Comparator<Pair<String, Integer>>() {
-
-                        @Override
-                        public int compare(Pair<String, Integer> o1, Pair<String, Integer> o2) {
-                            return o1.getRight().compareTo(o2.getRight());
-                        }
-                    });
+                    Collections.sort(rp.utilities,
+                            (Pair<String, Integer> o1, Pair<String, Integer> o2) -> o1.getRight().compareTo(o2.getRight()));
 
                     Message msg = new Message(world, Message.Purpose.Suggest, "Reqeust to Rescue the Patient");
                     msg.setSender(this.getName());
                     msg.setReceiver(rp.utilities.get(0).getLeft());
                     msg.payload.put("PatientName", rp.patient);
-                    msg.payload.put("PatientSeverity", rp.patientSeverity);
                     msg.payload.put("PatientLocation", rp.patientLocation);
                     msg.payload.put("HospitalName", rp.hospital);
                     msg.payload.put("HospitalLocation", rp.hospitalLocation);
-                    msg.payload.put("Utility", null);
+                    msg.payload.put("SuggestReply", null);
                     world.messageOut(msg);
                 } else {
                     rp.stage = RescueProcess.Stage.BedSecured;
@@ -137,11 +133,18 @@ public class ControlTower extends Agent {
                 RescueProcess rp = this.rescueRequestQueue.get(patient);
                 rp.utilities.add(new Pair(msg.sender, utility));
             }
+        } else if (msg.purpose == Message.Purpose.InfoDelivery) {
+            if (msg.sender.startsWith("Patient")) {
+                RescueProcess rp = rescueRequestQueue.get(msg.sender);
+                // Dead
+                rp.stage = RescueProcess.Stage.Complete;
+            }
         } else if (msg.purpose == Message.Purpose.Suggest) {
             if (msg.sender.startsWith("Patient")) {
                 RescueProcess rp = new RescueProcess(msg.sender);
                 rp.patientSeverity = (Patient.Severity) msg.payload.get("PatientSeverity");
                 rp.patientLocation = (Location) msg.payload.get("PatientLocation");
+                rp.stage = RescueProcess.Stage.Listed;
 
                 rescueRequestQueue.put(msg.sender, rp);
             }
@@ -159,6 +162,7 @@ public class ControlTower extends Agent {
                     msg = new Message(world, Message.Purpose.SuggestReply, "Call is Accepted");
                     msg.setSender(this.getName());
                     msg.setReceiver(patient);
+                    msg.payload.put("SuggestReply", true);
                     world.messageOut(msg);
                 } else {
                     if (rp.stage != RescueProcess.Stage.PTSSecured)

@@ -45,6 +45,7 @@ public class Patient extends Agent {
             msg.setReceiver("Control Tower");
             msg.payload.put("PatientSeverity", this.severity);
             msg.payload.put("PatientLocation", this.location);
+            msg.payload.put("SuggestReply", null);
 
             world.messageOut(msg);
         }
@@ -66,7 +67,7 @@ public class Patient extends Agent {
             this.severity = Severity.Delayed;
         else
             this.severity = Severity.Immediate;
-        this.lifePoint = 150 + (rd.nextInt(30) - 15); // 150 +- 15
+        this.lifePoint = 30 + (rd.nextInt(20) - 10); // 30 +- 10
         this.location = new Location(rd.nextInt(9), rd.nextInt(9));
 
         this.bleed = new Action(1) {
@@ -75,8 +76,16 @@ public class Patient extends Agent {
             public void execute() {
                 if (lifePoint > 0)
                     lifePoint--;
-                else
+                else {
+                    Message msg = new Message(world, Message.Purpose.InfoDelivery, "Call For Rescue");
+                    msg.setSender(Patient.this.getName());
+                    msg.setReceiver("Control Tower");
+                    msg.payload.put("Status", Patient.this.status);
+
+                    world.messageOut(msg);
+
                     Patient.this.status = Status.Dead;
+                }
             }
 
             @Override

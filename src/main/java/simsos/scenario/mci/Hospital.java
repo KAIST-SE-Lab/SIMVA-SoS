@@ -70,9 +70,11 @@ public class Hospital extends Agent {
     public void messageIn(Message msg) {
         if (msg.purpose == Message.Purpose.InfoRequest) {
             if (msg.sender.equals("Control Tower")) {
-                Message outMsg = new Message(world, Message.Purpose.InfoReply, "Reply Bed Capacity");
+                Message outMsg = new Message(world, Message.Purpose.InfoReply, "Reply Hospital Information");
                 outMsg.setSender(this.getName());
                 outMsg.setReceiver(msg.sender);
+                outMsg.payload = msg.payload;
+                outMsg.payload.put("Location", this.location);
                 outMsg.payload.put("BedCapacity", this.capacity);
                 world.messageOut(outMsg);
             }
