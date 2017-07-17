@@ -11,7 +11,8 @@ import java.util.Collections;
  * Created by mgjin on 2017-06-28.
  */
 public class MCIWorld extends World {
-    // Geographical Map
+    public static final Pair<Integer, Integer> MAP_SIZE = new Pair<Integer, Integer>(19, 19);
+
     private int[] patientRaisePlan;
     private int patientNumbering = 0;
 

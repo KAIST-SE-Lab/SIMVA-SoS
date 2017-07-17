@@ -28,9 +28,9 @@ public class Simulator {
             System.out.println();
             System.out.println("World Time: " + world.getTime());
 
-            actions.clear();
             do {
                 immediateActions.clear();
+                actions.clear();
                 for (Agent agent : world.getAgents()) {
                     Action action = agent.step();
 
@@ -47,7 +47,6 @@ public class Simulator {
 
             ArrayList<Action> exoActions = world.generateExogenousActions();
             actions.addAll(exoActions);
-            actions = new ArrayList<Action>(new LinkedHashSet<Action>(actions)); // Remove duplicates
             Collections.shuffle(actions);
             progress(actions);
 

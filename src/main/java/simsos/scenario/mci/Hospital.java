@@ -40,7 +40,7 @@ public class Hospital extends Agent {
     public void reset() {
         Random rd = new Random();
 
-        this.location = new Location(4, 4);
+        this.location = new Location(MCIWorld.MAP_SIZE.getLeft() / 2, MCIWorld.MAP_SIZE.getRight() / 2);
 
         this.capacity = 30 + (rd.nextInt(20) - 10); // 30 +- 10
         this.inpatients = new ArrayList<Patient>();
@@ -85,9 +85,9 @@ public class Hospital extends Agent {
                 String patientName = (String) msg.payload.get("PatientName");
 //                inpatients.add()
 
-                Message outMsg = new Message(world, Message.Purpose.Order, "Order to Complete Rescue");
+                Message outMsg = new Message(world, Message.Purpose.InfoDelivery, "Order to Complete Rescue");
                 outMsg.setSender(this.getName());
-                outMsg.setReceiver(patientName);
+                outMsg.setReceiver("Control Tower");
                 outMsg.payload.put("PatientName", patientName);
                 world.messageOut(outMsg);
 

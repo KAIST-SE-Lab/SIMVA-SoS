@@ -113,7 +113,7 @@ public class PTS extends Agent {
         Random rd = new Random();
 
         this.status = Status.Waiting;
-        this.location = new Location(4, 4);
+        this.location = new Location(MCIWorld.MAP_SIZE.getLeft() / 2, MCIWorld.MAP_SIZE.getRight() / 2);
     }
 
     private int getUtility(Patient.Severity severity, Location patientLocation, Location hospitalLocation) {

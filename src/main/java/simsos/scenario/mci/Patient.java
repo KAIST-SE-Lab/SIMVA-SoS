@@ -68,7 +68,7 @@ public class Patient extends Agent {
         else
             this.severity = Severity.Immediate;
         this.lifePoint = 30 + (rd.nextInt(20) - 10); // 30 +- 10
-        this.location = new Location(rd.nextInt(9), rd.nextInt(9));
+        this.location = new Location(rd.nextInt(MCIWorld.MAP_SIZE.getLeft()), rd.nextInt(MCIWorld.MAP_SIZE.getRight()));
 
         this.bleed = new Action(1) {
 
