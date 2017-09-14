@@ -1,9 +1,9 @@
-[![Build Status](https://travis-ci.org/SESoS/SIMSoS.svg?branch=develop)](https://travis-ci.org/SESoS/SIMSoS)
+[![Build Status](https://travis-ci.org/SESoS/SIMVA-SoS.svg?branch=develop)](https://travis-ci.org/SESoS/SIMVA-SoS)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# SIMSoS?
+# SIMVA-SoS?
 
-SIMSoS simulates a system of systems (SoS), and performs statistical model checking to verify the achievement of SoS-level goals. SoS-level goals can be translated into properties of the SoS. It is an open framework consisting of independent modules: simulator, property checker and statistical hypothesiss test module.
+SIMVA-SoS is a simulation-based verification and analysis tool for system of systems. It simulates a system of systems, and performs statistical model checking to verify the achievement of SoS-level goals. SoS-level goals can be translated into properties of the SoS. It is an open framework consisting of independent modules: simulator, property checker and statistical hypothesiss test module.
 
 # More Information
 
