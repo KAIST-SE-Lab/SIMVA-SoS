@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/SESoS/SIMSoS.svg?branch=develop)](https://travis-ci.org/SESoS/SIMSoS)
+[![Build Status](https://travis-ci.org/SESoS/SIMVA-SoS.svg?branch=master)](https://travis-ci.org/SESoS/SIMVA-SoS)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # SIMSoS?
@@ -9,7 +9,7 @@ SIMSoS simulates a system of systems (SoS), and performs statistical model check
 
 We are sorry to tell you that related publications are written in Korean. If you have any questions or suggesitions, please email us, [mgjin@se.kaist.ac.kr](mailto:mgjin@se.kaist.ac.kr). We are pleased to have talks with you.
 
-Mingyu Jin, Donghwan Shin, Junho Kim, Doo-Hwan Bae. "System-of-Systems-level Goal Achievement Verification Tool." Proceedings of KIISE,  (2017.6): to be published.
+[Mingyu Jin, Donghwan Shin, Junho Kim, Doo-Hwan Bae. "System-of-Systems-level Goal Achievement Verification Tool." Proceedings of KIISE,  (2017.6): 552-554.](http://www.dbpia.co.kr/Journal/ArticleDetail/NODE07207302)
 
 [Junho Kim, Donghwan Shin, Doo-Hwan Bae. "An Applicability Study of Action-Benefit-Cost Model and Statistical Model Checking for System of Systems Goal Achievement Verification." KIISE Transactions on Computing Practices, 23.4 (2017.4): 256-261.](http://www.dbpia.co.kr/Journal/ArticleDetail/NODE07153954)
 
