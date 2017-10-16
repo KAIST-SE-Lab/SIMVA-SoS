@@ -23,7 +23,7 @@ import kr.ac.kaist.se.simulator.SIMResult;
 public class Existence implements CheckerInterface{
 
     /*
-     * BLTL Model Checker for SIMSoS
+     * BLTL Model Checker for SIMVASoS
      * 1. Getting a sample sequence from the simulator
      * 2. Check whether the sample sequence satisfies or not the condition (temporal logic)
      * 3. Return Bernoulli random variable value (0, not satisfied or 1, satisfied)

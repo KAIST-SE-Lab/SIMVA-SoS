@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMSoS.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMSoS.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMSoS_main.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMSoS_main.iml" group="SIMSoS" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMSoS_test.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMSoS_test.iml" group="SIMSoS" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMVA-SoS.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMVA-SoS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMVA-SoS_main.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMVA-SoS_main.iml" group="SIMVA-SoS" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMVA-SoS_test.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMVA-SoS_test.iml" group="SIMVA-SoS" />
     </modules>
   </component>
 </project>
