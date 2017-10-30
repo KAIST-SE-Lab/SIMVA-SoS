@@ -4,15 +4,13 @@ import simvasos.modelparsing.modeling.ABCPlus.ABCItem;
 import simvasos.modelparsing.modeling.ABCPlus.ABCPlusCS;
 import simvasos.scenario.mciresponse.MCIResponseScenario;
 import simvasos.scenario.mciresponse.MCIResponseWorld;
-import simvasos.simulation.component.Message;
-import simvasos.simulation.util.*;
 import simvasos.simulation.component.Agent;
+import simvasos.simulation.component.Message;
 import simvasos.simulation.component.World;
+import simvasos.simulation.util.Location;
+import simvasos.simulation.util.Maptrix;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 public class ControlTower extends ABCPlusCS {
 
@@ -69,7 +67,6 @@ public class ControlTower extends ABCPlusCS {
     protected void generateActiveImmediateActions() {
         // Share pullout belief
         switch ((MCIResponseScenario.SoSType) this.world.getResources().get("Type")) {
-            case Directed:
             case Acknowledged:
             case Collaborative:
                 Message beliefShare = new Message();
@@ -93,17 +90,8 @@ public class ControlTower extends ABCPlusCS {
 
                 for (FireFighter fireFighter : this.fireFighters) {
                     Location fLocation = (Location) fireFighter.getProperties().get("Location");
-                    ArrayList<Location> targetLocations = new ArrayList<Location>();
-                    for (int x = 0; x < mapX; x++)
-                        for (int y = 0; y < mapY; y++)
-                            if (!this.pulloutBeliefMap.getValue(x, y))
-                                targetLocations.add(new Location(x, y));
 
-                    if (targetLocations.size() == 0)
-                        break;
-
-                    Collections.shuffle(targetLocations, this.world.random);
-                    targetLocations.sort(new Comparator<Location>() {
+                    PriorityQueue<Location> targetLocations = new PriorityQueue<Location>(mapX * mapY, new Comparator<Location>() {
 
                         @Override
                         public int compare(Location o1, Location o2) {
@@ -113,6 +101,14 @@ public class ControlTower extends ABCPlusCS {
                             return v1 - v2;
                         }
                     });
+
+                    for (int x = 0; x < mapX; x++)
+                        for (int y = 0; y < mapY; y++)
+                            if (!this.pulloutBeliefMap.getValue(x, y))
+                                targetLocations.offer(new Location(x, y));
+
+                    if (targetLocations.size() == 0)
+                        break;
 
                     Message direction = new Message();
                     direction.name = "Direct heading location";
@@ -125,7 +121,7 @@ public class ControlTower extends ABCPlusCS {
                         direction.data.put("AdditionalBenefit", (mapX + mapY) / 4);
                     }
 
-                    direction.data.put("HeadingLocation", targetLocations.get(0));
+                    direction.data.put("HeadingLocation", targetLocations.poll());
 
                     this.immediateActionList.add(new ABCItem(new SendMessage(direction), 0, 1));
                 }

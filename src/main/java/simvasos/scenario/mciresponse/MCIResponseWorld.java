@@ -35,6 +35,7 @@ public class MCIResponseWorld extends World {
 
     public SoSType type = null;
     public final int nPatient;
+    public int messageCnt;
 
     public static final Pair<Integer, Integer> MAP_SIZE = new Pair<Integer, Integer>(49, 49);
     public final Maptrix<Integer> expectedPatientsMap = new Maptrix<Integer>(Integer.TYPE, MAP_SIZE.getLeft(), MAP_SIZE.getRight());
@@ -89,6 +90,8 @@ public class MCIResponseWorld extends World {
             if (agent instanceof Ambulance) {
                 ((Ambulance) agent).setHospitalInformation(hospitalLocations, hospitalCapacities);
             }
+
+        this.messageCnt = 0;
     }
 
     @Override
@@ -184,13 +187,16 @@ public class MCIResponseWorld extends World {
                     continue;
 
                 if (agent.getName().startsWith(message.receiver)) {
-                    if (message.location == null)
+                    if (message.location == null) {
                         ((ABCPlusCS) agent).receiveMessage(message);
-                    else {
+                        this.messageCnt++;
+                    } else {
                         Map<String, Object> props = agent.getProperties();
                         if (props.containsKey("Location"))
-                            if (message.location.equals(props.get("Location")))
+                            if (message.location.equals(props.get("Location"))) {
                                 ((ABCPlusCS) agent).receiveMessage(message);
+                                this.messageCnt++;
+                            }
                     }
                 }
             }
@@ -225,6 +231,7 @@ public class MCIResponseWorld extends World {
 
 //        worldProperties.put("Time", this.time);
         worldProperties.put("Pulledout", getPulledoutPatients().size());
+        worldProperties.put("MessageCnt", this.messageCnt);
         snapshot.addProperties(null, worldProperties);
 
 //        for (Patient patient : this.patients)

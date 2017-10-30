@@ -2,18 +2,16 @@ package simvasos.scenario.mciresponse.entity;
 
 import simvasos.modelparsing.modeling.ABCPlus.ABCItem;
 import simvasos.modelparsing.modeling.ABCPlus.ABCPlusCS;
+import simvasos.scenario.mciresponse.MCIResponseScenario.SoSType;
 import simvasos.scenario.mciresponse.MCIResponseWorld;
 import simvasos.scenario.mciresponse.Patient;
-import simvasos.scenario.mciresponse.MCIResponseScenario.SoSType;
-import simvasos.simulation.component.Message;
-import simvasos.simulation.util.*;
 import simvasos.simulation.component.Action;
+import simvasos.simulation.component.Message;
 import simvasos.simulation.component.World;
+import simvasos.simulation.util.Location;
+import simvasos.simulation.util.Maptrix;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 public class FireFighter extends ABCPlusCS {
 
@@ -296,17 +294,7 @@ public class FireFighter extends ABCPlusCS {
                 int mapX = ((MCIResponseWorld) FireFighter.this.world).MAP_SIZE.getLeft();
                 int mapY = ((MCIResponseWorld) FireFighter.this.world).MAP_SIZE.getRight();
 
-                ArrayList<Location> targetLocations = new ArrayList<Location>();
-                for (int x = 0; x < mapX; x++)
-                    for (int y = 0; y < mapY; y++)
-                        if (!FireFighter.this.beliefMap.getValue(x, y))
-                            targetLocations.add(new Location(x, y));
-
-                if (targetLocations.size() == 0)
-                    return;
-
-                Collections.shuffle(targetLocations, FireFighter.this.world.random);
-                targetLocations.sort(new Comparator<Location>() {
+                PriorityQueue<Location> targetLocations = new PriorityQueue<Location>(mapX * mapY, new Comparator<Location>() {
 
                     @Override
                     public int compare(Location o1, Location o2) {
@@ -317,7 +305,15 @@ public class FireFighter extends ABCPlusCS {
                     }
                 });
 
-                FireFighter.this.headingLocation = targetLocations.get(0);
+                for (int x = 0; x < mapX; x++)
+                    for (int y = 0; y < mapY; y++)
+                        if (!FireFighter.this.beliefMap.getValue(x, y))
+                            targetLocations.offer(new Location(x, y));
+
+                if (targetLocations.size() == 0)
+                    return;
+
+                FireFighter.this.headingLocation = targetLocations.poll();
             }
         }
 
