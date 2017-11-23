@@ -149,36 +149,26 @@ public class FireFighter extends ABCPlusCS {
         if (this.status == Status.Complete) {
             switch ((SoSType) this.world.getResources().get("Type")) {
                 case Directed:
-                    if (this.location.getX() > 0)
-                        this.directedNormalActionList.add(new ABCItem(new Move(Direction.LEFT), 0, calculateMoveCost(Direction.LEFT, true)));
-                    if (this.location.getX() < MCIResponseWorld.MAP_SIZE.getLeft() - 1)
-                        this.directedNormalActionList.add(new ABCItem(new Move(Direction.RIGHT), 0, calculateMoveCost(Direction.RIGHT, true)));
-                    if (this.location.getY() > 0)
-                        this.directedNormalActionList.add(new ABCItem(new Move(Direction.UP), 0, calculateMoveCost(Direction.UP, true)));
-                    if (this.location.getY() < MCIResponseWorld.MAP_SIZE.getRight() - 1)
-                        this.directedNormalActionList.add(new ABCItem(new Move(Direction.DOWN), 0, calculateMoveCost(Direction.DOWN, true)));
+                    addFourDirectionMoves(this.directedNormalActionList, 0, true);
                     break;
                 case Acknowledged:
-                    if (FireFighter.this.location.getX() > 0 && lastDirection != Direction.RIGHT)
-                        this.normalActionList.add(new ABCItem(new Move(Direction.LEFT), headingBenefit, calculateMoveCost(Direction.LEFT, true)));
-                    if (FireFighter.this.location.getX() < MCIResponseWorld.MAP_SIZE.getLeft() - 1 && lastDirection != Direction.LEFT)
-                        this.normalActionList.add(new ABCItem(new Move(Direction.RIGHT), headingBenefit, calculateMoveCost(Direction.RIGHT, true)));
-                    if (FireFighter.this.location.getY() > 0 && lastDirection != Direction.DOWN)
-                        this.normalActionList.add(new ABCItem(new Move(Direction.UP), headingBenefit, calculateMoveCost(Direction.UP, true)));
-                    if (FireFighter.this.location.getY() < MCIResponseWorld.MAP_SIZE.getRight() - 1 && lastDirection != Direction.UP)
-                        this.normalActionList.add(new ABCItem(new Move(Direction.DOWN), headingBenefit, calculateMoveCost(Direction.DOWN, true)));
+                    addFourDirectionMoves(this.normalActionList, headingBenefit, true);
                 case Collaborative:
                 case Virtual:
-                    if (FireFighter.this.location.getX() > 0 && lastDirection != Direction.RIGHT)
-                        this.normalActionList.add(new ABCItem(new Move(Direction.LEFT), 0, calculateMoveCost(Direction.LEFT, false)));
-                    if (FireFighter.this.location.getX() < MCIResponseWorld.MAP_SIZE.getLeft() - 1 && lastDirection != Direction.LEFT)
-                        this.normalActionList.add(new ABCItem(new Move(Direction.RIGHT), 0, calculateMoveCost(Direction.RIGHT, false)));
-                    if (FireFighter.this.location.getY() > 0 && lastDirection != Direction.DOWN)
-                        this.normalActionList.add(new ABCItem(new Move(Direction.UP), 0, calculateMoveCost(Direction.UP, false)));
-                    if (FireFighter.this.location.getY() < MCIResponseWorld.MAP_SIZE.getRight() - 1 && lastDirection != Direction.UP)
-                        this.normalActionList.add(new ABCItem(new Move(Direction.DOWN), 0, calculateMoveCost(Direction.DOWN, false)));
+                    addFourDirectionMoves(this.normalActionList, 0, false);
             }
         }
+    }
+
+    public void addFourDirectionMoves(ArrayList<ABCItem> actionList, int additionalBenefit, boolean directMove) {
+        if (this.location.getX() > 0)
+            actionList.add(new ABCItem(new Move(Direction.LEFT), additionalBenefit, calculateMoveCost(Direction.LEFT, directMove)));
+        if (this.location.getX() < MCIResponseWorld.MAP_SIZE.getLeft() - 1)
+            actionList.add(new ABCItem(new Move(Direction.RIGHT), additionalBenefit, calculateMoveCost(Direction.RIGHT, directMove)));
+        if (this.location.getY() > 0)
+            actionList.add(new ABCItem(new Move(Direction.UP), additionalBenefit, calculateMoveCost(Direction.UP, directMove)));
+        if (this.location.getY() < MCIResponseWorld.MAP_SIZE.getRight() - 1)
+            actionList.add(new ABCItem(new Move(Direction.DOWN), additionalBenefit, calculateMoveCost(Direction.DOWN, directMove)));
     }
 
     public int calculateMoveCost(Direction direction, boolean directMove) {
