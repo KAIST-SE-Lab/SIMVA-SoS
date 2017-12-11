@@ -46,4 +46,5 @@ buildscript {
 
 pitest {
     targetClasses = ['simvasos.*']
+    threads = 4
 }
