@@ -3,6 +3,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: "info.solidsoft.pitest"
 
 mainClassName = 'simvasos.SIMVASoS'
 sourceCompatibility = 1.8
@@ -10,6 +11,11 @@ version = '1.0'
 
 repositories {
     mavenCentral()
+
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+
 }
 
 dependencies {
@@ -22,7 +28,22 @@ dependencies {
     // https://mvnrepository.com/artifact/com.internetitem/logback-elasticsearch-appender
      compile group: 'com.internetitem', name: 'logback-elasticsearch-appender', version: '1.4'
 
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M6")
-    testRuntime("org.junit.platform:junit-platform-launcher:1.0.0-M6")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M6")
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+//    testRuntime("org.junit.platform:junit-platform-launcher:1.0.0-M6")
+//    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M6")
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        //Needed only for SNAPSHOT versions
+        //maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.2.4'
+    }
+}
+
+pitest {
+    targetClasses = ['simvasos.*']
 }
