@@ -224,8 +224,8 @@ public class MCIResponseWorld extends World {
 
     @Override
     public Snapshot getCurrentSnapshot() {
-//        Snapshot snapshot = super.getCurrentSnapshot();
-        Snapshot snapshot = new Snapshot();
+        Snapshot snapshot = super.getCurrentSnapshot();
+//        Snapshot snapshot = new Snapshot();
 
         LinkedHashMap<String, Object> worldProperties = new LinkedHashMap<String, Object>();
 

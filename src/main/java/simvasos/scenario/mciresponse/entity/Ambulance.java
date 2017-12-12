@@ -202,7 +202,7 @@ public class Ambulance extends ABCPlusCS {
     @Override
     public HashMap<String, Object> getProperties() {
         HashMap<String, Object> properties = new HashMap<String, Object>();
-        properties.put("Location", this.location);
+        properties.put("Location", new Location(this.location));
         return properties;
     }
 
