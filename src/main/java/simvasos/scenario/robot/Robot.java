@@ -6,7 +6,6 @@ import simvasos.simulation.component.World;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Random;
 
 /**
  * Created by mgjin on 2017-06-21.
@@ -47,7 +46,7 @@ public class Robot extends Agent{
                 };
                 this.immediateStep = false;
             } else if (xpos > 10) { // Immediate action 2
-                int drop = new Random().nextInt(100);
+                int drop = this.world.random.nextInt(100);
                 if (drop == 0) {
                     next = new Action(0) {
 
