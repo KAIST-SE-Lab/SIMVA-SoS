@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/SESoS/SIMVA-SoS.svg?branch=master)](https://travis-ci.org/SESoS/SIMVA-SoS)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache2.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # SIMVA-SoS?
 
