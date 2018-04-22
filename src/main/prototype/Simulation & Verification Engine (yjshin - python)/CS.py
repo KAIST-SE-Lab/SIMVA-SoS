@@ -8,12 +8,12 @@ class CS(object):
         hello = 'hi my namen is ' + self.name
         return hello
 
-class Member(CS):
+class FireFighter(CS):
     def __init__(self, name, prob):
         self.name = name
         self.probability = prob
         self.location = -1
-        self.chocolate = 0
+        self.rescued = 0
 
     def act(self, tick, environment):
         if random.uniform(0, 1) < self.probability:
@@ -25,10 +25,10 @@ class Member(CS):
                 else:
                     self.location = (self.location - 1) % len(environment)
 
-            hello = 'hi my namen is ' + self.name + " I'm on " + str(self.location)
+            hello = 'Hi my namen is ' + self.name + ". I'm on " + str(self.location) + '.'
             if environment[self.location] > 0:
-                self.chocolate = self.chocolate + 1
-                self.environment[self.location] = self.environment[self.location] - 1
-                hello = hello + ' I got a chocolate'
+                self.rescued = self.rescued + 1
+                environment[self.location] = environment[self.location] - 1
+                hello = hello + ' I rescued a patient ' + str(environment)
 
             return hello

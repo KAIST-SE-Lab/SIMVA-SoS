@@ -1,31 +1,36 @@
 from SoS import SoS
-from CS import Member
+from CS import FireFighter
 from Scenario import Scenario
 from Event import Event
-from Action import Action
+from Action import MCIAction
 from TimeBound import ConstantTimeBound
 from Simulator import Simulator
 
-yongjun = Member('yongjun', 0.4)
-sumin = Member('sumin', 0.5)
+'''Input generation'''
+yongjun = FireFighter('yongjun', 0.4)
+sumin = FireFighter('sumin', 0.5)
 mapSize = 10
-chocolateMap = [0 for i in range(mapSize)]
-helloSoS = SoS([yongjun, sumin], chocolateMap)
+MCIMap = [0 for i in range(mapSize)]
+MCISoS = SoS([yongjun, sumin], MCIMap)
 
-helloEvents = []
-#todo: event가 환경을 알 수 있도록 파라미터 넣어줘야함.
+MCIEvents = []
 for i in range(10):
-    helloEvents.append(Event(Action('chocolate +1'), ConstantTimeBound(i*10+5)))
-helloScenario = Scenario(helloEvents)
+    MCIEvents.append(Event(MCIAction('patient +1', MCIMap), ConstantTimeBound(i)))
+MCIScenario = Scenario(MCIEvents)
 
-helloSim = Simulator(100, helloSoS, helloScenario)
+'''Simulation'''
+MCISim = Simulator(10, MCISoS, MCIScenario)
 
-helloLogs = helloSim.run()
+MCILogs = MCISim.run()
 
 print('log print')
-for log in helloLogs:
+for log in MCILogs:
     print(log)
 
-print(yongjun.chocolate)
-print(sumin.chocolate)
-print(chocolateMap)
+print()
+print('yongjun rescued:', yongjun.rescued)
+print('sumin rescued:', sumin.rescued)
+print('final map:', MCIMap)
+
+'''Verification'''
+#todo: SMC
