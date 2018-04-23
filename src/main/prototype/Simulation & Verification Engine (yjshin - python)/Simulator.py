@@ -1,13 +1,12 @@
 class Simulator(object):
-    def __init__(self, time, SoS, scenario):
-        self.time = time
+    def __init__(self, simulationTime, SoS, scenario):
+        self.simulationTime = simulationTime
         self.SoS = SoS
         self.scenario = scenario
         self.simulationLog = []
-        pass
 
     def run(self):
-        for tick in range(self.time):
+        for tick in range(self.simulationTime):
             print('tick:', tick)
             for event in self.scenario.events:
                 result = event.occur(tick)
@@ -15,8 +14,8 @@ class Simulator(object):
                     self.simulationLog.append((tick, result))
             result = self.SoS.run(tick)
             if result:
-                for r in result:
-                    self.simulationLog.append((tick, r))
+                for res in result:
+                    self.simulationLog.append((tick, res))
         return self.simulationLog
 
     def stop(self):
@@ -24,6 +23,10 @@ class Simulator(object):
 
     def monitor(self):
         pass
+
+    def reset(self):
+        self.simulationLog = []
+        self.SoS.reset()
 
 
 
