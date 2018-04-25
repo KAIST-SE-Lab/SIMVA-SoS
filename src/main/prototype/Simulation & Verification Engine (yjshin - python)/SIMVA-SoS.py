@@ -34,7 +34,7 @@ for i in range(repeatSim):
     MCILogs.append(MCILog)
 
 
-print('log print')
+print('log print (only last log)')
 for log in MCILogs[-1]:
     print(log)
 
