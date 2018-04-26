@@ -1,4 +1,6 @@
 import random
+from datetime import datetime
+random.seed(datetime.now())
 
 class CS(object):
     def __init__(self, name):

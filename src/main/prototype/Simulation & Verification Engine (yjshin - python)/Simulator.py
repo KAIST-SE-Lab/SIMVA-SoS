@@ -7,7 +7,7 @@ class Simulator(object):
 
     def run(self):
         for tick in range(self.simulationTime):
-            print('tick:', tick)
+            #print('tick:', tick)
             for event in self.scenario.events:
                 result = event.occur(tick)
                 if result:

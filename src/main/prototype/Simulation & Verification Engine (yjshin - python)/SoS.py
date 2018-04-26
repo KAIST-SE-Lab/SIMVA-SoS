@@ -1,5 +1,6 @@
 import random
-
+from datetime import datetime
+random.seed(datetime.now())
 
 class SoS(object):
     def __init__(self, CSs, environment):

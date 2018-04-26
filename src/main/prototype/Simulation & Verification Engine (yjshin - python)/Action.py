@@ -13,6 +13,7 @@ class MCIAction(Action):
         self.environment = environment
 
     def do(self):
+        #i = int(random.normalvariate(len(self.environment)/2, 2))%len(self.environment)
         i = random.randrange(len(self.environment))
         self.environment[i] = self.environment[i] + 1
         return super().do() + ' at ' + str(i) + ' ' + str(self.environment)

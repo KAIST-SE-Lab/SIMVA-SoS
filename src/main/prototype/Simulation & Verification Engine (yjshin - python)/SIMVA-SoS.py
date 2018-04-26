@@ -10,20 +10,22 @@ from Verifier import SPRT
 from Property import MCIProperty
 
 '''Input generation'''
-yongjun = FireFighter('yongjun', 0.6)
-sumin = FireFighter('sumin', 0.7)
+yongjun = FireFighter('yongjun', 0.85)
+sumin = FireFighter('sumin', 0.85)
 CSs = [yongjun, sumin]
-mapSize = 10
+mapSize = 20
 MCIMap = [0 for i in range(mapSize)]
 MCISoS = SoS(CSs, MCIMap)
 
 MCIEvents = []
-for i in range(10):
-    MCIEvents.append(Event(MCIAction('patient +1', MCIMap), ConstantTimeBound(i)))
+numOfPatients = 15
+for i in range(numOfPatients):
+    MCIEvents.append(Event(MCIAction('patient +1', MCIMap), ConstantTimeBound(0)))
 MCIScenario = Scenario(MCIEvents)
 
 '''Simulation'''
-MCISim = Simulator(10, MCISoS, MCIScenario)
+simulationTime = 10
+MCISim = Simulator(simulationTime, MCISoS, MCIScenario)
 
 repeatSim = 1000
 MCILogs = []
@@ -45,7 +47,7 @@ print('final map:', MCIMap)
 print()
 
 '''Verification'''
-property = MCIProperty('MCIProperty', 'MCIPropertySpecification', 'MCIPropertyType', 'MCIPropertyEtc')
+property = MCIProperty('RescuedPatientProperty', 'RescuedPatientRatioUpperThanValue', 'MCIPropertyType', 0.5)
 checker = MCIPropertyChecker()
 verifier = SPRT(checker)
 verifier.verify(MCILogs, property)

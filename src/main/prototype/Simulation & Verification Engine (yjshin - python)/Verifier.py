@@ -1,4 +1,6 @@
 import random
+from datetime import datetime
+random.seed(datetime.now())
 
 class Verifier(object):
     def __init__(self, checker):
@@ -22,27 +24,61 @@ class SPRT(Verifier):
     def verify(self, simulationLogs, verificationProperty):
         for i in range(100):
             theta = i * 0.01
-            numOfSample = 0
+            numOfSamples = 0
             numOfTrue = 0
             random.shuffle(simulationLogs)
 
-            j = 0
-            while self.isSampleNeeded(j):
-                if not j < len(simulationLogs):
+            while self.isSampleNeeded(numOfSamples, numOfTrue, theta):
+                logLen = len(simulationLogs)
+                if not numOfSamples < logLen:
                     print("Lack of simulation logs")
                     return False
-                numOfSample = numOfSample + 1
-                if self.propertyChecker.check(simulationLogs[j], verificationProperty):
+
+                if self.propertyChecker.check(simulationLogs[numOfSamples], verificationProperty):
                     numOfTrue = numOfTrue + 1
-                j = j + 1
+                numOfSamples = numOfSamples + 1
 
-            result = numOfTrue > numOfSample//2   #todo: 각 theta에 대한 결정 함수 필요
-            print('theta:', round(theta, 2), ' num of samples:', numOfSample, ' result:', result)
+            result = self.isSatisfied(numOfSamples, numOfTrue, theta)   #todo: 각 theta에 대한 결정 함수 필요, 여기서 alpha, beta, delta 사용
+            print('theta:', format(theta, ".2f"), ' num of samples:', numOfSamples, ' num of true:', numOfTrue, ' result:', result)
 
 
 
-    def isSampleNeeded(self, currentSamples):   #todo: 샘플 필요한지
-        if currentSamples < self.minimumSample:
+    def isSampleNeeded(self, numOfSamples, numOfTrue, theta):   #todo: 샘플 필요한지
+        if numOfSamples < self.minimumSample:
             return True
-        #todo: 인텔리제이 SPRT 97~104줄
-        return False
+
+        h0Threshold = self.beta/(1-self.alpha)
+        h1Threshold = (1-self.beta)/self.alpha
+
+        v = self.getV(numOfSamples, numOfTrue, theta)
+
+        if v <= h0Threshold:
+            return False
+        elif v >= h1Threshold:
+            return False
+        else:
+            return True
+
+    def isSatisfied(self, numOfSamples, numOfTrue, theta):
+        h0Threshold = self.beta / (1 - self.alpha)
+
+        v = self.getV(numOfSamples, numOfTrue, theta)
+
+        if v <= h0Threshold:
+            return True
+        else:
+            return False
+
+
+    def getV(self, numOfSamples, numOfTrue, theta): #todo
+        '''
+        p1 = numOfTrue / numOfSamples
+        p0 = 1 - p1
+        '''
+        p1 = theta + self.delta
+        p0 = theta - self.delta
+        #'''
+        numOfFalse = numOfSamples - numOfTrue
+        v = ((p1 ** numOfTrue) * ((1 - p1) ** numOfSamples ** numOfFalse)) / (((p0 ** numOfTrue) * ((1 - p0) ** numOfFalse)) + 0.0000001)
+
+        return v
