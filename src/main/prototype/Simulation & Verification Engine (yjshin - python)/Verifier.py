@@ -22,7 +22,7 @@ class SPRT(Verifier):
         self.minimumSample = 2
 
     def verify(self, simulationLogs, verificationProperty):
-        for i in range(100):
+        for i in range(1, 100):
             theta = i * 0.01
             numOfSamples = 0
             numOfTrue = 0
@@ -71,14 +71,15 @@ class SPRT(Verifier):
 
 
     def getV(self, numOfSamples, numOfTrue, theta): #todo
-        '''
-        p1 = numOfTrue / numOfSamples
-        p0 = 1 - p1
-        '''
-        p1 = theta + self.delta
-        p0 = theta - self.delta
-        #'''
+        p0 = theta + self.delta
+        p1 = theta - self.delta
+
         numOfFalse = numOfSamples - numOfTrue
-        v = ((p1 ** numOfTrue) * ((1 - p1) ** numOfSamples ** numOfFalse)) / (((p0 ** numOfTrue) * ((1 - p0) ** numOfFalse)) + 0.0000001)
+        p1m = ((p1 ** numOfTrue) * ((1 - p1) ** numOfFalse))
+        p0m = ((p0 ** numOfTrue) * ((1 - p0) ** numOfFalse))
+        if p0m == 0:
+            p1m = p1m + 0.000000001
+            p0m = p0m + 0.000000001
+        v =  p1m / p0m
 
         return v
