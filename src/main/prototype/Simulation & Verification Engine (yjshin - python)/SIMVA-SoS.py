@@ -27,18 +27,18 @@ MCIScenario = Scenario(MCIEvents)
 simulationTime = 15
 MCISim = Simulator(simulationTime, MCISoS, MCIScenario)
 
-repeatSim = 5000
+repeatSim = 2000
+
 MCILogs = []
 for i in range(repeatSim):
-    MCISim.reset()
     MCILog = MCISim.run()
-    MCILog.append(([CS.rescued for CS in CSs], MCIMap))
     MCILogs.append(MCILog)
 
+print('hi')
 '''
 print('log print (only last log)')
-for log in MCILogs[-1]:
-    print(log)
+for log in MCILogs:
+    print(log[-1], sum(log[-1][0]), sum(log[-1][1]))
 '''
 
 print()
@@ -48,7 +48,8 @@ print('final map:', MCIMap)
 print()
 
 '''Verification'''
-property = MCIProperty('RescuedPatientProperty', 'RescuedPatientRatioUpperThanValue', 'MCIPropertyType', 0.75)
+property = MCIProperty('RescuedPatientProperty', 'RescuedPatientRatioUpperThanValue', 'MCIPropertyType', 0.8)
 checker = MCIPropertyChecker()
 verifier = SPRT(checker)
-verifier.verify(MCILogs, property)
+verifier.verifyExistedLogs(MCILogs, property)
+verifier.verifyWithSimulator(MCISim, property, repeatSim)

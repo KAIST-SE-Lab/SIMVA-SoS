@@ -21,7 +21,7 @@ class SPRT(Verifier):
         self.delta = 0.01
         self.minimumSample = 2
 
-    def verify(self, simulationLogs, verificationProperty):
+    def verifyExistedLogs(self, simulationLogs, verificationProperty):
         for i in range(1, 100):
             theta = i * 0.01
             numOfSamples = 0
@@ -31,8 +31,8 @@ class SPRT(Verifier):
             while self.isSampleNeeded(numOfSamples, numOfTrue, theta):
                 logLen = len(simulationLogs)
                 if not numOfSamples < logLen:
-                    print("Lack of simulation logs")
-                    return False
+                    print("Lack of simulation logs:", logLen)
+                    break
 
                 if self.propertyChecker.check(simulationLogs[numOfSamples], verificationProperty):
                     numOfTrue = numOfTrue + 1
@@ -41,6 +41,27 @@ class SPRT(Verifier):
             result = self.isSatisfied(numOfSamples, numOfTrue, theta)   #todo: 각 theta에 대한 결정 함수 필요, 여기서 alpha, beta, delta 사용
             print('theta:', format(theta, ".2f"), ' num of samples:', numOfSamples, ' num of true:', numOfTrue, ' result:', result)
 
+
+    def verifyWithSimulator(self, simulator, verificationProperty, maxRepeat):
+        maxNumOfSamples = maxRepeat
+
+        for i in range(1, 100):
+            theta = i * 0.01
+            numOfSamples = 0
+            numOfTrue = 0
+
+            while self.isSampleNeeded(numOfSamples, numOfTrue, theta):
+                if not numOfSamples < maxNumOfSamples:
+                    print("Over maximum repeat:", maxNumOfSamples)
+                    break
+                simulationLog = simulator.run()
+
+                if self.propertyChecker.check(simulationLog, verificationProperty):
+                    numOfTrue = numOfTrue + 1
+                numOfSamples = numOfSamples + 1
+
+            result = self.isSatisfied(numOfSamples, numOfTrue, theta)   #todo: 각 theta에 대한 결정 함수 필요, 여기서 alpha, beta, delta 사용
+            print('theta:', format(theta, ".2f"), ' num of samples:', numOfSamples, ' num of true:', numOfTrue, ' result:', result)
 
 
     def isSampleNeeded(self, numOfSamples, numOfTrue, theta):   #todo: 샘플 필요한지

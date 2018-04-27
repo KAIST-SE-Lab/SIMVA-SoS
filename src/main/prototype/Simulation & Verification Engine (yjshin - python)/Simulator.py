@@ -6,6 +6,7 @@ class Simulator(object):
         self.simulationLog = []
 
     def run(self):
+        self.reset()
         for tick in range(self.simulationTime):
             #print('tick:', tick)
             for event in self.scenario.events:
@@ -16,6 +17,7 @@ class Simulator(object):
             if result:
                 for res in result:
                     self.simulationLog.append((tick, res))
+        self.simulationLog.append(([CS.rescued for CS in self.SoS.CSs], self.SoS.environment.copy()))
         return self.simulationLog
 
     def stop(self):

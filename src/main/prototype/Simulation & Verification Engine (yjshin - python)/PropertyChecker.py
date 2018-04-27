@@ -16,7 +16,6 @@ class MCIPropertyChecker(PropertyChecker):
 
         numberOfRescued = sum(rescued)
         numberOfPatients = numberOfRescued + sum(environment)
-        #print(numberOfRescued / numberOfPatients)
         if (numberOfRescued / numberOfPatients) > verificationProperty.getValue(): # rescued more than 50% of patients
             #print(True)
             return True
