@@ -2,6 +2,7 @@ import random
 from datetime import datetime
 random.seed(datetime.now())
 
+
 class Verifier(object):
     def __init__(self, checker):
         self.propertyChecker = checker
@@ -12,6 +13,7 @@ class Verifier(object):
             if not self.propertyChecker.check(simulationLog, property):
                 check = False
         return check
+
 
 class SPRT(Verifier):
     def __init__(self, checker):
@@ -41,7 +43,6 @@ class SPRT(Verifier):
             result = self.isSatisfied(numOfSamples, numOfTrue, theta)   #todo: 각 theta에 대한 결정 함수 필요, 여기서 alpha, beta, delta 사용
             print('theta:', format(theta, ".2f"), ' num of samples:', numOfSamples, ' num of true:', numOfTrue, ' result:', result)
 
-
     def verifyWithSimulator(self, simulator, verificationProperty, maxRepeat):
         maxNumOfSamples = maxRepeat
 
@@ -62,7 +63,6 @@ class SPRT(Verifier):
 
             result = self.isSatisfied(numOfSamples, numOfTrue, theta)   #todo: 각 theta에 대한 결정 함수 필요, 여기서 alpha, beta, delta 사용
             print('theta:', format(theta, ".2f"), ' num of samples:', numOfSamples, ' num of true:', numOfTrue, ' result:', result)
-
 
     def isSampleNeeded(self, numOfSamples, numOfTrue, theta):   #todo: 샘플 필요한지
         if numOfSamples < self.minimumSample:
@@ -90,7 +90,6 @@ class SPRT(Verifier):
         else:
             return False
 
-
     def getV(self, numOfSamples, numOfTrue, theta): #todo
         p0 = theta + self.delta
         p1 = theta - self.delta
@@ -101,6 +100,6 @@ class SPRT(Verifier):
         if p0m == 0:
             p1m = p1m + 0.000000001
             p0m = p0m + 0.000000001
-        v =  p1m / p0m
+        v = p1m / p0m
 
         return v

@@ -5,6 +5,7 @@ class PropertyChecker(object):
     def check(self, simulationLog, verificationProperty):
         return True
 
+
 class MCIPropertyChecker(PropertyChecker):
     def __init__(self):
         pass

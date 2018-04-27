@@ -2,6 +2,7 @@ import random
 from datetime import datetime
 random.seed(datetime.now())
 
+
 class CS(object):
     def __init__(self, name):
         self.name = name
@@ -9,6 +10,7 @@ class CS(object):
     def act(self, tick, environment):
         hello = 'hi my namen is ' + self.name
         return hello
+
 
 class FireFighter(CS):
     def __init__(self, name, prob):

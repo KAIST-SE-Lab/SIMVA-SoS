@@ -1,5 +1,6 @@
 import random
 
+
 class Action(object):
     def __init__(self, name):
         self.name = name
@@ -7,9 +8,10 @@ class Action(object):
     def do(self):
         return 'do action: ' + self.name
 
-class MCIAction(Action):
+
+class PatientOccurrence(Action):
     def __init__(self, name, environment):
-        super(MCIAction, self).__init__(name)
+        super(PatientOccurrence, self).__init__(name)
         self.environment = environment
 
     def do(self):

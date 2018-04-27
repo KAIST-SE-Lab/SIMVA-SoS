@@ -7,6 +7,7 @@ class Property(object):
     def getValue(self):
         return None
 
+
 class MCIProperty(Property):
     def __init__(self, name, specification, propertyType, etc):
         super(MCIProperty, self).__init__(name, specification, propertyType)
