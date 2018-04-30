@@ -1,1 +1,1 @@
-This is slicing directory.
+This is a Slicing directory.
