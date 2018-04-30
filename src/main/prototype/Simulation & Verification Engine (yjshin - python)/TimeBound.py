@@ -7,7 +7,7 @@ class TimeBound(object):
     def __init__(self):
         pass
 
-    def value(self):
+    def getValue(self):
         pass
 
 
@@ -23,15 +23,21 @@ class UniformDistributionTimeBound(TimeBound):
     def __init__(self, start, end):
         self.start = start
         self.end = end
+        self.value = None
 
     def getValue(self):
-        return random.randrange(self.start, self.end)
+        if not self.value:
+            self.value = random.randrange(self.start, self.end)
+        return self.value
 
 
 class NormalDistributionTimeBound(TimeBound):
     def __init__(self, mu, sigma):
         self.mu = mu
         self.sigma = sigma
+        self.value = None
 
     def getValue(self):
-        return int(random.normalvariate(self.mu, self.sigma))
+        if not self.value:
+            self.value = int(random.normalvariate(self.mu, self.sigma))
+        return self.value
