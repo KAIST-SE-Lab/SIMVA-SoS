@@ -1,1 +1,1 @@
-This is simulation & verification directory.
+This is a Simulation & Verification directory.

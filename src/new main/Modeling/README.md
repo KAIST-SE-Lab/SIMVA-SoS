@@ -1,1 +1,1 @@
-This is modeling directory.
+This is a Modeling directory.
