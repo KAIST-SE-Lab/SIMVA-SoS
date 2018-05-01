@@ -7,3 +7,7 @@ class Scenario(object):
 
     def addEvents(self, events):
         self.events = self.events + events
+
+    def reset(self):
+        for event in self.events:
+            event.reset()

@@ -7,3 +7,6 @@ class Event(object):
         if self.timeBound.getValue() == current:
             result = self.action.do()
             return result
+
+    def reset(self):
+        self.timeBound.reset()

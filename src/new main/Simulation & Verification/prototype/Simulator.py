@@ -28,6 +28,7 @@ class Simulator(object):
 
     def reset(self):
         self.simulationLog = []
+        self.scenario.reset()
         self.SoS.reset()
 
 

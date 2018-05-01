@@ -10,6 +10,9 @@ class TimeBound(object):
     def getValue(self):
         pass
 
+    def reset(self):
+        pass
+
 
 class ConstantTimeBound(TimeBound):
     def __init__(self, value):
@@ -17,6 +20,9 @@ class ConstantTimeBound(TimeBound):
 
     def getValue(self):
         return self.value
+
+    def reset(self):
+        pass
 
 
 class UniformDistributionTimeBound(TimeBound):
@@ -30,6 +36,9 @@ class UniformDistributionTimeBound(TimeBound):
             self.value = random.randrange(self.start, self.end)
         return self.value
 
+    def reset(self):
+        self.value = None
+
 
 class NormalDistributionTimeBound(TimeBound):
     def __init__(self, mu, sigma):
@@ -41,3 +50,6 @@ class NormalDistributionTimeBound(TimeBound):
         if not self.value:
             self.value = int(random.normalvariate(self.mu, self.sigma))
         return self.value
+
+    def reset(self):
+        self.value = None
