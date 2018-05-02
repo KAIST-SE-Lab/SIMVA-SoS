@@ -5,7 +5,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: "info.solidsoft.pitest"
 
-mainClassName = 'simvasos.SIMVASoS'
+mainClassName = 'Action'
 sourceCompatibility = 1.8
 version = '1.0'
 
@@ -45,6 +45,6 @@ buildscript {
 }
 
 pitest {
-    targetClasses = ['simvasos.*']
+    targetClasses = ['new main.*']
     threads = 4
 }
