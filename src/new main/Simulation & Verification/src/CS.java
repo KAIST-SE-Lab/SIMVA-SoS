@@ -1,7 +1,8 @@
 public class CS {
 
-  public CS() { // constructor
-
+  String name;
+  public CS(String name) { // constructor
+    this.name = name;
   }
 
   public String act() {

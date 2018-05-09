@@ -1,6 +1,15 @@
 public class FireFighter extends CS {
 
-  public FireFighter() {  //constructor
+  double probability;
+  int location;
+  int rescue;
+
+  public FireFighter(String name, double prob) {  //constructor
+
+    super(name);
+    this.probability = prob;
+    this.location = -1;
+    this.rescue = 0;
 
   }
 

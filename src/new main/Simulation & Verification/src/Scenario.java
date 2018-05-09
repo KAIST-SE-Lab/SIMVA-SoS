@@ -2,8 +2,9 @@ import java.util.ArrayList;
 
 public class Scenario {
 
+  ArrayList <Event> events;
   public Scenario(ArrayList <Event> events) {
-
+    this.events = events;
 
   }
 

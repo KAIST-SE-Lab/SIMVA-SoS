@@ -1,7 +1,8 @@
 public class Action {
 
-  public Action() {  // Constructor
-
+  String name;
+  public Action(String name) {  // Constructor
+    this.name = name;
   }
 
   public String behavior() {

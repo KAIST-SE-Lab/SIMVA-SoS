@@ -1,9 +1,13 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import org.omg.CORBA.Environment;
+
 
 public class SoS {
-  int tick;
-  public SoS(Object object, Environment environment) {
+  ArrayList <CS> CSs;
+  ArrayList environment;
+  public SoS( ArrayList <CS> CSs, ArrayList environment) {
+    this.CSs = CSs;
+    this.environment = environment;
 
   }
 

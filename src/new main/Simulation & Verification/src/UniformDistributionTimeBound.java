@@ -3,7 +3,11 @@ public class UniformDistributionTimeBound extends TimeBound {
 
   int start;
   int end;
-  public UniformDistributionTimeBound() {
+  double value;
+  public UniformDistributionTimeBound(int start, int end) {
+    this.start = start;
+    this.end = end;
+    this.value = 0.0;    // None?? what???
 
   }
 
