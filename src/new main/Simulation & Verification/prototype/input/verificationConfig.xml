@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<verificationConfig>
+    <verifier name = 'verifier' type = 'SPRT'>
+        <maxRepeatSimulation value = '2000'/>
+        <checker name = 'MCIPropertyChecker'>
+            <check parameter = '[simulationLog, verificationProperty]'>
+                <body file= 'MCIPropertyChecker.txt'/>
+            </check>
+        </checker>
+    </verifier>
+    <property name="RescuedPatientProperty" specification = 'RescuedPatientRatioUpperThanValue' propertyType = 'MCIPropertyType'>
+        <additional>
+            <parameter name = 'etc' value = '0.8'/>
+        </additional>
+        <getValue>
+            <body file = 'MCIProperty.txt'/>
+        </getValue>
+    </property>
+</verificationConfig>
