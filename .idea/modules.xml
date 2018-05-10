@@ -6,6 +6,8 @@
       <module fileurl="file://$PROJECT_DIR$/src/new main/Modeling/SIMVA-SoS.Modeling.iml" filepath="$PROJECT_DIR$/src/new main/Modeling/SIMVA-SoS.Modeling.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/new main/Simulation &amp; Verification/SIMVA-SoS.Simulation &amp; Verification.iml" filepath="$PROJECT_DIR$/src/new main/Simulation &amp; Verification/SIMVA-SoS.Simulation &amp; Verification.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/new main/Slicing/SIMVA-SoS.Slicing.iml" filepath="$PROJECT_DIR$/src/new main/Slicing/SIMVA-SoS.Slicing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMVA-SoS_main.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMVA-SoS_main.iml" group="SIMVA-SoS" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMVA-SoS_test.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMVA-SoS_test.iml" group="SIMVA-SoS" />
     </modules>
   </component>
 </project>
