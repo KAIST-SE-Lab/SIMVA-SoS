@@ -3,17 +3,17 @@ public class UniformDistributionTimeBound extends TimeBound {
 
   int start;
   int end;
-  double value;
+  int tick;
   public UniformDistributionTimeBound(int start, int end) {
     this.start = start;
     this.end = end;
-    this.value = 0.0;    // None?? what???
-
+    this.tick = 0;    // None?? what???
   }
 
-  public int getValue() {
+  public int getTick() {
     Random random = new Random();
-    int num = random.nextInt(end - start);
-    return num;
+
+    // Generate random number in Uniform Distribution
+    return random.nextInt(end - start);
   }
 }

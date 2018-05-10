@@ -16,4 +16,10 @@ public class Scenario {
 
   }
 
+  public void reset() {
+    for (Event ev : events) {
+        ev.reset();
+    }
+  }
+
 }

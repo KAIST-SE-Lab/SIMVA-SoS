@@ -5,9 +5,10 @@ public class Action {
     this.name = name;
   }
 
-  public String behavior() {
-
-    return "todo";
+  // Change "do" function in the prototype into "bahave"
+  // Because there is already default "do" function in Java
+  public String behave() {
+    return "do action: " + this.name;
   }
-
+  
 }

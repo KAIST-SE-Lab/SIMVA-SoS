@@ -7,7 +7,15 @@ public class Event {
     this.timebound = timebound;
   }
 
-  public String occur() {
-    return "todo";
+  public String occur(int current) {
+    String result = "";
+    if (this.timebound.getTick() == current) {
+      result = this.action.behave();
+    }
+    return result;
+  }
+
+  public void reset() {
+    this.timebound.reset();
   }
 }
