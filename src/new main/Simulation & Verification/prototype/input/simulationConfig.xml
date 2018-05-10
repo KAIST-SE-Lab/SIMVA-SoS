@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<simulationConfig>
+    <simulator type = 'discrete' name = 'MCISim' simulationTime = '15' targetSoS = 'MCISoS' targetScenario = 'MCIScenario'>
+        <run file = 'Simulator.txt'/>
+    </simulator>
+</simulationConfig>

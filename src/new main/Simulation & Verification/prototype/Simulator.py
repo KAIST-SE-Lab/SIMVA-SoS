@@ -17,7 +17,7 @@ class Simulator(object):
             if result:
                 for res in result:
                     self.simulationLog.append((tick, res))
-        self.simulationLog.append(([CS.rescued for CS in self.SoS.CSs], self.SoS.environment.copy()))
+        self.simulationLog.append(([CS.rescued for CS in self.SoS.CSs], self.SoS.environment.copy()))   #additionalLogAppend
         return self.simulationLog
 
     def stop(self):

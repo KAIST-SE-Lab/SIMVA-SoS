@@ -22,8 +22,8 @@ class SoS(object):
     def reset(self):
         for CS in self.CSs:
             CS.reset()
-        self.resetEnvironment(self.environment)
+        self.resetEnvironment()
 
-    def resetEnvironment(self, environment):
-        for i in range(len(environment)):
-            environment[i] = 0
+    def resetEnvironment(self):
+        for i in range(len(self.environment)):
+            self.environment[i] = 0
