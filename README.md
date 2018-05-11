@@ -7,7 +7,7 @@ SIMVA-SoS is a simulation-based verification and analysis tool for system of sys
 
 # More Information
 
-We are sorry to tell you that related publications are written in Korean. If you have any questions or suggesitions, please email us, [mgjin@se.kaist.ac.kr](mailto:mgjin@se.kaist.ac.kr). We are pleased to have talks with you.
+We are sorry to tell you that related publications are written in Korean. If you have any questions or suggesitions, please email us, [yjshin@se.kaist.ac.kr](mailto:yjshin@se.kaist.ac.kr). We are pleased to have talks with you.
 
 [Mingyu Jin, Donghwan Shin, Junho Kim, Doo-Hwan Bae. "System-of-Systems-level Goal Achievement Verification Tool." Proceedings of KIISE,  (2017.6): 552-554.](http://www.dbpia.co.kr/Journal/ArticleDetail/NODE07207302)
 
