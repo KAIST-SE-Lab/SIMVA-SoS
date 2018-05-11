@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--
+This is a configuration file for verification.
+Writer: Yong-Jun Shin
+-->
 <verificationConfig>
-    <verifier name = 'verifier' type = 'SPRT'>
-        <maxRepeatSimulation value = '2000'/>
-        <checker name = 'MCIPropertyChecker'>
-            <check parameter = '[simulationLog, verificationProperty]'>
-                <body file= 'MCIPropertyChecker.txt'/>
-            </check>
-        </checker>
-    </verifier>
-    <property name="RescuedPatientProperty" specification = 'RescuedPatientRatioUpperThanValue' propertyType = 'MCIPropertyType'>
+    <property name = 'rescuedProperty' type = 'MCIProperty' parName="'RescuedPatientProperty'" parSpecification = "'RescuedPatientRatioUpperThanValue'" parPropertyType = "'MCIPropertyType'">
         <additional>
             <parameter name = 'etc' value = '0.8'/>
         </additional>
@@ -16,4 +12,12 @@
             <body file = 'MCIProperty.txt'/>
         </getValue>
     </property>
+    <verifier name = 'verifier' type = 'SPRT'>
+        <maxRepeatSimulation value = '2000'/>
+        <checker name = 'rescuedChecker' type = 'MCIPropertyChecker'>
+            <check parameter = '[simulationLog, verificationProperty]'>
+                <body file= 'MCIPropertyChecker.txt'/>
+            </check>
+        </checker>
+    </verifier>
 </verificationConfig>

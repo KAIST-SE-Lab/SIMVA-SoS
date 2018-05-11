@@ -47,11 +47,11 @@ print()
 '''
 
 '''Verification'''
-property = MCIProperty('RescuedPatientProperty', 'RescuedPatientRatioUpperThanValue', 'MCIPropertyType', 0.8)
-checker = MCIPropertyChecker()
-verifier = SPRT(checker)
+rescuedProperty = MCIProperty('RescuedPatientProperty', 'RescuedPatientRatioUpperThanValue', 'MCIPropertyType', 0.8)
+rescuedChecker = MCIPropertyChecker()
+verifier = SPRT(rescuedChecker)
 print('Verify existed logs')
-verifier.verifyExistedLogs(MCILogs, property)
+verifier.verifyExistedLogs(MCILogs, rescuedProperty)
 print()
 print('Verify with simulator')
-verifier.verifyWithSimulator(MCISim, property, repeatSim)
+verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim)
