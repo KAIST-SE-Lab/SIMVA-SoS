@@ -1,11 +1,12 @@
 public class ConstantTimeBound extends TimeBound {
-  double value;
-  public ConstantTimeBound(double value) {
-    this.value = value;
+  int tick;
+
+  public ConstantTimeBound(int value) {
+    this.tick = value;
   }
 
-  public double getValue() {
-    return value;
+  public int getTick() {
+    return tick;
   }
 
 }

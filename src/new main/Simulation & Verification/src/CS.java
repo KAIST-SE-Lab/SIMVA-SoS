@@ -9,4 +9,9 @@ public class CS {
 
     return "todo";
   }
+
+  // this method for inherited classes' reset call from SoS.java
+  // for details of reset implementation, go to FireFighter.java, which is the
+  // child class of  CS
+  public void reset() {  }
 }

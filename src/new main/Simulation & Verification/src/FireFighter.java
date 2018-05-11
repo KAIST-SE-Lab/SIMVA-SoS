@@ -2,14 +2,14 @@ public class FireFighter extends CS {
 
   double probability;
   int location;
-  int rescue;
+  int rescued;
 
   public FireFighter(String name, double prob) {  //constructor
 
     super(name);
     this.probability = prob;
     this.location = -1;
-    this.rescue = 0;
+    this.rescued = 0;
 
   }
 
@@ -18,8 +18,8 @@ public class FireFighter extends CS {
     return "todo";
   }
 
-  public int reset() {
-
-    return -1;
+  public void reset() {
+    this.location = -1;
+    this.rescued = 0;
   }
 }
