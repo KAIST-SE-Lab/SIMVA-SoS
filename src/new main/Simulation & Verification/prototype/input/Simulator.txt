@@ -1,0 +1,1 @@
+self.simulationLog.append(([CS.rescued for CS in self.SoS.CSs], self.SoS.environment.copy()))
