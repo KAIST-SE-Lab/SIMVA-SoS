@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 public class Event {
 
   Action action;
@@ -7,12 +9,17 @@ public class Event {
     this.timebound = timebound;
   }
 
-  public String occur(int current) {
-    String result = "";
+  public Pair<Action, TimeBound> occur(int current) {
     if (this.timebound.getTick() == current) {
-      result = this.action.behave();
+      this.action.behave();
+
+      // return constant timebound because simulation log only need the time(tick) when the event was occurred.
+      ConstantTimeBound csnt_tb = new ConstantTimeBound(current);
+
+      return new Pair<>(this.action, csnt_tb);
     }
-    return result;
+
+    return null;
   }
 
   public void reset() {

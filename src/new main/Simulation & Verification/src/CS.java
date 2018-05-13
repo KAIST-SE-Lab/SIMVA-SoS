@@ -14,4 +14,7 @@ public class CS {
   // for details of reset implementation, go to FireFighter.java, which is the
   // child class of  CS
   public void reset() {  }
+
+  // this method for inherited classes' getRescued call from simulationLog.java
+  public int getRescued() { return -1;}
 }

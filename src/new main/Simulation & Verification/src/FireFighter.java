@@ -22,4 +22,6 @@ public class FireFighter extends CS {
     this.location = -1;
     this.rescued = 0;
   }
+
+  public int getRescued() { return rescued; }
 }

@@ -5,52 +5,43 @@ public class Simulator {
   int simulationTime;
   SoS sos;
   Scenario scenario;
-  // Change simualationLog type froom ArrayList<String> into ArrayList<Pair<Int, String>>
-  ArrayList <Pair<Integer,String>> simulationLog;
+  SimulationLog simulationLog;
   
   public Simulator(int simulationTime, SoS sos, Scenario scenario) {
     this.simulationTime = simulationTime;
     this.sos = sos;
     this.scenario = scenario;
-    this.simulationLog = new ArrayList<> ();
+    this.simulationLog = new SimulationLog();
   }
 
-  public ArrayList run() {
+  public SimulationLog run() {
     this.reset();
     
-    // result variable is for getting the result of event in such tick
-    String result;
+    // this "result" variable is for getting the information of each event
+    Pair<Action, TimeBound> result;
+
     // for every tick in simulation time
     for(int tick  = 0; tick < this.simulationTime; tick++) {
       // check every event in scenario
       for (Event ev : this.scenario.events) {
         result = ev.occur(tick);
-        
-        // the default return value is "" from event.occur from Event.java
-        if (!result.equals("")) {
-          this.simulationLog.add(new Pair<>(tick, result));
+
+        // result = (Action, Constant TimeBound)
+        if (result != null) {
+          this.simulationLog.addEventLog(result.getKey(), result.getValue());
         }
       }
-      // sosRunResults variable is for getting the result of SoS run in such tick
-      // Because the return type of sos.run is ArrayList<String>
-      ArrayList<String> sosRunResults = new ArrayList<>();
-      sosRunResults = this.sos.run(tick);
-      
-      // append each sosRunResults with tick in the simulation Log
-      for (String res : sosRunResults) {
-        this.simulationLog.add(new Pair<>(tick, res));
-      }
-      
-      // TODO!! ASK to YONG JUN!!
-      // self.simulationLog.append( ( [CS.rescued for CS in self.SoS.CSs],
-      // self.SoS.environment.copy() ) )
-      // this.simulationLog.add()
-      
-      return simulationLog;
-      
+
+      // Run SoS for such tick and get the result of each running
+      // And add this running result into simulationLog.sosRunLog with tick
+      this.simulationLog.addSosRunLog(tick, this.sos.run(tick));
     }
-    
-    return null;
+
+    // Save the other information from sos
+    // this Resultlog is also for checking the result easier
+    this.simulationLog.addResultLog(this.sos.CSs, this.sos.environment);
+
+    return simulationLog;
   }
 
   public void stop() {
