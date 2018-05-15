@@ -6,15 +6,16 @@ public class CS {
   }
 
   public String act() {
-
-    return "todo";
+    String ret = "CS Operated: ";
+    
+    return ret + this.name;
   }
 
-  // this method for inherited classes' reset call from SoS.java
+  // this method is for inherited classes' reset call in SoS.java
   // for details of reset implementation, go to FireFighter.java, which is the
   // child class of  CS
   public void reset() {  }
 
-  // this method for inherited classes' getRescued call from simulationLog.java
+  // this method is for inherited classes' getRescued call in simulationLog.java
   public int getRescued() { return -1;}
 }

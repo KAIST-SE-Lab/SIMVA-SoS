@@ -5,8 +5,8 @@ public class MCIProperty extends Property {
     super(name, specification, propertyType);
     this.etc = etc;
   }
-
-  public void getValue() {
-
+  
+  public double getValue() {
+    return this.etc;
   }
 }

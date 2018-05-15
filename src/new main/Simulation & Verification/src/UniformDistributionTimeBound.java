@@ -14,6 +14,6 @@ public class UniformDistributionTimeBound extends TimeBound {
     Random random = new Random();
 
     // Generate random number in Uniform Distribution
-    return random.nextInt(end - start);
+    return random.nextInt(end - start + 1) + start;
   }
 }

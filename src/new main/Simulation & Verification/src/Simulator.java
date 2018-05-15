@@ -39,7 +39,7 @@ public class Simulator {
 
     // Save the other information from sos
     // this Resultlog is also for checking the result easier
-    this.simulationLog.addResultLog(this.sos.CSs, this.sos.environment);
+    this.simulationLog.addPropertyLog(this.sos.CSs, this.sos.environment);
 
     return simulationLog;
   }

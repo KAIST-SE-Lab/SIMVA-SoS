@@ -8,8 +8,8 @@ public class PropertyChecker {
   }
 */
 
-  public boolean check(ArrayList simulationLog, Property verificationProperty) {
-
-    return false;
+  // this method is for inherited classes' check call
+  public boolean check(SimulationLog simuLog, Property verificationProperty) {
+    return true;
   }
 }
