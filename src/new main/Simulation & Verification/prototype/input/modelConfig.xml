@@ -10,9 +10,9 @@ Writer: Yong-Jun Shin
     </CSTypes>
     <CSs name = 'CSs'>
         <!--<CS type = 'FireFighter' parameter='0, 0.8' numberOfCS = '3'/>-->
-        <CS type = 'FireFighter' parameter='0, 0.8'/>
-        <CS type = 'FireFighter' parameter='1, 0.8'/>
-        <CS type = 'FireFighter' parameter='2, 0.8'/>
+        <CS type = 'FireFighter' parameter='"0", 0.8'/>
+        <CS type = 'FireFighter' parameter='"1", 0.8'/>
+        <CS type = 'FireFighter' parameter='"2", 0.8'/>
     </CSs>
     <SoS name = 'MCISoS' type = 'none' CSs ='CSs' environment ='MCIMap'>
         <resetEnvironment file = 'EnvironmentReset.txt'/>

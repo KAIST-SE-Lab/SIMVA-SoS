@@ -11,11 +11,19 @@ inputFileDir = 'input'
 modelConfigFile = 'modelConfig.xml'
 simulationConfigfile = 'simulationConfig.xml'
 verificationConfigFile = 'verificationConfig.xml'
-outputFileName = 'SIMVA-SoS.py'
+outputFileName = 'output/output.py'
+verificationResultFileName = 'output/verification_result.txt'
 
 # generate executable input
+print('Parsing input files ...')
 inputParser.parseInputFiles(inputFileDir, modelConfigFile, simulationConfigfile, verificationConfigFile, outputFileName)
 
-# run generated SIMVA-SoS file
+# todo func slicing
+'''here'''
+
+# run generated file
+print()
 print('Running generated file ...')
-os.system('python ' + outputFileName + ' > output/output.txt')
+os.system('python ' + outputFileName + ' > ' + verificationResultFileName)
+
+print('Done:', verificationResultFileName)
