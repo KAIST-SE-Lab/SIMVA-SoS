@@ -10,7 +10,7 @@ class Verifier(object):
     def verify(self, simulationLogs, verificationProperty):
         check = True
         for simulationLog in simulationLogs:
-            if not self.propertyChecker.check(simulationLog, property):
+            if not self.propertyChecker.check(simulationLog, verificationProperty):
                 check = False
         return check
 
