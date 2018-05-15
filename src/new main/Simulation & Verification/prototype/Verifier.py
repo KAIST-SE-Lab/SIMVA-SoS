@@ -24,6 +24,8 @@ class SPRT(Verifier):
         self.minimumSample = 2
 
     def verifyExistedLogs(self, simulationLogs, verificationProperty):
+        totalResult = True
+        probability = 0.
         for i in range(1, 100):
             theta = i * 0.01
             numOfSamples = 0
@@ -42,10 +44,17 @@ class SPRT(Verifier):
 
             result = self.isSatisfied(numOfSamples, numOfTrue, theta)   #todo: 각 theta에 대한 결정 함수 필요, 여기서 alpha, beta, delta 사용
             print('theta:', format(theta, ".2f"), ' num of samples:', numOfSamples, ' num of true:', numOfTrue, ' result:', result)
+            if totalResult:
+                if not result:
+                    totalResult = False
+                    probability = theta
+        print('Probability: about', probability * 100, '%')
 
     def verifyWithSimulator(self, simulator, verificationProperty, maxRepeat):
         maxNumOfSamples = maxRepeat
 
+        totalResult = True
+        probability = 0.
         for i in range(1, 100):
             theta = i * 0.01
             numOfSamples = 0
@@ -63,6 +72,11 @@ class SPRT(Verifier):
 
             result = self.isSatisfied(numOfSamples, numOfTrue, theta)   #todo: 각 theta에 대한 결정 함수 필요, 여기서 alpha, beta, delta 사용
             print('theta:', format(theta, ".2f"), ' num of samples:', numOfSamples, ' num of true:', numOfTrue, ' result:', result)
+            if totalResult:
+                if not result:
+                    totalResult = False
+                    probability = theta
+        print('Probability: about', probability*100, '%')
 
     def isSampleNeeded(self, numOfSamples, numOfTrue, theta):   #todo: 샘플 필요한지
         if numOfSamples < self.minimumSample:

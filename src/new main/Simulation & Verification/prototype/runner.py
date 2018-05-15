@@ -18,7 +18,10 @@ verificationResultFileName = 'output/verification_result.txt'
 print('Parsing input files ...')
 inputParser.parseInputFiles(inputFileDir, modelConfigFile, simulationConfigfile, verificationConfigFile, outputFileName)
 
-# run generated SIMVA-SoS file
+# todo func slicing
+'''here'''
+
+# run generated file
 print()
 print('Running generated file ...')
 os.system('python ' + outputFileName + ' > ' + verificationResultFileName)
