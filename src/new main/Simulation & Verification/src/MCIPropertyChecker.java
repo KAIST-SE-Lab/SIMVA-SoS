@@ -9,7 +9,8 @@ public class MCIPropertyChecker extends PropertyChecker {
     super();
   }
 
-  // In Simulation Log, this property function check the
+  // In Simulation Log, this property function check the simulation log
+  // (rescued people number, patient number)
   public boolean check(SimulationLog simuLog, Property verificationProperty) {
 
     Pair<ArrayList<Integer>, ArrayList<Integer>> tmp = simuLog.getPropertyLog();
@@ -28,6 +29,7 @@ public class MCIPropertyChecker extends PropertyChecker {
       sumPatients += i;
     }
     
+    //
     if((sumRescued / sumPatients) > verificationProperty.getValue()) {
       return true;
     }

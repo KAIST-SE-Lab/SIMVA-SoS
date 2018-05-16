@@ -24,13 +24,10 @@ public class SoS {
     this.resetEnvironment();
   }
 
-  public void resetEnvironment(ArrayList<Integer> environment) {
-      for (int i = 0; i < environment.size(); i++) {
-        environment.set(i, 0);
+  public void resetEnvironment() {
+      for (int i = 0; i < this.environment.size(); i++) {
+        this.environment.set(i, 0);
       }
   }
 
-  public void resetEnvironment() {
-
-  }
 }
