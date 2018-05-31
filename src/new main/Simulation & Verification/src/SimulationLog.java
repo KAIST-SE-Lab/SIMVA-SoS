@@ -36,7 +36,7 @@ public class SimulationLog {
 
     public void addSosRunLog(int tick, ArrayList<String> results) {
         for(String res: results) {
-            this.sosRunLog.add(new Pair<Integer, String>(tick, res));
+            this.sosRunLog.add(new Pair<>(tick, res));
         }
     }
 

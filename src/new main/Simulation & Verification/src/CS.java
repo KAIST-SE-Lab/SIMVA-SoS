@@ -1,13 +1,21 @@
-public class CS {
+import java.util.ArrayList;
+
+public abstract class CS {
 
   String name;
   public CS(String name) { // constructor
     this.name = name;
   }
-
+/*
   public String act() {
     String ret = "CS Operated: ";
     
+    return ret + this.name;
+  }*/
+
+  public String act(int tick, ArrayList<Integer> environment) {
+    String ret = "CS Operated: ";
+
     return ret + this.name;
   }
 

@@ -16,6 +16,7 @@ public class FireFighter extends CS {
 
   }
 
+  @Override
   public String act(int tick, ArrayList<Integer> environment) {
     String ret = "CS operated: ";
     Random random = new Random();

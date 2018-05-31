@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public abstract class ExistenceChecker extends PropertyChecker {
+/*public abstract class ExistenceChecker extends PropertyChecker {
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
 
@@ -15,4 +15,4 @@ public abstract class ExistenceChecker extends PropertyChecker {
         }
         return false;
     }
-}
+}*/
