@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-public class PropertyChecker {
+public abstract class PropertyChecker {
 
 /*
   public PropertyChecker() {  //constructor
@@ -9,7 +9,6 @@ public class PropertyChecker {
 */
 
   // this method is for inherited classes' check call
-  public boolean check(SimulationLog simuLog, Property verificationProperty) {
-    return true;
-  }
+  protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
+  public abstract boolean check(SimulationLog simLog, Property verificationProperty);
 }

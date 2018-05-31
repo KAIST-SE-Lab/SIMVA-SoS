@@ -1,12 +1,12 @@
 public class MCIProperty extends Property {
 
-  double etc;
+  double rescueRate;
   public MCIProperty(String name, String specification, String propertyType, double etc) {
     super(name, specification, propertyType);
-    this.etc = etc;
+    this.rescueRate = etc;
   }
   
   public double getValue() {
-    return this.etc;
+    return this.rescueRate;
   }
 }
