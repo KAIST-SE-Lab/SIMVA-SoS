@@ -1,5 +1,6 @@
 import javafx.util.Pair;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SimulationLog {
@@ -9,26 +10,55 @@ public class SimulationLog {
     // Event.occur() return the constant timebound of such event.
     ArrayList<Event> eventLog;
 
-    // This variable is used in the property checking part
-    // The first part of this variable is
-    ArrayList<Pair<ArrayList<Integer>, ArrayList<Integer>>> propertyLog;
+    // csResultLog save eacs CSs' final state at each simulation
+    // In this FireFighter case, this log store the rescued number of values for each CS
+    // , when this simulation finished.
+    ArrayList<Integer> csResultLog;
+
+    // environmentResultLog save final state of SoS.environment values
+    // In this case, this log store the unrescued number of values for each CS,
+    // when this simulation finished.
+    ArrayList<Integer> environmentResultLog;
 
     ArrayList<Pair<Integer, String>> sosRunLog;
 
-    // Constructor
     public SimulationLog() {
-        this.eventLog = new ArrayList<>();
-        this.propertyLog = new ArrayList<>();
-        this.sosRunLog = new ArrayList<>();
+      this.eventLog = new ArrayList<>();
+      //this.propertyLog = new ArrayList<>();
+      this.csResultLog = new ArrayList<>();
+      this.environmentResultLog = new ArrayList<>();
+      this.sosRunLog = new ArrayList<>();
     }
 
     public void clear() {
       this.eventLog.clear();
-      this.propertyLog.clear();
+      this.csResultLog.clear();
+      this.environmentResultLog.clear();
       this.sosRunLog.clear();
     }
 
-    // Add log into eventlog
+    public void addCsResultLog(ArrayList<CS> log) {
+      ArrayList<Integer> rescued = new ArrayList<>();
+      for (CS cs : log) {
+        rescued.add(cs.getRescued());
+      }
+      this.csResultLog = rescued;
+    }
+
+    public void addEnvironmentResultLog(ArrayList<Integer> log) {
+      this.environmentResultLog = new ArrayList<>(log);
+    }
+
+    // For the convenience of getting csResultLog and environmentResultLog simultaneously,
+    // this get PropertyCheckLogs returns the pair of logs.
+    // You can use csResultLog for getKey(), and environmentResultLog for getValue() functions
+    // in each simulation.
+    public Pair<ArrayList<Integer>,ArrayList<Integer>> getPropertyCheckLogs() {
+      return new Pair<>(this.csResultLog, this.environmentResultLog);
+    }
+
+
+  // Add log into eventlog
     public void addEventLog(Action action, TimeBound timeBound) {
         Event event = new Event(action, timeBound);
         this.eventLog.add(event);
@@ -40,25 +70,6 @@ public class SimulationLog {
         }
     }
 
-    // Add result of simulation into propertylog
-    // THIS PART COULD BE CHANGED ACCORDING TO THE DEVELOPMENT OF MODELING PART
-    public void addPropertyLog(ArrayList<CS> csArrayList, ArrayList<Integer> environment) {
-        ArrayList<Integer> rescued = new ArrayList<>();
-        for (CS cs : csArrayList) {
-            rescued.add(cs.getRescued());
-        }
-
-        this.propertyLog.add(new Pair<>(rescued, environment));
-    }
-
-    public Pair<ArrayList<Integer>, ArrayList<Integer>> getPropertyLog() {
-      Pair<ArrayList<Integer>, ArrayList<Integer>> ret =
-          new Pair<> (this.propertyLog.get(0).getKey(),
-                      this.propertyLog.get(0).getValue());
-      
-      return ret;
-    }
-    
     // print the log of each occurred event
     public void printEventLog() {
       System.out.println("Event Log");
@@ -77,21 +88,4 @@ public class SimulationLog {
       }
     }
 
-
-    // print the result of simulation
-    // THIS PART COULD BE CHANGED ACCORDING TO THE DEVELOPMENT OF MODELING PART
-    public void printPropertyLog() {
-        ArrayList<Integer> tmpRescued = this.propertyLog.get(0).getKey();
-        ArrayList<Integer> tmpEnv = this.propertyLog.get(0).getValue();
-
-        System.out.println("The number of rescued people by each CS");
-        for(int i : tmpRescued) {
-            System.out.println(i);
-        }
-
-        System.out.println("Environment Setting");
-        for(int i: tmpEnv) {
-            System.out.println(i);
-        }
-    }
 }

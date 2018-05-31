@@ -13,10 +13,9 @@ public class MCIPropertyChecker extends PropertyChecker {
   // (rescued people number, patient number)
   public boolean check(SimulationLog simuLog, Property verificationProperty) {
 
-    Pair<ArrayList<Integer>, ArrayList<Integer>> tmp = simuLog.getPropertyLog();
-    
-    ArrayList<Integer> rescued = tmp.getKey();
-    ArrayList<Integer> environment = tmp.getValue();
+    Pair<ArrayList<Integer>, ArrayList<Integer>> propertyLogs = simuLog.getPropertyCheckLogs();
+    ArrayList<Integer> rescued = propertyLogs.getKey();
+    ArrayList<Integer> environment = propertyLogs.getValue();
     
     double sumRescued = 0;
     double sumPatients = 0;
@@ -30,13 +29,10 @@ public class MCIPropertyChecker extends PropertyChecker {
     }
     
     sumPatients += sumRescued;
-    //System.out.println(sumRescued + " , " + sumPatients + " ," + verificationProperty.getValue());
     if((sumRescued / sumPatients) > verificationProperty.getValue()) {
-      //System.out.println("return true");
       return true;
     }
     else {
-      //System.out.println("return false");
       return false;
     }
   }

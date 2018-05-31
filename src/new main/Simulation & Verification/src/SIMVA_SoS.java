@@ -44,12 +44,10 @@ public class SIMVA_SoS {
         int simulationTime = 15;
         MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
         int repeatSim = 2000;
-        ArrayList MCILogs = new ArrayList();
+        ArrayList<SimulationLog> MCILogs = new ArrayList<>();
 
         for(int i = 0; i < repeatSim; i++) {
-            SimulationLog MCILog = MCISim.run();
-            //System.out.println(MCILog.getPropertyLog());// MCILog = MCISim.run()   이걸 어떻게 바꾸지??  여기서 에러 발생하는데...NullpointerException...
-            MCILogs.add(MCILog);
+            MCILogs.add(MCISim.run());
         }
 
         // Verification

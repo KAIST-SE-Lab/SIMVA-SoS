@@ -17,14 +17,13 @@ public class Simulator {
 
     SimulationLog simulationLog = new SimulationLog();
 
-
     // this "result" variable is for getting the information of each event
     Pair<Action, TimeBound> result;
+    Pair<ArrayList<String>, ArrayList<Integer>> result_sos = null;
 
     // for every tick in simulation time
     for(int tick  = 0; tick < this.simulationTime; tick++) {
       // check every event in scenario
-      //System.out.println(tick);
       for (Event ev : this.scenario.events) {
         result = ev.occur(tick);
 
@@ -34,24 +33,17 @@ public class Simulator {
         }
       }
 
-      int sum = 0;
-
-      for (int i : this.sos.environment) {
-        sum += i;
-      }
-
-      if (tick == 0 && sum != 20) System.out.println(tick + ": " + sum);
       // Run SoS for such tick and get the result of each running
       // And add this running result into simulationLog.sosRunLog with tick
-      simulationLog.addSosRunLog(tick, this.sos.run(tick));
+      result_sos = this.sos.run(tick);
+      simulationLog.addSosRunLog(tick, result_sos.getKey());
     }
 
     // Save the other information from sos
     // this Resultlog is also for checking the result easier
-    simulationLog.addPropertyLog(this.sos.CSs, this.sos.environment);
-    //System.out.println(simulationLog.getPropertyLog());
-
-    int sum = 0;
+    simulationLog.addCsResultLog(this.sos.CSs);
+    simulationLog.addEnvironmentResultLog(result_sos.getValue());
+    //System.out.println(simulationLog.getCsLog() + " : " + simulationLog.getEnvironmentLog());
 
 
     return simulationLog;

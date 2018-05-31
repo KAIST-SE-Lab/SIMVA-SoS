@@ -22,6 +22,7 @@ public class FireFighter extends CS {
     Random random = new Random();
     
     if (random.nextFloat() < this.probability) {
+
       if (this.location == -1) {
         this.location = random.nextInt(environment.size());
       }
@@ -30,12 +31,11 @@ public class FireFighter extends CS {
       }
       
       ret = ret + this.name + ", Current Location: " + this.location;
-      //System.out.println(ret);
+
       if(environment.get(this.location) > 0) {
         this.rescued += 1;
         environment.set(this.location, environment.get(this.location) - 1);
         ret = ret + ", Rescued Patient :" + environment.toString();
-
       }
     }
     return ret;

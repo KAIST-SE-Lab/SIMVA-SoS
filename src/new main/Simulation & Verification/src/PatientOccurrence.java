@@ -17,7 +17,6 @@ public class PatientOccurrence extends Action {
     
     int i = random.nextInt(this.environment.size());
     this.environment.set(i,this.environment.get(i) + 1);
-    //System.out.println(this.environment);
     
     // for changing the environment(Arraylist of integerr) into String for return
     String ret = "";
