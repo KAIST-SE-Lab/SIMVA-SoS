@@ -1,5 +1,6 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class SoS {
@@ -13,7 +14,19 @@ public class SoS {
 
   public ArrayList run(int tick) {
 
-    return null;
+    ArrayList<String> logs = new ArrayList<>();
+    Collections.shuffle(CSs);
+
+    for(CS cs : CSs) {
+      String result = cs.act(tick, environment);
+
+      if(result != null && !result.isEmpty()) {
+        logs.add(result);
+      }
+    }
+    //logs.add(String (environment));
+
+    return logs;
   }
 
   // reset all cs's attributes ex) firefighter

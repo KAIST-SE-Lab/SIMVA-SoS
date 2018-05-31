@@ -29,7 +29,7 @@ public class MCIPropertyChecker extends PropertyChecker {
       sumPatients += i;
     }
     
-    //
+    sumPatients += sumRescued;
     if((sumRescued / sumPatients) > verificationProperty.getValue()) {
       return true;
     }
