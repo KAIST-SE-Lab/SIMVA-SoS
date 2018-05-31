@@ -25,19 +25,18 @@ public class SPRT extends Verifier {
     
     int numSamples;
     int numTrue;
-    long randomSeed;
     
     for(int i = 1; i < 100; i++) {
       theta = i * 0.01;
       
       numSamples = 0;
       numTrue = 0;
-      
-      randomSeed = System.nanoTime();
-      Collections.shuffle(simuLogs, new Random(randomSeed));
+
+      //randomSeed = System.nanoTime();
+      Collections.shuffle(simuLogs, new Random());
       
       while(isSampleNeeded(numSamples, numTrue, theta)) {
-        
+
         if (numSamples >=logLen) {
           System.out.println("Lack of simulation  Logs: " + logLen);
           break;
@@ -90,12 +89,11 @@ public class SPRT extends Verifier {
           numTrue += 1;
         }
         numSamples += 1;
-        
-        ret = this.isSatisfied(numSamples, numTrue, theta);
-        System.out.println("theta: " + Double.parseDouble(String.format("%.2f",theta)) +
-            " numSamples: " + numSamples + " numTrue: " + numTrue + " result: " + ret);
-        
       }
+
+      ret = this.isSatisfied(numSamples, numTrue, theta);
+      System.out.println("theta: " + Double.parseDouble(String.format("%.2f",theta)) +
+          " numSamples: " + numSamples + " numTrue: " + numTrue + " result: " + ret);
       
       if(totalRet) {
         if (!ret) {

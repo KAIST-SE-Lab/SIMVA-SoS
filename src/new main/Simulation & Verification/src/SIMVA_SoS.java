@@ -24,7 +24,7 @@ public class SIMVA_SoS {
         int mapSize = 20;
         ArrayList<Integer> MCIMap = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < mapSize; i++) {
           MCIMap.add(0);
         }
 
@@ -44,11 +44,11 @@ public class SIMVA_SoS {
         int simulationTime = 15;
         MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
         int repeatSim = 2000;
-        SimulationLog MCILog;
         ArrayList MCILogs = new ArrayList();
 
         for(int i = 0; i < repeatSim; i++) {
-            MCILog = MCISim.run();       // MCILog = MCISim.run()   이걸 어떻게 바꾸지??  여기서 에러 발생하는데...NullpointerException...
+            SimulationLog MCILog = MCISim.run();
+            //System.out.println(MCILog.getPropertyLog());// MCILog = MCISim.run()   이걸 어떻게 바꾸지??  여기서 에러 발생하는데...NullpointerException...
             MCILogs.add(MCILog);
         }
 
@@ -62,9 +62,5 @@ public class SIMVA_SoS {
         System.out.println();
         System.out.println("Verify with simulator");
         verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim);
-
-
-
-
     }
 }

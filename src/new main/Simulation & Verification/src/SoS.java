@@ -5,7 +5,7 @@ import java.util.Collections;
 
 public class SoS {
   ArrayList <CS> CSs;
-  ArrayList <Integer> environment;
+  public ArrayList <Integer> environment;
   public SoS( ArrayList <CS> CSs, ArrayList<Integer> environment) {
     this.CSs = CSs;
     this.environment = environment;

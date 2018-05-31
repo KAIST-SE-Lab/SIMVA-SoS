@@ -18,8 +18,8 @@ public class MCIPropertyChecker extends PropertyChecker {
     ArrayList<Integer> rescued = tmp.getKey();
     ArrayList<Integer> environment = tmp.getValue();
     
-    int sumRescued = 0;
-    int sumPatients = 0;
+    double sumRescued = 0;
+    double sumPatients = 0;
     
     for (int i : rescued ) {
       sumRescued += i;
@@ -30,10 +30,13 @@ public class MCIPropertyChecker extends PropertyChecker {
     }
     
     sumPatients += sumRescued;
+    //System.out.println(sumRescued + " , " + sumPatients + " ," + verificationProperty.getValue());
     if((sumRescued / sumPatients) > verificationProperty.getValue()) {
+      //System.out.println("return true");
       return true;
     }
     else {
+      //System.out.println("return false");
       return false;
     }
   }
