@@ -1,4 +1,4 @@
-public abstract class ExistenceUntilChecker extends ExistenceChecker{
+/*public abstract class ExistenceUntilChecker extends ExistenceChecker{
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
 
@@ -13,4 +13,4 @@ public abstract class ExistenceUntilChecker extends ExistenceChecker{
         }
         return false;
     }
-}
+}*/

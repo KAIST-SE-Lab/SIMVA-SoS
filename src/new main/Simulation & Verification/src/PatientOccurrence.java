@@ -23,7 +23,7 @@ public class PatientOccurrence extends Action {
     for (int j: environment) {
       ret += String.valueOf(j) + " ";
     }
-    
+
     return super.behave() + "at" + String.valueOf(i) + " " + ret;
   }
 }

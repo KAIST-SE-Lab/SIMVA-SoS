@@ -9,6 +9,6 @@ public abstract class PropertyChecker {
 */
 
   // this method is for inherited classes' check call
-  protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
+  /*protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);*/
   public abstract boolean check(SimulationLog simLog, Property verificationProperty);
 }

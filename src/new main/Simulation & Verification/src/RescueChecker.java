@@ -1,3 +1,4 @@
+/*
 public class RescueChecker extends ExistenceChecker {
     @Override
     protected boolean evaluateState(Snapshot state, Property verificationProperty) {
@@ -5,3 +6,4 @@ public class RescueChecker extends ExistenceChecker {
         return state.getRescueRate() > verificationProperty.getValue();
     }
 }
+*/
