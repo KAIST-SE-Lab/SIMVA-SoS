@@ -1,4 +1,4 @@
-public abstract class ExistenceChecker extends PropertyChecker {
+public abstract class AbsenceChecker extends PropertyChecker{
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
 
@@ -8,9 +8,9 @@ public abstract class ExistenceChecker extends PropertyChecker {
 
         for (int i = 0; i < logSize; i++) {
             if (evaluateState(simLog.getSnapshot(i), verificationProperty)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
