@@ -83,9 +83,9 @@ public class SPRT extends Verifier {
           break;
         }
         
-        SimulationLog simuLog = simulator.run();
+        Log log = simulator.run();
         
-        if(this.propertychecker.check(simuLog, verificationProperty)) {
+        if(this.propertychecker.check(log.getSimuLog(), verificationProperty)) {
           numTrue += 1;
         }
         numSamples += 1;

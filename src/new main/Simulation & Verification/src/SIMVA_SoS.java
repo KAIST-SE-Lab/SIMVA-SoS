@@ -41,23 +41,25 @@ public class SIMVA_SoS {
         MCIScenario = new Scenario(MCIEvents);
 
         // Simulation
+        int repeatSim = 2000;
         int simulationTime = 15;
         MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
-        int repeatSim = 2000;
+        
+        /*
         ArrayList<SimulationLog> MCILogs = new ArrayList<>();
 
         for(int i = 0; i < repeatSim; i++) {
             MCILogs.add(MCISim.run());
         }
-
+        */
         // Verification
         rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
         rescuedChecker = new MCIPropertyChecker();
         verifier = new SPRT(rescuedChecker);
 
-        System.out.println("Verify existed Logs");
-        verifier.verifyExistedLogs(MCILogs, rescuedProperty);
-        System.out.println();
+        //System.out.println("Verify existed Logs");
+        //verifier.verifyExistedLogs(MCILogs, rescuedProperty);
+        //System.out.println();
         System.out.println("Verify with simulator");
         verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim);
     }

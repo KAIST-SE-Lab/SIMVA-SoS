@@ -1,4 +1,4 @@
-public abstract class TransientStateProbabilityChecker extends PropertyChecker {
+/*public abstract class TransientStateProbabilityChecker extends PropertyChecker {
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
 
@@ -18,4 +18,4 @@ public abstract class TransientStateProbabilityChecker extends PropertyChecker {
         }
         return false;
     }
-}
+}*/

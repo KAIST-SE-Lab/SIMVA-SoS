@@ -1,4 +1,4 @@
-public abstract class SteadyStateProbability extends PropertyChecker{
+/*public abstract class SteadyStateProbability extends PropertyChecker{
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
 
@@ -18,4 +18,4 @@ public abstract class SteadyStateProbability extends PropertyChecker{
         }
         return false;
     }
-}
+}*/

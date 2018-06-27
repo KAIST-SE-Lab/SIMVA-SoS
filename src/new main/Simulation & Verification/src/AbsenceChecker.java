@@ -1,4 +1,4 @@
-public abstract class AbsenceChecker extends PropertyChecker{
+/*public abstract class AbsenceChecker extends PropertyChecker{
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
 
@@ -13,4 +13,4 @@ public abstract class AbsenceChecker extends PropertyChecker{
         }
         return true;
     }
-}
+}*/

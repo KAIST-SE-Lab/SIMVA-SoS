@@ -9,14 +9,14 @@ public class Event {
     this.timebound = timebound;
   }
 
-  public Pair<Action, TimeBound> occur(int current) {
+  public Action occur(int current) {
     if (this.timebound.getTick() == current) {
       this.action.behave();
 
       // return constant timebound because simulation log only need the time(tick) when the event was occurred.
-      ConstantTimeBound csnt_tb = new ConstantTimeBound(current);
+      //ConstantTimeBound csnt_tb = new ConstantTimeBound(current);
 
-      return new Pair<>(this.action, csnt_tb);
+      return this.action;
     }
 
     return null;
