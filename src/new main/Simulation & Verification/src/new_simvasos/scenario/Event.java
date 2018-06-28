@@ -1,8 +1,10 @@
-import javafx.util.Pair;
+package new_simvasos.scenario;
+
+import new_simvasos.timebound.TimeBound;
 
 public class Event {
 
-  Action action;
+  public Action action;
   TimeBound timebound;
   public Event(Action action, TimeBound timebound) {  //constructor
     this.action = action;
@@ -22,7 +24,7 @@ public class Event {
     return null;
   }
 
-  public void reset() {
+  protected void reset() {
     this.timebound.reset();
   }
 }

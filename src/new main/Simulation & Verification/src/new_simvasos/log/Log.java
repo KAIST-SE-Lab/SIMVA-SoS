@@ -1,6 +1,12 @@
+package new_simvasos.log;
+
+import new_simvasos.not_decided.CS;
+import new_simvasos.scenario.Event;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 
 public class Log {
   
@@ -24,11 +30,13 @@ public class Log {
     
     snapshotMap.put(tick, tmp);
   }
-  
+
+
   public void addSimuLog(ArrayList<CS> Css, ArrayList<Integer> Evs) {
     this.simuLog.addCsResultLog(Css);
     this.simuLog.addEnvironmentResultLog(Evs);
   }
+
   
   public void printSnapshot() {
     Iterator<Integer> keys = snapshotMap.keySet().iterator();

@@ -1,3 +1,5 @@
+package new_simvasos.property;
+
 public class MCIProperty extends Property {
 
   double rescueRate;
@@ -5,7 +7,7 @@ public class MCIProperty extends Property {
     super(name, specification, propertyType);
     this.rescueRate = etc;
   }
-  
+
   public double getValue() {
     return this.rescueRate;
   }

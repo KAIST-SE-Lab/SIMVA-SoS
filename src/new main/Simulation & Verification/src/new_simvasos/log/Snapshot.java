@@ -1,4 +1,6 @@
-import javafx.util.Pair;
+package new_simvasos.log;
+
+import new_simvasos.scenario.Event;
 
 import java.util.ArrayList;
 

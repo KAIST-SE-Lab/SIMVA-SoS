@@ -1,3 +1,5 @@
+package new_simvasos.timebound;
+
 public class ConstantTimeBound extends TimeBound {
   int tick;
 

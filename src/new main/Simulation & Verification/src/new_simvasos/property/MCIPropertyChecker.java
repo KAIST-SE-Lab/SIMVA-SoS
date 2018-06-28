@@ -1,4 +1,7 @@
+package new_simvasos.property;
+
 import javafx.util.Pair;
+import new_simvasos.log.SimulationLog;
 
 import java.util.ArrayList;
 

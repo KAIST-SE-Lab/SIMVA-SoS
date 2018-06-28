@@ -1,3 +1,5 @@
+package new_simvasos.not_decided;
+
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -5,7 +7,7 @@ import java.util.Collections;
 
 
 public class SoS {
-  ArrayList <CS> CSs;
+  public ArrayList <CS> CSs;
   ArrayList <Integer> environment;
 
   public SoS( ArrayList <CS> CSs, ArrayList<Integer> environment) {

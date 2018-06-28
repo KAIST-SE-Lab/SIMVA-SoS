@@ -1,3 +1,5 @@
+package new_simvasos.timebound;
+
 import java.util.Random;
 
 public class NormalDistributionTimeBound extends TimeBound {

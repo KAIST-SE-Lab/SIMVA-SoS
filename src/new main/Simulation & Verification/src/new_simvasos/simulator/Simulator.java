@@ -1,4 +1,10 @@
+package new_simvasos.simulator;
+
 import javafx.util.Pair;
+import new_simvasos.log.Log;
+import new_simvasos.not_decided.SoS;
+import new_simvasos.scenario.Event;
+import new_simvasos.scenario.Scenario;
 
 import java.util.ArrayList;
 public class Simulator {
@@ -47,16 +53,24 @@ public class Simulator {
     return log;
   }
 
+
+  public  void pause() {
+
+  }
+
+
   public void stop() {
 
   }
+
 
   public void monitor() {
 
   }
 
+
   // reset the attributes of Simulator
-  public void reset() {
+  private void reset() {
     this.scenario.reset();
     this.sos.reset();
   }

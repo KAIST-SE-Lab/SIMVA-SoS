@@ -1,3 +1,11 @@
+package new_simvasos.verifier;
+
+import new_simvasos.log.Log;
+import new_simvasos.log.SimulationLog;
+import new_simvasos.property.Property;
+import new_simvasos.property.PropertyChecker;
+import new_simvasos.simulator.Simulator;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -16,7 +24,7 @@ public class SPRT extends Verifier {
     this.minimumSample = 2;
   }
   
-  public void verifyExistedLogs(ArrayList<SimulationLog> simuLogs, Property verificationProperty) {
+  private void verifyExistedLogs(ArrayList<SimulationLog> simuLogs, Property verificationProperty) {
     boolean ret;
     boolean totalRet = true;
     double probability = 0;

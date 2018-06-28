@@ -1,3 +1,9 @@
+package new_simvasos.verifier;
+
+import new_simvasos.log.SimulationLog;
+import new_simvasos.property.Property;
+import new_simvasos.property.PropertyChecker;
+
 import java.util.ArrayList;
 
 public class Verifier {
@@ -8,7 +14,7 @@ public class Verifier {
   }
   
   //
-  public boolean verify(ArrayList<SimulationLog> simulationLogs, Property verificationProperty) {
+  private boolean verify(ArrayList<SimulationLog> simulationLogs, Property verificationProperty) {
     boolean check = true;
     
     for(SimulationLog log: simulationLogs) {

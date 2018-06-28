@@ -1,3 +1,5 @@
+package new_simvasos.property;
+
 public class Property {
 
   String name;

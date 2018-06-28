@@ -1,7 +1,8 @@
-import javafx.util.Pair;
+package new_simvasos.log;
 
-import java.lang.reflect.Array;
+import javafx.util.Pair;
 import java.util.ArrayList;
+import new_simvasos.not_decided.CS;
 
 public class SimulationLog {
   
@@ -20,12 +21,12 @@ public class SimulationLog {
       this.environmentResultLog = new ArrayList<>();
     }
 
-    public void clear() {
+    private void clear() {
       this.csResultLog.clear();
       this.environmentResultLog.clear();
     }
 
-    public void addCsResultLog(ArrayList<CS> log) {
+    protected void addCsResultLog(ArrayList<CS> log) {
       ArrayList<Integer> rescued = new ArrayList<>();
       for (CS cs : log) {
         rescued.add(cs.getRescued());
@@ -33,7 +34,7 @@ public class SimulationLog {
       this.csResultLog = rescued;
     }
 
-    public void addEnvironmentResultLog(ArrayList<Integer> log) {
+    protected void addEnvironmentResultLog(ArrayList<Integer> log) {
       this.environmentResultLog = new ArrayList<>(log);
     }
 

@@ -1,3 +1,5 @@
+package new_simvasos.scenario;
+
 import java.util.ArrayList;
 import java.util.Random;
 

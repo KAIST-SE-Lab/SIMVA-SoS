@@ -1,4 +1,7 @@
-import java.util.ArrayList;
+package new_simvasos.property;
+
+import new_simvasos.log.SimulationLog;
+
 public abstract class PropertyChecker {
 
 /*

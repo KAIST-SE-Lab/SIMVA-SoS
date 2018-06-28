@@ -1,3 +1,5 @@
+package new_simvasos.scenario;
+
 public class Action {
 
   String name;
