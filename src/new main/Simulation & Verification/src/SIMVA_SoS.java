@@ -65,6 +65,8 @@ public class SIMVA_SoS {
         }
         */
         // Verification
+
+        long start = System.currentTimeMillis();
         rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
         rescuedChecker = new MCIPropertyChecker();
         verifier = new SPRT(rescuedChecker);
@@ -74,5 +76,8 @@ public class SIMVA_SoS {
         //System.out.println();
         System.out.println("Verify with simulator");
         verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim);
+
+        long end = System.currentTimeMillis();
+        System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
     }
 }
