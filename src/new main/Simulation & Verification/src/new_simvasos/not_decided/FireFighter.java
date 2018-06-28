@@ -20,7 +20,7 @@ public class FireFighter extends CS {
 
   @Override
   public String act(int tick, ArrayList<Integer> environment) {
-    String ret = "CS operated: ";
+    String ret = "CS number: ";
     Random random = new Random();
     
     if (random.nextFloat() < this.probability) {
@@ -32,12 +32,13 @@ public class FireFighter extends CS {
         this.location = (this.location + 1) % environment.size();
       }
       
-      ret = ret + this.name + ", Current Location: " + this.location;
+      ret = ret + this.name + " at Location: " + this.location;
 
       if(environment.get(this.location) > 0) {
         this.rescued += 1;
         environment.set(this.location, environment.get(this.location) - 1);
-        ret = ret + ", Rescued Patient :" + environment.toString();
+        //ret = ret + ", Rescued Patient :" + environment.toString();
+        ret = ret + " Rescue Patient: " + this.rescued;
       }
     }
     return ret;

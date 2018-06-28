@@ -24,7 +24,7 @@ public class SPRT extends Verifier {
     this.minimumSample = 2;
   }
   
-  private void verifyExistedLogs(ArrayList<SimulationLog> simuLogs, Property verificationProperty) {
+  /*private void verifyExistedLogs(ArrayList<SimulationLog> simuLogs, Property verificationProperty) {
     boolean ret;
     boolean totalRet = true;
     double probability = 0;
@@ -69,7 +69,7 @@ public class SPRT extends Verifier {
     }
     System.out.println("Probability: about " + probability * 100 + "%");
   }
-  
+  */
   public void verifyWithSimulator(Simulator simulator, Property verificationProperty, int maxRepeat) {
     int maxNumSamples = maxRepeat;
     
@@ -93,7 +93,7 @@ public class SPRT extends Verifier {
         
         Log log = simulator.run();
         
-        if(this.propertychecker.check(log.getSimuLog(), verificationProperty)) {
+        if(this.propertychecker.check(log, verificationProperty)) {
           numTrue += 1;
         }
         numSamples += 1;

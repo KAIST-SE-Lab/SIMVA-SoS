@@ -13,8 +13,8 @@ public class Verifier {
     this.propertychecker = checker;
   }
   
-  //
-  private boolean verify(ArrayList<SimulationLog> simulationLogs, Property verificationProperty) {
+  /*
+  private boolean verify(ArrayList<Log> simulationLogs, Property verificationProperty) {
     boolean check = true;
     
     for(SimulationLog log: simulationLogs) {
@@ -25,4 +25,5 @@ public class Verifier {
     
     return check;
   }
+  */
 }

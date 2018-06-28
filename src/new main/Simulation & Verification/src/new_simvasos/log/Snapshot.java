@@ -5,39 +5,16 @@ import new_simvasos.scenario.Event;
 import java.util.ArrayList;
 
 public class Snapshot {
+  private String snapshotString;
   
-  // Store the log of event. Just like the Scenario class, save (Action, Timebound class)
-  // but because this is log, the timebound is only constant one.
-  // Event.occur() return the constant timebound of such event.
-  private ArrayList<Event> eventLog;
-  private ArrayList<String> sosLog;
-  private ArrayList<Integer> environmentLog;
-  
-  public Snapshot() {
-    this.eventLog = new ArrayList<>();
-    this.sosLog = new ArrayList<>();
-    this.environmentLog = new ArrayList<>();
+  public Snapshot(String str) {
+    this.snapshotString = str;
   }
-  
-  public void addEnvironmentLog(ArrayList<Integer> log) {
-    for (int i : log) {
-      this.environmentLog.add(i);
-    }
+
+  public String getSnapshotString(){
+    return this.snapshotString;
   }
-  
-  // Add log into eventlog
-  public void addEventLog(ArrayList<Event> Evs) {
-    for(Event ev : Evs) {
-      this.eventLog.add(ev);
-    }
-  }
-  
-  public void addSosLog(ArrayList<String> results) {
-    for(String res: results) {
-      this.sosLog.add(res);
-    }
-  }
-  
+  /*
   public void printSnapshotLog() {
     System.out.println("===================== OCCURED EVENT =====================");
     for (Event ev: this.eventLog) {
@@ -51,4 +28,5 @@ public class Snapshot {
     System.out.println(this.environmentLog);
     
   }
+  */
 }

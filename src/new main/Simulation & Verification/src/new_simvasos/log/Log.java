@@ -22,11 +22,8 @@ public class Log {
     this.simuLog = new SimulationLog();
   }
   
-  public void addSnapshot(int tick, ArrayList<Event> events, ArrayList<String> sosLogs, ArrayList<Integer> environments) {
-    Snapshot tmp = new Snapshot();
-    tmp.addEventLog(events);
-    tmp.addSosLog(sosLogs);
-    tmp.addEnvironmentLog(environments);
+  public void addSnapshot(int tick, String snapshot) {
+    Snapshot tmp = new Snapshot(snapshot);
     
     snapshotMap.put(tick, tmp);
   }
@@ -44,11 +41,15 @@ public class Log {
     while(keys.hasNext()) {
       Integer key = keys.next();
       System.out.println("===================== TICK : " + key.toString() + " =====================");
-      snapshotMap.get(key).printSnapshotLog();
+      //snapshotMap.get(key).printSnapshotLog();
     }
   }
   
   public SimulationLog getSimuLog() {
     return this.simuLog;
+  }
+
+  public HashMap<Integer, Snapshot> getSnapshotMap() {
+    return snapshotMap;
   }
 }

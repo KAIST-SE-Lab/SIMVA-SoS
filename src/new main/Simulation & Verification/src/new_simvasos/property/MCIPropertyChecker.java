@@ -2,10 +2,13 @@ package new_simvasos.property;
 
 import javafx.util.Pair;
 import new_simvasos.log.SimulationLog;
+import new_simvasos.log.Snapshot;
+import new_simvasos.property.pattern.ExistenceChecker;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-public class MCIPropertyChecker extends PropertyChecker {
+public class MCIPropertyChecker extends ExistenceChecker {
 
   public MCIPropertyChecker() {
 
@@ -36,6 +39,25 @@ public class MCIPropertyChecker extends PropertyChecker {
       return true;
     }
     else {
+      return false;
+    }
+  }
+
+  @Override
+  protected boolean evaluateState(Snapshot snapshot, Property verificationProperty) {
+    StringTokenizer st = new StringTokenizer(snapshot.getSnapshotString(), " ");
+    while(st.hasMoreTokens()) {
+      if(st.nextToken().equals("RescuedRate:"))
+        break;
+    }
+
+
+    double rescueRate = Double.parseDouble(st.nextToken());
+
+    if(rescueRate > verificationProperty.getValue()){
+      return true;
+    }
+    else{
       return false;
     }
   }

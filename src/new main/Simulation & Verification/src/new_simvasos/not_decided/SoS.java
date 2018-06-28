@@ -15,24 +15,26 @@ public class SoS {
     this.environment = environment;
   }
 
-  public Pair<ArrayList<String>, ArrayList<Integer>> run(int tick) {
+  public String run(int tick) {
 
-    Pair<ArrayList<String>, ArrayList<Integer>> ret;
-    ArrayList<String> logs = new ArrayList<>();
+    String logs = "";
     Collections.shuffle(CSs);
 
     for(CS cs : CSs) {
       String result = cs.act(tick, this.environment);
 
       if(result != null && !result.isEmpty()) {
-        logs.add(result);
+        logs += result;
+        logs += " ";
       }
     }
     //logs.add(String (environment));
 
-    ret = new Pair<>(logs, this.environment);
+    logs += this.environment.toString();
+    logs += " ";
+    logs += "RescuedRate: " + getRescuedRate();
 
-    return ret;
+    return logs;
   }
 
   // reset all cs's attributes ex) firefighter
@@ -43,10 +45,23 @@ public class SoS {
     this.resetEnvironment();
   }
 
-  public void resetEnvironment() {
+  private void resetEnvironment() {
       for (int i = 0; i < this.environment.size(); i++) {
         this.environment.set(i, 0);
       }
+  }
+
+  private double getRescuedRate(){
+    int rescued = 0;
+    int notRescued = 0;
+
+    for(CS cs : CSs){
+      rescued += cs.getRescued();
+    }
+    for(int i : environment){
+      notRescued += i;
+    }
+    return (double)rescued/((double)rescued + (double)notRescued);
   }
 
 }
