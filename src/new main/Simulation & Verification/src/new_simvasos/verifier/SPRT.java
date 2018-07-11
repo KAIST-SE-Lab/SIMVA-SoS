@@ -80,7 +80,7 @@ public class SPRT extends Verifier {
     int numSamples;
     int numTrue;
     
-    for (int i = 1; i < 100; i++) {
+    for (int i = 1; i <= 100; i++) {
       theta = i * 0.01;
       numSamples = 0;
       numTrue = 0;
@@ -108,6 +108,8 @@ public class SPRT extends Verifier {
           totalRet = false;
           probability = theta;
         }
+        if (i == 100)
+          probability = 1.0;
       }
     }
     
