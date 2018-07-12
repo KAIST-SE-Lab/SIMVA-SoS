@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/new main/GUI/GUI.iml" filepath="$PROJECT_DIR$/src/new main/GUI/GUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/Junit_test/Junit_test.iml" filepath="$PROJECT_DIR$/src/Junit_test/Junit_test.iml" group="SIMVA-SoS" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMVA-SoS.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMVA-SoS.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/new main/Modeling/SIMVA-SoS.Modeling.iml" filepath="$PROJECT_DIR$/src/new main/Modeling/SIMVA-SoS.Modeling.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/new main/Simulation &amp; Verification/SIMVA-SoS.Simulation &amp; Verification.iml" filepath="$PROJECT_DIR$/src/new main/Simulation &amp; Verification/SIMVA-SoS.Simulation &amp; Verification.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/new main/Slicing/SIMVA-SoS.Slicing.iml" filepath="$PROJECT_DIR$/src/new main/Slicing/SIMVA-SoS.Slicing.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMVA-SoS_main.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMVA-SoS_main.iml" group="SIMVA-SoS" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SIMVA-SoS_test.iml" filepath="$PROJECT_DIR$/.idea/modules/SIMVA-SoS_test.iml" group="SIMVA-SoS" />
     </modules>
   </component>
 </project>
