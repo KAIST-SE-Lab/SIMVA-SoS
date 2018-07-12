@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
+/**
+ * Class System-of-Systems
+ */
 public class SoS {
   public ArrayList <CS> CSs;
   ArrayList <Integer> environment;
