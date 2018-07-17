@@ -11,24 +11,31 @@ public class DatasetUtility{
 
     DatasetUtility (DefaultCategoryDataset newDataset) {
         this.dataset = newDataset;
-        this.hasUnprocessedData = false;
+        this.hasUnprocessedData = true;
     }
 
     public synchronized void addValueIntoDataset (int num, String shape, String length) {
         System.out.println("Adding ");
 
         dataset.addValue(num, shape, length);
-        hasUnprocessedData = true;
+        //hasUnprocessedData = true;
         notifyAll();
-        System.out.println("Adding Done");
+        //System.out.println("Adding Done");
     }
 
     public synchronized DefaultCategoryDataset getDataset() {
-        System.out.println("get dataset");
-
+        //  System.out.println("get dataset");
+        while (!hasUnprocessedData) {
+            // If there is no new data, wait for new data
+            try {
+            System.out.println("get dataset Wait");
+            wait();
+            }
+            catch (InterruptedException e) { }
+            }
         hasUnprocessedData = false;
         notifyAll();
-        System.out.println("get dataset DONE");
+        System.out.println("aaa");
         return dataset;
     }
 }
