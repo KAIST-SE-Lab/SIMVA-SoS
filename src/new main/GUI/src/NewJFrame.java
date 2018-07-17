@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -36,6 +37,18 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.data.general.DatasetChangeListener;
+
+import new_simvasos.not_decided.CS;
+import new_simvasos.not_decided.FireFighter;
+import new_simvasos.not_decided.SoS;
+import new_simvasos.property.MCIProperty;
+import new_simvasos.property.MCIPropertyChecker;
+import new_simvasos.scenario.Event;
+import new_simvasos.scenario.PatientOccurrence;
+import new_simvasos.scenario.Scenario;
+import new_simvasos.simulator.Simulator;
+import new_simvasos.timebound.ConstantTimeBound;
+import new_simvasos.verifier.SPRT;
 
 
 
@@ -130,24 +143,86 @@ private DefaultCategoryDataset createDataset() throws InterruptedException {
         scheduler.schedule(new Runnable() {
             @Override
             public void run() {
-                try{
 //                    dataTool.addValueIntoDataset(new Random().nextInt(50), "line", "23456");
 //                    Thread.sleep(1000);
 //                    dataTool.addValueIntoDataset(new Random().nextInt(50), "line", "2356");
 //                    Thread.sleep(1000);
 //                    dataTool.addValueIntoDataset(new Random().nextInt(50), "line", "56");
-                    
+
+                ConstantTimeBound constantTimeBound;
+                PatientOccurrence patientOccurrence;
+                Event event;
+                Scenario MCIScenario;
+                Simulator MCISim;
+                MCIProperty rescuedProperty;
+                MCIPropertyChecker rescuedChecker;
+                SPRT verifier;
+                double fireFighterPr = 0.8;
+                int numFireFighter = 3;
+                ArrayList<CS> CSs = new ArrayList();
+
+                for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
+                    FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
+                    CSs.add(fireFighter);
+                }
+
+                int mapSize = 20;
+                ArrayList<Integer> MCIMap = new ArrayList<>();
+
+                for (int i = 0; i < mapSize; i++) {
+                    MCIMap.add(0);
+                }
+
+                SoS MCISoS = new SoS(CSs, MCIMap);
+                ArrayList MCIEvents = new ArrayList();
+                int numPatients = 20;
+
+                for(int j = 0; j < numPatients; j++) {
+                    constantTimeBound = new ConstantTimeBound(0);
+                    patientOccurrence = new PatientOccurrence("patient + 1", MCIMap);
+                    event = new Event(patientOccurrence, constantTimeBound);
+                    MCIEvents.add(event);
+                }
+                MCIScenario = new Scenario(MCIEvents);
+
+                // Simulation
+                int repeatSim = 2000;
+                int simulationTime = 15;
+                boolean ret = true;
+                double theta;
+                int flag=0;
+                MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
+                long start = System.currentTimeMillis();
+                rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
+                rescuedChecker = new MCIPropertyChecker();
+                verifier = new SPRT(rescuedChecker);
+                System.out.println("Verify with simulator");
+                for (int i =1; i<= 100; i++) {
+                    theta = i * 0.01;
+                    ret = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+
+                    if(ret == true)
+                        flag = 1;
+                    if(ret == false)
+                        flag = 0;
+
+                    dataTool.addValueIntoDataset(flag, "line", String.valueOf(theta));
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+/*
                     for(int i = 0; i<50; i++){
                         dataTool.addValueIntoDataset(new Random().nextInt(50), "line", "0.02" + String.valueOf(i));
                         Thread.sleep(500);
-
                     }
+*/
 
+                // something
 
-                    // something
-                }
-                catch (InterruptedException ex) {}
-                
             }
         }, 1, TimeUnit.SECONDS);
         
@@ -176,10 +251,11 @@ private DefaultCategoryDataset createDataset2() throws InterruptedException {
 //                    dataTool.addValueIntoDataset(new Random().nextInt(50), "line", "2356");
 //                    Thread.sleep(1000);
 //                    dataTool.addValueIntoDataset(new Random().nextInt(50), "line", "56");
-                    
+
+
                     for(int i = 0; i<10; i++){
                         dataTool.addValueIntoDataset(new Random().nextInt(50), "line", "0.02" + String.valueOf(i));
-                        Thread.sleep(500);
+                        Thread.sleep(50);
 
                     }
 
@@ -1402,6 +1478,8 @@ private DefaultCategoryDataset createDataset2() throws InterruptedException {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new NewJFrame().setVisible(true);
+
+
             }
         });
     }

@@ -29,5 +29,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="module" module-name="SIMVA-SoS.GUI" />
   </component>
 </module>
