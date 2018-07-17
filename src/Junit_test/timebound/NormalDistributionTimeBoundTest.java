@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class NormalDistributionTimeBoundTest extends TimeBound {
+public class NormalDistributionTimeBoundTest {
 
     @Test
     public void getTick() {

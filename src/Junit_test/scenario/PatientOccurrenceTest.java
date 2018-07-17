@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class PatientOccurrenceTest extends Action {
+public class PatientOccurrenceTest {
 
     @Test
     public void behave() {
