@@ -120,8 +120,51 @@ public class SPRT extends Verifier {
     System.out.println("Probability: about " + probability * 100 + "%");
   }
 
+  // return number of samples
+  public int verifyWithSimulator(Simulator simulator, Property verificationProperty, int maxRepeat, double theta) {
+    int maxNumSamples = maxRepeat;
+
+    boolean totalRet = true;
+    boolean ret = true;
+    double probability = 0;
+
+    int numSamples=0;
+    int numTrue=0;
+
+    while(this.isSampleNeeded(numSamples, numTrue, theta)) {
+      if (!(numSamples < maxNumSamples)) {
+        System.out.println("Over maximum repeat: " + maxNumSamples);
+        break;
+      }
+
+      Log log = simulator.run();
+
+      if(this.propertychecker.check(log, verificationProperty)) {
+        numTrue += 1;
+      }
+      numSamples += 1;
+    }
+
+    ret = this.isSatisfied(numSamples, numTrue, theta);
+    System.out.println("theta: " + Double.parseDouble(String.format("%.2f",theta)) +
+            " numSamples: " + numSamples + " numTrue: " + numTrue + " result: " + ret);
+
+    if(totalRet) {
+      if (!ret) {
+        totalRet = false;
+        probability = theta;
+      }
+
+    }
 
 
+    System.out.println("Probability: about " + probability * 100 + "%");
+    return numSamples;
+  }
+
+
+  // return boolean (ret)
+  /*
   public boolean verifyWithSimulator(Simulator simulator, Property verificationProperty, int maxRepeat, double theta) {
     int maxNumSamples = maxRepeat;
 
@@ -162,6 +205,7 @@ public class SPRT extends Verifier {
     System.out.println("Probability: about " + probability * 100 + "%");
     return ret;
   }
+  */
   
   
   private boolean isSampleNeeded(int numSample, int numTrue, double theta) {

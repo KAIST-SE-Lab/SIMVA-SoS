@@ -189,6 +189,7 @@ private DefaultCategoryDataset createDataset() throws InterruptedException {
                 int repeatSim = 2000;
                 int simulationTime = 15;
                 boolean ret = true;
+                int numSamples = 0;
                 double theta;
                 int flag=0;
                 MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
@@ -199,16 +200,19 @@ private DefaultCategoryDataset createDataset() throws InterruptedException {
                 System.out.println("Verify with simulator");
                 for (int i =1; i<= 100; i++) {
                     theta = i * 0.01;
-                    ret = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+                    numSamples = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
 
+                    /*
                     if(ret == true)
                         flag = 1;
                     if(ret == false)
                         flag = 0;
+                    */
 
-                    dataTool.addValueIntoDataset(flag, "line", String.valueOf(theta));
+                    //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
+                    dataTool.addValueIntoDataset(numSamples, "line", String.valueOf(theta));
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(40);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
