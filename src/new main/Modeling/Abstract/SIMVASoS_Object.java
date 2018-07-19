@@ -9,6 +9,13 @@ public abstract class SIMVASoS_Object {
     EnumObjState objState;
     boolean isObjActivated;
 
+    public SIMVASoS_Object() {
+        objName = "noName";
+        objType = null;
+        objState = null;
+        isObjActivated = false;
+    }
+
 
     public void activate(){
         isObjActivated = true;

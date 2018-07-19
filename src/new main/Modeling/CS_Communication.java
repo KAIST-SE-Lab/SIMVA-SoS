@@ -6,4 +6,13 @@ public class CS_Communication extends SIMVASoS_Behavior {
     EnumCSInterfaceType csInterfaceType;
     int csMessageSenderId;
     int csMessageReceiverId;
+
+
+    public CS_Communication() {
+        super();
+        csBehaviorMessage = null;
+        csInterfaceType = null;
+        csMessageSenderId = -1;
+        csMessageReceiverId = -1;
+    }
 }

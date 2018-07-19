@@ -7,4 +7,12 @@ public class Organization_Task {
     float taskProgress;
     ArrayList<Organization_Task> precedentTasks;
     //ArrayList<Organization_Policy> taskPolicies;
+
+    public Organization_Task() {
+        taskId = -1;
+        taskName = "noName";
+        taskProgress = -1;
+        precedentTasks = new ArrayList<Organization_Task>();
+        //taskPolicies = new ArrayList<Organization_Policy>();
+    }
 }
