@@ -133,10 +133,8 @@ public class NewJFrame extends javax.swing.JFrame {
     private final ScheduledExecutorService dataReadingScheduler;
     private ScheduledExecutorService dataAddingScheduler;
     private ScheduledFuture<?> dataAddingThread;
-    private boolean isGraphInitialized = false;
     private DatasetUtility dataTool;
     private DefaultCategoryDataset createDataset() throws InterruptedException {
-        //if (!isGraphInitialized) {
             Runnable timerTask = new Runnable() {
                 @Override
                 public void run() {
@@ -155,13 +153,8 @@ public class NewJFrame extends javax.swing.JFrame {
             dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
                 @Override
                 public void run() {
-//                    dataTool.addValueIntoDataset(15, "line", "23");
-//                    dataTool.addValueIntoDataset(24, "line", "234");
-//                    dataTool.addValueIntoDataset(26, "line", "23456");
-//                    dataTool.addValueIntoDataset(30, "line", "234567");
-//                    dataTool.addValueIntoDataset(35, "line", "2345678");
-//                    dataTool.addValueIntoDataset(40, "line", "23456789");
                     dataTool.reset();
+
                     ConstantTimeBound constantTimeBound;
                     PatientOccurrence patientOccurrence;
                     Event event;
@@ -233,90 +226,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
                 }
             }, 1, TimeUnit.SECONDS);
-            //isGraphInitialized = true;
-        //}
-//        else {
-//            try {
-//                dataAddingThread.get();
-//            }
-//            catch (Exception ex) { }
-//            dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
-//                @Override
-//                public void run() {
-//                    dataTool.reset();
-//                    System.out.println("-------Readding data");
-//                    ConstantTimeBound constantTimeBound;
-//                    PatientOccurrence patientOccurrence;
-//                    Event event;
-//                    Scenario MCIScenario;
-//                    Simulator MCISim;
-//                    MCIProperty rescuedProperty;
-//                    MCIPropertyChecker rescuedChecker;
-//                    SPRT verifier;
-//                    double fireFighterPr = 0.8;
-//                    int numFireFighter = 3;
-//                    ArrayList<CS> CSs = new ArrayList();
-//
-//                    for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
-//                        FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
-//                        CSs.add(fireFighter);
-//                    }
-//
-//                    int mapSize = 20;
-//                    ArrayList<Integer> MCIMap = new ArrayList<>();
-//
-//                    for (int i = 0; i < mapSize; i++) {
-//                        MCIMap.add(0);
-//                    }
-//
-//                    SoS MCISoS = new SoS(CSs, MCIMap);
-//                    ArrayList MCIEvents = new ArrayList();
-//                    int numPatients = 20;
-//
-//                    for(int j = 0; j < numPatients; j++) {
-//                        constantTimeBound = new ConstantTimeBound(0);
-//                        patientOccurrence = new PatientOccurrence("patient + 1", MCIMap);
-//                        event = new Event(patientOccurrence, constantTimeBound);
-//                        MCIEvents.add(event);
-//                    }
-//                    MCIScenario = new Scenario(MCIEvents);
-//
-//                    // Simulation
-//                    int repeatSim = 2000;
-//                    int simulationTime = 15;
-//                    boolean ret = true;
-//                    int numSamples = 0;
-//                    double theta;
-//                    int flag=0;
-//                    MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
-//                    long start = System.currentTimeMillis();
-//                    rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
-//                    rescuedChecker = new MCIPropertyChecker();
-//                    verifier = new SPRT(rescuedChecker);
-//                    System.out.println("Verify with simulator");
-//                    for (int i =1; i<= 100; i++) {
-//                        theta = i * 0.01;
-//                        numSamples = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
-//
-//                    /*
-//                    if(ret == true)
-//                        flag = 1;
-//                    if(ret == false)
-//                        flag = 0;
-//                    */
-//
-//                        //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
-//                        dataTool.addValueIntoDataset(numSamples, "line", String.valueOf(theta));
-//                        try {
-//                            Thread.sleep(40);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                }
-//            }, 0, TimeUnit.SECONDS);
-//        }
+
 
         return dataTool.getDataset();
     }
@@ -324,33 +234,96 @@ public class NewJFrame extends javax.swing.JFrame {
 
   //This is for bar graph
 private  DefaultCategoryDataset createDataset2() throws InterruptedException {
-        DatasetUtility dataTool = new DatasetUtility(new DefaultCategoryDataset());
-        Runnable timerTask = new Runnable() {
-            @Override
-            public void run() {
-                DefaultCategoryDataset data = dataTool.getDataset();
-                drawBarGraph (data);
+    Runnable timerTask = new Runnable() {
+        @Override
+        public void run() {
+            System.out.println("running");
+            DefaultCategoryDataset data = dataTool.getDataset();
+            drawBarGraph (data);
+            try {
+                Thread.sleep(500);
             }
-        };
-        ScheduledFuture<?> timerHandle =
-        scheduler.scheduleAtFixedRate(timerTask, 0, 1, TimeUnit.SECONDS);
-        scheduler.schedule(new Runnable() {
-            @Override
-            public void run() {
-                try{
+            catch (InterruptedException ex) {}
+        }
+    };
+    ScheduledFuture<?> timerHandle =
+            dataReadingScheduler.scheduleAtFixedRate(timerTask, 0, 1, TimeUnit.SECONDS);
 
-                    for(int i = 0; i<10; i++){
-                        dataTool.addValueIntoDataset(new Random().nextInt(50), "line", "0.02" + String.valueOf(i));
-                        Thread.sleep(50);
+    dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
+        @Override
+        public void run() {
+                dataTool.reset();
+                ConstantTimeBound constantTimeBound;
+                PatientOccurrence patientOccurrence;
+                Event event;
+                Scenario MCIScenario;
+                Simulator MCISim;
+                MCIProperty rescuedProperty;
+                MCIPropertyChecker rescuedChecker;
+                SPRT verifier;
+                double fireFighterPr = 0.8;
+                int numFireFighter = 3;
+                ArrayList<CS> CSs = new ArrayList();
 
-                    }
-
-
-                    // something
+                for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
+                    FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
+                    CSs.add(fireFighter);
                 }
-                catch (InterruptedException ex) {}
+
+                int mapSize = 20;
+                ArrayList<Integer> MCIMap = new ArrayList<>();
+
+                for (int i = 0; i < mapSize; i++) {
+                    MCIMap.add(0);
+                }
+
+                SoS MCISoS = new SoS(CSs, MCIMap);
+                ArrayList MCIEvents = new ArrayList();
+                int numPatients = 20;
+
+                for(int j = 0; j < numPatients; j++) {
+                    constantTimeBound = new ConstantTimeBound(0);
+                    patientOccurrence = new PatientOccurrence("patient + 1", MCIMap);
+                    event = new Event(patientOccurrence, constantTimeBound);
+                    MCIEvents.add(event);
+                }
+                MCIScenario = new Scenario(MCIEvents);
+
+                // Simulation
+                int repeatSim = 2000;
+                int simulationTime = 15;
+                boolean ret = true;
+                int numSamples = 0;
+                double theta;
+                int flag=0;
+                MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
+                long start = System.currentTimeMillis();
+                rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
+                rescuedChecker = new MCIPropertyChecker();
+                verifier = new SPRT(rescuedChecker);
+                System.out.println("Verify with simulator");
+                for (int i =1; i<= 100; i++) {
+                    theta = i * 0.01;
+                    numSamples = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+
+                    /*
+                    if(ret == true)
+                        flag = 1;
+                    if(ret == false)
+                        flag = 0;
+                    */
+
+                    //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
+                    dataTool.addValueIntoDataset(numSamples, "line", String.valueOf(theta));
+                    try {
+                        Thread.sleep(40);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
             }
+
         }, 1, TimeUnit.SECONDS);
 
         return dataTool.getDataset();
