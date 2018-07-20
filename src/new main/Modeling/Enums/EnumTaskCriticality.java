@@ -11,6 +11,9 @@ package Enums;
  *      - Degradation
  * CATEOGRY_D: Minor or negligible consequences if failed
  *      - Minor degradation
+ *
+ * Reference: D. Escorial Rico, "Software Criticality Classification and Reduction,"
+ * Workshop of Critical Software (WOCS)
  */
 public enum EnumTaskCriticality {
     CATEGORY_A,

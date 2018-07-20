@@ -1,4 +1,5 @@
 import Abstract.NonActionableObject;
+import Abstract.ObjectLocation;
 import Enums.EnumCSState;
 import Enums.EnumCSType;
 
@@ -9,6 +10,7 @@ public class CS {
     String csName;
     EnumCSType csType;
     EnumCSState csState;
+    ObjectLocation csLocation;
     ArrayList<CS_Action> csActionList;
     ArrayList<CS_Action> csExecutionList;
     ArrayList<CS_Message> csIncomingReqList;
@@ -17,11 +19,13 @@ public class CS {
     //ArrayList<Organization> csOrgs;
 
 
+
     public CS() {
         csId = -1;
         csName = "noName";
         csType = null;
         csState = null;
+        csLocation = null;
         csIncomingReqList = new ArrayList<CS_Message>();
         csIncomingInfoLIst = new ArrayList<CS_Message>();
         csActionList = new ArrayList<CS_Action>();

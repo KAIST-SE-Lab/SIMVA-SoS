@@ -13,17 +13,19 @@ import Enums.EnumObjType;
  * If a SIMVASoS_Object should be excluded for the simulation,
  * isObjActivated should be 'false', then it is automatically excluded by the simulator.
  */
-public abstract class SIMVASoS_Object {
+public class SIMVASoS_Object {
     String objName;
     EnumObjType objType;
     EnumObjState objState;
     boolean isObjActivated;
+    ObjectLocation objLocation;
 
     public SIMVASoS_Object() {
         objName = "noName";
         objType = null;
         objState = null;
         isObjActivated = false;
+        objLocation = null;
     }
 
 
