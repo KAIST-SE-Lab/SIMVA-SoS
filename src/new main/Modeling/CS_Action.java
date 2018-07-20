@@ -17,4 +17,16 @@ public class CS_Action extends SIMVASoS_Action{
         csActionBenefit = -1;
         csActionUtility = csActionBenefit - csActionCost;
     }
+
+    public void executeBehavior(){
+
+    }
+
+    public void checkPrecondition(){
+
+    }
+
+    public void updatePriority(){
+
+    }
 }
