@@ -32,6 +32,10 @@ import javax.swing.Timer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -60,6 +64,7 @@ import new_simvasos.verifier.SPRT;
 
 public class NewJFrame extends javax.swing.JFrame {
 
+
     static AtomicInteger foo = new AtomicInteger(1);
     private JTextArea textArea;
     private PrintStream standardOut;
@@ -68,6 +73,7 @@ public class NewJFrame extends javax.swing.JFrame {
      * Creates new form NewJFrame
      */
     public NewJFrame() {
+        setTitle("[SIMVA-SoS] Main Window");
         initComponents();
         this.setLocationRelativeTo(null);
         graph_panel.setLayout(new java.awt.BorderLayout());
@@ -109,9 +115,31 @@ public class NewJFrame extends javax.swing.JFrame {
 
     public void drawGraph(DefaultCategoryDataset dataset) {
         JFreeChart lineChart = ChartFactory.createLineChart("Title", "x-axis", "y-axis", dataset, PlotOrientation.VERTICAL, true, true, false);
+
+
+
         //set color
         CategoryPlot plot = (CategoryPlot) lineChart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
+
+
+
+        //CategoryAxis domainAxis = plot.getDomainAxis();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //create chart panel the add it to swing panel in jframe
         ChartPanel chartpanel = new ChartPanel(lineChart);
         graph_panel.removeAll();
@@ -135,12 +163,15 @@ public class NewJFrame extends javax.swing.JFrame {
     private ScheduledFuture<?> dataAddingThread;
     private DatasetUtility dataTool;
     private DefaultCategoryDataset createDataset() throws InterruptedException {
+        boolean linecheck = false;
             Runnable timerTask = new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("running");
+
+                   // System.out.println("running");
                     DefaultCategoryDataset data = dataTool.getDataset();
                     drawGraph (data);
+
                     try {
                         Thread.sleep(500);
                     }
@@ -216,7 +247,17 @@ public class NewJFrame extends javax.swing.JFrame {
                     */
 
                         //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
-                        dataTool.addValueIntoDataset(numSamples, "line", String.valueOf(theta));
+
+//                        if(theta=1){
+//
+//
+//                        }
+
+
+                        dataTool.addValueIntoDataset(numSamples, "line", theta);
+
+
+
                         try {
                             Thread.sleep(40);
                         } catch (InterruptedException e) {
@@ -237,7 +278,8 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     Runnable timerTask = new Runnable() {
         @Override
         public void run() {
-            System.out.println("running");
+            boolean barcheck = false;
+           // System.out.println("running");
             DefaultCategoryDataset data = dataTool.getDataset();
             drawBarGraph (data);
             try {
@@ -1374,7 +1416,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         if (oPtions == 0){ // line graph
        try{
                 createDataset();
-                System.out.println ("returned");
+             //   System.out.println ("returned");
                 
         
        }

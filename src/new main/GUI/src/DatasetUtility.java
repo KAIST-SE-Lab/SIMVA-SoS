@@ -14,8 +14,8 @@ public class DatasetUtility{
         this.hasUnprocessedData = true;
     }
 
-    public synchronized void addValueIntoDataset (int num, String shape, String length) {
-        System.out.println("Adding ");
+    public synchronized void addValueIntoDataset (Number num, Comparable shape, Comparable length) {
+       // System.out.println("Adding ");
 //        while (hasUnprocessedData) {
 //            // If the graph is not drawn, wait
 //            try {
@@ -27,29 +27,30 @@ public class DatasetUtility{
         dataset.addValue(num, shape, length);
         hasUnprocessedData = true;
         notifyAll();
-        System.out.println("Adding Done");
+       // System.out.println("Adding Done");
 
     }
 
     public synchronized DefaultCategoryDataset getDataset() {
 
-        System.out.println("get dataset");
+       // System.out.println("get dataset");
         while (!hasUnprocessedData) {
             // If there is no new data, wait for new data
             try {
-                System.out.println("get dataset Wait");
+             //   System.out.println("get dataset Wait");
                 wait();
             }
             catch (InterruptedException e) { }
         }
         hasUnprocessedData = false;
         notifyAll();
-        System.out.println("get dataset DONE");
+       // System.out.println("get dataset DONE");
         return dataset;
     }
 
     public synchronized void reset() {
-        dataset = new DefaultCategoryDataset();
+        dataset.clear();
+        //dataset = new DefaultCategoryDataset();
         hasUnprocessedData = false;
     }
 }
