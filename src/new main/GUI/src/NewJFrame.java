@@ -1074,6 +1074,24 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
         jLabel9.setText("Model Information ");
 
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Organization1");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("CS_Firefighter");
+        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("CS_Action_Rescue");
+        javax.swing.tree.DefaultMutableTreeNode treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Behaviour_First_Aid");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Behaviour_Pick_up");
+        treeNode3.add(treeNode4);
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("CS_Action_Move");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("lol");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("CS_Action_Extinguish");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("lmao");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane3.setViewportView(jTree1);
 
         javax.swing.GroupLayout VI_Grey3Layout = new javax.swing.GroupLayout(VI_Grey3);
