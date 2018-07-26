@@ -98,7 +98,7 @@ public class NewJFrame extends javax.swing.JFrame {
 }
 
     public void drawGraph(DefaultCategoryDataset dataset) {
-        JFreeChart lineChart = ChartFactory.createLineChart("Title", "x-axis", "y-axis", dataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart lineChart = ChartFactory.createLineChart("Title", "theta", "numSamples", dataset, PlotOrientation.VERTICAL, true, true, false);
 
 
 
@@ -118,7 +118,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     
     public void drawBarGraph(DefaultCategoryDataset dataset){
-        JFreeChart barChart = ChartFactory.createBarChart("Title", "x-axis", "y-axis", dataset, PlotOrientation.VERTICAL, true, true, false); // horizontal
+        JFreeChart barChart = ChartFactory.createBarChart("Title", "theta", "numSamples", dataset, PlotOrientation.VERTICAL, true, true, false); // horizontal
         CategoryPlot plot = (CategoryPlot) barChart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
         ChartPanel chartpanel = new ChartPanel(barChart);
@@ -1084,11 +1084,11 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("CS_Action_Move");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("lol");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("hi");
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("CS_Action_Extinguish");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("lmao");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("hello");
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
