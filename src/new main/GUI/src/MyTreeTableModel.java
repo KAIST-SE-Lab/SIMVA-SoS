@@ -15,17 +15,17 @@ public class MyTreeTableModel extends AbstractTreeTableModel {
           "hello" ) );
          
         MyTreeNode subtree = new MyTreeNode( "CS_Action_Rescue", 
-          "it's me" );
+          "world" );
         subtree.getChildren().add( new MyTreeNode( "Behavior_First_Aid", 
-          "I was wondering " ) );
+          "hi" ) );
         subtree.getChildren().add( new MyTreeNode( "Behavior_Pickup", 
-          "if after all these years" ) );
+          "world" ) );
         myroot.getChildren().add( subtree );
          
         myroot.getChildren().add( new MyTreeNode( "CS_Action_Move", 
-          "can you hear me?" ) );
+          "goodbye" ) );
         myroot.getChildren().add( new MyTreeNode( "CS_Action_Extinguish", 
-          "hello from the other side" ) );
+          "world" ) );
          
     }
  
