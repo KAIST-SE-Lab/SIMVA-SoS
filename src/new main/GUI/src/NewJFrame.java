@@ -17,9 +17,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 import org.jdesktop.swingx.JXTreeTable;
@@ -335,6 +333,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                     count++;
                     jProgressBar1.setString(count+"% Done");
                     jProgressBar1.setValue(count);
+
                     theta = i * 0.01;
                     numSamples = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
 
@@ -543,6 +542,10 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
         jProgressBar1.setString("0% Done");
         jProgressBar1.setStringPainted(true);
+        jProgressBar1.setBorderPainted(true);
+
+
+
 
         javax.swing.GroupLayout VP_PanelLayout = new javax.swing.GroupLayout(VP_Panel);
         VP_Panel.setLayout(VP_PanelLayout);
@@ -1325,6 +1328,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jProgressBar2.setString("0% Done");
         jProgressBar2.setStringPainted(true);
 
+
         jPanel4.setBackground(new java.awt.Color(244, 244, 244));
 
         jLabel10.setText("Simulation Log");
@@ -1657,7 +1661,12 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     }
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // File chooser for Imported Policy on VP&R
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f11 = chooser.getSelectedFile();
+        String filename = f11.getAbsolutePath();
+        jTextField_SS5.setText(filename);
     }
 
     private void jTextField_SS5ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1665,11 +1674,22 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     }
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // File chooser for Simulation Configuration on VP&R
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f10 = chooser.getSelectedFile();
+        String filename = f10.getAbsolutePath();
+        jTextField_VC3.setText(filename);
+
     }
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // File chooser for Simulation Scenario on VP&R
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f9 = chooser.getSelectedFile();
+        String filename = f9.getAbsolutePath();
+        jTextField_SS4.setText(filename);
     }
 
     private void jTextField_SS4ActionPerformed(java.awt.event.ActionEvent evt) {
