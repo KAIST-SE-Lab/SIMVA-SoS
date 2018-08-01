@@ -1580,11 +1580,12 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         // Simulation Scenario Button
-        JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);
-        File f = chooser.getSelectedFile();
-        String filename = f.getAbsolutePath();
-        jTextField_SS.setText(filename);
+            JFileChooser chooser = new JFileChooser();
+            chooser.showOpenDialog(null);
+            File f = chooser.getSelectedFile();
+            String filename = f.getAbsolutePath();
+            jTextField_SS.setText(filename);
+
 
     }
 
@@ -1671,6 +1672,12 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
+        //File chooser for imported policy in single simulation tab
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f = chooser.getSelectedFile();
+        String filename = f.getAbsolutePath();
+        jTextField_SS3.setText(filename);
 
     }
 
@@ -1679,11 +1686,21 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // file chooser for Simulation Configuration in single simulation tab
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f7 = chooser.getSelectedFile();
+        String filename = f7.getAbsolutePath();
+        jTextField_VC2.setText(filename);
     }
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // File chooser for Simulation Scenario in single simulation tab
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f6 = chooser.getSelectedFile();
+        String filename6 = f6.getAbsolutePath();
+        jTextField_SS2.setText(filename6);
     }
 
     private void jTextField_SS2ActionPerformed(java.awt.event.ActionEvent evt) {
