@@ -147,12 +147,10 @@ public class NewJFrame extends javax.swing.JFrame {
     private ScheduledFuture<?> dataAddingThread;
     private DatasetUtility dataTool;
     private DefaultCategoryDataset createDataset() throws InterruptedException {
-        boolean linecheck = false;
             Runnable timerTask = new Runnable() {
                 @Override
                 public void run() {
 
-                   // System.out.println("running");
                     DefaultCategoryDataset data = dataTool.getDataset();
                     drawGraph (data);
 
@@ -168,7 +166,7 @@ public class NewJFrame extends javax.swing.JFrame {
             dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
                 @Override
                 public void run()
-                {
+                {   //single simulation tab
                     dataTool.reset();
 
                     ConstantTimeBound constantTimeBound;
@@ -208,6 +206,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     MCIScenario = new Scenario(MCIEvents);
 
                     // Simulation
+                    int count = 0;
                     int repeatSim = 2000;
                     int simulationTime = 15;
                     boolean ret = true;
@@ -221,6 +220,9 @@ public class NewJFrame extends javax.swing.JFrame {
                     verifier = new SPRT(rescuedChecker);
                     System.out.println("Verify with simulator");
                     for (int i =1; i<= 100; i++) {
+                        count++;
+                        jProgressBar2.setString(count+"% Done");
+                        jProgressBar2.setValue(count); // progressbar in single simulation
                         theta = i * 0.01;
                         numSamples = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
 
@@ -322,6 +324,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 int numSamples = 0;
                 double theta;
                 int flag=0;
+                int count = 0;
                 MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
                 long start = System.currentTimeMillis();
                 rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
@@ -329,6 +332,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 verifier = new SPRT(rescuedChecker);
                 System.out.println("Verify with simulator");
                 for (int i =1; i<= 100; i++) {
+                    count++;
+                    jProgressBar1.setString(count+"% Done");
+                    jProgressBar1.setValue(count);
                     theta = i * 0.01;
                     numSamples = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
 
