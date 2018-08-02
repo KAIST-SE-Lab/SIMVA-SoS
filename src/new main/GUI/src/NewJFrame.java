@@ -132,9 +132,10 @@ public class NewJFrame extends javax.swing.JFrame {
         JFreeChart barChart = ChartFactory.createBarChart("Title", "theta", "numSamples", dataset, PlotOrientation.VERTICAL, true, true, false); // horizontal
         CategoryPlot plot = (CategoryPlot) barChart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
+
         ChartPanel chartpanel = new ChartPanel(barChart);
 
-       // System.out.println("drawBarGraph");
+        //System.out.println("drawBarGraph");
 
         graph_panel.removeAll();
         graph_panel.add(chartpanel, BorderLayout.CENTER);
@@ -165,8 +166,8 @@ public class NewJFrame extends javax.swing.JFrame {
 
             dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
                 @Override
-                public void run()
-                {   //single simulation tab
+                public void run() {   //single simulation tab
+                    long start = System.currentTimeMillis();
                     dataTool.reset();
 
                     ConstantTimeBound constantTimeBound;
@@ -215,7 +216,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     double theta;
                     int flag=0;
                     MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
-                    long start = System.currentTimeMillis();
+
                     rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
                     rescuedChecker = new MCIPropertyChecker();
                     verifier = new SPRT(rescuedChecker);
@@ -226,6 +227,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         jProgressBar2.setValue(count); // progressbar in single simulation
                         theta = i * 0.01;
                         pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+
 
                     /*
                     if(ret == true)
@@ -241,11 +243,11 @@ public class NewJFrame extends javax.swing.JFrame {
 //
 //                        }
 
-                        System.out.println("pair1 : " + pair);
-                        System.out.println("pair1.getKey() : " + pair.getKey());        // numSamples ==> int
-                        System.out.println("pair1.getValue() : " + pair.getValue());    // ret ==> boolean
-                        int myInt = pair.getValue() ? 1 : 0;
-                        dataTool.addValueIntoDataset(myInt, "line", String.valueOf(theta));
+                        //System.out.println("pair1 : " + pair);
+                        //System.out.println("pair1.getKey() : " + pair.getKey());        // numSamples ==> int
+                        //System.out.println("pair1.getValue() : " + pair.getValue());    // ret ==> boolean
+                        //int myInt = pair.getValue() ? 1 : 0;
+                        dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
 
 
 
@@ -255,7 +257,8 @@ public class NewJFrame extends javax.swing.JFrame {
                             e.printStackTrace();
                         }
                     }
-
+                    long end = System.currentTimeMillis();
+                    System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
                 }
             }, 1, TimeUnit.SECONDS);
 
@@ -271,6 +274,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         public void run() {
            // System.out.println("running");
             DefaultCategoryDataset data = dataTool.getDataset();
+
             drawBarGraph (data);
             try {
                 Thread.sleep(500);
@@ -284,85 +288,88 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
         @Override
         public void run() {
-                dataTool.reset();
-                ConstantTimeBound constantTimeBound;
-                PatientOccurrence patientOccurrence;
-                Event event;
-                Scenario MCIScenario;
-                Simulator MCISim;
-                MCIProperty rescuedProperty;
-                MCIPropertyChecker rescuedChecker;
-                SPRT verifier;
-                double fireFighterPr = 0.8;
-                int numFireFighter = 3;
-                ArrayList<CS> CSs = new ArrayList();
+            long start = System.currentTimeMillis();
+            dataTool.reset();
+            ConstantTimeBound constantTimeBound;
+            PatientOccurrence patientOccurrence;
+            Event event;
+            Scenario MCIScenario;
+            Simulator MCISim;
+            MCIProperty rescuedProperty;
+            MCIPropertyChecker rescuedChecker;
+            SPRT verifier;
+            double fireFighterPr = 0.8;
+            int numFireFighter = 3;
+            ArrayList<CS> CSs = new ArrayList();
 
-                for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
-                    FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
-                    CSs.add(fireFighter);
+            for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
+                FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
+                CSs.add(fireFighter);
+            }
+
+            int mapSize = 20;
+            ArrayList<Integer> MCIMap = new ArrayList<>();
+
+            for (int i = 0; i < mapSize; i++) {
+                MCIMap.add(0);
+            }
+
+            SoS MCISoS = new SoS(CSs, MCIMap);
+            ArrayList MCIEvents = new ArrayList();
+            int numPatients = 20;
+
+            for(int j = 0; j < numPatients; j++) {
+                constantTimeBound = new ConstantTimeBound(0);
+                patientOccurrence = new PatientOccurrence("patient + 1", MCIMap);
+                event = new Event(patientOccurrence, constantTimeBound);
+                MCIEvents.add(event);
+            }
+            MCIScenario = new Scenario(MCIEvents);
+
+            // Simulation
+            int repeatSim = 2000;
+            int simulationTime = 15;
+            //boolean ret = true;
+            //int numSamples = 0;
+            Pair<Integer, Boolean> pair;
+            double theta;
+            int flag=0;
+            int count = 0;
+            MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
+
+            rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
+            rescuedChecker = new MCIPropertyChecker();
+            verifier = new SPRT(rescuedChecker);
+            System.out.println("Verify with simulator");
+            for (int i =1; i<= 100; i++) {
+                count++;
+                jProgressBar1.setString(count+"% Done");
+                jProgressBar1.setValue(count);
+
+                theta = i * 0.01;
+                pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+
+                /*
+                if(ret == true)
+                    flag = 1;
+                if(ret == false)
+                    flag = 0;
+                */
+
+                //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
+                //System.out.println("pair2 : " + pair);
+                //System.out.println("pair2.getKey() : " + pair.getKey());
+                //System.out.println("pair2.getValue() : " + pair.getValue());
+                //int myInt = pair.getValue() ? 1 : 0;
+                dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
+                try {
+                    Thread.sleep(40);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                int mapSize = 20;
-                ArrayList<Integer> MCIMap = new ArrayList<>();
-
-                for (int i = 0; i < mapSize; i++) {
-                    MCIMap.add(0);
                 }
-
-                SoS MCISoS = new SoS(CSs, MCIMap);
-                ArrayList MCIEvents = new ArrayList();
-                int numPatients = 20;
-
-                for(int j = 0; j < numPatients; j++) {
-                    constantTimeBound = new ConstantTimeBound(0);
-                    patientOccurrence = new PatientOccurrence("patient + 1", MCIMap);
-                    event = new Event(patientOccurrence, constantTimeBound);
-                    MCIEvents.add(event);
-                }
-                MCIScenario = new Scenario(MCIEvents);
-
-                // Simulation
-                int repeatSim = 2000;
-                int simulationTime = 15;
-                //boolean ret = true;
-                //int numSamples = 0;
-                Pair<Integer, Boolean> pair;
-                double theta;
-                int flag=0;
-                int count = 0;
-                MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
-                long start = System.currentTimeMillis();
-                rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
-                rescuedChecker = new MCIPropertyChecker();
-                verifier = new SPRT(rescuedChecker);
-                System.out.println("Verify with simulator");
-                for (int i =1; i<= 100; i++) {
-                    count++;
-                    jProgressBar1.setString(count+"% Done");
-                    jProgressBar1.setValue(count);
-
-                    theta = i * 0.01;
-                    pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
-
-                    /*
-                    if(ret == true)
-                        flag = 1;
-                    if(ret == false)
-                        flag = 0;
-                    */
-
-                    //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
-                    System.out.println("pair2 : " + pair);
-                    System.out.println("pair2.getKey() : " + pair.getKey());
-                    System.out.println("pair2.getValue() : " + pair.getValue());
-                    dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
-                    try {
-                        Thread.sleep(40);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
+            long end = System.currentTimeMillis();
+            System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
             }
 
         }, 1, TimeUnit.SECONDS);
@@ -1516,10 +1523,64 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         }
     }//GEN-LAST:event_SAR_ButtonActionPerformed
 
-    boolean checkLog = false;
+
+
+    public void timer(){
+        boolean state = true;
+
+        Thread t = new Thread()
+        {
+            public void run(){
+
+                int millisec = 0;
+                int sec = 0;
+                int min = 0;
+                int hour = 0;
+
+                for(;;){
+                    if(state == true){
+                        try{
+                            millisec++;
+                            Thread.sleep(1);
+
+                            if(millisec>1000){
+                                millisec = 0;
+                                sec++;
+                            }
+                            if(sec>60){
+                                millisec = 0;
+                                sec = 0;
+                                min++;
+                            }
+                            if(min>60){
+                                millisec = 0;
+                                sec = 0;
+                                min = 0;
+                                hour++;
+                            }
+
+                            VP_TextPanel.setText(hour+":"+min+":"+sec+":"+millisec);
+                        } catch (InterruptedException egg) {
+                            egg.printStackTrace();
+                        }
+                    }else{
+                        break;
+                    }
+                }
+
+
+            }
+
+        };
+
+    }
+
+
+
+
 
     private void Start_ButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.checkLog = true;
+
 //        JFrame frame = new JFrame();
 //        String[] options = new String[2];
 //        options[0] = new String("Line Graph");
@@ -1535,6 +1596,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
 
         try{// bar graph
+            //timer();
             createDataset2();
             //System.out.println("111111111111111111111");
 
