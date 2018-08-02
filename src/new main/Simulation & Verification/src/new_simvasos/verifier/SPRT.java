@@ -1,5 +1,6 @@
 package new_simvasos.verifier;
 
+import javafx.util.Pair;
 import new_simvasos.log.Log;
 import new_simvasos.log.SimulationLog;
 import new_simvasos.property.Property;
@@ -120,6 +121,7 @@ public class SPRT extends Verifier {
     System.out.println("Probability: about " + probability * 100 + "%");
   }
 
+  /*
   // return number of samples
   public int verifyWithSimulator(Simulator simulator, Property verificationProperty, int maxRepeat, double theta) {
     int maxNumSamples = maxRepeat;
@@ -164,8 +166,9 @@ public class SPRT extends Verifier {
 
 
   // return boolean (ret)
-  /*
-  public boolean verifyWithSimulator(Simulator simulator, Property verificationProperty, int maxRepeat, double theta) {
+*/
+
+  public Pair<Integer, Boolean> verifyWithSimulator(Simulator simulator, Property verificationProperty, int maxRepeat, double theta) {
     int maxNumSamples = maxRepeat;
 
     boolean totalRet = true;
@@ -203,9 +206,10 @@ public class SPRT extends Verifier {
 
 
     System.out.println("Probability: about " + probability * 100 + "%");
-    return ret;
+    return new Pair(numSamples, ret);
+
   }
-  */
+
   
   
   private boolean isSampleNeeded(int numSample, int numTrue, double theta) {

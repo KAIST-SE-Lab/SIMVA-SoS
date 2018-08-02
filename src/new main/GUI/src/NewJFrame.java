@@ -20,6 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import javafx.util.Pair;
 import org.jdesktop.swingx.JXTreeTable;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -207,8 +209,9 @@ public class NewJFrame extends javax.swing.JFrame {
                     int count = 0;
                     int repeatSim = 2000;
                     int simulationTime = 15;
-                    boolean ret = true;
-                    int numSamples = 0;
+                    //boolean ret = true;
+                    //int numSamples = 0;
+                    Pair<Integer, Boolean> pair;
                     double theta;
                     int flag=0;
                     MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
@@ -222,7 +225,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         jProgressBar2.setString(count+"% Done");
                         jProgressBar2.setValue(count); // progressbar in single simulation
                         theta = i * 0.01;
-                        numSamples = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+                        pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
 
                     /*
                     if(ret == true)
@@ -238,8 +241,11 @@ public class NewJFrame extends javax.swing.JFrame {
 //
 //                        }
 
-
-                        dataTool.addValueIntoDataset(numSamples, "line", theta);
+                        System.out.println("pair1 : " + pair);
+                        System.out.println("pair1.getKey() : " + pair.getKey());        // numSamples ==> int
+                        System.out.println("pair1.getValue() : " + pair.getValue());    // ret ==> boolean
+                        int myInt = pair.getValue() ? 1 : 0;
+                        dataTool.addValueIntoDataset(myInt, "line", String.valueOf(theta));
 
 
 
@@ -318,8 +324,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 // Simulation
                 int repeatSim = 2000;
                 int simulationTime = 15;
-                boolean ret = true;
-                int numSamples = 0;
+                //boolean ret = true;
+                //int numSamples = 0;
+                Pair<Integer, Boolean> pair;
                 double theta;
                 int flag=0;
                 int count = 0;
@@ -335,7 +342,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                     jProgressBar1.setValue(count);
 
                     theta = i * 0.01;
-                    numSamples = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+                    pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
 
                     /*
                     if(ret == true)
@@ -345,7 +352,10 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                     */
 
                     //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
-                    dataTool.addValueIntoDataset(numSamples, "line", String.valueOf(theta));
+                    System.out.println("pair2 : " + pair);
+                    System.out.println("pair2.getKey() : " + pair.getKey());
+                    System.out.println("pair2.getValue() : " + pair.getValue());
+                    dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
