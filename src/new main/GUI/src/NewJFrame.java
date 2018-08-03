@@ -7,10 +7,7 @@
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -87,6 +84,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
        // NewJFrame.add(JScrollPane3(jXTreeTable), BorderLayout.CENTER);
 
+        temp = new ArrayList<>();
     }
 
 
@@ -147,6 +145,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private ScheduledExecutorService dataAddingScheduler;
     private ScheduledFuture<?> dataAddingThread;
     private DatasetUtility dataTool;
+    private ArrayList<String> temp;
     private DefaultCategoryDataset createDataset() throws InterruptedException {
             Runnable timerTask = new Runnable() {
                 @Override
@@ -265,7 +264,128 @@ public class NewJFrame extends javax.swing.JFrame {
 
         return dataTool.getDataset();
     }
-    
+
+
+
+    boolean checking = false;
+
+//    public void simdata(){
+//        long start = System.currentTimeMillis();
+//        dataTool.reset();
+//        ConstantTimeBound constantTimeBound;
+//        PatientOccurrence patientOccurrence;
+//        Event event;
+//        Scenario MCIScenario;
+//        Simulator MCISim;
+//        MCIProperty rescuedProperty;
+//        MCIPropertyChecker rescuedChecker;
+//        SPRT verifier;
+//        double fireFighterPr = 0.8;
+//        int numFireFighter = 3;
+//        ArrayList<CS> CSs = new ArrayList();
+//
+//        for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
+//            FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
+//            CSs.add(fireFighter);
+//        }
+//
+//        int mapSize = 20;
+//        ArrayList<Integer> MCIMap = new ArrayList<>();
+//
+//        for (int i = 0; i < mapSize; i++) {
+//            MCIMap.add(0);
+//        }
+//
+//        SoS MCISoS = new SoS(CSs, MCIMap);
+//        ArrayList MCIEvents = new ArrayList();
+//        int numPatients = 20;
+//
+//        for(int j = 0; j < numPatients; j++) {
+//            constantTimeBound = new ConstantTimeBound(0);
+//            patientOccurrence = new PatientOccurrence("patient + 1", MCIMap);
+//            event = new Event(patientOccurrence, constantTimeBound);
+//            MCIEvents.add(event);
+//        }
+//        MCIScenario = new Scenario(MCIEvents);
+//
+//        // Simulation
+//        int repeatSim = 2000;
+//        int simulationTime = 15;
+//        //boolean ret = true;
+//        //int numSamples = 0;
+//        Pair<Integer, Boolean> pair;
+//        double theta;
+//        int flag=0;
+//        int count = 0;
+//        MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
+//
+//        rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
+//        rescuedChecker = new MCIPropertyChecker();
+//        verifier = new SPRT(rescuedChecker);
+//        System.out.println("Verify with simulator");
+//        for (int i =1; i<= 100; i++) {
+//            count++;
+//            jProgressBar1.setString(count+"% Done");
+//            jProgressBar1.setValue(count);
+//
+//            theta = i * 0.01;
+//            pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+//
+//                /*
+//                if(ret == true)
+//                    flag = 1;
+//                if(ret == false)
+//                    flag = 0;
+//                */
+//
+//            //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
+//            //System.out.println("pair2 : " + pair);
+//            //System.out.println("pair2.getKey() : " + pair.getKey());
+//            //System.out.println("pair2.getValue() : " + pair.getValue());
+//            //int myInt = pair.getValue() ? 1 : 0;
+//            dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
+//            try {
+//                Thread.sleep(40);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        long end = System.currentTimeMillis();
+//
+//
+//        jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
+//        jTextPane16.setEditable(false);
+//
+//        if(checking = true) {
+//            @Override
+//            public void run () {
+//
+//                String filetowrite = "C:/testing/test.txt";
+//                FileWriter fw = null;
+//                try {
+//
+//                    // "Total runtime: " + ( end - start )/1000.0 + " sec"
+//                    fw = new FileWriter(filetowrite);
+//                    fw.write("good bye world");
+//                    fw.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//            }
+//
+//
+//        }
+//    }
+
+
+
+
+
+
+
+
 
   //This is for bar graph
 private  DefaultCategoryDataset createDataset2() throws InterruptedException {
@@ -288,6 +408,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
         @Override
         public void run() {
+          //  simdata();
             long start = System.currentTimeMillis();
             dataTool.reset();
             ConstantTimeBound constantTimeBound;
@@ -369,7 +490,11 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 }
                 }
             long end = System.currentTimeMillis();
-            System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
+
+            temp.add("Total runtime: " + ( end - start )/1000.0 + " sec");
+            jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
+            jTextPane16.setEditable(false);
+            //System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
             }
 
         }, 1, TimeUnit.SECONDS);
@@ -1525,56 +1650,55 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
 
 
-    public void timer(){
-        boolean state = true;
-
-        Thread t = new Thread()
-        {
-            public void run(){
-
-                int millisec = 0;
-                int sec = 0;
-                int min = 0;
-                int hour = 0;
-
-                for(;;){
-                    if(state == true){
-                        try{
-                            millisec++;
-                            Thread.sleep(1);
-
-                            if(millisec>1000){
-                                millisec = 0;
-                                sec++;
-                            }
-                            if(sec>60){
-                                millisec = 0;
-                                sec = 0;
-                                min++;
-                            }
-                            if(min>60){
-                                millisec = 0;
-                                sec = 0;
-                                min = 0;
-                                hour++;
-                            }
-
-                            VP_TextPanel.setText(hour+":"+min+":"+sec+":"+millisec);
-                        } catch (InterruptedException egg) {
-                            egg.printStackTrace();
-                        }
-                    }else{
-                        break;
-                    }
-                }
-
-
-            }
-
-        };
-
-    }
-
+//    public void timer(){
+//        boolean state = true;
+//
+//        Thread t = new Thread()
+//        {
+//            public void run(){
+//
+//                int millisec = 0;
+//                int sec = 0;
+//                int min = 0;
+//                int hour = 0;
+//
+//                for(;;){
+//                    if(state == true){
+//                        try{
+//                            millisec++;
+//                            Thread.sleep(1);
+//
+//                            if(millisec>1000){
+//                                millisec = 0;
+//                                sec++;
+//                            }
+//                            if(sec>60){
+//                                millisec = 0;
+//                                sec = 0;
+//                                min++;
+//                            }
+//                            if(min>60){
+//                                millisec = 0;
+//                                sec = 0;
+//                                min = 0;
+//                                hour++;
+//                            }
+//
+//                            VP_TextPanel.setText(hour+":"+min+":"+sec+":"+millisec);
+//                        } catch (InterruptedException egg) {
+//                            egg.printStackTrace();
+//                        }
+//                    }else{
+//                        break;
+//                    }
+//                }
+//
+//
+//            }
+//
+//        };
+//
+//    }
 
 
 
@@ -1587,12 +1711,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 //        options[1] = new String("Bar Graph");
 //        int oPtions = JOptionPane.showOptionDialog(frame.getContentPane(),"What type of graph would you like to draw?","Options", 0,JOptionPane.INFORMATION_MESSAGE,null,options,null);
 //
+        temp.clear();
         System.setOut(this.printStreamSimulation);
         System.setErr(this.printStreamSimulation);
-
-
-
-
 
 
         try{// bar graph
@@ -1684,11 +1805,40 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jTextField_VC.setText(filename1);
     }
 
+
+
+
+
+
     private void SVR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
+        checking = true;
+
+        String temp2 = temp.get(0);
+
+       // String temp2 = temp.get(0);
+
+        if(checking = true){
+            System.out.println("TRUE");
+        }
+
         if (yes_or_no == 0) {
-            VP_TextPanel.setText("Yes");
+
+
+            String filetowrite = "C:/testing/test.txt";
+            FileWriter fw = null;
+            try {
+
+               // "Total runtime: " + ( end - start )/1000.0 + " sec"
+                fw = new FileWriter(filetowrite);
+                fw.write(temp2);
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            VP_TextPanel.setText("Saved");
         } else {
             VP_TextPanel.setText("No");
         }
@@ -1960,7 +2110,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     private javax.swing.JTextField jTextField_VC3;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTextPane jTextPane12;
-    private javax.swing.JTextPane jTextPane16;
+    private javax.swing.JTextPane jTextPane16; //time consumed
     private javax.swing.JTextPane jTextPane18;
     private javax.swing.JTextPane jTextPane20;
     private javax.swing.JTextPane jTextPane21;
