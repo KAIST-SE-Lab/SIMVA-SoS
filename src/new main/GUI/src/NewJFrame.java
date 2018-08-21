@@ -404,7 +404,20 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
         jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
+        jMenuItem14 = new javax.swing.JMenuItem();
+        jMenuItem15 = new javax.swing.JMenuItem();
+        jMenuItem16 = new javax.swing.JMenuItem();
+        jMenuItem17 = new javax.swing.JMenuItem();
+        jMenuItem18 = new javax.swing.JMenuItem();
+        jMenuItem19 = new javax.swing.JMenuItem();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         Simulation_based_Analysis = new javax.swing.JPanel();
         VP_Panel = new javax.swing.JPanel();
@@ -525,7 +538,12 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jMenu6 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
-        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+
+
+        //imhere
+
 
         jMenuItem12.setText("Policy Details");
 
@@ -1478,28 +1496,60 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
         jMenuBar2.add(jMenu3);
 
-        jMenu4.setText("Simulation");
+        jMenu4.setText("Simulation-based Analysis"); // simulation-based analysis menu
 
-        jMenuItem3.setText("Start Simulation");
+        jMenuItem3.setText("Initialize analysis");
         jMenu4.add(jMenuItem3);
 
-        jMenuItem4.setText("Stop Simulation (disabled)");
+        jMenu4.add(jSeparator1);
+
+        jMenu1.setText("Import");
+        jMenuItem13.setText("Simulation Scenario");
+        jMenuItem14.setText("Verification Configuration");
+        jMenu1.add(jMenuItem13);
+        jMenu1.add(jMenuItem14);
+
+
+        jMenu4.add(jMenu1); // jmenu4 = simulation-based analysis
+
+        jMenu4.add(jSeparator2);
+        jMenuItem4.setText("Start analysis");
         jMenu4.add(jMenuItem4);
 
-        jMenuItem5.setText("Simulation Configuration Details");
+        jMenuItem5.setText("Stop analysis");
         jMenu4.add(jMenuItem5);
 
-        jMenuItem6.setText("Save Simulation Logs");
+        jMenu4.add(jSeparator3);
+        jMenuItem6.setText("Save analysis results");
         jMenu4.add(jMenuItem6);
 
         jMenuBar2.add(jMenu4);
 
-        jMenu5.setText("Verification");
+        jMenu5.setText("Single Simulation");
 
-        jMenuItem7.setText("Verification Properties Details");
+        jMenuItem7.setText("Initialize single simulation");
         jMenu5.add(jMenuItem7);
+        jMenu5.add(jSeparator4);
 
-        jMenuItem8.setText("Save Analysis Results");
+        jMenu2.setText("Import");
+        jMenu5.add(jMenu2);
+        jMenuItem15.setText("Simulation Scenario");
+        jMenuItem16.setText("Policy Specification");
+        jMenuItem17.setText("Simulation Configuration");
+
+        jMenu2.add(jMenuItem15);
+        jMenu2.add(jMenuItem16);
+        jMenu2.add(jMenuItem17);
+
+        jMenu5.add(jSeparator5);
+
+        jMenuItem18.setText("Start simulation");
+        jMenuItem19.setText("Stop simulation");
+        jMenu5.add(jMenuItem18);
+        jMenu5.add(jMenuItem19);
+        jMenu5.add(jSeparator6);
+
+        jMenuItem8.setText("Save simulation results");
         jMenu5.add(jMenuItem8);
 
         jMenuBar2.add(jMenu5);
@@ -1509,11 +1559,11 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jMenuItem9.setText("Help");
         jMenu6.add(jMenuItem9);
 
+
+
         jMenuItem10.setText("About SIMVA-SoS");
         jMenu6.add(jMenuItem10);
 
-        jMenuItem11.setText("Documentation");
-        jMenu6.add(jMenuItem11);
 
         jMenuBar2.add(jMenu6);
 
@@ -1893,6 +1943,8 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1; //import button on Simulation-based Analysis menu
+    private javax.swing.JMenu jMenu2; //import button on Single simulation menu
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
@@ -1900,8 +1952,14 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13; // Simulation Scenario on simulation-based Analysis menu
+    private javax.swing.JMenuItem jMenuItem14; // Verification Configuration
+    private javax.swing.JMenuItem jMenuItem15; // Simulation Scenario on Single Simulation menu
+    private javax.swing.JMenuItem jMenuItem16; //policy Specification
+    private javax.swing.JMenuItem jMenuItem17; // Simulation configuration
+    private javax.swing.JMenuItem jMenuItem18; // start simulation
+    private javax.swing.JMenuItem jMenuItem19; // stop simulation
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -1953,6 +2011,14 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     private javax.swing.JTextPane jTextPane24;
     private javax.swing.JTextPane jTextPane25;
     private javax.swing.JTree jTree1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
+
+
     // End of variables declaration
 
 }
