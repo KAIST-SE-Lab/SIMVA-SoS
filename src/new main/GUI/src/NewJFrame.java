@@ -1505,15 +1505,34 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
         jMenu1.setText("Import");
         jMenuItem13.setText("Simulation Scenario");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileformenu(evt);
+            }
+        });
+
         jMenuItem14.setText("Verification Configuration");
+        jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileformenu(evt);
+            }
+        });
+
+
         jMenu1.add(jMenuItem13);
         jMenu1.add(jMenuItem14);
 
 
         jMenu4.add(jMenu1); // jmenu4 = simulation-based analysis
-
         jMenu4.add(jSeparator2);
         jMenuItem4.setText("Start analysis");
+
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+
         jMenu4.add(jMenuItem4);
 
         jMenuItem5.setText("Stop analysis");
@@ -1534,8 +1553,26 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jMenu2.setText("Import");
         jMenu5.add(jMenu2);
         jMenuItem15.setText("Simulation Scenario");
+        jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileformenu(evt);
+            }
+        });
+
         jMenuItem16.setText("Policy Specification");
+        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileformenu(evt);
+            }
+        });
+
         jMenuItem17.setText("Simulation Configuration");
+        jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileformenu(evt);
+            }
+        });
+
 
         jMenu2.add(jMenuItem15);
         jMenu2.add(jMenuItem16);
@@ -1544,6 +1581,13 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jMenu5.add(jSeparator5);
 
         jMenuItem18.setText("Start simulation");
+
+        jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem18ActionPerformed(evt);
+            }
+        });
+
         jMenuItem19.setText("Stop simulation");
         jMenu5.add(jMenuItem18);
         jMenu5.add(jMenuItem19);
@@ -1650,6 +1694,16 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         // TODO add your handling code here:
     }
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        Start_ButtonActionPerformed(evt);
+    }
+
+    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        Start_Button1ActionPerformed(evt);
+    }
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         // Simulation Scenario Button
             JFileChooser chooser = new JFileChooser();
@@ -1657,8 +1711,17 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             File f = chooser.getSelectedFile();
             String filename = f.getAbsolutePath();
             jTextField_SS.setText(filename);
+    }
 
-
+    private void fileformenu(java.awt.event.ActionEvent evt){
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f = chooser.getSelectedFile();
+        try {
+            f.getCanonicalFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void jTextField_SSActionPerformed(java.awt.event.ActionEvent evt) {
