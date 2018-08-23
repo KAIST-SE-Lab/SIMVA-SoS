@@ -241,7 +241,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         jProgressBar2.setString(count+"% Done");
                         jProgressBar2.setValue(count); // progressbar in single simulation
                         theta = i * 0.01;
-                        pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta, writer);
+                        pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
 
                         dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
 
@@ -356,7 +356,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 jProgressBar1.setValue(count);
 
                 theta = i * 0.01;
-                pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta, writer);
+                pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
 
                 /*
                 if(ret == true)
