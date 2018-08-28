@@ -51,10 +51,6 @@ import new_simvasos.verifier.SPRT;
  */
 
 public class NewJFrame extends javax.swing.JFrame {
-
-    static AtomicInteger foo = new AtomicInteger(1);
-    private JTextArea textArea;
-    private PrintStream standardOut;
     private PrintStream printStreamSimulation;
     private PrintStream printStreamSingle;
     private PrintWriter writer;
@@ -93,7 +89,9 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
 
-
+    /**
+     * Transfers output console to simulation log
+     */
     public class CustomOutputStream extends OutputStream {
     private JTextArea textArea;
      
@@ -111,18 +109,15 @@ public class NewJFrame extends javax.swing.JFrame {
     
 }
 
+    /**
+     * @param dataset Creates line graph
+     */
     public void drawGraph(DefaultCategoryDataset dataset) {
         JFreeChart lineChart = ChartFactory.createLineChart("Title", "theta", "numSamples", dataset, PlotOrientation.VERTICAL, true, true, false);
-
-
 
         //set color
         CategoryPlot plot = (CategoryPlot) lineChart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
-
-
-        //CategoryAxis domainAxis = plot.getDomainAxis();
-
 
         //create chart panel the add it to swing panel in jframe
         ChartPanel chartpanel1 = new ChartPanel(lineChart);
@@ -130,20 +125,16 @@ public class NewJFrame extends javax.swing.JFrame {
         graph_panel1.add(chartpanel1, BorderLayout.CENTER);
         graph_panel1.revalidate();
     }
-    
+
+    /**
+     * @param dataset Creates bar graph
+     */
     public void drawBarGraph(DefaultCategoryDataset dataset){
         JFreeChart barChart = ChartFactory.createBarChart("Title", "theta", "numSamples", dataset, PlotOrientation.VERTICAL, true, true, false); // horizontal
         CategoryPlot plot = (CategoryPlot) barChart.getPlot();
-
-
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
         plot.getRenderer().setSeriesPaint(1,Color.RED);
-
-
-
         ChartPanel chartpanel = new ChartPanel(barChart);
-
-        //System.out.println("drawBarGraph");
 
         graph_panel.removeAll();
         graph_panel.add(chartpanel, BorderLayout.CENTER);
@@ -157,7 +148,11 @@ public class NewJFrame extends javax.swing.JFrame {
     private DatasetUtility dataTool;
     private ArrayList<String> temp;
     private ArrayList<String> temp_single;
-    private ArrayList<Integer> bool_list;
+
+    /**
+     * @return Adding line graph data to data tool (DataUtility class)
+     * @throws InterruptedException
+     */
     private DefaultCategoryDataset createDataset() throws InterruptedException {
             Runnable timerTask = new Runnable() {
                 @Override
@@ -221,11 +216,8 @@ public class NewJFrame extends javax.swing.JFrame {
                     int count = 0;
                     int repeatSim = 2000;
                     int simulationTime = 15;
-                    //boolean ret = true;
-                    //int numSamples = 0;
                     Pair<Integer, Boolean> pair;
                     double theta;
-                    int flag=0;
                     MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
 
                     rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
@@ -242,10 +234,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         jProgressBar2.setValue(count); // progressbar in single simulation
                         theta = i * 0.01;
                         pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta, writer);
-
                         dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
-
-
 
                         try {
                             Thread.sleep(40);
@@ -270,13 +259,15 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
 
-
+    /**
+     * @return Adding bar graph data to data tool (DataUtility class)
+     * @throws InterruptedException
+     */
   //This is for bar graph
 private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     Runnable timerTask = new Runnable() {
         @Override
         public void run() {
-           // System.out.println("running");
             DefaultCategoryDataset data = dataTool.getDataset();
 
             drawBarGraph (data);
@@ -292,8 +283,6 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
         @Override
         public void run() {
-
-
 
             long start = System.currentTimeMillis();
             dataTool.reset();
@@ -336,11 +325,8 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             // Simulation
             int repeatSim = 2000;
             int simulationTime = 15;
-            //boolean ret = true;
-            //int numSamples = 0;
             Pair<Integer, Boolean> pair;
             double theta;
-            int flag=0;
             int count = 0;
             MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
 
@@ -357,18 +343,6 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
                 theta = i * 0.01;
                 pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta, writer);
-
-                /*
-                if(ret == true)
-                    flag = 1;
-                if(ret == false)
-                    flag = 0;
-                */
-
-                //dataTool.addValueIntoDataset(ret, "line", String.valueOf(theta));
-                //System.out.println("pair2 : " + pair);
-                //System.out.println("pair2.getKey() : " + pair.getKey());
-                //System.out.println("pair2.getValue() : " + pair.getValue());
                 int myInt = pair.getValue() ? 1 : 0;
 
                 dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
@@ -389,15 +363,12 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             writer.close();
             jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
             jTextPane16.setEditable(false);
-            //System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
             }
 
         }, 1, TimeUnit.SECONDS);
 
         return dataTool.getDataset();
     }
-
-
 
 
     @SuppressWarnings("unchecked")
@@ -1627,9 +1598,11 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         pack();
     }// </editor-fold>
 
+    /**
+     * @param evt Saves anyalysis results
+     */
     private void SAR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SAR_ButtonActionPerformed
         // TODO add your handling code here:
-
 
         int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
 
@@ -1641,32 +1614,22 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     }
 
 
-
-
+    /**
+     * @param evt Enables start button for bar graph
+     */
     private void Start_ButtonActionPerformed(ActionEvent evt) {
-
         temp.clear();
-
-            System.setOut(this.printStreamSimulation);
-            System.setErr(this.printStreamSimulation);
-
+        System.setOut(this.printStreamSimulation);
+        System.setErr(this.printStreamSimulation);
         try{// bar graph
             createDataset2();
-
         }catch (Exception ex){
-
         }
-
-     
-      
-      
     }
 
 
     private void Stop_ButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-        //Start_ButtonActionPerformed(evt);
-        //createDataset();
 
     }
 
@@ -1704,6 +1667,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         Start_Button1ActionPerformed(evt);
     }
 
+    /**
+     * @param evt Activates file explorer for Simulation Scenario on Simulation-based Analysis tab
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         // Simulation Scenario Button
             JFileChooser chooser = new JFileChooser();
@@ -1728,6 +1694,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         // TODO add your handling code here:
     }
 
+    /**
+     * @param evt  Activates file explorer for Verification Configuration on Simulation-based Analysis tab
+     */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         // Verification Configuration Button
         JFileChooser chooser = new JFileChooser();
@@ -1738,10 +1707,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     }
 
 
-
-
-
-
+    /**
+     * @param evt Activates Save Verification Results on Simulation-based Analysis tab, which saves time consumed in .txt file
+     */
     private void SVR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
@@ -1749,8 +1717,6 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         String temp2 = temp.get(0);
 
         if (yes_or_no == 0) {
-
-
             String filetowrite = "C:/testing/test.txt";
             FileWriter fw = null;
             try {
@@ -1767,6 +1733,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         }
     }
 
+    /**
+     * @param evt Activates Save Verification Results on Single Simulation tab
+     */
     private void SAR_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // Save analysis results on single simulation tab
 
@@ -1774,10 +1743,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
         String temp2 = temp_single.get(0);
 
-
         if (yes_or_no == 0) {
-
-
             String filetowrite = "C:/testing/test_single.txt";
             FileWriter fw = null;
             try {
@@ -1792,15 +1758,15 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         } else {
             VP_TextPanel.setText("No");
         }
-
-
-
     }
 
     private void Stop_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    /**
+     * @param evt Activates start button for single simulation
+     */
     private void Start_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // start button for single simulation
 
@@ -1809,12 +1775,10 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         System.setOut(this.printStreamSingle);
         System.setErr(this.printStreamSingle);
 
-
+        //This is for tree table on single simulation
         MyTreeTableModel treeTableModel = new MyTreeTableModel();
         JXTreeTable jXTreeTable = new JXTreeTable(treeTableModel);
-
         jScrollPane3.getViewport().add(jXTreeTable);
-
 
         //drawign line graph
         try{
@@ -1829,6 +1793,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         // TODO add your handling code here:
     }
 
+    /**
+     * @param evt Activates file explorer for Imported Policy (Verification Progress & Results) on Single Simulation
+     */
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {
         // File chooser for Imported Policy on VP&R
         JFileChooser chooser = new JFileChooser();
@@ -1842,6 +1809,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         // TODO add your handling code here:
     }
 
+    /**
+     * @param evt Activates file explorer for Simulation Configuration (Verification Progress & Results) on Single Simulation
+     */
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {
         // File chooser for Simulation Configuration on VP&R
         JFileChooser chooser = new JFileChooser();
@@ -1852,6 +1822,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
     }
 
+    /**
+     * @param evt Activates file explorer for Simulation Scenario (Verification Progress & Results) on Single Simulation
+     */
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {
         // File chooser for Simulation Scenario on VP&R
         JFileChooser chooser = new JFileChooser();
@@ -1866,6 +1839,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     }
 
 
+    /**
+     * @param evt Activates file explorer for Imported Policy (Simulation Information) on Single Simulation
+     */
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
         //File chooser for imported policy in single simulation tab
         JFileChooser chooser = new JFileChooser();
@@ -1880,6 +1856,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         // TODO add your handling code here:
     }
 
+    /**
+     * @param evt Activates file explorer for Simulation Configuration (Simulation Information) on Single Simulation
+     */
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
         // file chooser for Simulation Configuration in single simulation tab
         JFileChooser chooser = new JFileChooser();
@@ -1889,6 +1868,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jTextField_VC2.setText(filename);
     }
 
+    /**
+     * @param evt Activates file explorer for Simulation Scenario (Simulation Information) on Single Simulation
+     */
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
         // File chooser for Simulation Scenario in single simulation tab
         JFileChooser chooser = new JFileChooser();
@@ -1907,7 +1889,6 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1930,13 +1911,10 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new NewJFrame().setVisible(true);
-
-
             }
         });
     }
