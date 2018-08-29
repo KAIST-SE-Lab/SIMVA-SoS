@@ -234,6 +234,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         jProgressBar2.setString(count+"% Done");
                         jProgressBar2.setValue(count); // progressbar in single simulation
                         theta = i * 0.01;
+                      
                         pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta, writer);
                         dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
 
