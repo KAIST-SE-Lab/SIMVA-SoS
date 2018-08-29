@@ -5,10 +5,11 @@
  */
 
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -1574,10 +1575,21 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jMenuItem9.setText("Help");
         jMenu6.add(jMenuItem9);
 
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+
 
 
         jMenuItem10.setText("About SIMVA-SoS");
         jMenu6.add(jMenuItem10);
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
 
 
         jMenuBar2.add(jMenu6);
@@ -1597,6 +1609,28 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
         pack();
     }// </editor-fold>
+
+    private void jMenuItem10ActionPerformed(ActionEvent evt) {
+        Desktop d = Desktop.getDesktop();
+        try {
+            d.browse(new URI("http://se.kaist.ac.kr/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void jMenuItem9ActionPerformed(ActionEvent evt) {
+        Desktop d = Desktop.getDesktop();
+        try {
+            d.browse(new URI("http://se.kaist.ac.kr/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param evt Saves anyalysis results
