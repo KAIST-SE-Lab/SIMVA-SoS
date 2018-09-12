@@ -10,6 +10,5 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="module" module-name="SIMVA-SoS.Simulation &amp; Verification" />
-    <orderEntry type="library" name="swingx-all-1.6.4" level="project" />
   </component>
 </module>
