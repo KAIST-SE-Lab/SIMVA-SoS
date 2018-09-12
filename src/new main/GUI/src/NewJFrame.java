@@ -20,7 +20,7 @@ import javax.swing.*;
 
 import javafx.scene.paint.Paint;
 import javafx.util.Pair;
-import org.jdesktop.swingx.JXTreeTable;
+//import org.jdesktop.swingx.JXTreeTable;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -234,7 +234,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         jProgressBar2.setString(count+"% Done");
                         jProgressBar2.setValue(count); // progressbar in single simulation
                         theta = i * 0.01;
-                        pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta, writer);
+                        pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
                         dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
 
                         try {
@@ -343,7 +343,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 jProgressBar1.setValue(count);
 
                 theta = i * 0.01;
-                pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta, writer);
+                pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
                 int myInt = pair.getValue() ? 1 : 0;
 
                 dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
@@ -1810,9 +1810,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         System.setErr(this.printStreamSingle);
 
         //This is for tree table on single simulation
-        MyTreeTableModel treeTableModel = new MyTreeTableModel();
-        JXTreeTable jXTreeTable = new JXTreeTable(treeTableModel);
-        jScrollPane3.getViewport().add(jXTreeTable);
+//        MyTreeTableModel treeTableModel = new MyTreeTableModel();
+//        JXTreeTable jXTreeTable = new JXTreeTable(treeTableModel);
+//        jScrollPane3.getViewport().add(jXTreeTable);
 
         //drawign line graph
         try{
