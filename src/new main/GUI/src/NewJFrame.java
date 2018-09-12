@@ -5,32 +5,7 @@
  */
 
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;;
-import javax.swing.*;
-
-import javafx.scene.paint.Paint;
 import javafx.util.Pair;
-//import org.jdesktop.swingx.JXTreeTable;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
-import org.jfree.data.category.DefaultCategoryDataset;
-
-
 import new_simvasos.not_decided.CS;
 import new_simvasos.not_decided.FireFighter;
 import new_simvasos.not_decided.SoS;
@@ -42,6 +17,25 @@ import new_simvasos.scenario.Scenario;
 import new_simvasos.simulator.Simulator;
 import new_simvasos.timebound.ConstantTimeBound;
 import new_simvasos.verifier.SPRT;
+import org.jdesktop.swingx.JXTreeTable;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 
 
@@ -80,7 +74,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
 
         try {
-            writer = new PrintWriter(new FileOutputStream("C:/testing/log.txt"));
+            writer = new PrintWriter(new FileOutputStream("./testing/log.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -1751,7 +1745,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         String temp2 = temp.get(0);
 
         if (yes_or_no == 0) {
-            String filetowrite = "C:/testing/test.txt";
+            String filetowrite = "./testing/log.txt";
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filetowrite);
@@ -1778,7 +1772,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         String temp2 = temp_single.get(0);
 
         if (yes_or_no == 0) {
-            String filetowrite = "C:/testing/test_single.txt";
+            String filetowrite = "./testing/test_single.txt";
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filetowrite);
@@ -1810,9 +1804,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         System.setErr(this.printStreamSingle);
 
         //This is for tree table on single simulation
-//        MyTreeTableModel treeTableModel = new MyTreeTableModel();
-//        JXTreeTable jXTreeTable = new JXTreeTable(treeTableModel);
-//        jScrollPane3.getViewport().add(jXTreeTable);
+        MyTreeTableModel treeTableModel = new MyTreeTableModel();
+        JXTreeTable jXTreeTable = new JXTreeTable(treeTableModel);
+        jScrollPane3.getViewport().add(jXTreeTable);
 
         //drawign line graph
         try{
