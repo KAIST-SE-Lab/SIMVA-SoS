@@ -1,2 +1,0 @@
-for i in range(len(self.environment)):
-    self.environment[i] = 0
