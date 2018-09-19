@@ -50,15 +50,32 @@ public abstract class Simulation {
         return simulator.run();
     }
 
+    /**
+     * A method for setting the simulation completion time (ticks)
+     * @param newSimulationTime number of ticks
+     */
     //TODO: Find usage
     public void setSimulationTime(int newSimulationTime) {
         simulator = new Simulator(newSimulationTime, targetSoS, targetScenario);
     }
 
+    /**
+     * Model initialization (abstract)
+     */
     abstract void initModels();
 
+    /**
+     * Scenario initialization (abstract)
+     */
     abstract void initScenario();
 
+    /**
+     * A method for initializing the simulator engine with Simulation Objects and configuration
+     *
+     * @param simulationTime    required number of ticks
+     * @param targetSoS         target SoS object
+     * @param targetScenario    target Scenario event sequences
+     */
     private void initSimulator(int simulationTime, SoS targetSoS, Scenario targetScenario) {
         simulator = new Simulator(simulationTime, targetSoS, targetScenario);
     }

@@ -11,6 +11,13 @@ import new_simvasos.timebound.ConstantTimeBound;
 
 import java.util.ArrayList;
 
+/**
+ * Example simulation based on simulation objects of <SIM-SoS>
+ * An SoS consists of multiple firefighters to extinguish fire
+ * This class extends Simulation to define a simulation execution unit.
+ *
+ * @author yjshin, ymbaek
+ */
 public class Simulation_Firefighters extends Simulation {
     public Simulation_Firefighters() {
         System.out.println("Simulation_Firefighter > Constructor 1");
@@ -36,6 +43,12 @@ public class Simulation_Firefighters extends Simulation {
         return simulator.run();
     }
 
+    /**
+     * (This function should be overridden.)
+     * Three firefighters are included as an SoS model.
+     * MCI map is included as the environment model.
+     */
+    @Override
     void initModels(){
         System.out.println("Simulation_Firefighters > initModels()");
         double fireFighterPr = 0.8;
@@ -57,6 +70,11 @@ public class Simulation_Firefighters extends Simulation {
         targetSoS = new SoS(CSs, MCIMap);
     }
 
+    /**
+     * (This function should be overridden.)
+     * Number of patients is assigned to the map according to the scenario.
+     */
+    @Override
     void initScenario(){
         System.out.println("Simulation_Firefighters > initScenario()");
 
