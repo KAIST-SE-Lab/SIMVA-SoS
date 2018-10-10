@@ -178,7 +178,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     // Simulation
                     int repeatSim = 2000;
                     int simulationTime = 15;
-                    Pair<Integer, Boolean> pair;
+                    Pair<Pair<Integer, Boolean>, String> verificationResult;
                     double theta;
                     int count = 0;
                     Boolean totalRet=true;
@@ -194,14 +194,17 @@ public class NewJFrame extends javax.swing.JFrame {
 
                     for (int i =1; i<= 100; i++) {
                         count++;
-                        jProgressBar1.setString(count+"% Done");
-                        jProgressBar1.setValue(count);
+                        jProgressBar2.setString(count+"% Done");
+                        jProgressBar2.setValue(count);
 
                         theta = i * 0.01;
-                        pair = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
-                        int myInt = pair.getValue() ? 1 : 0;
+                        verificationResult= verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
 
-                        dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
+                        // True or False for this theta iteration
+                        int myInt = verificationResult.getKey().getValue() ? 1 : 0;
+
+                                                     // number of samples for this theta iteration
+                        dataTool.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
                         try {
                             Thread.sleep(40);
                         } catch (InterruptedException e) {
@@ -209,19 +212,22 @@ public class NewJFrame extends javax.swing.JFrame {
                         }
 
                         if(totalRet) {
-                            if (!pair.getValue()) {
+                            if (!verificationResult.getKey().getValue()) {
                                 totalRet = false;
                                 probability = theta;
                             }
                             if (i == 100)
                                 probability = 1.0;
                         }
+                        System.out.println(verificationResult.getValue());
+                        writer.println(verificationResult.getValue());
                     }
                     long end = System.currentTimeMillis();
 
                     System.out.println("Probability: about " + probability * 100 +"%");
                     System.out.println("---------------------------------------------------------------------");
                     System.out.print("Total runtime: " + ( end - start )/1000.0 + " sec");
+                    writer.println("Probability: about " + probability * 100 +"%");
                     writer.println("---------------------------------------------------------------------");
                     writer.println("Total runtime: " + ( end - start )/1000.0 + " sec");
                     temp.add("Total runtime: " + ( end - start )/1000.0 + " sec");
@@ -271,7 +277,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             // Simulation
             int repeatSim = 2000;
             int simulationTime = 15;
-            Pair<Integer, Boolean> pair;
+            Pair<Pair<Integer, Boolean>, String> verificationResult;
             double theta;
             int count = 0;
             Boolean totalRet=true;
@@ -291,10 +297,13 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 jProgressBar1.setValue(count);
 
                 theta = i * 0.01;
-                pair = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
-                int myInt = pair.getValue() ? 1 : 0;
+                verificationResult= verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
 
-                dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
+                // True or False for this theta iteration
+                int myInt = verificationResult.getKey().getValue() ? 1 : 0;
+
+                // number of samples for this theta iteration
+                dataTool.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
                 try {
                     Thread.sleep(40);
                 } catch (InterruptedException e) {
@@ -302,19 +311,22 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 }
 
                 if(totalRet) {
-                    if (!pair.getValue()) {
+                    if (!verificationResult.getKey().getValue()) {
                         totalRet = false;
                         probability = theta;
                     }
                     if (i == 100)
                         probability = 1.0;
                 }
+                System.out.println(verificationResult.getValue());
+                writer.println(verificationResult.getValue());
             }
             long end = System.currentTimeMillis();
 
             System.out.println("Probability: about " + probability * 100 +"%");
             System.out.println("---------------------------------------------------------------------");
             System.out.print("Total runtime: " + ( end - start )/1000.0 + " sec");
+            writer.println("Probability: about " + probability * 100 +"%");
             writer.println("---------------------------------------------------------------------");
             writer.println("Total runtime: " + ( end - start )/1000.0 + " sec");
             temp.add("Total runtime: " + ( end - start )/1000.0 + " sec");
@@ -322,7 +334,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             writer.close();
             jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
             jTextPane16.setEditable(false);
-            }
+        }
 
         }, 1, TimeUnit.SECONDS);
 

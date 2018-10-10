@@ -115,12 +115,11 @@ public class SPRT extends Verifier {
     System.out.println("Probability: about " + probability * 100 + "%");
   }
 
-    public Pair<Integer, Boolean> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta) {
+    // Return <pair for drawing graph<number of samples, true/false>,
+    // verification result on each theta>
+    public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta) {
         int maxNumSamples = maxRepeat;
-
-        boolean totalRet = true;
         boolean ret = true;
-        double probability = 0;
         int numSamples;
         int numTrue;
 
@@ -142,12 +141,11 @@ public class SPRT extends Verifier {
         }
 
         ret = this.isSatisfied(numSamples, numTrue, theta);
-        System.out.println("theta: " + Double.parseDouble(String.format("%.2f",theta)) +
-                " numSamples: " + numSamples + " numTrue: " + numTrue + " result: " + ret);
+        String verificationResult = "theta: " + Double.parseDouble(String.format("%.2f",theta)) +
+                " numSamples: " + numSamples + " numTrue: " + numTrue + " result: " + ret;
 
-        System.out.println("Probability: about " + probability * 100 + "%");
 
-        return new Pair(numSamples, ret);
+        return new Pair(new Pair(numSamples, ret), verificationResult);
     }
 
     public void verifyWithSimulation(Simulation simulation, Property verificationProperty, int maxRepeat) {
