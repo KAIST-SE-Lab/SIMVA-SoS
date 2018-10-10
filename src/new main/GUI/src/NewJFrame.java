@@ -6,6 +6,7 @@
 
 
 import javafx.util.Pair;
+import new_simvasos.log.Snapshot;
 import new_simvasos.not_decided.CS;
 import new_simvasos.not_decided.FireFighter;
 import new_simvasos.not_decided.SoS;
@@ -33,6 +34,8 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -171,66 +174,44 @@ public class NewJFrame extends javax.swing.JFrame {
                 public void run() {   //single simulation tab
                     long start = System.currentTimeMillis();
                     dataTool.reset();
-                    MCIProperty rescuedProperty;
-                    MCIPropertyChecker rescuedChecker;
-                    SPRT verifier;
+                    int count = 0;
 
                     // Simulation
-                    int repeatSim = 2000;
                     int simulationTime = 15;
-                    Pair<Pair<Integer, Boolean>, String> verificationResult;
-                    double theta;
-                    int count = 0;
-                    Boolean totalRet=true;
-                    double probability=0;
 
                     Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
+                    HashMap<Integer, Snapshot> snapshotMap = sim1.runSimulation().getSnapshotMap();
 
-                    rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
-                    rescuedChecker = new MCIPropertyChecker();
-                    verifier = new SPRT(rescuedChecker);
-                    System.out.println("Verify with simulator");
-                    writer.println("Verify with simulator");
+                    System.out.println("Run Single Simulation");
+                    writer.println("Run Single Simulation");
 
-                    for (int i =1; i<= 100; i++) {
-                        count++;
+                    for (int i =0; i<= snapshotMap.size(); i++) {
+
+                        // Calculate a progress rate
+                        count += (100/snapshotMap.size() + 1);
+                        if(count >= 100) count = 100;
                         jProgressBar2.setString(count+"% Done");
                         jProgressBar2.setValue(count);
 
-                        theta = i * 0.01;
-                        verificationResult= verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
+                        System.out.println("tick: " + (i+1) + " " + snapshotMap.get(i).getSnapshotString());
+                        writer.println(snapshotMap.get(i).getSnapshotString());
 
-                        // True or False for this theta iteration
-                        int myInt = verificationResult.getKey().getValue() ? 1 : 0;
+                        StringTokenizer st = new StringTokenizer(snapshotMap.get(i).getSnapshotString(), " ");
+                        while(st.hasMoreTokens()) {
+                            if(st.nextToken().equals("NotRescuedPatients:"))
+                                break;
+                        }
 
-                                                     // number of samples for this theta iteration
-                        dataTool.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
+                        int notRescuedPatients = Integer.parseInt(st.nextToken());
+                        // number of samples for this theta iteration
+                        dataTool.addValueIntoDataset(notRescuedPatients, "line", String.valueOf(i+1));
                         try {
                             Thread.sleep(40);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-
-                        if(totalRet) {
-                            if (!verificationResult.getKey().getValue()) {
-                                totalRet = false;
-                                probability = theta;
-                            }
-                            if (i == 100)
-                                probability = 1.0;
-                        }
-                        System.out.println(verificationResult.getValue());
-                        writer.println(verificationResult.getValue());
                     }
                     long end = System.currentTimeMillis();
-
-                    System.out.println("Probability: about " + probability * 100 +"%");
-                    System.out.println("---------------------------------------------------------------------");
-                    System.out.print("Total runtime: " + ( end - start )/1000.0 + " sec");
-                    writer.println("Probability: about " + probability * 100 +"%");
-                    writer.println("---------------------------------------------------------------------");
-                    writer.println("Total runtime: " + ( end - start )/1000.0 + " sec");
-                    temp.add("Total runtime: " + ( end - start )/1000.0 + " sec");
 
                     writer.close();
                     jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
