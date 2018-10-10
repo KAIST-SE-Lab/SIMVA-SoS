@@ -7,17 +7,9 @@
 
 import javafx.util.Pair;
 import new_simvasos.log.Snapshot;
-import new_simvasos.not_decided.CS;
-import new_simvasos.not_decided.FireFighter;
-import new_simvasos.not_decided.SoS;
 import new_simvasos.property.MCIProperty;
 import new_simvasos.property.MCIPropertyChecker;
-import new_simvasos.scenario.Event;
-import new_simvasos.scenario.PatientOccurrence;
-import new_simvasos.scenario.Scenario;
 import new_simvasos.simulation.Simulation_Firefighters;
-import new_simvasos.simulator.Simulator;
-import new_simvasos.timebound.ConstantTimeBound;
 import new_simvasos.verifier.SPRT;
 import org.jdesktop.swingx.JXTreeTable;
 import org.jfree.chart.ChartFactory;
@@ -52,7 +44,6 @@ import java.util.concurrent.TimeUnit;
 public class NewJFrame extends javax.swing.JFrame {
     private PrintStream printStreamSimulation;
     private PrintStream printStreamSingle;
-    private PrintWriter writer;
 
     /**
      * Creates new form NewJFrame
@@ -76,25 +67,17 @@ public class NewJFrame extends javax.swing.JFrame {
         printStreamSimulation = new PrintStream(new CustomOutputStream(jTextArea1));
         printStreamSingle = new PrintStream(new CustomOutputStream(jTextArea2));
 
-
-        try {
-            writer = new PrintWriter(new FileOutputStream("./src/new main/GUI/testing/log.txt"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        temp = new ArrayList<>();
-        temp_single = new ArrayList<>();
+        fileBufferVerification = new ArrayList<>();
+        fileBufferSingle = new ArrayList<>();
     }
-
-
+    
     /**
      * Transfers output console to simulation log
      */
     public class CustomOutputStream extends OutputStream {
-    private JTextArea textArea;
-     
-    public CustomOutputStream(JTextArea textArea) {
+        private JTextArea textArea;
+        
+        public CustomOutputStream(JTextArea textArea) {
         this.textArea = textArea;
     }
      
@@ -112,7 +95,7 @@ public class NewJFrame extends javax.swing.JFrame {
      * @param dataset Creates line graph
      */
     public void drawGraph(DefaultCategoryDataset dataset) {
-        JFreeChart lineChart = ChartFactory.createLineChart("Title", "theta", "numSamples", dataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart lineChart = ChartFactory.createLineChart("Title", "Tick", "Patients", dataset, PlotOrientation.VERTICAL, true, true, false);
 
         //set color
         CategoryPlot plot = (CategoryPlot) lineChart.getPlot();
@@ -129,7 +112,7 @@ public class NewJFrame extends javax.swing.JFrame {
      * @param dataset Creates bar graph
      */
     public void drawBarGraph(DefaultCategoryDataset dataset){
-        JFreeChart barChart = ChartFactory.createBarChart("Title", "theta", "numSamples", dataset, PlotOrientation.VERTICAL, true, true, false); // horizontal
+        JFreeChart barChart = ChartFactory.createBarChart("Title", "Theta", "NumSamples", dataset, PlotOrientation.VERTICAL, true, true, false); // horizontal
         CategoryPlot plot = (CategoryPlot) barChart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
         plot.getRenderer().setSeriesPaint(1,Color.RED);
@@ -145,8 +128,8 @@ public class NewJFrame extends javax.swing.JFrame {
     private ScheduledExecutorService dataAddingScheduler;
     private ScheduledFuture<?> dataAddingThread;
     private DatasetUtility dataTool;
-    private ArrayList<String> temp;
-    private ArrayList<String> temp_single;
+    private ArrayList<String> fileBufferVerification;
+    private ArrayList<String> fileBufferSingle;
 
     /**
      * @return Adding line graph data to data tool (DataUtility class)
@@ -183,7 +166,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     HashMap<Integer, Snapshot> snapshotMap = sim1.runSimulation().getSnapshotMap();
 
                     System.out.println("Run Single Simulation");
-                    writer.println("Run Single Simulation");
+                    //writer.println("Run Single Simulation");
 
                     for (int i =0; i<= snapshotMap.size(); i++) {
 
@@ -194,7 +177,8 @@ public class NewJFrame extends javax.swing.JFrame {
                         jProgressBar2.setValue(count);
 
                         System.out.println("tick: " + (i+1) + " " + snapshotMap.get(i).getSnapshotString());
-                        writer.println(snapshotMap.get(i).getSnapshotString());
+                        //writer.println(snapshotMap.get(i).getSnapshotString());
+                        fileBufferSingle.add("tick: " + (i+1) + " " + snapshotMap.get(i).getSnapshotString());
 
                         StringTokenizer st = new StringTokenizer(snapshotMap.get(i).getSnapshotString(), " ");
                         while(st.hasMoreTokens()) {
@@ -213,9 +197,9 @@ public class NewJFrame extends javax.swing.JFrame {
                     }
                     long end = System.currentTimeMillis();
 
-                    writer.close();
-                    jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
-                    jTextPane16.setEditable(false);
+                    //writer.close();
+                    //jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
+                    //jTextPane16.setEditable(false);
                 }
 
             }, 1, TimeUnit.SECONDS);
@@ -269,8 +253,8 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
             rescuedChecker = new MCIPropertyChecker();
             verifier = new SPRT(rescuedChecker);
-            System.out.println("Verify with simulator");
-            writer.println("Verify with simulator");
+            System.out.println("Simulation based Analysis");
+            fileBufferVerification.add("Simulation based Analysis");
 
             for (int i =1; i<= 100; i++) {
                 count++;
@@ -300,19 +284,18 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                         probability = 1.0;
                 }
                 System.out.println(verificationResult.getValue());
-                writer.println(verificationResult.getValue());
+                fileBufferVerification.add(verificationResult.getValue());
             }
             long end = System.currentTimeMillis();
 
             System.out.println("Probability: about " + probability * 100 +"%");
+            fileBufferVerification.add("Probability: about " + probability * 100 +"%");
             System.out.println("---------------------------------------------------------------------");
+            fileBufferVerification.add("---------------------------------------------------------------------");
             System.out.print("Total runtime: " + ( end - start )/1000.0 + " sec");
-            writer.println("Probability: about " + probability * 100 +"%");
-            writer.println("---------------------------------------------------------------------");
-            writer.println("Total runtime: " + ( end - start )/1000.0 + " sec");
-            temp.add("Total runtime: " + ( end - start )/1000.0 + " sec");
-
-            writer.close();
+            fileBufferVerification.add("Total runtime: " + ( end - start )/1000.0 + " sec");
+            
+            //writer.close();
             jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
             jTextPane16.setEditable(false);
         }
@@ -1583,27 +1566,12 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         }
     }
 
-    /**
-     * @param evt Saves anyalysis results
-     */
-    private void SAR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SAR_ButtonActionPerformed
-        // TODO add your handling code here:
-
-        int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
-
-        if (yes_or_no == 0) {
-            VP_TextPanel.setText("Saved");
-        } else {
-            VP_TextPanel.setText("No2");
-        }
-    }
-
-
+    
     /**
      * @param evt Enables start button for bar graph
      */
     private void Start_ButtonActionPerformed(ActionEvent evt) {
-        temp.clear();
+        fileBufferVerification.clear();
         System.setOut(this.printStreamSimulation);
         System.setErr(this.printStreamSimulation);
         try{// bar graph
@@ -1699,23 +1667,6 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         // TODO add your handling code here:
         int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
 
-        String temp2 = temp.get(0);
-
-        if (yes_or_no == 0) {
-            String filetowrite = "./testing/log.txt";
-            FileWriter fw = null;
-            try {
-                fw = new FileWriter(filetowrite);
-                fw.write(temp2);
-                fw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            VP_TextPanel.setText("Saved");
-        } else {
-            VP_TextPanel.setText("No");
-        }
     }
 
     /**
@@ -1726,14 +1677,17 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
         int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
 
-        String temp2 = temp_single.get(0);
 
         if (yes_or_no == 0) {
-            String filetowrite = "./testing/test_single.txt";
+            String filetowrite = "./src/new main/GUI/testing/SingleSimulationLog.txt";
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filetowrite);
-                fw.write(temp2);
+                
+                for(int i = 0; i < fileBufferSingle.size(); i++) {
+                    fw.write(fileBufferSingle.get(i));
+                    fw.write(System.getProperty("line.separator"));
+                }
                 fw.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1744,7 +1698,35 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             VP_TextPanel.setText("No");
         }
     }
-
+    
+    /**
+     * @param evt Saves anyalysis results
+     */
+    private void SAR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SAR_ButtonActionPerformed
+        // TODO add your handling code here:
+        
+        int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
+        
+        if (yes_or_no == 0) {
+            String filetowrite = "./src/new main/GUI/testing/VerificationLog.txt";
+            FileWriter fw = null;
+            try {
+                fw = new FileWriter(filetowrite);
+                for(int i = 0; i < fileBufferVerification.size(); i++) {
+                    fw.write(fileBufferVerification.get(i));
+                    fw.write(System.getProperty("line.separator"));
+                }
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            VP_TextPanel.setText("Verification Saved");
+        } else {
+            VP_TextPanel.setText("No");
+        }
+    }
+    
     private void Stop_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
@@ -1755,7 +1737,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     private void Start_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // start button for single simulation
 
-        temp_single.clear();
+        fileBufferSingle.clear();
 
         System.setOut(this.printStreamSingle);
         System.setErr(this.printStreamSingle);
