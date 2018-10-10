@@ -45,6 +45,7 @@ public class Log {
     }
   }
   
+  
   public SimulationLog getSimuLog() {
     return this.simuLog;
   }
