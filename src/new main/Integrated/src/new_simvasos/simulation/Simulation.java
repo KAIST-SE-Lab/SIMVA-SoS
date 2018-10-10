@@ -5,10 +5,17 @@ import new_simvasos.simulator.Simulator;
 import new_simvasos.not_decided.SoS;
 import new_simvasos.scenario.Scenario;
 
+/**
+ * @author ymbaek
+ *
+ * Simulation is an (abstract) execution unit for executing simulation objects and scenario.
+ * Simulation objects include SoS models such as Org, CS, Infra, Environment.
+ * A Scenario represents sequence of events
+ */
 public abstract class Simulation {
-    Simulator simulator;
-    SoS targetSoS;
-    Scenario targetScenario;
+    Simulator simulator;        //Simulator for executing targetSoS & targetScenario
+    SoS targetSoS;              //Simulation Object 1: Target SoS
+    Scenario targetScenario;    //Simulation Object 2: Target Scenario (Event Sequence)
 
     public Simulation() {
         System.out.println("Simulation > Constructor 1");
@@ -20,12 +27,21 @@ public abstract class Simulation {
         initSimulation(simulationTime);
     }
 
+    /**
+     * A method for initializing Simulation
+     *
+     * @param simulationTime    limited time (num of ticks) for a single simulation execution
+     */
     public void initSimulation(int simulationTime) {
         initModels();
         initScenario();
         initSimulator(simulationTime, targetSoS, targetScenario);
     }
 
+    /**
+     * A method for running a simulation
+     * @return results (accumulated text logs) of a single simulation execution
+     */
     public Log runSimulation() {
         System.out.println("Simulation > runSimulation()");
 
@@ -34,15 +50,32 @@ public abstract class Simulation {
         return simulator.run();
     }
 
+    /**
+     * A method for setting the simulation completion time (ticks)
+     * @param newSimulationTime number of ticks
+     */
     //TODO: Find usage
     public void setSimulationTime(int newSimulationTime) {
         simulator = new Simulator(newSimulationTime, targetSoS, targetScenario);
     }
 
+    /**
+     * Model initialization (abstract)
+     */
     abstract void initModels();
 
+    /**
+     * Scenario initialization (abstract)
+     */
     abstract void initScenario();
 
+    /**
+     * A method for initializing the simulator engine with Simulation Objects and configuration
+     *
+     * @param simulationTime    required number of ticks
+     * @param targetSoS         target SoS object
+     * @param targetScenario    target Scenario event sequences
+     */
     private void initSimulator(int simulationTime, SoS targetSoS, Scenario targetScenario) {
         simulator = new Simulator(simulationTime, targetSoS, targetScenario);
     }
