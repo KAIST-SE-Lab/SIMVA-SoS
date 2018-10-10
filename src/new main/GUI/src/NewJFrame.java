@@ -14,6 +14,7 @@ import new_simvasos.property.MCIPropertyChecker;
 import new_simvasos.scenario.Event;
 import new_simvasos.scenario.PatientOccurrence;
 import new_simvasos.scenario.Scenario;
+import new_simvasos.simulation.Simulation_Firefighters;
 import new_simvasos.simulator.Simulator;
 import new_simvasos.timebound.ConstantTimeBound;
 import new_simvasos.verifier.SPRT;
@@ -74,7 +75,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
 
         try {
-            writer = new PrintWriter(new FileOutputStream("./testing/log.txt"));
+            writer = new PrintWriter(new FileOutputStream("./src/new main/GUI/testing/log.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -170,85 +171,67 @@ public class NewJFrame extends javax.swing.JFrame {
                 public void run() {   //single simulation tab
                     long start = System.currentTimeMillis();
                     dataTool.reset();
-
-                    ConstantTimeBound constantTimeBound;
-                    PatientOccurrence patientOccurrence;
-                    Event event;
-                    Scenario MCIScenario;
-                    Simulator MCISim;
                     MCIProperty rescuedProperty;
                     MCIPropertyChecker rescuedChecker;
                     SPRT verifier;
-                    double fireFighterPr = 0.8;
-                    int numFireFighter = 3;
-                    ArrayList<CS> CSs = new ArrayList();
-
-                    for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
-                        FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
-                        CSs.add(fireFighter);
-                    }
-
-                    int mapSize = 20;
-                    ArrayList<Integer> MCIMap = new ArrayList<>();
-
-                    for (int i = 0; i < mapSize; i++) {
-                        MCIMap.add(0);
-                    }
-
-                    SoS MCISoS = new SoS(CSs, MCIMap);
-                    ArrayList MCIEvents = new ArrayList();
-                    int numPatients = 20;
-
-                    for(int j = 0; j < numPatients; j++) {
-                        constantTimeBound = new ConstantTimeBound(0);
-                        patientOccurrence = new PatientOccurrence("patient + 1", MCIMap);
-                        event = new Event(patientOccurrence, constantTimeBound);
-                        MCIEvents.add(event);
-                    }
-                    MCIScenario = new Scenario(MCIEvents);
 
                     // Simulation
-                    int count = 0;
                     int repeatSim = 2000;
                     int simulationTime = 15;
                     Pair<Integer, Boolean> pair;
                     double theta;
-                    MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
+                    int count = 0;
+                    Boolean totalRet=true;
+                    double probability=0;
+
+                    Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
 
                     rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
                     rescuedChecker = new MCIPropertyChecker();
                     verifier = new SPRT(rescuedChecker);
-
                     System.out.println("Verify with simulator");
                     writer.println("Verify with simulator");
 
-
                     for (int i =1; i<= 100; i++) {
                         count++;
-                        jProgressBar2.setString(count+"% Done");
-                        jProgressBar2.setValue(count); // progressbar in single simulation
-                        theta = i * 0.01;
-                        pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
-                        dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
+                        jProgressBar1.setString(count+"% Done");
+                        jProgressBar1.setValue(count);
 
+                        theta = i * 0.01;
+                        pair = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
+                        int myInt = pair.getValue() ? 1 : 0;
+
+                        dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
                         try {
                             Thread.sleep(40);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+
+                        if(totalRet) {
+                            if (!pair.getValue()) {
+                                totalRet = false;
+                                probability = theta;
+                            }
+                            if (i == 100)
+                                probability = 1.0;
+                        }
                     }
                     long end = System.currentTimeMillis();
-                    System.out.println("---------------------------------------------------------------------");
-                    writer.println("---------------------------------------------------------------------");
-                    System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
-                    writer.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
-                    temp_single.add("Total runtime: " + ( end - start )/1000.0 + " sec" );
 
+                    System.out.println("Probability: about " + probability * 100 +"%");
+                    System.out.println("---------------------------------------------------------------------");
+                    System.out.print("Total runtime: " + ( end - start )/1000.0 + " sec");
+                    writer.println("---------------------------------------------------------------------");
+                    writer.println("Total runtime: " + ( end - start )/1000.0 + " sec");
+                    temp.add("Total runtime: " + ( end - start )/1000.0 + " sec");
 
                     writer.close();
+                    jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
+                    jTextPane16.setEditable(false);
                 }
-            }, 1, TimeUnit.SECONDS);
 
+            }, 1, TimeUnit.SECONDS);
 
         return dataTool.getDataset();
     }
@@ -281,41 +264,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
             long start = System.currentTimeMillis();
             dataTool.reset();
-            ConstantTimeBound constantTimeBound;
-            PatientOccurrence patientOccurrence;
-            Event event;
-            Scenario MCIScenario;
-            Simulator MCISim;
             MCIProperty rescuedProperty;
             MCIPropertyChecker rescuedChecker;
             SPRT verifier;
-            double fireFighterPr = 0.8;
-            int numFireFighter = 3;
-            ArrayList<CS> CSs = new ArrayList();
-
-            for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
-                FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
-                CSs.add(fireFighter);
-            }
-
-            int mapSize = 20;
-            ArrayList<Integer> MCIMap = new ArrayList<>();
-
-            for (int i = 0; i < mapSize; i++) {
-                MCIMap.add(0);
-            }
-
-            SoS MCISoS = new SoS(CSs, MCIMap);
-            ArrayList MCIEvents = new ArrayList();
-            int numPatients = 20;
-
-            for(int j = 0; j < numPatients; j++) {
-                constantTimeBound = new ConstantTimeBound(0);
-                patientOccurrence = new PatientOccurrence("patient + 1", MCIMap);
-                event = new Event(patientOccurrence, constantTimeBound);
-                MCIEvents.add(event);
-            }
-            MCIScenario = new Scenario(MCIEvents);
 
             // Simulation
             int repeatSim = 2000;
@@ -323,7 +274,10 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             Pair<Integer, Boolean> pair;
             double theta;
             int count = 0;
-            MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
+            Boolean totalRet=true;
+            double probability=0;
+
+            Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
 
             rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
             rescuedChecker = new MCIPropertyChecker();
@@ -337,7 +291,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 jProgressBar1.setValue(count);
 
                 theta = i * 0.01;
-                pair = verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim, theta);
+                pair = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
                 int myInt = pair.getValue() ? 1 : 0;
 
                 dataTool.addValueIntoDataset(pair.getKey(), "line", String.valueOf(theta));
@@ -346,9 +300,19 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                if(totalRet) {
+                    if (!pair.getValue()) {
+                        totalRet = false;
+                        probability = theta;
+                    }
+                    if (i == 100)
+                        probability = 1.0;
                 }
+            }
             long end = System.currentTimeMillis();
 
+            System.out.println("Probability: about " + probability * 100 +"%");
             System.out.println("---------------------------------------------------------------------");
             System.out.print("Total runtime: " + ( end - start )/1000.0 + " sec");
             writer.println("---------------------------------------------------------------------");
