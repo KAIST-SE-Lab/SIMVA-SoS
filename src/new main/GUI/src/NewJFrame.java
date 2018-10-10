@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-
 import javafx.util.Pair;
 import new_simvasos.log.Snapshot;
 import new_simvasos.property.MCIProperty;
@@ -33,12 +32,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-
-
-
 /**
- *
- * @author TaeGeon
+ * @author TaeGeon, SuMin, YongJun, SangWon
  */
 
 public class NewJFrame extends javax.swing.JFrame {
@@ -47,7 +42,15 @@ public class NewJFrame extends javax.swing.JFrame {
     private JFreeChart lineChart;
     private JFreeChart barChart;
     
-
+    private final ScheduledExecutorService scheduler;
+    private final ScheduledExecutorService dataReadingScheduler;
+    private ScheduledExecutorService dataAddingScheduler;
+    private ScheduledFuture<?> dataAddingThread;
+    private DatasetUtility dataTool1;
+    private DatasetUtility dataTool2;
+    private ArrayList<String> fileBufferVerification;
+    private ArrayList<String> fileBufferSingle;
+    
     /**
      * Creates new form NewJFrame
      */
@@ -57,16 +60,16 @@ public class NewJFrame extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         graph_panel.setLayout(new java.awt.BorderLayout());
         graph_panel1.setLayout(new java.awt.BorderLayout());
-
+        
         scheduler = Executors.newScheduledThreadPool(2);
         dataReadingScheduler = Executors.newScheduledThreadPool(1);
         dataAddingScheduler = Executors.newScheduledThreadPool(1);
         dataTool1 = new DatasetUtility(new DefaultCategoryDataset());
         dataTool2 = new DatasetUtility(new DefaultCategoryDataset());
-    
+        
         lineChart = ChartFactory.createLineChart("Single Simulation", "Tick", "Patients", dataTool1.getDataset(), PlotOrientation.VERTICAL, true, true, false);
         barChart = ChartFactory.createBarChart("Statistical Verification", "Theta", "NumSamples", dataTool2.getDataset(), PlotOrientation.VERTICAL, true, true, false); // horizontal
-    
+        
         // Single
         drawGraph(null);
         // Verification
@@ -74,10 +77,10 @@ public class NewJFrame extends javax.swing.JFrame {
         
         jTextArea1.setEditable(false); // log for the simulation-based Analysis
         jTextArea2.setEditable(false); // log for the single simulation
-
+        
         printStreamSimulation = new PrintStream(new CustomOutputStream(jTextArea1));
         printStreamSingle = new PrintStream(new CustomOutputStream(jTextArea2));
-
+        
         fileBufferVerification = new ArrayList<>();
         fileBufferSingle = new ArrayList<>();
     }
@@ -89,237 +92,227 @@ public class NewJFrame extends javax.swing.JFrame {
         private JTextArea textArea;
         
         public CustomOutputStream(JTextArea textArea) {
-        this.textArea = textArea;
-    }
-     
-    @Override
-    public void write(int b) throws IOException {
-        // redirects data to the text area
-        textArea.append(String.valueOf((char)b));
-        // scrolls the text area to the end of data
-        textArea.setCaretPosition(textArea.getDocument().getLength());
+            this.textArea = textArea;
+        }
+        
+        @Override
+        public void write(int b) throws IOException {
+            // redirects data to the text area
+            textArea.append(String.valueOf((char) b));
+            // scrolls the text area to the end of data
+            textArea.setCaretPosition(textArea.getDocument().getLength());
+        }
     }
     
-}
-
     /**
      * @param dataset Creates line graph
      */
     public void drawGraph(DefaultCategoryDataset dataset) {
-
+        
         //set color
         CategoryPlot plot = (CategoryPlot) lineChart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
-
+        
         //create chart panel the add it to swing panel in jframe
         ChartPanel chartpanel1 = new ChartPanel(lineChart);
         graph_panel1.removeAll();
         graph_panel1.add(chartpanel1, BorderLayout.CENTER);
         graph_panel1.revalidate();
     }
-
+    
     /**
      * @param dataset Creates bar graph
      */
-    public void drawBarGraph(DefaultCategoryDataset dataset){
+    public void drawBarGraph(DefaultCategoryDataset dataset) {
         CategoryPlot plot = (CategoryPlot) barChart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
-        plot.getRenderer().setSeriesPaint(1,Color.RED);
+        plot.getRenderer().setSeriesPaint(1, Color.RED);
         ChartPanel chartpanel = new ChartPanel(barChart);
-
+        
         graph_panel.removeAll();
         graph_panel.add(chartpanel, BorderLayout.CENTER);
         graph_panel.revalidate();
     }
-
-    private final ScheduledExecutorService scheduler;
-    private final ScheduledExecutorService dataReadingScheduler;
-    private ScheduledExecutorService dataAddingScheduler;
-    private ScheduledFuture<?> dataAddingThread;
-    private DatasetUtility dataTool1;
-    private DatasetUtility dataTool2;
-    private ArrayList<String> fileBufferVerification;
-    private ArrayList<String> fileBufferSingle;
-
+    
     /**
      * @return Adding line graph data to data tool (DataUtility class)
      * @throws InterruptedException
      */
     private DefaultCategoryDataset createDataset() throws InterruptedException {
-            Runnable timerTask = new Runnable() {
-                @Override
-                public void run() {
-
-                    DefaultCategoryDataset data = dataTool1.getDataset();
-                    drawGraph (data);
-
+        Runnable timerTask = new Runnable() {
+            @Override
+            public void run() {
+                
+                DefaultCategoryDataset data = dataTool1.getDataset();
+                drawGraph(data);
+                
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                }
+            }
+        };
+        ScheduledFuture<?> timerHandle =
+            dataReadingScheduler.scheduleAtFixedRate(timerTask, 0, 1, TimeUnit.SECONDS);
+        
+        dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
+            @Override
+            public void run() {   //single simulation tab
+                long start = System.currentTimeMillis();
+                dataTool1.reset();
+                int count = 0;
+                
+                // Simulation
+                int simulationTime = 15;
+                
+                Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
+                HashMap<Integer, Snapshot> snapshotMap = sim1.runSimulation().getSnapshotMap();
+                
+                System.out.println("Run Single Simulation");
+                //writer.println("Run Single Simulation");
+                
+                for (int i = 0; i <= snapshotMap.size(); i++) {
+                    
+                    // Calculate a progress rate
+                    count += (100 / snapshotMap.size() + 1);
+                    if (count >= 100) count = 100;
+                    jProgressBar2.setString(count + "% Done");
+                    jProgressBar2.setValue(count);
+                    
+                    System.out.println("tick: " + (i + 1) + " " + snapshotMap.get(i).getSnapshotString());
+                    //writer.println(snapshotMap.get(i).getSnapshotString());
+                    fileBufferSingle.add("tick: " + (i + 1) + " " + snapshotMap.get(i).getSnapshotString());
+                    
+                    StringTokenizer st = new StringTokenizer(snapshotMap.get(i).getSnapshotString(), " ");
+                    while (st.hasMoreTokens()) {
+                        if (st.nextToken().equals("NotRescuedPatients:"))
+                            break;
+                    }
+                    
+                    int notRescuedPatients = Integer.parseInt(st.nextToken());
+                    // number of samples for this theta iteration
+                    dataTool1.addValueIntoDataset(notRescuedPatients, "line", String.valueOf(i + 1));
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(40);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    catch (InterruptedException ex) {}
                 }
-            };
-            ScheduledFuture<?> timerHandle =
-                    dataReadingScheduler.scheduleAtFixedRate(timerTask, 0, 1, TimeUnit.SECONDS);
-
-            dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
-                @Override
-                public void run() {   //single simulation tab
-                    long start = System.currentTimeMillis();
-                    dataTool1.reset();
-                    int count = 0;
-
-                    // Simulation
-                    int simulationTime = 15;
-
-                    Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
-                    HashMap<Integer, Snapshot> snapshotMap = sim1.runSimulation().getSnapshotMap();
-
-                    System.out.println("Run Single Simulation");
-                    //writer.println("Run Single Simulation");
-
-                    for (int i =0; i<= snapshotMap.size(); i++) {
-
-                        // Calculate a progress rate
-                        count += (100/snapshotMap.size() + 1);
-                        if(count >= 100) count = 100;
-                        jProgressBar2.setString(count+"% Done");
-                        jProgressBar2.setValue(count);
-
-                        System.out.println("tick: " + (i+1) + " " + snapshotMap.get(i).getSnapshotString());
-                        //writer.println(snapshotMap.get(i).getSnapshotString());
-                        fileBufferSingle.add("tick: " + (i+1) + " " + snapshotMap.get(i).getSnapshotString());
-
-                        StringTokenizer st = new StringTokenizer(snapshotMap.get(i).getSnapshotString(), " ");
-                        while(st.hasMoreTokens()) {
-                            if(st.nextToken().equals("NotRescuedPatients:"))
-                                break;
-                        }
-
-                        int notRescuedPatients = Integer.parseInt(st.nextToken());
-                        // number of samples for this theta iteration
-                        dataTool1.addValueIntoDataset(notRescuedPatients, "line", String.valueOf(i+1));
-                        try {
-                            Thread.sleep(40);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    long end = System.currentTimeMillis();
-
-                    //writer.close();
-                    //jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
-                    //jTextPane16.setEditable(false);
-                }
-
-            }, 1, TimeUnit.SECONDS);
-
+                long end = System.currentTimeMillis();
+                
+                //writer.close();
+                //jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
+                //jTextPane16.setEditable(false);
+            }
+            
+        }, 1, TimeUnit.SECONDS);
+        
         return dataTool1.getDataset();
     }
-
-
+    
+    
     /**
      * @return Adding bar graph data to data tool (DataUtility class)
      * @throws InterruptedException
      */
-  //This is for bar graph
-private  DefaultCategoryDataset createDataset2() throws InterruptedException {
-    Runnable timerTask = new Runnable() {
-        @Override
-        public void run() {
-            DefaultCategoryDataset data = dataTool2.getDataset();
-
-            drawBarGraph (data);
-            try {
-                Thread.sleep(500);
-            }
-            catch (InterruptedException ex) {}
-        }
-    };
-    ScheduledFuture<?> timerHandle =
-            dataReadingScheduler.scheduleAtFixedRate(timerTask, 0, 1, TimeUnit.SECONDS);
-
-    dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
-        @Override
-        public void run() {
-
-            long start = System.currentTimeMillis();
-            dataTool2.reset();
-            MCIProperty rescuedProperty;
-            MCIPropertyChecker rescuedChecker;
-            SPRT verifier;
-
-            // Simulation
-            int repeatSim = 2000;
-            int simulationTime = 15;
-            Pair<Pair<Integer, Boolean>, String> verificationResult;
-            double theta;
-            int count = 0;
-            Boolean totalRet=true;
-            double probability=0;
-
-            Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
-
-            rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
-            rescuedChecker = new MCIPropertyChecker();
-            verifier = new SPRT(rescuedChecker);
-            System.out.println("Simulation based Analysis");
-            fileBufferVerification.add("Simulation based Analysis");
-
-            for (int i =1; i<= 100; i++) {
-                count++;
-                jProgressBar1.setString(count+"% Done");
-                jProgressBar1.setValue(count);
-
-                theta = i * 0.01;
-                verificationResult= verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
-
-                // True or False for this theta iteration
-                int myInt = verificationResult.getKey().getValue() ? 1 : 0;
-
-                // number of samples for this theta iteration
-                dataTool2.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
+    //This is for bar graph
+    private DefaultCategoryDataset createDataset2() throws InterruptedException {
+        Runnable timerTask = new Runnable() {
+            @Override
+            public void run() {
+                DefaultCategoryDataset data = dataTool2.getDataset();
+                
+                drawBarGraph(data);
                 try {
-                    Thread.sleep(40);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
                 }
-
-                if(totalRet) {
-                    if (!verificationResult.getKey().getValue()) {
-                        totalRet = false;
-                        probability = theta;
-                    }
-                    if (i == 100)
-                        probability = 1.0;
-                }
-                System.out.println(verificationResult.getValue());
-                fileBufferVerification.add(verificationResult.getValue());
             }
-            long end = System.currentTimeMillis();
-
-            System.out.println("Probability: about " + probability * 100 +"%");
-            fileBufferVerification.add("Probability: about " + probability * 100 +"%");
-            System.out.println("---------------------------------------------------------------------");
-            fileBufferVerification.add("---------------------------------------------------------------------");
-            System.out.print("Total runtime: " + ( end - start )/1000.0 + " sec");
-            fileBufferVerification.add("Total runtime: " + ( end - start )/1000.0 + " sec");
+        };
+        ScheduledFuture<?> timerHandle =
+            dataReadingScheduler.scheduleAtFixedRate(timerTask, 0, 1, TimeUnit.SECONDS);
+        
+        dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
+            @Override
+            public void run() {
+                
+                long start = System.currentTimeMillis();
+                dataTool2.reset();
+                MCIProperty rescuedProperty;
+                MCIPropertyChecker rescuedChecker;
+                SPRT verifier;
+                
+                // Simulation
+                int repeatSim = 2000;
+                int simulationTime = 15;
+                Pair<Pair<Integer, Boolean>, String> verificationResult;
+                double theta;
+                int count = 0;
+                Boolean totalRet = true;
+                double probability = 0;
+                
+                Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
+                
+                rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
+                rescuedChecker = new MCIPropertyChecker();
+                verifier = new SPRT(rescuedChecker);
+                System.out.println("Simulation based Analysis");
+                fileBufferVerification.add("Simulation based Analysis");
+                
+                for (int i = 1; i <= 100; i++) {
+                    count++;
+                    jProgressBar1.setString(count + "% Done");
+                    jProgressBar1.setValue(count);
+                    
+                    theta = i * 0.01;
+                    verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
+                    
+                    // True or False for this theta iteration
+                    int myInt = verificationResult.getKey().getValue() ? 1 : 0;
+                    
+                    // number of samples for this theta iteration
+                    dataTool2.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
+                    try {
+                        Thread.sleep(40);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    if (totalRet) {
+                        if (!verificationResult.getKey().getValue()) {
+                            totalRet = false;
+                            probability = theta;
+                        }
+                        if (i == 100)
+                            probability = 1.0;
+                    }
+                    System.out.println(verificationResult.getValue());
+                    fileBufferVerification.add(verificationResult.getValue());
+                }
+                long end = System.currentTimeMillis();
+                
+                System.out.println("Probability: about " + probability * 100 + "%");
+                fileBufferVerification.add("Probability: about " + probability * 100 + "%");
+                System.out.println("---------------------------------------------------------------------");
+                fileBufferVerification.add("---------------------------------------------------------------------");
+                System.out.print("Total runtime: " + (end - start) / 1000.0 + " sec");
+                fileBufferVerification.add("Total runtime: " + (end - start) / 1000.0 + " sec");
+                
+                //writer.close();
+                jTextPane16.setText("Total runtime: " + (end - start) / 1000.0 + " sec");
+                jTextPane16.setEditable(false);
+            }
             
-            //writer.close();
-            jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
-            jTextPane16.setEditable(false);
-        }
-
         }, 1, TimeUnit.SECONDS);
-
+        
         return dataTool2.getDataset();
     }
-
-
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
+        
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
@@ -456,33 +449,33 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
-
-
+        
+        
         //imhere
-
-
+        
+        
         jMenuItem12.setText("Policy Details");
-
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jTabbedPane2.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         Simulation_based_Analysis.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         VP_Panel.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel1.setText("Verification Progress");
-
+        
         jPanel2.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         Start_Button.setText("▶");
         Start_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Start_ButtonActionPerformed(evt);
             }
         });
-
+        
         Stop_Button.setFont(new java.awt.Font("Lucida Grande", 0, 25)); // NOI18N
         Stop_Button.setText("■");
         Stop_Button.addActionListener(new java.awt.event.ActionListener() {
@@ -490,206 +483,204 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 Stop_ButtonActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(Start_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Stop_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(8, Short.MAX_VALUE))
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(Start_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(Stop_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(8, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(Stop_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(Start_Button)))
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(Stop_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Start_Button)))
         );
-
+        
         jProgressBar1.setString("0% Done");
         jProgressBar1.setStringPainted(true);
         jProgressBar1.setBorderPainted(true);
-
-
-
-
+        
+        
         javax.swing.GroupLayout VP_PanelLayout = new javax.swing.GroupLayout(VP_Panel);
         VP_Panel.setLayout(VP_PanelLayout);
         VP_PanelLayout.setHorizontalGroup(
-                VP_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            VP_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VP_PanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VP_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(VP_PanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VP_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(VP_PanelLayout.createSequentialGroup()
-                                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGap(29, 29, 29))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGap(29, 29, 29))
         );
         VP_PanelLayout.setVerticalGroup(
-                VP_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VP_PanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VP_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VP_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VP_PanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel1)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VP_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         VPR_Grey.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel2.setText("Verification Progress & Results ");
-
+        
         VPR_White.setBackground(new java.awt.Color(255, 255, 255));
-
+        
         jLabel7.setText("Total # of Simulation");
-
+        
         jLabel11.setText("Time Consumed");
-
+        
         jLabel12.setText("Verification Progress");
-
+        
         jLabel13.setText("Property Checking");
-
+        
         jLabel14.setText("Target Model");
-
+        
         jScrollPane2.setViewportView(jTextPane1);
-
+        
         jScrollPane14.setViewportView(jTextPane12);
-
+        
         jScrollPane18.setViewportView(jTextPane16);
-
+        
         jScrollPane19.setViewportView(VP_TextPanel);
-
+        
         jScrollPane20.setViewportView(jTextPane18);
-
+        
         javax.swing.GroupLayout VPR_WhiteLayout = new javax.swing.GroupLayout(VPR_White);
         VPR_White.setLayout(VPR_WhiteLayout);
         VPR_WhiteLayout.setHorizontalGroup(
-                VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VPR_WhiteLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(VPR_WhiteLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(VPR_WhiteLayout.createSequentialGroup()
-                                                .addComponent(jLabel14)
-                                                .addGap(93, 93, 93)
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(VPR_WhiteLayout.createSequentialGroup()
-                                                .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel7)
-                                                        .addComponent(jLabel11)
-                                                        .addComponent(jLabel12)
-                                                        .addComponent(jLabel13))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-                                                        .addComponent(jScrollPane18)
-                                                        .addComponent(jScrollPane19)
-                                                        .addComponent(jScrollPane20))))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel14)
+                            .addGap(93, 93, 93)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(VPR_WhiteLayout.createSequentialGroup()
+                            .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel7)
+                                .addComponent(jLabel11)
+                                .addComponent(jLabel12)
+                                .addComponent(jLabel13))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                                .addComponent(jScrollPane18)
+                                .addComponent(jScrollPane19)
+                                .addComponent(jScrollPane20))))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         VPR_WhiteLayout.setVerticalGroup(
-                VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VPR_WhiteLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel14))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel7)
-                                        .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel11)
-                                        .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel12)
-                                        .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel13)
-                                        .addComponent(jScrollPane20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VPR_WhiteLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel14))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel7)
+                        .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel11)
+                        .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel12)
+                        .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VPR_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel13)
+                        .addComponent(jScrollPane20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         SVR_Button.setText("Save verification results");
         SVR_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SVR_ButtonActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout VPR_GreyLayout = new javax.swing.GroupLayout(VPR_Grey);
         VPR_Grey.setLayout(VPR_GreyLayout);
         VPR_GreyLayout.setHorizontalGroup(
-                VPR_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            VPR_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VPR_GreyLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VPR_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(VPR_GreyLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VPR_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(VPR_GreyLayout.createSequentialGroup()
-                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(SVR_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(VPR_White, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(9, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SVR_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(VPR_White, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(9, Short.MAX_VALUE))
         );
         VPR_GreyLayout.setVerticalGroup(
-                VPR_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VPR_GreyLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VPR_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel2)
-                                        .addComponent(SVR_Button))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(VPR_White, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VPR_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VPR_GreyLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VPR_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(SVR_Button))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(VPR_White, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         VI_Grey.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel5.setText("Verification Information ");
-
+        
         VI_White.setBackground(new java.awt.Color(255, 255, 255));
-
+        
         jLabel16.setText("Verification Configuration");
-
+        
         jLabel17.setText("alpha (α)");
-
+        
         jLabel18.setText("beta (β)");
-
+        
         jLabel19.setText("delta (δ)");
-
+        
         jLabel20.setText("Number of minimum samples");
-
+        
         jLabel21.setText("Simulation time");
-
+        
         jLabel22.setText("Number of simulations");
-
+        
         jLabel23.setText("Simulation Scenario");
-
+        
         jScrollPane22.setViewportView(jTextPane20);
-
+        
         jScrollPane23.setViewportView(jTextPane21);
-
+        
         jScrollPane24.setViewportView(jTextPane22);
-
+        
         jScrollPane25.setViewportView(jTextPane23);
-
+        
         jScrollPane26.setViewportView(jTextPane24);
-
+        
         jScrollPane27.setViewportView(jTextPane25);
-
+        
         jLabel24.setText("Sliced");
-
+        
         enable_button1.setText("Yes");
         enable_button1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -701,7 +692,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 enable_button1ActionPerformed(evt);
             }
         });
-
+        
         disable_button1.setText("No");
         disable_button1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -713,8 +704,8 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 disable_button1ActionPerformed(evt);
             }
         });
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jComboBox2.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBox2ItemStateChanged(evt);
@@ -725,343 +716,343 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 jComboBox2ActionPerformed(evt);
             }
         });
-
+        
         jTextField_SS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField_SSActionPerformed(evt);
             }
         });
-
+        
         jButton2.setText("File..");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-
+        
         jButton3.setText("File..");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout VI_WhiteLayout = new javax.swing.GroupLayout(VI_White);
         VI_White.setLayout(VI_WhiteLayout);
         VI_WhiteLayout.setHorizontalGroup(
-                VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_WhiteLayout.createSequentialGroup()
-                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, VI_WhiteLayout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel16)
-                                                        .addComponent(jLabel24)
-                                                        .addComponent(jLabel23))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, VI_WhiteLayout.createSequentialGroup()
-                                                                        .addComponent(jTextField_SS, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                .addGroup(VI_WhiteLayout.createSequentialGroup()
-                                                                        .addComponent(enable_button1)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(disable_button1)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                        .addGroup(VI_WhiteLayout.createSequentialGroup()
-                                                                .addComponent(jTextField_VC, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addGap(0, 8, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, VI_WhiteLayout.createSequentialGroup()
-                                                .addGap(35, 35, 35)
-                                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(VI_WhiteLayout.createSequentialGroup()
-                                                                .addComponent(jLabel22)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addComponent(jScrollPane27, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(VI_WhiteLayout.createSequentialGroup()
-                                                                .addComponent(jLabel20)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addComponent(jScrollPane25, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(VI_WhiteLayout.createSequentialGroup()
-                                                                .addComponent(jLabel17)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(jLabel18)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(jLabel19)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(0, 0, Short.MAX_VALUE))
-                                                        .addGroup(VI_WhiteLayout.createSequentialGroup()
-                                                                .addComponent(jLabel21)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addComponent(jScrollPane26, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_WhiteLayout.createSequentialGroup()
+                    .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, VI_WhiteLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel16)
+                                .addComponent(jLabel24)
+                                .addComponent(jLabel23))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, VI_WhiteLayout.createSequentialGroup()
+                                        .addComponent(jTextField_SS, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(VI_WhiteLayout.createSequentialGroup()
+                                        .addComponent(enable_button1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(disable_button1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(VI_WhiteLayout.createSequentialGroup()
+                                    .addComponent(jTextField_VC, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(0, 8, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, VI_WhiteLayout.createSequentialGroup()
+                            .addGap(35, 35, 35)
+                            .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(VI_WhiteLayout.createSequentialGroup()
+                                    .addComponent(jLabel22)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane27, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(VI_WhiteLayout.createSequentialGroup()
+                                    .addComponent(jLabel20)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane25, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(VI_WhiteLayout.createSequentialGroup()
+                                    .addComponent(jLabel17)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jLabel18)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jLabel19)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, Short.MAX_VALUE))
+                                .addGroup(VI_WhiteLayout.createSequentialGroup()
+                                    .addComponent(jLabel21)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane26, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         VI_WhiteLayout.setVerticalGroup(
-                VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_WhiteLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel23)
-                                        .addComponent(jTextField_SS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton2))
-                                .addGap(2, 2, 2)
-                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(enable_button1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(disable_button1)
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel24))
-                                .addGap(2, 2, 2)
-                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel16)
-                                        .addComponent(jTextField_VC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton3))
-                                .addGap(8, 8, 8)
-                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel17)
-                                        .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel18)
-                                        .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel19)
-                                        .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel20)
-                                        .addComponent(jScrollPane25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel21)
-                                        .addComponent(jScrollPane26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel22)
-                                        .addComponent(jScrollPane27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_WhiteLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel23)
+                        .addComponent(jTextField_SS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton2))
+                    .addGap(2, 2, 2)
+                    .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(enable_button1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(disable_button1)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel24))
+                    .addGap(2, 2, 2)
+                    .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel16)
+                        .addComponent(jTextField_VC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton3))
+                    .addGap(8, 8, 8)
+                    .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel17)
+                        .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel18)
+                        .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel19)
+                        .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel20)
+                        .addComponent(jScrollPane25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel21)
+                        .addComponent(jScrollPane26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VI_WhiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel22)
+                        .addComponent(jScrollPane27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         javax.swing.GroupLayout VI_GreyLayout = new javax.swing.GroupLayout(VI_Grey);
         VI_Grey.setLayout(VI_GreyLayout);
         VI_GreyLayout.setHorizontalGroup(
-                VI_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_GreyLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(VI_White, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(17, Short.MAX_VALUE))
+            VI_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_GreyLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(VI_White, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(17, Short.MAX_VALUE))
         );
         VI_GreyLayout.setVerticalGroup(
-                VI_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_GreyLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(VI_White, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VI_GreyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_GreyLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel5)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(VI_White, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         jPanel1.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel4.setText("Analysis ");
-
+        
         SAR_Button.setText("Save analysis results");
         SAR_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SAR_ButtonActionPerformed(evt);
             }
         });
-
+        
         jScrollPane1.setBackground(new java.awt.Color(244, 244, 244));
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
+        
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
-
+        
         graph_panel.setBackground(new java.awt.Color(255, 255, 255));
-
+        
         javax.swing.GroupLayout graph_panelLayout = new javax.swing.GroupLayout(graph_panel);
         graph_panel.setLayout(graph_panelLayout);
         graph_panelLayout.setHorizontalGroup(
-                graph_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
+            graph_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 0, Short.MAX_VALUE)
         );
         graph_panelLayout.setVerticalGroup(
-                graph_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
+            graph_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 0, Short.MAX_VALUE)
         );
-
+        
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(graph_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(SAR_Button))
-                                        .addComponent(jScrollPane1))
-                                .addContainerGap())
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(graph_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SAR_Button))
+                        .addComponent(jScrollPane1))
+                    .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(SAR_Button)
-                                        .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(graph_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(SAR_Button)
+                        .addComponent(jLabel4))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(graph_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
         );
-
+        
         javax.swing.GroupLayout Simulation_based_AnalysisLayout = new javax.swing.GroupLayout(Simulation_based_Analysis);
         Simulation_based_Analysis.setLayout(Simulation_based_AnalysisLayout);
         Simulation_based_AnalysisLayout.setHorizontalGroup(
-                Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(Simulation_based_AnalysisLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(Simulation_based_AnalysisLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(Simulation_based_AnalysisLayout.createSequentialGroup()
-                                                .addGroup(Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(VPR_Grey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(VI_Grey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addComponent(VP_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap())
+                            .addGroup(Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(VPR_Grey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(VI_Grey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(VP_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addContainerGap())
         );
         Simulation_based_AnalysisLayout.setVerticalGroup(
-                Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(Simulation_based_AnalysisLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(VP_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(Simulation_based_AnalysisLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(VP_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(Simulation_based_AnalysisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(Simulation_based_AnalysisLayout.createSequentialGroup()
-                                                .addComponent(VI_Grey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(VPR_Grey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(VI_Grey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(VPR_Grey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         jTabbedPane2.addTab("Simulation-based Analysis", Simulation_based_Analysis);
-
+        
         jPanel6.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel3.setText("Simulation Progress");
-
+        
         VI_Grey1.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel6.setText("Simulation Information ");
-
+        
         VI_White2.setBackground(new java.awt.Color(255, 255, 255));
-
+        
         jLabel37.setText("Simulation Configuration");
-
+        
         jLabel44.setText("Simulation Scenario");
-
+        
         jTextField_SS2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField_SS2ActionPerformed(evt);
             }
         });
-
+        
         jButton6.setText("File..");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
-
+        
         jButton7.setText("File..");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
             }
         });
-
+        
         jLabel45.setText("Imported Policy");
-
+        
         jTextField_SS3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField_SS3ActionPerformed(evt);
             }
         });
-
+        
         jButton8.setText("File..");
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout VI_White2Layout = new javax.swing.GroupLayout(VI_White2);
         VI_White2.setLayout(VI_White2Layout);
         VI_White2Layout.setHorizontalGroup(
-                VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_White2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel37)
+                        .addComponent(jLabel44)
+                        .addComponent(jLabel45))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(VI_White2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel37)
-                                        .addComponent(jLabel44)
-                                        .addComponent(jLabel45))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(VI_White2Layout.createSequentialGroup()
-                                                .addComponent(jTextField_SS3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(VI_White2Layout.createSequentialGroup()
-                                                .addComponent(jTextField_SS2, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(VI_White2Layout.createSequentialGroup()
-                                                .addComponent(jTextField_VC2, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap(27, Short.MAX_VALUE))
+                            .addComponent(jTextField_SS3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(VI_White2Layout.createSequentialGroup()
+                            .addComponent(jTextField_SS2, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(VI_White2Layout.createSequentialGroup()
+                            .addComponent(jTextField_VC2, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(27, Short.MAX_VALUE))
         );
         VI_White2Layout.setVerticalGroup(
-                VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_White2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel44)
-                                        .addComponent(jTextField_SS2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jTextField_SS3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel45)
-                                        .addComponent(jButton8))
-                                .addGap(6, 6, 6)
-                                .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel37)
-                                        .addComponent(jTextField_VC2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton7))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_White2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel44)
+                        .addComponent(jTextField_SS2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton6))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField_SS3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel45)
+                        .addComponent(jButton8))
+                    .addGap(6, 6, 6)
+                    .addGroup(VI_White2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel37)
+                        .addComponent(jTextField_VC2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton7))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         VI_Grey3.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel9.setText("Model Information ");
-
+        
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Organization1");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("CS_Firefighter");
         javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("CS_Action_Rescue");
@@ -1081,193 +1072,193 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         treeNode1.add(treeNode2);
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         //jScrollPane3.setViewportView(jTree1);
-
-
+        
+        
         javax.swing.GroupLayout VI_Grey3Layout = new javax.swing.GroupLayout(VI_Grey3);
         VI_Grey3.setLayout(VI_Grey3Layout);
         VI_Grey3Layout.setHorizontalGroup(
-                VI_Grey3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_Grey3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_Grey3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(27, Short.MAX_VALUE))
+            VI_Grey3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_Grey3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_Grey3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(27, Short.MAX_VALUE))
         );
         VI_Grey3Layout.setVerticalGroup(
-                VI_Grey3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_Grey3Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addGap(11, 11, 11))
+            VI_Grey3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_Grey3Layout.createSequentialGroup()
+                    .addGap(12, 12, 12)
+                    .addComponent(jLabel9)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGap(11, 11, 11))
         );
-
+        
         VI_Grey2.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel8.setText("Verification Progress & Results");
-
+        
         VI_White3.setBackground(new java.awt.Color(255, 255, 255));
-
+        
         jLabel38.setText("Simulation Configuration");
-
+        
         jLabel46.setText("Simulation Scenario");
-
+        
         jTextField_SS4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField_SS4ActionPerformed(evt);
             }
         });
-
+        
         jButton9.setText("File..");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton9ActionPerformed(evt);
             }
         });
-
+        
         jButton10.setText("File..");
         jButton10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton10ActionPerformed(evt);
             }
         });
-
+        
         jLabel47.setText("Imported Policy");
-
+        
         jTextField_SS5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField_SS5ActionPerformed(evt);
             }
         });
-
+        
         jButton11.setText("File..");
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout VI_White3Layout = new javax.swing.GroupLayout(VI_White3);
         VI_White3.setLayout(VI_White3Layout);
         VI_White3Layout.setHorizontalGroup(
-                VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_White3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel38)
+                        .addComponent(jLabel46)
+                        .addComponent(jLabel47))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(VI_White3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel38)
-                                        .addComponent(jLabel46)
-                                        .addComponent(jLabel47))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(VI_White3Layout.createSequentialGroup()
-                                                .addComponent(jTextField_SS5, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(VI_White3Layout.createSequentialGroup()
-                                                .addComponent(jTextField_SS4, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(VI_White3Layout.createSequentialGroup()
-                                                .addComponent(jTextField_VC3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap(29, Short.MAX_VALUE))
+                            .addComponent(jTextField_SS5, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(VI_White3Layout.createSequentialGroup()
+                            .addComponent(jTextField_SS4, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(VI_White3Layout.createSequentialGroup()
+                            .addComponent(jTextField_VC3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(29, Short.MAX_VALUE))
         );
         VI_White3Layout.setVerticalGroup(
-                VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_White3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel46)
-                                        .addComponent(jTextField_SS4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton9))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jTextField_SS5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel47)
-                                        .addComponent(jButton11))
-                                .addGap(6, 6, 6)
-                                .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel38)
-                                        .addComponent(jTextField_VC3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton10))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_White3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel46)
+                        .addComponent(jTextField_SS4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton9))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField_SS5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel47)
+                        .addComponent(jButton11))
+                    .addGap(6, 6, 6)
+                    .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel38)
+                        .addComponent(jTextField_VC3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton10))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         SVR_Button1.setText("Save verification results");
         SVR_Button1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SVR_Button1ActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout VI_Grey2Layout = new javax.swing.GroupLayout(VI_Grey2);
         VI_Grey2.setLayout(VI_Grey2Layout);
         VI_Grey2Layout.setHorizontalGroup(
-                VI_Grey2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            VI_Grey2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_Grey2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_Grey2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(VI_White3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(VI_Grey2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_Grey2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(VI_White3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(VI_Grey2Layout.createSequentialGroup()
-                                                .addComponent(jLabel8)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(SVR_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap())
+                            .addComponent(jLabel8)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SVR_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap())
         );
         VI_Grey2Layout.setVerticalGroup(
-                VI_Grey2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_Grey2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_Grey2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel8)
-                                        .addComponent(SVR_Button1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(VI_White3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            VI_Grey2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_Grey2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_Grey2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(SVR_Button1))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(VI_White3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         javax.swing.GroupLayout VI_Grey1Layout = new javax.swing.GroupLayout(VI_Grey1);
         VI_Grey1.setLayout(VI_Grey1Layout);
         VI_Grey1Layout.setHorizontalGroup(
-                VI_Grey1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            VI_Grey1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_Grey1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(VI_Grey1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(VI_Grey3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(VI_Grey2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(VI_Grey1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(VI_Grey1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(VI_Grey3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(VI_Grey2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(VI_Grey1Layout.createSequentialGroup()
-                                                .addGap(6, 6, 6)
-                                                .addGroup(VI_Grey1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(VI_White2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(6, 6, 6)
+                            .addGroup(VI_Grey1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(VI_White2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         VI_Grey1Layout.setVerticalGroup(
-                VI_Grey1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(VI_Grey1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(VI_White2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(VI_Grey3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(VI_Grey2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
+            VI_Grey1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(VI_Grey1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel6)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(VI_White2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(VI_Grey3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(VI_Grey2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
         );
-
+        
         jPanel3.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         Start_Button1.setText("▶");
         Start_Button1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Start_Button1ActionPerformed(evt);
             }
         });
-
+        
         Stop_Button1.setFont(new java.awt.Font("Lucida Grande", 0, 25)); // NOI18N
         Stop_Button1.setText("■");
         Stop_Button1.addActionListener(new java.awt.event.ActionListener() {
@@ -1275,150 +1266,150 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 Stop_Button1ActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(Start_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Stop_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(8, Short.MAX_VALUE))
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(Start_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(Stop_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(8, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
-                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(Stop_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(Start_Button1)))
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(Stop_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Start_Button1)))
         );
-
+        
         jProgressBar2.setString("0% Done");
         jProgressBar2.setStringPainted(true);
-
-
+        
+        
         jPanel4.setBackground(new java.awt.Color(244, 244, 244));
-
+        
         jLabel10.setText("Simulation Log");
-
+        
         SAR_Button1.setText("Save simulation log");
         SAR_Button1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SAR_Button1ActionPerformed(evt);
             }
         });
-
+        
         jScrollPane4.setBackground(new java.awt.Color(244, 244, 244));
         jScrollPane4.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
+        
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
         jScrollPane4.setViewportView(jTextArea2);
-
+        
         graph_panel1.setBackground(new java.awt.Color(255, 255, 255));
-
+        
         javax.swing.GroupLayout graph_panel1Layout = new javax.swing.GroupLayout(graph_panel1);
         graph_panel1.setLayout(graph_panel1Layout);
         graph_panel1Layout.setHorizontalGroup(
-                graph_panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
+            graph_panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 0, Short.MAX_VALUE)
         );
         graph_panel1Layout.setVerticalGroup(
-                graph_panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 222, Short.MAX_VALUE)
+            graph_panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 222, Short.MAX_VALUE)
         );
-
+        
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
-                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(graph_panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(jPanel4Layout.createSequentialGroup()
-                                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
-                                                .addComponent(SAR_Button1))
-                                        .addComponent(jScrollPane4))
-                                .addContainerGap())
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(graph_panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
+                            .addComponent(SAR_Button1))
+                        .addComponent(jScrollPane4))
+                    .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
-                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel4Layout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addComponent(jLabel10))
-                                        .addComponent(SAR_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(graph_panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+                            .addContainerGap()
+                            .addComponent(jLabel10))
+                        .addComponent(SAR_Button1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(graph_panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
         );
-
+        
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
-                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel6Layout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(jPanel6Layout.createSequentialGroup()
-                                                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                        .addGroup(jPanel6Layout.createSequentialGroup()
-                                                .addComponent(VI_Grey1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addContainerGap())
+                            .addContainerGap()
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel6Layout.createSequentialGroup()
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(jPanel6Layout.createSequentialGroup()
+                            .addComponent(VI_Grey1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
-                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel3)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(20, 20, 20)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(20, 20, 20)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel6Layout.createSequentialGroup()
-                                                .addComponent(VI_Grey1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGap(25, 25, 25))
-                                        .addGroup(jPanel6Layout.createSequentialGroup()
-                                                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addContainerGap())))
+                            .addComponent(VI_Grey1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(25, 25, 25))
+                        .addGroup(jPanel6Layout.createSequentialGroup()
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addContainerGap())))
         );
-
+        
         jTabbedPane2.addTab("Single Simulation", jPanel6);
-
+        
         jMenu3.setText("Model");
-
+        
         jMenuItem2.setText("Model Details");
         jMenu3.add(jMenuItem2);
-
+        
         jMenuItem1.setText("Policy Details");
         jMenu3.add(jMenuItem1);
-
+        
         jMenuBar2.add(jMenu3);
-
+        
         jMenu4.setText("Simulation-based Analysis"); // simulation-based analysis menu
-
+        
         jMenuItem3.setText("Initialize analysis");
         jMenu4.add(jMenuItem3);
-
+        
         jMenu4.add(jSeparator1);
-
+        
         jMenu1.setText("Import");
         jMenuItem13.setText("Simulation Scenario");
         jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
@@ -1426,46 +1417,46 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 fileformenu(evt);
             }
         });
-
+        
         jMenuItem14.setText("Verification Configuration");
         jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileformenu(evt);
             }
         });
-
-
+        
+        
         jMenu1.add(jMenuItem13);
         jMenu1.add(jMenuItem14);
-
-
+        
+        
         jMenu4.add(jMenu1); // jmenu4 = simulation-based analysis
         jMenu4.add(jSeparator2);
         jMenuItem4.setText("Start analysis");
-
+        
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
             }
         });
-
+        
         jMenu4.add(jMenuItem4);
-
+        
         jMenuItem5.setText("Stop analysis");
         jMenu4.add(jMenuItem5);
-
+        
         jMenu4.add(jSeparator3);
         jMenuItem6.setText("Save analysis results");
         jMenu4.add(jMenuItem6);
-
+        
         jMenuBar2.add(jMenu4);
-
+        
         jMenu5.setText("Single Simulation");
-
+        
         jMenuItem7.setText("Initialize single simulation");
         jMenu5.add(jMenuItem7);
         jMenu5.add(jSeparator4);
-
+        
         jMenu2.setText("Import");
         jMenu5.add(jMenu2);
         jMenuItem15.setText("Simulation Scenario");
@@ -1474,59 +1465,58 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 fileformenu(evt);
             }
         });
-
+        
         jMenuItem16.setText("Policy Specification");
         jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileformenu(evt);
             }
         });
-
+        
         jMenuItem17.setText("Simulation Configuration");
         jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileformenu(evt);
             }
         });
-
-
+        
+        
         jMenu2.add(jMenuItem15);
         jMenu2.add(jMenuItem16);
         jMenu2.add(jMenuItem17);
-
+        
         jMenu5.add(jSeparator5);
-
+        
         jMenuItem18.setText("Start simulation");
-
+        
         jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem18ActionPerformed(evt);
             }
         });
-
+        
         jMenuItem19.setText("Stop simulation");
         jMenu5.add(jMenuItem18);
         jMenu5.add(jMenuItem19);
         jMenu5.add(jSeparator6);
-
+        
         jMenuItem8.setText("Save simulation results");
         jMenu5.add(jMenuItem8);
-
+        
         jMenuBar2.add(jMenu5);
-
+        
         jMenu6.setText("Help");
-
+        
         jMenuItem9.setText("Help");
         jMenu6.add(jMenuItem9);
-
+        
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem9ActionPerformed(evt);
             }
         });
-
-
-
+        
+        
         jMenuItem10.setText("About SIMVA-SoS");
         jMenu6.add(jMenuItem10);
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
@@ -1534,26 +1524,26 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 jMenuItem10ActionPerformed(evt);
             }
         });
-
-
+        
+        
         jMenuBar2.add(jMenu6);
-
+        
         setJMenuBar(jMenuBar2);
-
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTabbedPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTabbedPane2)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jTabbedPane2)
         );
-
+        
         pack();
     }// </editor-fold>
-
+    
     private void jMenuItem10ActionPerformed(ActionEvent evt) {
         Desktop d = Desktop.getDesktop();
         try {
@@ -1564,7 +1554,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             e.printStackTrace();
         }
     }
-
+    
     private void jMenuItem9ActionPerformed(ActionEvent evt) {
         Desktop d = Desktop.getDesktop();
         try {
@@ -1575,7 +1565,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             e.printStackTrace();
         }
     }
-
+    
     
     /**
      * @param evt Enables start button for bar graph
@@ -1584,65 +1574,65 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         fileBufferVerification.clear();
         System.setOut(this.printStreamSimulation);
         System.setErr(this.printStreamSimulation);
-        try{// bar graph
+        try {// bar graph
             createDataset2();
-        }catch (Exception ex){
+        } catch (Exception ex) {
         }
     }
-
-
+    
+    
     private void Stop_ButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-
+        
     }
-
+    
     private void enable_button1MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     private void enable_button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     private void disable_button1MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     private void disable_button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         Start_ButtonActionPerformed(evt);
     }
-
+    
     private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         Start_Button1ActionPerformed(evt);
     }
-
+    
     /**
      * @param evt Activates file explorer for Simulation Scenario on Simulation-based Analysis tab
      */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         // Simulation Scenario Button
-            JFileChooser chooser = new JFileChooser();
-            chooser.showOpenDialog(null);
-            File f = chooser.getSelectedFile();
-            String filename = f.getAbsolutePath();
-            jTextField_SS.setText(filename);
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f = chooser.getSelectedFile();
+        String filename = f.getAbsolutePath();
+        jTextField_SS.setText(filename);
     }
-
-    private void fileformenu(java.awt.event.ActionEvent evt){
+    
+    private void fileformenu(java.awt.event.ActionEvent evt) {
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         File f = chooser.getSelectedFile();
@@ -1652,13 +1642,13 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             e.printStackTrace();
         }
     }
-
+    
     private void jTextField_SSActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     /**
-     * @param evt  Activates file explorer for Verification Configuration on Simulation-based Analysis tab
+     * @param evt Activates file explorer for Verification Configuration on Simulation-based Analysis tab
      */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         // Verification Configuration Button
@@ -1668,33 +1658,33 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         String filename1 = f1.getAbsolutePath();
         jTextField_VC.setText(filename1);
     }
-
-
+    
+    
     /**
      * @param evt Activates Save Verification Results on Simulation-based Analysis tab, which saves time consumed in .txt file
      */
     private void SVR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
-
+        
     }
-
+    
     /**
      * @param evt Activates Save Verification Results on Single Simulation tab
      */
     private void SAR_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // Save analysis results on single simulation tab
-
+        
         int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
-
-
+        
+        
         if (yes_or_no == 0) {
             String filetowrite = "./src/new main/GUI/testing/SingleSimulationLog.txt";
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filetowrite);
                 
-                for(int i = 0; i < fileBufferSingle.size(); i++) {
+                for (int i = 0; i < fileBufferSingle.size(); i++) {
                     fw.write(fileBufferSingle.get(i));
                     fw.write(System.getProperty("line.separator"));
                 }
@@ -1702,7 +1692,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            
             VP_TextPanel.setText("Saved");
         } else {
             VP_TextPanel.setText("No");
@@ -1722,7 +1712,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filetowrite);
-                for(int i = 0; i < fileBufferVerification.size(); i++) {
+                for (int i = 0; i < fileBufferVerification.size(); i++) {
                     fw.write(fileBufferVerification.get(i));
                     fw.write(System.getProperty("line.separator"));
                 }
@@ -1740,36 +1730,36 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     private void Stop_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     /**
      * @param evt Activates start button for single simulation
      */
     private void Start_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // start button for single simulation
-
+        
         fileBufferSingle.clear();
-
+        
         System.setOut(this.printStreamSingle);
         System.setErr(this.printStreamSingle);
-
+        
         //This is for tree table on single simulation
         MyTreeTableModel treeTableModel = new MyTreeTableModel();
         JXTreeTable jXTreeTable = new JXTreeTable(treeTableModel);
         jScrollPane3.getViewport().add(jXTreeTable);
-
+        
         //drawign line graph
-        try{
+        try {
             createDataset();
-
-        }catch (Exception wow){
-
+            
+        } catch (Exception wow) {
+        
         }
     }
-
+    
     private void SVR_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     /**
      * @param evt Activates file explorer for Imported Policy (Verification Progress & Results) on Single Simulation
      */
@@ -1781,11 +1771,11 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         String filename = f11.getAbsolutePath();
         jTextField_SS5.setText(filename);
     }
-
+    
     private void jTextField_SS5ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     /**
      * @param evt Activates file explorer for Simulation Configuration (Verification Progress & Results) on Single Simulation
      */
@@ -1796,9 +1786,9 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         File f10 = chooser.getSelectedFile();
         String filename = f10.getAbsolutePath();
         jTextField_VC3.setText(filename);
-
+        
     }
-
+    
     /**
      * @param evt Activates file explorer for Simulation Scenario (Verification Progress & Results) on Single Simulation
      */
@@ -1810,12 +1800,12 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         String filename = f9.getAbsolutePath();
         jTextField_SS4.setText(filename);
     }
-
+    
     private void jTextField_SS4ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
-
+    
+    
     /**
      * @param evt Activates file explorer for Imported Policy (Simulation Information) on Single Simulation
      */
@@ -1826,13 +1816,13 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         File f = chooser.getSelectedFile();
         String filename = f.getAbsolutePath();
         jTextField_SS3.setText(filename);
-
+        
     }
-
+    
     private void jTextField_SS3ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
+    
     /**
      * @param evt Activates file explorer for Simulation Configuration (Simulation Information) on Single Simulation
      */
@@ -1844,7 +1834,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         String filename = f7.getAbsolutePath();
         jTextField_VC2.setText(filename);
     }
-
+    
     /**
      * @param evt Activates file explorer for Simulation Scenario (Simulation Information) on Single Simulation
      */
@@ -1856,12 +1846,12 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         String filename6 = f6.getAbsolutePath();
         jTextField_SS2.setText(filename6);
     }
-
+    
     private void jTextField_SS2ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
-
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -1869,7 +1859,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -1896,11 +1886,11 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         });
     }
     //create the line graph
-
-
+    
+    
     // Variables declaration - do not modify
-    private javax.swing.JButton SAR_Button;
-    private javax.swing.JButton SAR_Button1;
+    private javax.swing.JButton SAR_Button; // Stastical Verification File Buffer Save Button
+    private javax.swing.JButton SAR_Button1; // Single Simulation File Buffer Save Button
     private javax.swing.JButton SVR_Button;
     private javax.swing.JButton SVR_Button1;
     private javax.swing.JPanel Simulation_based_Analysis;
@@ -2035,8 +2025,8 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
-
-
+    
+    
     // End of variables declaration
-
+    
 }
