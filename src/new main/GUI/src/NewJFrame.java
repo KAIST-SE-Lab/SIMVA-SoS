@@ -247,7 +247,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 int simulationTime = 15;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
-                int count = 0;
+                int count = 1;
                 Boolean totalRet = true;
                 double probability = 0;
                 
@@ -259,7 +259,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 System.out.println("Simulation based Analysis");
                 fileBufferVerification.add("Simulation based Analysis");
                 
-                for (int i = 1; i <= 100; i++) {
+                for (int i = 1; i < 100; i++) {
                     count++;
                     jProgressBar1.setString(count + "% Done");
                     jProgressBar1.setValue(count);
@@ -283,8 +283,6 @@ public class NewJFrame extends javax.swing.JFrame {
                             totalRet = false;
                             probability = theta;
                         }
-                        if (i == 100)
-                            probability = 1.0;
                     }
                     System.out.println(verificationResult.getValue());
                     fileBufferVerification.add(verificationResult.getValue());
