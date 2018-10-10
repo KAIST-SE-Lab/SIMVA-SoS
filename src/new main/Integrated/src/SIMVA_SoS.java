@@ -68,8 +68,8 @@ public class SIMVA_SoS {
         // Verification
 
         //TODO: Simulation test
-        Simulation_Firefighters sim1 = new Simulation_Firefighters(9);
-
+        Simulation_Firefighters sim1 = new Simulation_Firefighters(15);
+        sim1.runSimulation().printSnapshot(); //single simulation tab 결과로
 
         long start = System.currentTimeMillis();
         rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);

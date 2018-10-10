@@ -40,7 +40,7 @@ public class Log {
     System.out.println("===================== SNAPSHOT PRINT =====================");
     while(keys.hasNext()) {
       Integer key = keys.next();
-      System.out.println("===================== TICK : " + key.toString() + " =====================");
+      System.out.println("===================== TICK:" + key.toString() + " " + snapshotMap.get(key).getSnapshotString() + " =====================");
       //snapshotMap.get(key).printSnapshotLog();
     }
   }
