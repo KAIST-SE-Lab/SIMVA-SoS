@@ -44,6 +44,9 @@ import java.util.concurrent.TimeUnit;
 public class NewJFrame extends javax.swing.JFrame {
     private PrintStream printStreamSimulation;
     private PrintStream printStreamSingle;
+    private JFreeChart lineChart;
+    private JFreeChart barChart;
+    
 
     /**
      * Creates new form NewJFrame
@@ -58,8 +61,16 @@ public class NewJFrame extends javax.swing.JFrame {
         scheduler = Executors.newScheduledThreadPool(2);
         dataReadingScheduler = Executors.newScheduledThreadPool(1);
         dataAddingScheduler = Executors.newScheduledThreadPool(1);
-        dataTool = new DatasetUtility(new DefaultCategoryDataset());
-        
+        dataTool1 = new DatasetUtility(new DefaultCategoryDataset());
+        dataTool2 = new DatasetUtility(new DefaultCategoryDataset());
+    
+        lineChart = ChartFactory.createLineChart("Single Simulation", "Tick", "Patients", dataTool1.getDataset(), PlotOrientation.VERTICAL, true, true, false);
+        barChart = ChartFactory.createBarChart("Statistical Verification", "Theta", "NumSamples", dataTool2.getDataset(), PlotOrientation.VERTICAL, true, true, false); // horizontal
+    
+        // Single
+        drawGraph(null);
+        // Verification
+        drawBarGraph(null);
         
         jTextArea1.setEditable(false); // log for the simulation-based Analysis
         jTextArea2.setEditable(false); // log for the single simulation
@@ -95,7 +106,6 @@ public class NewJFrame extends javax.swing.JFrame {
      * @param dataset Creates line graph
      */
     public void drawGraph(DefaultCategoryDataset dataset) {
-        JFreeChart lineChart = ChartFactory.createLineChart("Title", "Tick", "Patients", dataset, PlotOrientation.VERTICAL, true, true, false);
 
         //set color
         CategoryPlot plot = (CategoryPlot) lineChart.getPlot();
@@ -112,7 +122,6 @@ public class NewJFrame extends javax.swing.JFrame {
      * @param dataset Creates bar graph
      */
     public void drawBarGraph(DefaultCategoryDataset dataset){
-        JFreeChart barChart = ChartFactory.createBarChart("Title", "Theta", "NumSamples", dataset, PlotOrientation.VERTICAL, true, true, false); // horizontal
         CategoryPlot plot = (CategoryPlot) barChart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE);
         plot.getRenderer().setSeriesPaint(1,Color.RED);
@@ -127,7 +136,8 @@ public class NewJFrame extends javax.swing.JFrame {
     private final ScheduledExecutorService dataReadingScheduler;
     private ScheduledExecutorService dataAddingScheduler;
     private ScheduledFuture<?> dataAddingThread;
-    private DatasetUtility dataTool;
+    private DatasetUtility dataTool1;
+    private DatasetUtility dataTool2;
     private ArrayList<String> fileBufferVerification;
     private ArrayList<String> fileBufferSingle;
 
@@ -140,7 +150,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 @Override
                 public void run() {
 
-                    DefaultCategoryDataset data = dataTool.getDataset();
+                    DefaultCategoryDataset data = dataTool1.getDataset();
                     drawGraph (data);
 
                     try {
@@ -156,7 +166,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 @Override
                 public void run() {   //single simulation tab
                     long start = System.currentTimeMillis();
-                    dataTool.reset();
+                    dataTool1.reset();
                     int count = 0;
 
                     // Simulation
@@ -188,7 +198,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
                         int notRescuedPatients = Integer.parseInt(st.nextToken());
                         // number of samples for this theta iteration
-                        dataTool.addValueIntoDataset(notRescuedPatients, "line", String.valueOf(i+1));
+                        dataTool1.addValueIntoDataset(notRescuedPatients, "line", String.valueOf(i+1));
                         try {
                             Thread.sleep(40);
                         } catch (InterruptedException e) {
@@ -204,7 +214,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
             }, 1, TimeUnit.SECONDS);
 
-        return dataTool.getDataset();
+        return dataTool1.getDataset();
     }
 
 
@@ -217,7 +227,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
     Runnable timerTask = new Runnable() {
         @Override
         public void run() {
-            DefaultCategoryDataset data = dataTool.getDataset();
+            DefaultCategoryDataset data = dataTool2.getDataset();
 
             drawBarGraph (data);
             try {
@@ -234,7 +244,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
         public void run() {
 
             long start = System.currentTimeMillis();
-            dataTool.reset();
+            dataTool2.reset();
             MCIProperty rescuedProperty;
             MCIPropertyChecker rescuedChecker;
             SPRT verifier;
@@ -268,7 +278,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
                 int myInt = verificationResult.getKey().getValue() ? 1 : 0;
 
                 // number of samples for this theta iteration
-                dataTool.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
+                dataTool2.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
                 try {
                     Thread.sleep(40);
                 } catch (InterruptedException e) {
@@ -302,7 +312,7 @@ private  DefaultCategoryDataset createDataset2() throws InterruptedException {
 
         }, 1, TimeUnit.SECONDS);
 
-        return dataTool.getDataset();
+        return dataTool2.getDataset();
     }
 
 
