@@ -35,6 +35,8 @@ public class SoS {
 
     logs += this.environment.toString();
     logs += " ";
+    logs += "NotRescuedPatients: " + getNumOfNotRescuedPatients();
+    logs += " ";
     logs += "RescuedRate: " + getRescuedRate();
 
     return logs;
@@ -65,6 +67,16 @@ public class SoS {
       notRescued += i;
     }
     return (double)rescued/((double)rescued + (double)notRescued);
+  }
+
+  private int getNumOfNotRescuedPatients(){
+    int notRescued = 0;
+
+
+    for(int i : environment){
+      notRescued += i;
+    }
+    return notRescued;
   }
 
   public ArrayList<Integer> getEnvironment() {
