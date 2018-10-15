@@ -1,10 +1,10 @@
 package new_simvasos.model;
 
 import new_simvasos.model.Abstract.SIMVASoS_Action;
-import new_simvasos.model.Enums.EnumCSActionPriority;
+import new_simvasos.model.Enums.EnumActionPriority;
 
 public class CS_Action extends SIMVASoS_Action{
-    EnumCSActionPriority csActionPriority; //
+    EnumActionPriority csActionPriority; //
     float csActionCost; //
     float csActionBenefit; //
     float csActionUtility; //

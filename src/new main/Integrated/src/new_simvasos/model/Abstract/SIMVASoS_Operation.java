@@ -12,13 +12,13 @@ import new_simvasos.model.Enums.EnumBehaviorType;
  * According to the type of behaviorType,
  * behaviorTarget is manipulated with a concrete value by performing the behavior
  */
-public abstract class SIMVASoS_Behavior {
+public abstract class SIMVASoS_Operation {
     EnumBehaviorType behaviorType;
     SIMVASoS_Object behaviorTarget;
     float behaviorValue;
 
 
-    public SIMVASoS_Behavior() {
+    public SIMVASoS_Operation() {
         behaviorType = null;
         behaviorTarget = null;
         behaviorValue = -1;

@@ -56,6 +56,8 @@ public abstract class ActionableObject extends SIMVASoS_Object{
     abstract String doActions();
 
 
+    /** GETTERS & SETTERS */
+
     public ArrayList<SIMVASoS_Action> getActionList() {
         return actionList;
     }

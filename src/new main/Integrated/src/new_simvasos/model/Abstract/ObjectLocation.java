@@ -53,6 +53,9 @@ public class ObjectLocation {
         this.zPos = zPos;
     }
 
+
+    /** GETTERS & SETTERS */
+
     public float getxPos() {
         return xPos;
     }

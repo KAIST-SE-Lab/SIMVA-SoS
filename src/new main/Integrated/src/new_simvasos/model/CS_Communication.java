@@ -1,9 +1,9 @@
 package new_simvasos.model;
 
-import new_simvasos.model.Abstract.SIMVASoS_Behavior;
+import new_simvasos.model.Abstract.SIMVASoS_Operation;
 import new_simvasos.model.Enums.EnumCSInterfaceType;
 
-public class CS_Communication extends SIMVASoS_Behavior {
+public class CS_Communication extends SIMVASoS_Operation {
     CS_Message csBehaviorMessage;
     EnumCSInterfaceType csInterfaceType;
     int csMessageSenderId;

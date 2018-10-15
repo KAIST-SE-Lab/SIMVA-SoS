@@ -58,6 +58,9 @@ public class SIMVASoS_Object {
         isActivated = false;
     }
 
+
+    /** GETTERS & SETTERS */
+
     public String getObjId() {
         return objId;
     }

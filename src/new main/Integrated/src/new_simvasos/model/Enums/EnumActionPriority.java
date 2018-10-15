@@ -7,11 +7,11 @@ package new_simvasos.model.Enums;
  * VERY_HIGH ~ VERY_LOW: level of priorities
  * EXCLUDED: unconditionally not-selected and excluded by the simulator
  */
-public enum EnumCSActionPriority {
+public enum EnumActionPriority {
     MANDATORY,
     VERY_HIGH,
     HIGH,
-    MEDIUM,
+    MIDDLE,
     LOW,
     VERY_LOW,
     EXCLUDED

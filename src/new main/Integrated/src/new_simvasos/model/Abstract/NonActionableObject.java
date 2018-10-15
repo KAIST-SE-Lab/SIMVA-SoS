@@ -42,6 +42,9 @@ public abstract class NonActionableObject extends SIMVASoS_Object {
         return isAvailable;
     }
 
+
+    /** GETTERS & SETTERS */
+
     public float getObjNumValue() {
         return objNumValue;
     }
