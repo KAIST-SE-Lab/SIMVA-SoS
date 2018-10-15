@@ -10,7 +10,7 @@ package new_simvasos.model.Enums;
  * SEND_MESSAGE: Send a message
  * RECEIVE_MESSAGE: Receive a message
  */
-public enum EnumBehaviorType {
+public enum EnumOperationType {
     VAR_VAL_TO_ZERO,
     VAR_VAL_UPDATE,
     VAR_VAL_INCREASE,

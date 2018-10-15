@@ -25,7 +25,7 @@ public abstract class SIMVASoS_Action {
     EnumActionType actionType;                      //type of an action (DO_TASK, COMMUNICATE, DO_NOTHING)
     boolean actionPrecondition;                     //Whether precondition of an action is met or not
     ArrayList<SIMVASoS_Operation> actionOperations; //Included list of operations to be executed by a single action
-    int actionDuration;                             //Duration of an action
+    int actionDuration;                             //Duration of an action (i.e., how many ticks are needed)
     int actionProgress;                             //Progress of an action (depends on its duration)
     EnumActionStatus actionStatus;                  //Current state of an action
 
@@ -85,6 +85,8 @@ public abstract class SIMVASoS_Action {
      * There are two ways to perform an action
      * i) Run operations in actionOperations[]
      * ii) Run the code written in runOperations without any operation definitions
+     *
+     * In runOperations(), progress should be updated according to its total duration required
      *
      * (This method is abstract, so it should be implemented by child classes)
      * @return operations execution log messages

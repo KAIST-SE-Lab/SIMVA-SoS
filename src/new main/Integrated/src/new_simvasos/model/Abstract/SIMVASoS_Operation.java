@@ -1,6 +1,6 @@
 package new_simvasos.model.Abstract;
 
-import new_simvasos.model.Enums.EnumBehaviorType;
+import new_simvasos.model.Enums.EnumOperationType;
 
 /**
  * @author ymbaek
@@ -13,14 +13,34 @@ import new_simvasos.model.Enums.EnumBehaviorType;
  * behaviorTarget is manipulated with a concrete value by performing the behavior
  */
 public abstract class SIMVASoS_Operation {
-    EnumBehaviorType behaviorType;
-    SIMVASoS_Object behaviorTarget;
-    float behaviorValue;
+    EnumOperationType behaviorType;
+//    SIMVASoS_Object behaviorTarget;
+//    float behaviorValue;
 
 
     public SIMVASoS_Operation() {
         behaviorType = null;
-        behaviorTarget = null;
-        behaviorValue = -1;
+//        behaviorTarget = null;
+//        behaviorValue = -1;
+    }
+
+    /**
+     * Operate its specified code-level behaviors and return a log message
+     * (This method is abstract, so it should be implemented by child classes)
+     * @return operation execution log messages
+     */
+    abstract String operate();
+
+
+    /** GETTERS & SETTERS */
+
+    public EnumOperationType getBehaviorType() {
+        return behaviorType;
+    }
+
+    public void setBehaviorType(EnumOperationType behaviorType) {
+        this.behaviorType = behaviorType;
     }
 }
+
+
