@@ -13,13 +13,13 @@ import new_simvasos.model.Enums.EnumOperationType;
  * behaviorTarget is manipulated with a concrete value by performing the behavior
  */
 public abstract class SIMVASoS_Operation {
-    EnumOperationType behaviorType;
+    EnumOperationType operationType;     //type of
 //    SIMVASoS_Object behaviorTarget;
 //    float behaviorValue;
 
 
     public SIMVASoS_Operation() {
-        behaviorType = null;
+        operationType = null;
 //        behaviorTarget = null;
 //        behaviorValue = -1;
     }
@@ -32,14 +32,14 @@ public abstract class SIMVASoS_Operation {
     abstract String operate();
 
 
-    /** GETTERS & SETTERS */
+    /* GETTERS & SETTERS */
 
-    public EnumOperationType getBehaviorType() {
-        return behaviorType;
+    public EnumOperationType getOperationType() {
+        return operationType;
     }
 
-    public void setBehaviorType(EnumOperationType behaviorType) {
-        this.behaviorType = behaviorType;
+    public void setOperationType(EnumOperationType behaviorType) {
+        this.operationType = behaviorType;
     }
 }
 

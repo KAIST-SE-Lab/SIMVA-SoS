@@ -40,6 +40,9 @@ public abstract class ActionableObject extends SIMVASoS_Object{
      * selectActions() performs an action selection mechanism,
      * such as precondition checking or decision making to decide what to perform
      * by updating selectedActionList[] ArrayList.
+     * (i.e., Decision-making mechanism may be implemented in selectActions() method.)
+     * Actions can also be selected (filtered out) based on actionPriority of candidate actions.
+     *
      * (This method is abstract, so it should be implemented by child classes)
      *
      * @return action selection log messages
@@ -56,7 +59,7 @@ public abstract class ActionableObject extends SIMVASoS_Object{
     abstract String doActions();
 
 
-    /** GETTERS & SETTERS */
+    /* GETTERS & SETTERS */
 
     public ArrayList<SIMVASoS_Action> getActionList() {
         return actionList;

@@ -1,5 +1,6 @@
 package new_simvasos.model;
 
+import new_simvasos.model.Abstract.ActionableObject;
 import new_simvasos.model.Abstract.NonActionableObject;
 import new_simvasos.model.Abstract.ObjectLocation;
 import new_simvasos.model.Abstract.SIMVASoS_Object;
@@ -8,101 +9,143 @@ import new_simvasos.model.Enums.EnumCSType;
 
 import java.util.ArrayList;
 
-public class CS {
-    int csId;
-    String csName;
-    EnumCSType csType;
-    EnumCSState csState;
-    ObjectLocation csLocation;
-    boolean isCSActivated;
+public abstract class CS extends ActionableObject{
+//    String csId;                //id of a CS (already included in SIMVASoS_Object)
+//    String csName;              //name of a CS (already included in SIMVASoS_Object)
+    EnumCSType csType;          //type of a CS: ADMIN,MANAGER,MIDDLE_MANAGER,MEDIATOR,NORMAL,PASSIVE
+    EnumCSState csState;        //state of a CS: IDLE,DEACTIVATED,OCCUPIED
+//    ObjectLocation csLocation;//already included in SIMVASoS_Object
+//    boolean isCSActivated;    //already included in SIMVASoS_Object
 
-    ArrayList<CS_Action> csActionList;
-    ArrayList<CS_Action> csExecutionList;
-    ArrayList<CS_Message> csIncomingReqList;
-    ArrayList<CS_Message> csIncomingInfoLIst;
-    ArrayList<NonActionableObject> csKnowledgeList;
-    ArrayList<CS_Resource> csResourceList;
+//    ArrayList<CS_Action> csActionList;        //already included in ActionableObject
+//    ArrayList<CS_Action> csExecutionList;     //already included in ActionableObject
+//    ArrayList<CS_Message> csIncomingReqList;  //name modified
+//    ArrayList<CS_Message> csIncomingInfoLIst; //name modified
+
+    ArrayList<CommunicationMessage> csReceivedMessages; //List of received messages
+    ArrayList<CS_Knowledge> csKnowledgeList;            //List of CS's local knowledge
+    ArrayList<CS_Resource> csResourceList;              //List of CS's local resources
     //ArrayList<Organization> csOrgs;
 
-    ArrayList<SIMVASoS_Object> SoSEnvironment;
+//    ArrayList<SIMVASoS_Object> SoSEnvironment;    //passed as a parameter
 
 
-    /**
-     * @param SoSEnvironment    A list of SoS-level environmental factors
-     *                          it could be null.
-     */
-    public CS(ArrayList<SIMVASoS_Object> SoSEnvironment) {
-        csId = -1;
-        csName = "noName";
+    public CS() {
         csType = null;
         csState = null;
-        csLocation = null;
-        isCSActivated = false;
-
-        csIncomingReqList = new ArrayList<CS_Message>();
-        csIncomingInfoLIst = new ArrayList<CS_Message>();
-        csActionList = new ArrayList<CS_Action>();
-        csExecutionList = new ArrayList<CS_Action>();
-        csKnowledgeList = new ArrayList<NonActionableObject>();
-        csResourceList = new ArrayList<CS_Resource>();
-
-        this.SoSEnvironment = SoSEnvironment;
+        csReceivedMessages = new ArrayList<>();
+        csKnowledgeList = new ArrayList<>();
+        csResourceList = new ArrayList<>();
     }
 
-
-    public void activate(){
-        isCSActivated = true;
-    }
-    public void deactivate(){
-        isCSActivated = false;
-    }
-
-    public void joinOrg(Organization org){
-
+    public CS(EnumCSType csType) {
+        this.csType = csType;
+        csState = null;
+        csReceivedMessages = new ArrayList<>();
+        csKnowledgeList = new ArrayList<>();
+        csResourceList = new ArrayList<>();
     }
 
-    public void leaveOrg(Organization org){
-
+    public CS(ArrayList<CS_Knowledge> csKnowledgeList, ArrayList<CS_Resource> csResourceList) {
+        csType = null;
+        csState = null;
+        csReceivedMessages = new ArrayList<>();
+        this.csKnowledgeList = csKnowledgeList;
+        this.csResourceList = csResourceList;
     }
 
-    public void initSystem(){
-        initActionList();
-        initKnowledgeList();
-        initResourceList();
+    public CS(EnumCSType csType, ArrayList<CS_Knowledge> csKnowledgeList, ArrayList<CS_Resource> csResourceList) {
+        this.csType = csType;
+        csState = null;
+        csReceivedMessages = new ArrayList<>();
+        this.csKnowledgeList = csKnowledgeList;
+        this.csResourceList = csResourceList;
     }
+
 
     /**
-     * @param tick SIMSoS variable
+     * Before selecting actions, A CS should check messages from other CSs.
+     * Detailed message checking mechanism (interpretation & processing) should be implemented in child classes
+     * (This method is abstract, so it should be implemented by child classes)
+     *
+     * @return execution logs of checking received messages
      */
-    public void doAction(int tick){
-        checkMessage();
-        makeDecision();
-        System.out.println("[CS] " + csName + ": doAction() at " + tick);
+    public abstract String checkMessage();
+
+    //selectActions() also should be implemented in child classes.
+    //doActions() also should be implemented in child classes.
+
+
+    /* INITIALIZERS */
+
+    public void initSystem(){
+        initActionList();       //Add (initial) CS_Actions into its actionList[] as CS's capabilities
+        initKnowledgeList();    //Add initial CS_Knowledge(s) into its csKnowledgeList[]
+        initResourceList();     //Add initial CS_Resource(s) into its csResourceList[]
+        initReceivedMessages(); //Make the message queue empty
     }
 
-    private void checkMessage(){
-
-    }
-
-    private void makeDecision(){
-
-    }
 
     private void initActionList(){
-
+        //TODO: how to initialize the action list?
     }
 
     private void initResourceList(){
-
+        //TODO: how to initialize the resource list?
     }
 
     private void initKnowledgeList(){
-
+        //TODO: how to initialize the knowledge list?
     }
 
-    //TODO: To consider not to use
-    public void updateSystemState(){
+    private void initReceivedMessages() {
+        //TODO: how to intialize the message queue?
+    }
 
+
+    /* ADDERS */
+
+    /**
+     * Add a newly received message into the CS's message queue
+     * @param receivedMessage   a received message from other CSs/Organizations
+     */
+    public void addReceivedMessage(CommunicationMessage receivedMessage) {
+        csReceivedMessages.add(receivedMessage);
+    }
+
+    /**
+     * Add a new knowledge item into csKnowledgeList
+     * @param knowledge     new knowledge item
+     */
+    public void addKnowledge(CS_Knowledge knowledge) {
+        csKnowledgeList.add(knowledge);
+    }
+
+    /**
+     * Add a new resource item into csResourceList
+     * @param resource      new resource item
+     */
+    public void addResource(CS_Resource resource) {
+        csResourceList.add(resource);
+    }
+
+
+    /* GETTERS & SETTERS */
+
+    public EnumCSType getCsType() {
+        return csType;
+    }
+
+    public EnumCSState getCsState() {
+        return csState;
+    }
+
+    public ArrayList<CS_Knowledge> getCsKnowledgeList() {
+        return csKnowledgeList;
+    }
+
+    public ArrayList<CS_Resource> getCsResourceList() {
+        return csResourceList;
     }
 
 

@@ -59,7 +59,7 @@ public class SIMVASoS_Object {
     }
 
 
-    /** GETTERS & SETTERS */
+    /* GETTERS & SETTERS */
 
     public String getObjId() {
         return objId;

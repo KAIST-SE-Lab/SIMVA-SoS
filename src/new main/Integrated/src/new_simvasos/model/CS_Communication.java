@@ -1,20 +1,55 @@
 package new_simvasos.model;
 
+import new_simvasos.model.Abstract.SIMVASoS_Action;
 import new_simvasos.model.Abstract.SIMVASoS_Operation;
+import new_simvasos.model.Enums.EnumActionType;
 import new_simvasos.model.Enums.EnumCSInterfaceType;
 
-public class CS_Communication extends SIMVASoS_Operation {
-    CS_Message csBehaviorMessage;
-    EnumCSInterfaceType csInterfaceType;
-    int csMessageSenderId;
-    int csMessageReceiverId;
-
+//TODO: Check the details in specification
+public abstract class CS_Communication extends CS_Action {
+    CommunicationMessage commMsg;
 
     public CS_Communication() {
-        super();
-        csBehaviorMessage = null;
-        csInterfaceType = null;
-        csMessageSenderId = -1;
-        csMessageReceiverId = -1;
+    }
+
+    public CS_Communication(float csActionCost, float csActionBenefit) {
+        super(csActionCost, csActionBenefit);
+    }
+
+    public CS_Communication(String actionId, String actionName) {
+        super(actionId, actionName);
+    }
+
+    public CS_Communication(String actionId, String actionName, EnumActionType actionType, int actionDuration, float csActionCost, float csActionBenefit) {
+        super(actionId, actionName, actionType, actionDuration, csActionCost, csActionBenefit);
+    }
+
+    public CS_Communication(CommunicationMessage commMsg) {
+        this.commMsg = commMsg;
+    }
+
+    public CS_Communication(float csActionCost, float csActionBenefit, CommunicationMessage commMsg) {
+        super(csActionCost, csActionBenefit);
+        this.commMsg = commMsg;
+    }
+
+    public CS_Communication(String actionId, String actionName, CommunicationMessage commMsg) {
+        super(actionId, actionName);
+        this.commMsg = commMsg;
+    }
+
+    public CS_Communication(String actionId, String actionName, EnumActionType actionType, int actionDuration, float csActionCost, float csActionBenefit, CommunicationMessage commMsg) {
+        super(actionId, actionName, actionType, actionDuration, csActionCost, csActionBenefit);
+        this.commMsg = commMsg;
+    }
+
+    /* GETTERS & SETTERS */
+
+    public CommunicationMessage getCommMsg() {
+        return commMsg;
+    }
+
+    public void setCommMsg(CommunicationMessage commMsg) {
+        this.commMsg = commMsg;
     }
 }

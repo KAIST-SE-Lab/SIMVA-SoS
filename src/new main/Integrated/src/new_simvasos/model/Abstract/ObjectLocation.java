@@ -54,7 +54,7 @@ public class ObjectLocation {
     }
 
 
-    /** GETTERS & SETTERS */
+    /* GETTERS & SETTERS */
 
     public float getxPos() {
         return xPos;

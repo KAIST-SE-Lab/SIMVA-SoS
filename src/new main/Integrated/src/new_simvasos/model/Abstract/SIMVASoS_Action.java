@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * An action has its duration according to the time unit of the simulation engine.
  */
 public abstract class SIMVASoS_Action {
-    int actionId;                                   //id of an action
+    String actionId;                                   //id of an action
     String actionName;                              //name of an action
     EnumActionPriority actionPriority;              //priority of an action (MANDATORY ~ EXCLUDED)
     EnumActionType actionType;                      //type of an action (DO_TASK, COMMUNICATE, DO_NOTHING)
@@ -30,7 +30,7 @@ public abstract class SIMVASoS_Action {
     EnumActionStatus actionStatus;                  //Current state of an action
 
     public SIMVASoS_Action() {
-        actionId = -1;
+        actionId = "noId";
         actionName = "noName";
         actionPriority = null;
         actionType = null;
@@ -41,7 +41,7 @@ public abstract class SIMVASoS_Action {
         actionStatus = null;
     }
 
-    public SIMVASoS_Action(int actionId, String actionName) {
+    public SIMVASoS_Action(String actionId, String actionName) {
         this.actionId = actionId;
         this.actionName = actionName;
         actionPriority = null;
@@ -53,7 +53,7 @@ public abstract class SIMVASoS_Action {
         actionStatus = null;
     }
 
-    public SIMVASoS_Action(int actionId, String actionName, EnumActionType actionType, int actionDuration) {
+    public SIMVASoS_Action(String actionId, String actionName, EnumActionType actionType, int actionDuration) {
         this.actionId = actionId;
         this.actionName = actionName;
         this.actionType = actionType;
@@ -110,13 +110,13 @@ public abstract class SIMVASoS_Action {
         actionProgress = 0;
     }
 
-    /** GETTERS & SETTERS */
+    /* GETTERS & SETTERS */
 
-    public int getActionId() {
+    public String getActionId() {
         return actionId;
     }
 
-    public void setActionId(int actionId) {
+    public void setActionId(String actionId) {
         this.actionId = actionId;
     }
 
