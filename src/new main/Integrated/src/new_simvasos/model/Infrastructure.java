@@ -2,11 +2,18 @@ package new_simvasos.model;
 
 import java.util.ArrayList;
 
+/**
+ * @author ymbaek
+ *
+ * Infrastructure is one of the major components of an SoS.
+ * The Infrastructure mainly provides two things: (1) Services, (2) Resources,
+ * so it has two lists for managing services and resources.
+ */
 public class Infrastructure {
-    String InfraName;
+    String InfraName;                       //Name of infrastructure
 
-    ArrayList<InfraService> infraServices;
-    ArrayList<InfraResource> infraResources;
+    ArrayList<InfraService> infraServices;  //List of infrastructure services
+    ArrayList<InfraResource> infraResources;//List of infrastructure resources
 
     public Infrastructure(){
         InfraName = "noName";

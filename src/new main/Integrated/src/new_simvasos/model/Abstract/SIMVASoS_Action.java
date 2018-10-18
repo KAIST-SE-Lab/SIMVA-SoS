@@ -91,7 +91,7 @@ public abstract class SIMVASoS_Action {
      * (This method is abstract, so it should be implemented by child classes)
      * @return operations execution log messages
      */
-    abstract String runOperations();
+    protected abstract String runOperations(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment);
 
     /**
      * Check precondition of an action.
@@ -100,7 +100,7 @@ public abstract class SIMVASoS_Action {
      *
      * (This method is abstract, so it should be implemented by child classes)
      */
-    abstract void checkPrecondition();
+    protected abstract void checkPrecondition();
 
 
     /**

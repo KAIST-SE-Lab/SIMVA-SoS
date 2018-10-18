@@ -5,9 +5,17 @@ import new_simvasos.model.Abstract.SIMVASoS_Action;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/**
+ * @author ymbaek
+ *
+ * CS_DecisionMaking is a class used for selectActions() method of ActionableObject (i.e., CS)
+ * CS_DecisionMaking includes specific decision making mechanism such as cost-benefit analysis.
+ * Since this class requires a goal-based model to execute a specific mechanism,
+ * makeDecision(...) method should be implemented.
+ */
 public abstract class CS_DecisionMaking {
-    String mechanismId;
-    String mechanismName;
+    String mechanismId;     //Id of decision making mechanism
+    String mechanismName;   //Name of decision making mechanism
 
     public CS_DecisionMaking() {
         mechanismId = "noId";

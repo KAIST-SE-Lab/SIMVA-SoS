@@ -64,4 +64,12 @@ public abstract class NonActionableObject extends SIMVASoS_Object {
     public void setAvailable(boolean available) {
         isAvailable = available;
     }
+
+    public ArrayList<String> getObjOccupyingIds() {
+        return objOccupyingIds;
+    }
+
+    public void setObjOccupyingIds(ArrayList<String> objOccupyingIds) {
+        this.objOccupyingIds = objOccupyingIds;
+    }
 }
