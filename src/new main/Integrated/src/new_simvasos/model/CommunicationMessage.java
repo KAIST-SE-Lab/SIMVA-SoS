@@ -3,13 +3,29 @@ package new_simvasos.model;
 import new_simvasos.model.Abstract.NonActionableObject;
 import new_simvasos.model.Enums.EnumMessageType;
 
+/**
+ * @author ymbaek
+ *
+ * CommunicationMessage is a specialized type of NonActionableObject.
+ * The message can be created by CSs, and it can be sent to other CSs/Organizations through the simulation engine.
+ *
+ * There are two message types supported: (1) SEND_MESSAGE, (2) REQUEST_OCCUPANCY
+ * SEND_MESSAGE supports the direct communication between (among) CSs.
+ * REQUEST_OCCUPANCY is used to request the occupancy of SoS-level objects such as InfraResource/Service.
+ *
+ * For SEND_MESSAGE, two ways of direct communication are supported:
+ * (1) unicast (CS-to-CS), (2) broadcast (CS-to-Org)
+ * One of those two casting methods is determined according to the msgReceiverId.
+ * If msgReceiverId is CS's id, then it is unicasted.
+ * Otherwise (Org's id), it will be broadcasted to the member CSs of the Org.
+ */
 public class CommunicationMessage extends NonActionableObject {
     //EnumMessageType msgType;  //TODO: To implement EnumMessageType
 
-    EnumMessageType msgType;
-    String msgSenderId;
-    String msgReceiverId;
-    String msgContents;
+    EnumMessageType msgType;    //Type of message: SEND_MESSAGE, REQUEST_OCCUPANCY
+    String msgSenderId;         //Sender's id: it must be a single CS's id
+    String msgReceiverId;       //Receiver's id: it could be either CS's id or Org's id
+    String msgContents;         //Contents of a message to be sent
 
     public CommunicationMessage() {
         msgType = null;

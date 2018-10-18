@@ -45,6 +45,11 @@ public class SoS {
     }
 
 
+    /**
+     * @param tick              current tick of simulation
+     * @param SoSEnvironment    SoS-level EnvironmentElements
+     * @return                  Execution log after running a single tick of SoS
+     */
     public String runSoS(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment) {
         return null;    //TODO: return accumulated log messages
     }
@@ -53,7 +58,7 @@ public class SoS {
         if (isRestOrgs) {
             //SoSOrgs.reset();
             for(Organization org:SoSOrgs) {
-                org.reset();
+                org.reset(true, true, true);
             }
         }
         if (isResetInfraServices) {

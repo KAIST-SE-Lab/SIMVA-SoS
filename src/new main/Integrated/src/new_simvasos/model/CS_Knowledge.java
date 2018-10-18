@@ -13,4 +13,28 @@ public class CS_Knowledge extends NonActionableObject{
         csKnowledgeInfo = "noInfo";
         csKnowledgeType = null;
     }
+
+    public CS_Knowledge(EnumKnowledgeType csKnowledgeType, String csKnowledgeInfo) {
+        this.csKnowledgeType = csKnowledgeType;
+        this.csKnowledgeInfo = csKnowledgeInfo;
+    }
+
+
+    /* GETTERS & SETTERS */
+
+    public EnumKnowledgeType getCsKnowledgeType() {
+        return csKnowledgeType;
+    }
+
+    public void setCsKnowledgeType(EnumKnowledgeType csKnowledgeType) {
+        this.csKnowledgeType = csKnowledgeType;
+    }
+
+    public String getCsKnowledgeInfo() {
+        return csKnowledgeInfo;
+    }
+
+    public void setCsKnowledgeInfo(String csKnowledgeInfo) {
+        this.csKnowledgeInfo = csKnowledgeInfo;
+    }
 }

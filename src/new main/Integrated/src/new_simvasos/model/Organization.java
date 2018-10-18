@@ -6,6 +6,15 @@ import new_simvasos.model.Enums.EnumOrgType;
 import java.util.ArrayList;
 
 
+/**
+ * @author ymbaek
+ *
+ * An Organization is a highest-level of structure in an SoS.
+ * An Organization consists of multiple CSs and required organizational features.
+ * Organizational Tasks, Roles, Contracts, Policies are instances of the organizational features.
+ *
+ * An Organization can have its suborganizations as well.
+ */
 public class Organization {
     int orgId;                              //id of an organization
     String orgName;                         //name of an organization
@@ -44,10 +53,15 @@ public class Organization {
 
     //@param LocationMap
     //@param Environment[]
+    /**
+     * @param tick              current tick of simulation
+     * @param SoSEnvironment    SoS-level EnvironmentElements (received from SoS)
+     * @return                  Execution log after running a single tick of Org's behaviors
+     */
     public void runOrganization(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment){
         System.out.println("[Org] " + orgName + ": doOperation() at " + tick);
         for(CS cs : orgCSs) {
-            cs.doAction(tick); //TODO: include SoSEnvironment as a parameter
+            cs.runCS(tick, SoSEnvironment); //TODO: include SoSEnvironment as a parameter
         }
     }
 

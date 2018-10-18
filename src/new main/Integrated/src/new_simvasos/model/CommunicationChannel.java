@@ -4,10 +4,17 @@ import new_simvasos.model.Enums.EnumChannelType;
 
 import java.util.ArrayList;
 
+/**
+ * @author ymbaek
+ *
+ * CommunicationChannel is a specialized type of InfraResource.
+ * InfraResource is a NonActionableObject, thus CommunicationChannel is basically non-actionable.
+ * CommunicationChannel is built on (and managed by) the SoS-level infrastructure,
+ * and the channel can be used by multiple CSs for communication purposes.
+ */
 public class CommunicationChannel extends InfraResource{
-    EnumChannelType channelType;
-
-    ArrayList<CommunicationMessage> messageQueue;
+    EnumChannelType channelType;                    //Type of channel (media, bus-type, interface, and so on)
+    ArrayList<CommunicationMessage> messageQueue;   //Queue to store messages from CSs
 
     public CommunicationChannel() {
         channelType = null;

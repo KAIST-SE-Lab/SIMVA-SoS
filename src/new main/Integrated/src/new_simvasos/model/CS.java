@@ -9,25 +9,25 @@ import new_simvasos.model.Enums.EnumCSType;
 
 import java.util.ArrayList;
 
+/**
+ * @author ymbaek
+ *
+ * CS is a major component system of an organization of an SoS.
+ * Basically, A CS is an ActionableObject, which means that a CS can perform its autonomous behaviors.
+ * By extending ActionableObject, a CS has its own ActionList[] with selectActions() and doActions() methods.
+ *
+ * For the communication, Each CS has a message queue to receive messages from other CSs.
+ *
+ * Additionally, to represent CS's capabilities and independencies,
+ * A CS has its own local knowledge base (csKnowledgeList) and resource base (csResourceList).
+ */
 public abstract class CS extends ActionableObject{
-//    String csId;                //id of a CS (already included in SIMVASoS_Object)
-//    String csName;              //name of a CS (already included in SIMVASoS_Object)
     EnumCSType csType;          //type of a CS: ADMIN,MANAGER,MIDDLE_MANAGER,MEDIATOR,NORMAL,PASSIVE
     EnumCSState csState;        //state of a CS: IDLE,DEACTIVATED,OCCUPIED
-//    ObjectLocation csLocation;//already included in SIMVASoS_Object
-//    boolean isCSActivated;    //already included in SIMVASoS_Object
-
-//    ArrayList<CS_Action> csActionList;        //already included in ActionableObject
-//    ArrayList<CS_Action> csExecutionList;     //already included in ActionableObject
-//    ArrayList<CS_Message> csIncomingReqList;  //name modified
-//    ArrayList<CS_Message> csIncomingInfoLIst; //name modified
 
     ArrayList<CommunicationMessage> csReceivedMessages; //List of received messages
     ArrayList<CS_Knowledge> csKnowledgeList;            //List of CS's local knowledge
     ArrayList<CS_Resource> csResourceList;              //List of CS's local resources
-    //ArrayList<Organization> csOrgs;
-
-//    ArrayList<SIMVASoS_Object> SoSEnvironment;    //passed as a parameter
 
 
     public CS() {
@@ -74,6 +74,19 @@ public abstract class CS extends ActionableObject{
 
     //selectActions() also should be implemented in child classes.
     //doActions() also should be implemented in child classes.
+
+    /**
+     * runCS(...) should include:
+     * (1) checkMessage()
+     * (2) selectActions()
+     * (3) doActions()
+     * (This method is abstract, so it should be implemented by child classes)
+     *
+     * @param tick              current tick of simulation
+     * @param SoSEnvironment    SoS-level EnvironmentElements (received from Org (from SoS))
+     * @return                  Execution log after running a single tick of CS's behaviors
+     */
+    public abstract String runCS(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment);
 
 
     /* INITIALIZERS */
