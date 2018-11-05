@@ -1,5 +1,3 @@
-package SoSModelSlicer;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -51,6 +49,7 @@ public class SoSSlicer {
         System.out.println("Succeed step 5-1: Collecing slices classes and line numbers.");
 
         // Step 5-2. Copying input files to the output folder.
+        String prevSourcePath = "";
         for (String javaFile : javaFileList) {
             if (javaFile.contains("SoSSlicer.java"))
                 continue;
@@ -59,82 +58,65 @@ public class SoSSlicer {
             for (int i = 0; i<folders.length-1; i++) {
                 folderName = folderName +folders[i] +"\\";
             }
-            File source = new File(folderName);
-            sosSlicer.copyDirectory (source, folderName.replace("slicingInput", "slicingOutput"));
+            if (prevSourcePath.equals("") || (!prevSourcePath.equals("") && !prevSourcePath.equals(folderName))) {
+                prevSourcePath = folderName;
+                File source = new File(folderName);
+                sosSlicer.copyDirectory (source, folderName.replace("slicingInput", "slicingOutput"));
+            }
         }
         System.out.println("Succeed step 5-2: Copying input files to the output folder.");
 
         // Step 5-3. Applying ORBS to make the sliced program executable.
         System.out.println("Step 5-3 starts.");
-//        for(String fileName: javaFileList) {
-//            String compactFileName = sosSlicer.isFileToBeSliced(fileName, slicedLinesPerClass.keySet());
-//
-//            if (!compactFileName.equals("")) {
-//                System.out.println("***Current sliced file name: "+compactFileName);
-//                ArrayList<String> programLines = sosSlicer.fileReader(fileName);
-//                int programSize = programLines.size();
-//                ArrayList<Boolean> areSlicedLines = new ArrayList<Boolean>();
-//                for (int i = 0; i<programSize; i++){
-//                    areSlicedLines.add(false);
-//                }
-//                String newFilePath = fileName.replace("slicingInput", "slicingOutput");
-//                System.out.println(newFilePath);
-//                for (int i = programSize; i>0; i--) {
-//                    System.out.println("Slicing line: "+i);
-//                    if (sosSlicer.isCollectedLine(i, slicedLinesPerClass.get(compactFileName)))
-//                        continue;
-//                    File newFile = new File(newFilePath);
-//
-//                    // Should it be removed? true -> yes, false -> no
-//                    areSlicedLines.set(i-1, true);
-//                    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(newFile)));
-//                    for (int j = 0; j<programLines.size(); j++) {
-//                        if (!areSlicedLines.get(j))
-//                            pw.println(programLines.get(j));
-//                    }
-//                    pw.close();
-//
-//                    String newfiles = "";
-//                    for (String newfileName : javaFileList) {
-//                        String modifiedFilePath = newfileName.replace("input", "output");
-//                        if (fileName.contains("SoSSlicer.java"))
-//                            continue;
-//                        newfiles = newfiles+" "+modifiedFilePath;
-//                    }
-//                    System.out.println("start proc");
-//                    Process p = Runtime.getRuntime().exec("cmd.exe /c javac -source 1.6 -target 1.6 "+newfiles);
-//                    new Thread(new Runnable() {
-//                        public void run() {
-//                            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//                            String line = null;
-//
-//                            try {
-//                                while ((line = input.readLine()) != null)
-//                                    System.out.println(line);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }).start();
-//                    int rst = p.waitFor();
-//                    System.out.println("rst: "+rst);
-//                    InputStream error = p.getErrorStream();
-//                    if(error.available() >0)
-//                        areSlicedLines.set(i, false);
-//                    p.destroy();
-//
-//                    newFile.delete();
-//                }
-//
-//                File finalSlicedFile = new File(newFilePath);
-//                PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(finalSlicedFile)));
-//                for (int i = 0; i<programSize; i++) {
-//                    if (!areSlicedLines.get(i))
-//                        pw.println(programLines.get(i));
-//                }
-//                pw.close();
-//            }
-//        }
+        for(String fileName: javaFileList) {
+            String compactFileName = sosSlicer.isFileToBeSliced(fileName, slicedLinesPerClass.keySet());
+
+            if (!compactFileName.equals("")) {
+                System.out.println("***Current sliced file name: "+compactFileName);
+                ArrayList<String> programLines = sosSlicer.fileReader(fileName);
+                int programSize = programLines.size();
+                ArrayList<Boolean> areSlicedLines = new ArrayList<Boolean>();
+                for (int i = 0; i<programSize; i++){
+                    areSlicedLines.add(false);
+                }
+                String newFilePath = fileName.replace("slicingInput", "slicingOutput");
+                for (int i = programSize; i>0; i--) {
+                    if (sosSlicer.isCollectedLine(i, slicedLinesPerClass.get(compactFileName)))
+                        continue;
+                    File newFile = new File(newFilePath);
+
+                    // Should it be removed? true -> yes, false -> no
+                    areSlicedLines.set(i-1, true);
+                    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(newFile)));
+                    for (int j = 0; j<programLines.size(); j++) {
+                        if (!areSlicedLines.get(j))
+                            pw.println(programLines.get(j));
+                    }
+                    pw.close();
+
+                    String newfiles = "";
+                    for (String newfileName : javaFileList) {
+                        String modifiedFilePath = newfileName.replace("slicingInput", "slicingOutput");
+                        if (fileName.contains("SoSSlicer.java"))
+                            continue;
+                        newfiles = newfiles+" "+modifiedFilePath;
+                    }
+                    boolean isSucceed = sosSlicer.errorCommandExecuter("cmd.exe /c javac -source 1.6 -target 1.6 "+newfiles+ " -encoding UTF-8", i);
+                    if (!isSucceed)
+                        areSlicedLines.set(i-1, false);
+
+                    newFile.delete();
+                }
+
+                File finalSlicedFile = new File(newFilePath);
+                PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(finalSlicedFile)));
+                for (int i = 0; i<programSize; i++) {
+                    if (!areSlicedLines.get(i))
+                        pw.println(programLines.get(i));
+                }
+                pw.close();
+            }
+        }
     }
 
     public void copyDirectory(File sourceLocation, String destLocation)
@@ -170,7 +152,23 @@ public class SoSSlicer {
 
 
 
-
+    public boolean errorCommandExecuter (String command, int lineNum) throws InterruptedException, IOException {
+        Runtime run = Runtime.getRuntime();
+        final Process proc;
+        proc = run.exec(command);
+        proc.getInputStream().close();
+        proc.getOutputStream().close();
+        proc.getErrorStream().close();
+        int rst = proc.waitFor();
+        proc.destroy();
+        if (rst == 0) {
+            System.out.println("Succeed removing line " + lineNum);
+            return true;
+        } else {
+            System.out.println("Fail removing line " + lineNum);
+            return false;
+        }
+    }
 
     public void commandExecuter (String command, String step, String message) throws InterruptedException, IOException {
         Runtime run = Runtime.getRuntime();
@@ -220,8 +218,9 @@ public class SoSSlicer {
 
     public boolean isCollectedLine (int lineNum, HashSet<Integer> lines) {
         for (int line: lines) {
-            if(line == lineNum)
+            if(line == lineNum) {
                 return true;
+            }
         }
         return false;
     }
@@ -244,7 +243,12 @@ public class SoSSlicer {
                 for (int i = 1; i<untilClassName.length-1; i++) {
                     keyClassName = keyClassName+"\\"+untilClassName[i];
                 }
-                if (slicedLinesPerFile.equals(keyClassName)) {
+                boolean isContained = false;
+                for (String key: slicedLinesPerFile.keySet()) {
+                    if (key.equals(keyClassName))
+                        isContained = true;
+                }
+                if (isContained) {
                     HashSet<Integer> lineNumbers = slicedLinesPerFile.get(keyClassName);
                     lineNumbers.add(Integer.parseInt(lineNumAndInst[0].trim()));
                 } else {
