@@ -22,10 +22,11 @@ public class SoSSlicer {
 
     public static void main (String[] args) throws IOException, InterruptedException {
 
+        SoSSlicer sosSlicer = new SoSSlicer();
         // Step 1. Collecting subject Java files.
-        commandExecuter("cmd.exe /c dir /b /s *.java > ./javaFiles.txt", "1", "Collecting subject Java files.");
+        sosSlicer.commandExecuter("cmd.exe /c dir /b /s *.java > ./javaFiles.txt", "1", "Collecting subject Java files.");
 
-        ArrayList<String> javaFileList = fileReader(".\\JavaFiles.txt");
+        ArrayList<String> javaFileList = sosSlicer.fileReader(".\\JavaFiles.txt");
 
         String files = "";
         for (String fileName : javaFileList) {
@@ -35,18 +36,18 @@ public class SoSSlicer {
         }
 
         // Step 2. Compiling the subject Java files.
-        commandExecuter("cmd.exe /c javac -source 1.6 -target 1.6 -g "+files+ " -encoding UTF-8", "2", "Compling the subject Java files.");
+        sosSlicer.commandExecuter("cmd.exe /c javac -source 1.6 -target 1.6 -g "+files+ " -encoding UTF-8", "2", "Compling the subject Java files.");
 
         // Step 3. Tracing the subject Java files.
-        commandExecuter("cmd.exe /c java -javaagent:./lib/tracer.jar=tracefile:SoStrace.trace -cp ./bin/slicingInput new_simvasos.simulation.Simulation_Firefighters", "3", "Tracing subject Java files.");
+        sosSlicer.commandExecuter("cmd.exe /c java -javaagent:./lib/tracer.jar=tracefile:SoStrace.trace -cp ./bin/slicingInput new_simvasos.simulation.Simulation_Firefighters", "3", "Tracing subject Java files.");
 
         // Step 4. Slicing the subject Java files.
-        commandExecuter("cmd.exe /c java -Xmx2g -jar ./lib/slicer.jar -p SoStrace.trace " + "new_simvasos.simulation.Simulation_Firefighters.main:30:*" + " > SlicedSoS.txt", "4", "Slicing subject Java files.");
+        sosSlicer.commandExecuter("cmd.exe /c java -Xmx2g -jar ./lib/slicer.jar -p SoStrace.trace " + "new_simvasos.simulation.Simulation_Firefighters.main:30:*" + " > SlicedSoS.txt", "4", "Slicing subject Java files.");
 
         // Step 5. Making sliced contents compilable & executable.
 
         // Step 5-1. Collecting sliced classes and line numbers.
-        HashMap<String, HashSet<Integer>> slicedLinesPerClass= setSlicedLinesPerClass();
+        HashMap<String, HashSet<Integer>> slicedLinesPerClass= sosSlicer.setSlicedLinesPerClass();
         System.out.println("Succeed step 5-1: Collecing slices classes and line numbers.");
 
         // Step 5-2. Copying input files to the output folder.
@@ -59,18 +60,18 @@ public class SoSSlicer {
                 folderName = folderName +folders[i] +"\\";
             }
             File source = new File(folderName);
-            copyDirectory (source, folderName.replace("slicingInput", "slicingOutput"));
+            sosSlicer.copyDirectory (source, folderName.replace("slicingInput", "slicingOutput"));
         }
         System.out.println("Succeed step 5-2: Copying input files to the output folder.");
 
         // Step 5-3. Applying ORBS to make the sliced program executable.
         System.out.println("Step 5-3 starts.");
 //        for(String fileName: javaFileList) {
-//            String compactFileName = isFileToBeSliced(fileName, slicedLinesPerClass.keySet());
+//            String compactFileName = sosSlicer.isFileToBeSliced(fileName, slicedLinesPerClass.keySet());
 //
 //            if (!compactFileName.equals("")) {
 //                System.out.println("***Current sliced file name: "+compactFileName);
-//                ArrayList<String> programLines = fileReader(fileName);
+//                ArrayList<String> programLines = sosSlicer.fileReader(fileName);
 //                int programSize = programLines.size();
 //                ArrayList<Boolean> areSlicedLines = new ArrayList<Boolean>();
 //                for (int i = 0; i<programSize; i++){
@@ -80,7 +81,7 @@ public class SoSSlicer {
 //                System.out.println(newFilePath);
 //                for (int i = programSize; i>0; i--) {
 //                    System.out.println("Slicing line: "+i);
-//                    if (isCollectedLine(i, slicedLinesPerClass.get(compactFileName)))
+//                    if (sosSlicer.isCollectedLine(i, slicedLinesPerClass.get(compactFileName)))
 //                        continue;
 //                    File newFile = new File(newFilePath);
 //
@@ -136,7 +137,7 @@ public class SoSSlicer {
 //        }
     }
 
-    public static void copyDirectory(File sourceLocation, String destLocation)
+    public void copyDirectory(File sourceLocation, String destLocation)
             throws IOException {
         File targetFolder = new File(destLocation);
         if (sourceLocation.isDirectory()) {
@@ -171,7 +172,7 @@ public class SoSSlicer {
 
 
 
-    public static void commandExecuter (String command, String step, String message) throws InterruptedException, IOException {
+    public void commandExecuter (String command, String step, String message) throws InterruptedException, IOException {
         Runtime run = Runtime.getRuntime();
         final Process proc;
         proc = run.exec(command);
@@ -196,7 +197,7 @@ public class SoSSlicer {
             System.out.println("Fail step "+step+": "+message);
     }
 
-    public static ArrayList<String> fileReader (String fileName) {
+    public ArrayList<String> fileReader (String fileName) {
         ArrayList<String> javaFileList = new ArrayList<String>();
         try {
             File file = new File(fileName);
@@ -217,7 +218,7 @@ public class SoSSlicer {
         return javaFileList;
     }
 
-    public static boolean isCollectedLine (int lineNum, HashSet<Integer> lines) {
+    public boolean isCollectedLine (int lineNum, HashSet<Integer> lines) {
         for (int line: lines) {
             if(line == lineNum)
                 return true;
@@ -225,7 +226,7 @@ public class SoSSlicer {
         return false;
     }
 
-    public static HashMap<String, HashSet<Integer>> setSlicedLinesPerClass () throws IOException {
+    public HashMap<String, HashSet<Integer>> setSlicedLinesPerClass () throws IOException {
         HashMap<String, HashSet<Integer>> slicedLinesPerFile = new HashMap<String, HashSet<Integer>>();
         File slicedInstructionFile = new File("SlicedSoS.txt");
         if (slicedInstructionFile.isFile()) {
@@ -256,7 +257,7 @@ public class SoSSlicer {
         return slicedLinesPerFile;
     }
 
-    public static String isFileToBeSliced (String fileName, Set<String> keySet) {
+    public String isFileToBeSliced (String fileName, Set<String> keySet) {
         for (String key: keySet) {
             if (fileName.contains(key))
                 return key;
