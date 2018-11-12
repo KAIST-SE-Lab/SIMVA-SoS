@@ -6,8 +6,10 @@
 
 import javafx.util.Pair;
 import new_simvasos.log.Snapshot;
+import new_simvasos.property.MCIAbsenceChecker;
 import new_simvasos.property.MCIProperty;
 import new_simvasos.property.MCIPropertyChecker;
+import new_simvasos.property.MCISteadyStateProbabilityChecker;
 import new_simvasos.simulation.Simulation_Firefighters;
 import new_simvasos.verifier.SPRT;
 import org.jdesktop.swingx.JXTreeTable;
@@ -239,12 +241,21 @@ public class NewJFrame extends javax.swing.JFrame {
                 long start = System.currentTimeMillis();
                 dataTool2.reset();
                 MCIProperty rescuedProperty;
-                MCIPropertyChecker rescuedChecker;
                 SPRT verifier;
                 
+                //시험 검증 평가
+                System.out.println("**********SIMVA_SoS Evaluation START**********");
+                MCIPropertyChecker existenceChecker = new MCIPropertyChecker();
+                MCIAbsenceChecker absenceChecker = new MCIAbsenceChecker();
+                MCISteadyStateProbabilityChecker steadyChecker = new MCISteadyStateProbabilityChecker();
+    
+                verifier = new SPRT(existenceChecker);
+                //verifier = new SPRT(absenceChecker);
+                verifier = new SPRT(steadyChecker);
+                
                 // Simulation
-                int repeatSim = 2000;
-                int simulationTime = 15;
+                int repeatSim = 1000;
+                int simulationTime = 6000;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
                 int count = 0;
@@ -253,9 +264,9 @@ public class NewJFrame extends javax.swing.JFrame {
                 
                 Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
                 
-                rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.8);
-                rescuedChecker = new MCIPropertyChecker();
-                verifier = new SPRT(rescuedChecker);
+                rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.90);
+                rescuedProperty.setThresholdPatient(0.5);
+                
                 System.out.println("Simulation based Analysis");
                 fileBufferVerification.add("Simulation based Analysis");
                 

@@ -51,8 +51,8 @@ public class Simulation_Firefighters extends Simulation {
     @Override
     void initModels(){
         System.out.println("Simulation_Firefighters > initModels()");
-        double fireFighterPr = 0.8;
-        int numFireFighter = 3;
+        double fireFighterPr = 0.04;
+        int numFireFighter = 2;
         ArrayList<CS> CSs = new ArrayList();
 
         for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
@@ -60,7 +60,7 @@ public class Simulation_Firefighters extends Simulation {
             CSs.add(fireFighter);
         }
 
-        int mapSize = 20;
+        int mapSize = 300;
         ArrayList<Integer> MCIMap = new ArrayList<>();
 
         for (int i = 0; i < mapSize; i++) {
@@ -83,7 +83,7 @@ public class Simulation_Firefighters extends Simulation {
         Event event;
 
         ArrayList MCIEvents = new ArrayList();
-        int numPatients = 20;
+        int numPatients = 100;
 
         for(int j = 0; j < numPatients; j++) {
             constantTimeBound = new ConstantTimeBound(0);
