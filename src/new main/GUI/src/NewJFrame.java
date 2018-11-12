@@ -6,10 +6,7 @@
 
 import javafx.util.Pair;
 import new_simvasos.log.Snapshot;
-import new_simvasos.property.MCIAbsenceChecker;
-import new_simvasos.property.MCIProperty;
-import new_simvasos.property.MCIPropertyChecker;
-import new_simvasos.property.MCISteadyStateProbabilityChecker;
+import new_simvasos.property.*;
 import new_simvasos.simulation.Simulation_Firefighters;
 import new_simvasos.verifier.SPRT;
 import org.jdesktop.swingx.JXTreeTable;
@@ -248,13 +245,19 @@ public class NewJFrame extends javax.swing.JFrame {
                 MCIPropertyChecker existenceChecker = new MCIPropertyChecker();
                 MCIAbsenceChecker absenceChecker = new MCIAbsenceChecker();
                 MCISteadyStateProbabilityChecker steadyChecker = new MCISteadyStateProbabilityChecker();
+                MCITransientStateProbabilityChecker transientChecker = new MCITransientStateProbabilityChecker();
+                MCIUniversalityChecker universalityChecker = new MCIUniversalityChecker();
+                MCIMinimumDurationChecker minimumDurationChecker = new MCIMinimumDurationChecker();
     
                 verifier = new SPRT(existenceChecker);
                 //verifier = new SPRT(absenceChecker);
-                verifier = new SPRT(steadyChecker);
+                //verifier = new SPRT(steadyChecker);
+                //verifier = new SPRT(transientChecker);
+                //verifier = new SPRT(universalityChecker);
+                //verifier = new SPRT(minimumDurationChecker);
                 
                 // Simulation
-                int repeatSim = 1000;
+                int repeatSim = 1500;
                 int simulationTime = 6000;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
@@ -265,7 +268,17 @@ public class NewJFrame extends javax.swing.JFrame {
                 Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
                 
                 rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.90);
-                rescuedProperty.setThresholdPatient(0.5);
+                // SteadyStateProbability
+                //rescuedProperty.setThresholdPatient(0.5);
+                
+                // TransientStateProbability
+                // rescuedProperty.setThresholdPatient(0.9);
+                
+                // Universality
+                // rescuedProperty.setThresholdPatient(1.0);
+                
+                // MinimumDuration
+                // rescuedProperty.setThresholdPatient(1.0);
                 
                 System.out.println("Simulation based Analysis");
                 fileBufferVerification.add("Simulation based Analysis");

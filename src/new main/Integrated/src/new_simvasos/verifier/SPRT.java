@@ -133,8 +133,18 @@ public class SPRT extends Verifier {
             }
 
             Log log = simulation.runSimulation();
-
-            if(this.propertychecker.check(log, verificationProperty)) {
+  
+          // ExistenceChecker, AbsenceChecker, UniversalityChecker
+          if(this.propertychecker.check(log, verificationProperty)) {
+            
+            // SteadyStateProbability Checker
+            //if(this.propertychecker.check(log, verificationProperty, 0.5, 6000)) {
+    
+            // TransientStateProbabilityChecker
+            // if(this.propertychecker.check(log, verificationProperty, 0.90, 6000, 5900)) {
+    
+            // MinimumDurationChecker
+            // if(this.propertychecker.check(log, verificationProperty, 6000, 600) {
                 numTrue += 1;
             }
             numSamples += 1;
@@ -171,7 +181,16 @@ public class SPRT extends Verifier {
 
         Log log = simulation.runSimulation();
 
+        // ExistenceChecker, AbsenceChecker, UniversalityChecker
         if(this.propertychecker.check(log, verificationProperty)) {
+        // SteadyStateProbability Checker
+        //if(this.propertychecker.check(log, verificationProperty, 0.5, 6000)) {
+        
+        // TransientStateProbabilityChecker
+          // if(this.propertychecker.check(log, verificationProperty, 0.90, 6000, 5900)) {
+          
+        // MinimumDurationChecker
+        // if(this.propertychecker.check(log, verificationProperty, 6000, 600) {
           numTrue += 1;
         }
         numSamples += 1;
