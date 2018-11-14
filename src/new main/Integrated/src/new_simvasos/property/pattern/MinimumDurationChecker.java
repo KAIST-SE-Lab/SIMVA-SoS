@@ -22,7 +22,7 @@ public abstract class MinimumDurationChecker extends PropertyChecker {
             }
         }
         
-        if ((double)satisfiedCount <= (double)(T-t)){
+        if ((double)satisfiedCount < (double)(T-t)){
             return true;
         }
         return false;

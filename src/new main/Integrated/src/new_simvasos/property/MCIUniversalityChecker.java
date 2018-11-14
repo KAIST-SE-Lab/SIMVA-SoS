@@ -40,4 +40,9 @@ public class MCIUniversalityChecker extends UniversalityChecker {
     public boolean check(Log log, Property verificationProperty, double prob, int t, int T) {
         return false;
     }
+    
+    @Override
+    public boolean check(Log log, Property verificationProperty, int t, int T) {
+        return false;
+    }
 }

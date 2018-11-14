@@ -37,8 +37,7 @@ public class Simulation_Firefighters extends Simulation {
         log.printSnapshot();
 
     }
-
-
+    
     public Log runSimulation() {
         return simulator.run();
     }

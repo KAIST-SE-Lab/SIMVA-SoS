@@ -137,14 +137,14 @@ public class SPRT extends Verifier {
           // ExistenceChecker, AbsenceChecker, UniversalityChecker
           if(this.propertychecker.check(log, verificationProperty)) {
             
-            // SteadyStateProbability Checker
-            //if(this.propertychecker.check(log, verificationProperty, 0.5, 6000)) {
+          // SteadyStateProbability Checker
+          //if(this.propertychecker.check(log, verificationProperty, 0.5, 6000)) {
     
-            // TransientStateProbabilityChecker
-            // if(this.propertychecker.check(log, verificationProperty, 0.90, 6000, 5900)) {
+          // TransientStateProbabilityChecker
+          //if(this.propertychecker.check(log, verificationProperty, 0.95, 5900, 6000)) {
     
             // MinimumDurationChecker
-            // if(this.propertychecker.check(log, verificationProperty, 6000, 600) {
+            // if(this.propertychecker.check(log, verificationProperty, 600, 6000)) {
                 numTrue += 1;
             }
             numSamples += 1;

@@ -18,7 +18,7 @@ public class MCISteadyStateProbabilityChecker extends SteadyStateProbabilityChec
         
         double rescueRate = Double.parseDouble(st.nextToken());
         
-        if(rescueRate > verificationProperty.getThresholdPatient()){
+        if(rescueRate >= verificationProperty.getThresholdPatient()){
             return true;
         }
         else{
@@ -37,12 +37,12 @@ public class MCISteadyStateProbabilityChecker extends SteadyStateProbabilityChec
     }
     
     @Override
-    public boolean check(Log log, Property verificationProperty, double prob, int T) {
+    public boolean check(Log log, Property verificationProperty, double prob, int t, int T) {
         return false;
     }
     
     @Override
-    public boolean check(Log log, Property verificationProperty, double prob, int t, int T) {
+    public boolean check(Log log, Property verificationProperty, int t, int T) {
         return false;
     }
 }

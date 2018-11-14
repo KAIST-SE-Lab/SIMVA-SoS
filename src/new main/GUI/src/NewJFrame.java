@@ -82,6 +82,11 @@ public class NewJFrame extends javax.swing.JFrame {
         
         fileBufferVerification = new ArrayList<>();
         fileBufferSingle = new ArrayList<>();
+        
+        // 시험 검증 평가
+        jTextPane24.setText("6000");
+        jTextField_VC.setText("Universality Property");
+        jTextField_SS.setText("MCI Firefighter Scenario1");
     }
     
     /**
@@ -241,7 +246,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 SPRT verifier;
                 
                 //시험 검증 평가
-                System.out.println("**********SIMVA_SoS Evaluation START**********");
+                System.out.println("**********SIMVA_SoS Universality Property Evaluation START**********");
+                
                 MCIPropertyChecker existenceChecker = new MCIPropertyChecker();
                 MCIAbsenceChecker absenceChecker = new MCIAbsenceChecker();
                 MCISteadyStateProbabilityChecker steadyChecker = new MCISteadyStateProbabilityChecker();
@@ -249,11 +255,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 MCIUniversalityChecker universalityChecker = new MCIUniversalityChecker();
                 MCIMinimumDurationChecker minimumDurationChecker = new MCIMinimumDurationChecker();
     
-                verifier = new SPRT(existenceChecker);
+                //verifier = new SPRT(existenceChecker);
                 //verifier = new SPRT(absenceChecker);
                 //verifier = new SPRT(steadyChecker);
                 //verifier = new SPRT(transientChecker);
-                //verifier = new SPRT(universalityChecker);
+                verifier = new SPRT(universalityChecker);
                 //verifier = new SPRT(minimumDurationChecker);
                 
                 // Simulation
@@ -268,17 +274,16 @@ public class NewJFrame extends javax.swing.JFrame {
                 Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
                 
                 rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.90);
+                
                 // SteadyStateProbability
-                //rescuedProperty.setThresholdPatient(0.5);
+               //rescuedProperty.setThresholdPatient(0.5);
                 
                 // TransientStateProbability
-                // rescuedProperty.setThresholdPatient(0.9);
+                //rescuedProperty.setThresholdPatient(0.9);
                 
-                // Universality
-                // rescuedProperty.setThresholdPatient(1.0);
+                // Universality, MinimumDuration
+                rescuedProperty.setThresholdPatient(1.0);
                 
-                // MinimumDuration
-                // rescuedProperty.setThresholdPatient(1.0);
                 
                 System.out.println("Simulation based Analysis");
                 fileBufferVerification.add("Simulation based Analysis");
@@ -325,6 +330,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 //writer.close();
                 jTextPane16.setText("Total runtime: " + (end - start) / 1000.0 + " sec");
                 jTextPane16.setEditable(false);
+                
+                jTextPane18.setText("Transient Universality Checking Result: " + probability*100 + "%");
             }
             
         }, 1, TimeUnit.SECONDS);
@@ -1682,7 +1689,6 @@ public class NewJFrame extends javax.swing.JFrame {
         String filename1 = f1.getAbsolutePath();
         jTextField_VC.setText(filename1);
     }
-    
     
     /**
      * @param evt Activates Save Verification Results on Simulation-based Analysis tab, which saves time consumed in .txt file
