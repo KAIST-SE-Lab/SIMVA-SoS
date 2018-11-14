@@ -1,5 +1,7 @@
 package new_simvasos.model.Enums;
 
 public enum EnumResType {
-    TYPE1
+    HUMAN_RESOURCE,
+    SYSTEM_RESURCE,     //including utilities/facilities
+    MONETARY_RESURCE
 }

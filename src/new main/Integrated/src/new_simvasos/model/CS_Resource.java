@@ -3,13 +3,22 @@ package new_simvasos.model;
 import new_simvasos.model.Abstract.NonActionableObject;
 import new_simvasos.model.Enums.EnumResType;
 
+/**
+ * @author ymbaek
+ *
+ * CS_Resource is a specialized type of NonActionableObject.
+ * To represent a specific resource, it has its resource type.
+ */
 public class CS_Resource extends NonActionableObject{
     EnumResType csResType;
-
 
     public CS_Resource() {
         super();
         csResType = null;
+    }
+
+    public CS_Resource(EnumResType csResType) {
+        this.csResType = csResType;
     }
 
     /**

@@ -14,25 +14,78 @@ import new_simvasos.model.Enums.EnumObjType;
  * isObjActivated should be 'false', then it is automatically excluded by the simulator.
  */
 public class SIMVASoS_Object {
-    String objName;
-    EnumObjType objType;
-    EnumObjState objState;
-    boolean isObjActivated;
+    String objId;                   //Id of every SIMVASoS_Object
+    String objName;                 //Name of SIMVASoS_Object
+//    EnumObjType objType;            //Type of SIMVASoS_Object
+//    EnumObjState objState;          //State of SIMVASoS_Object
+    boolean isActivated;            //If an object is activated, simulation engine can access to the object
     ObjectLocation objLocation;
 
     public SIMVASoS_Object() {
+        objId = "noId";
         objName = "noName";
-        objType = null;
-        objState = null;
-        isObjActivated = false;
+//        objType = null;
+//        objState = null;
+        isActivated = false;        //Default value is false, so every SIMVASoS_Object should be activated() first
         objLocation = null;
     }
 
-
-    public void activate(){
-        isObjActivated = true;
+    public SIMVASoS_Object(String objId, String objName) {
+        this.objId = objId;
+        this.objName = objName;
+        isActivated = false;        //Default value is false, so every SIMVASoS_Object should be activated() first
+        objLocation = null;
     }
+
+    public SIMVASoS_Object(String objId, String objName, boolean isActivated, ObjectLocation objLocation) {
+        this.objId = objId;
+        this.objName = objName;
+        this.isActivated = isActivated;
+        this.objLocation = objLocation;
+    }
+
+    /**
+     * Activate an object
+     */
+    public void activate(){
+        isActivated = true;
+    }
+
+    /**
+     * Deactivate an object
+     */
     public void deactivate(){
-        isObjActivated = false;
+        isActivated = false;
+    }
+
+
+    /* GETTERS & SETTERS */
+
+    public String getObjId() {
+        return objId;
+    }
+
+    public void setObjId(String objId) {
+        this.objId = objId;
+    }
+
+    public String getObjName() {
+        return objName;
+    }
+
+    public void setObjName(String objName) {
+        this.objName = objName;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
+
+    public ObjectLocation getObjLocation() {
+        return objLocation;
+    }
+
+    public void setObjLocation(ObjectLocation objLocation) {
+        this.objLocation = objLocation;
     }
 }
