@@ -19,14 +19,15 @@ import java.util.ArrayList;
  * @author yjshin, ymbaek
  */
 public class Simulation_Firefighters extends Simulation {
+    
     public Simulation_Firefighters() {
         System.out.println("Simulation_Firefighter > Constructor 1");
     }
 
     public Simulation_Firefighters(int simulationTime) {
-        System.out.println("Simulation_Firefighter > Constructor 2");
+        System.out.println("Simulation_Firefighters > Constructor 2");
         setSimulationTime(simulationTime);
-        System.out.println("Simulation_Firefighter > setSimulationTime: " + simulationTime);
+        System.out.println("Simulation_Firefighters > setSimulationTime: " + simulationTime);
     }
 
     public static void main(String []args) {
@@ -35,12 +36,11 @@ public class Simulation_Firefighters extends Simulation {
         Simulation_Firefighters simFF = new Simulation_Firefighters(15);
         Log log = simFF.runSimulation();
         log.printSnapshot();
-
     }
 
-
     public Log runSimulation() {
-        return simulator.run();
+        this.targetSoS.reset();
+        return simulator.run(this.targetSoS, this.targetScenario);
     }
 
     /**
@@ -67,7 +67,8 @@ public class Simulation_Firefighters extends Simulation {
             MCIMap.add(0);
         }
 
-        targetSoS = new SoS(CSs, MCIMap);
+        //targetSoS = new SoS(CSs, MCIMap);
+        targetSoS = new SoS(new ArrayList<>(CSs), MCIMap);
     }
 
     /**

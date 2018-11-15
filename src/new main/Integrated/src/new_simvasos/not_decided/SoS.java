@@ -13,7 +13,7 @@ public class SoS {
   public ArrayList <CS> CSs;
   ArrayList <Integer> environment;
 
-  public SoS( ArrayList <CS> CSs, ArrayList<Integer> environment) {
+  public SoS(ArrayList <CS> CSs, ArrayList<Integer> environment) {
     this.CSs = CSs;
     this.environment = environment;
   }
@@ -82,4 +82,5 @@ public class SoS {
   public ArrayList<Integer> getEnvironment() {
     return environment;
   }
+  
 }

@@ -35,7 +35,7 @@ public abstract class Simulation {
     public void initSimulation(int simulationTime) {
         initModels();
         initScenario();
-        initSimulator(simulationTime, targetSoS, targetScenario);
+        initSimulator(simulationTime);
     }
 
     /**
@@ -47,7 +47,7 @@ public abstract class Simulation {
 
         //TODO: write the Log
         //TODO: modify Verifier code to read the Log
-        return simulator.run();
+        return simulator.run(this.targetSoS, this.targetScenario);
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class Simulation {
      */
     //TODO: Find usage
     public void setSimulationTime(int newSimulationTime) {
-        simulator = new Simulator(newSimulationTime, targetSoS, targetScenario);
+        simulator = new Simulator(newSimulationTime);
     }
 
     /**
@@ -73,11 +73,9 @@ public abstract class Simulation {
      * A method for initializing the simulator engine with Simulation Objects and configuration
      *
      * @param simulationTime    required number of ticks
-     * @param targetSoS         target SoS object
-     * @param targetScenario    target Scenario event sequences
      */
-    private void initSimulator(int simulationTime, SoS targetSoS, Scenario targetScenario) {
-        simulator = new Simulator(simulationTime, targetSoS, targetScenario);
+    private void initSimulator(int simulationTime) {
+        simulator = new Simulator(simulationTime);
     }
 
 

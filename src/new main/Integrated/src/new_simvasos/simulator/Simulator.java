@@ -9,16 +9,12 @@ import new_simvasos.scenario.Scenario;
 import java.util.ArrayList;
 public class Simulator {
   int simulationTime;
-  SoS sos;
-  Scenario scenario;
   
-  public Simulator(int simulationTime, SoS sos, Scenario scenario) {
+  public Simulator(int simulationTime) {
     this.simulationTime = simulationTime;
-    this.sos = sos;
-    this.scenario = scenario;
   }
 
-  public Log run() {
+  public Log run(SoS sos, Scenario scenario) {
     this.reset();
 
     Log log = new Log();
@@ -28,7 +24,7 @@ public class Simulator {
     // for every tick in simulation time
     for(int tick  = 0; tick < this.simulationTime; tick++) {
       // check every event in scenario
-      for (Event ev : this.scenario.events) {
+      for (Event ev : scenario.events) {
         // result = (Action, Constant TimeBound)
         if (ev.occur(tick) != null) {
           occuredEvents.add(ev);
@@ -37,7 +33,7 @@ public class Simulator {
 
       // Run SoS for such tick and get the result of each running
       // And add this running result into simulationLog.sosRunLog with tick
-      result_sos = this.sos.run(tick);
+      result_sos = sos.run(tick);
       //System.out.println(result_sos);
                                             // CS Actition      // Environment State
       log.addSnapshot(tick, result_sos);
@@ -69,9 +65,6 @@ public class Simulator {
 
 
   // reset the attributes of Simulator
-  private void reset() {
-    this.scenario.reset();
-    this.sos.reset();
-  }
+  private void reset() { }
 
 }

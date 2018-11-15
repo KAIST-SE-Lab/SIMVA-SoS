@@ -133,7 +133,7 @@ public class SPRT extends Verifier {
             }
 
             Log log = simulation.runSimulation();
-
+            
             if(this.propertychecker.check(log, verificationProperty)) {
                 numTrue += 1;
             }
