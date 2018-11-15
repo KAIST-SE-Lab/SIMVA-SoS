@@ -56,7 +56,7 @@ public class SIMVA_SoS {
         // Simulation
         int repeatSim = 2000;
         int simulationTime = 15;
-        MCISim = new Simulator(simulationTime, MCISoS, MCIScenario);
+        MCISim = new Simulator(simulationTime);
         
         /*
         ArrayList<SimulationLog> MCILogs = new ArrayList<>();
@@ -81,7 +81,7 @@ public class SIMVA_SoS {
         //System.out.println();
         System.out.println("Verify with simulator");
         //verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim);
-        verifier.verifyWithSimulation(sim1, rescuedProperty, repeatSim);
+        //verifier.verifyWithSimulation(sim1, rescuedProperty, repeatSim);
 
         long end = System.currentTimeMillis();
         System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
