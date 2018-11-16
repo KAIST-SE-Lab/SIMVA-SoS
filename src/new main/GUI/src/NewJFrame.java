@@ -84,8 +84,8 @@ public class NewJFrame extends javax.swing.JFrame {
         fileBufferSingle = new ArrayList<>();
         
         // 시험 검증 평가
-        jTextPane24.setText("6000");
-        jTextField_VC.setText("Universality Property");
+        jTextPane24.setText("300");
+        jTextField_VC.setText("Existence Property");
         jTextField_SS.setText("MCI Firefighter Scenario1");
         
         // Slicing Part Disable
@@ -101,7 +101,6 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO Minimum Sample number 2?
         jTextPane23.setText("2");
         jTextPane25.setText("1500");
-        
     }
     
     /**
@@ -261,7 +260,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 SPRT verifier;
                 
                 //시험 검증 평가
-                System.out.println("**********SIMVA_SoS Universality Property Evaluation START**********");
+                System.out.println("**********SIMVA_SoS Existence Property Evaluation START**********");
                 
                 MCIPropertyChecker existenceChecker = new MCIPropertyChecker();
                 MCIAbsenceChecker absenceChecker = new MCIAbsenceChecker();
@@ -270,21 +269,22 @@ public class NewJFrame extends javax.swing.JFrame {
                 MCIUniversalityChecker universalityChecker = new MCIUniversalityChecker();
                 MCIMinimumDurationChecker minimumDurationChecker = new MCIMinimumDurationChecker();
     
-                //verifier = new SPRT(existenceChecker);
+                verifier = new SPRT(existenceChecker);
                 //verifier = new SPRT(absenceChecker);
                 //verifier = new SPRT(steadyChecker);
                 //verifier = new SPRT(transientChecker);
-                verifier = new SPRT(universalityChecker);
+                //verifier = new SPRT(universalityChecker);
                 //verifier = new SPRT(minimumDurationChecker);
                 
                 // Simulation
                 int repeatSim = 1500;
-                int simulationTime = 6000;
+                int simulationTime = 300;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
                 int count = 1;
                 Boolean totalRet = true;
                 double probability = 0;
+                int accumulatedSimulation = 0;
                 
                 Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
                 
@@ -297,11 +297,15 @@ public class NewJFrame extends javax.swing.JFrame {
                 //rescuedProperty.setThresholdPatient(0.9);
                 
                 // Universality, MinimumDuration
-                rescuedProperty.setThresholdPatient(1.0);
+                //rescuedProperty.setThresholdPatient(1.0);
                 
                 
                 System.out.println("Simulation based Analysis");
                 fileBufferVerification.add("Simulation based Analysis");
+    
+                // Verification Progress & Result Modification
+                jTextPane1.setText("MCI Response SoS Model (Simulation_Firefighters.java)");
+                VP_TextPanel.setText("Verification in progress");
                 
                 for (int i = 1; i < 100; i++) {
                     count++;
@@ -316,6 +320,8 @@ public class NewJFrame extends javax.swing.JFrame {
                     
                     // number of samples for this theta iteration
                     dataTool2.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
+                    accumulatedSimulation += verificationResult.getKey().getKey();
+                    
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
@@ -330,8 +336,13 @@ public class NewJFrame extends javax.swing.JFrame {
                     }
                     System.out.println(verificationResult.getValue());
                     fileBufferVerification.add(verificationResult.getValue());
+    
+                    jTextPane12.setText(Integer.toString(accumulatedSimulation));
                 }
                 long end = System.currentTimeMillis();
+    
+                // Verification Progress & Result Modification
+                VP_TextPanel.setText("Verification in progress");
                 
                 System.out.println("Probability: about " + probability * 100 + "%");
                 fileBufferVerification.add("Probability: about " + probability * 100 + "%");
@@ -344,6 +355,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 jTextPane16.setText("Total runtime: " + (end - start) / 1000.0 + " sec");
                 jTextPane16.setEditable(false);
                 
+                // Verification Progress & Result Modification
                 jTextPane18.setText("Transient Universality Checking Result: " + probability*100 + "%");
             }
             
@@ -707,7 +719,7 @@ public class NewJFrame extends javax.swing.JFrame {
         
         jLabel21.setText("Simulation time");
         
-        jLabel22.setText("Number of simulations");
+        jLabel22.setText("Maximum Number of simulations");
         
         jLabel23.setText("Simulation Scenario");
         
