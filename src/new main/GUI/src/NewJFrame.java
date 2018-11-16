@@ -1246,7 +1246,7 @@ public class NewJFrame extends javax.swing.JFrame {
         VI_White3Layout.setVerticalGroup(
             VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(VI_White3Layout.createSequentialGroup()
-                    // Simualtion Progress & Results Gap
+                    // Single simualtion Progress & Results Gap
                     .addGap(10)
                     .addContainerGap()
                     .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1254,7 +1254,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(jTextField_SS4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton9))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGap(15)
+                    //.addGap(10)
                     .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextField_SS5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel47)
