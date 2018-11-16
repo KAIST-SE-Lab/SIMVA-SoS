@@ -87,6 +87,21 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextPane24.setText("6000");
         jTextField_VC.setText("Universality Property");
         jTextField_SS.setText("MCI Firefighter Scenario1");
+        
+        // Slicing Part Disable
+        jLabel24.setVisible(false);
+        enable_button1.setVisible(false);
+        disable_button1.setVisible(false);
+        jComboBox2.setVisible(false);
+        
+        // Verification Property Information (Alpha, Beta, Gamma)
+        jTextPane20.setText("0.05");
+        jTextPane22.setText("0.05");
+        jTextPane21.setText("0.01");
+        // TODO Minimum Sample number 2?
+        jTextPane23.setText("2");
+        jTextPane25.setText("1500");
+        
     }
     
     /**
