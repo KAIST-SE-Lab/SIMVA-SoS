@@ -101,6 +101,22 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO Minimum Sample number 2?
         jTextPane23.setText("2");
         jTextPane25.setText("1500");
+        
+        // Single Simulation Information
+        jTextField_SS2.setText("MCI Firefighter Scenario 1");
+        jTextField_SS3.setBackground(Color.LIGHT_GRAY);
+        jTextField_SS3.setText("Not supported");
+        jTextField_SS3.setEditable(false);
+        jTextField_VC2.setBackground(Color.LIGHT_GRAY);
+        jTextField_VC2.setText("Not supported");
+        jTextField_VC2.setEditable(false);
+        
+        // Single Simulation Progress & Result
+        jTextField_SS5.setVisible(false);
+        jButton11.setVisible(false);
+        jLabel47.setVisible(false);
+        jButton9.setVisible(false);
+        jButton10.setVisible(false);
     }
     
     /**
@@ -176,26 +192,31 @@ public class NewJFrame extends javax.swing.JFrame {
         dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
             @Override
             public void run() {   //single simulation tab
-                long start = System.currentTimeMillis();
+                
                 dataTool1.reset();
-                int count = 0;
+                double count = 0;
                 
                 // Simulation
-                int simulationTime = 15;
+                int simulationTime = 300;
                 
-                Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
-                HashMap<Integer, Snapshot> snapshotMap = sim1.runSimulation().getSnapshotMap();
-                
+                jTextField_SS4.setText("Simulation in Progress");
                 System.out.println("Run Single Simulation");
+    
+                Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
+                
+                long start = System.currentTimeMillis();
+                HashMap<Integer, Snapshot> snapshotMap = sim1.runSimulation().getSnapshotMap();
+                long end = System.currentTimeMillis();
+                
                 //writer.println("Run Single Simulation");
                 
-                for (int i = 0; i <= snapshotMap.size(); i++) {
+                for (int i = 0; i < snapshotMap.size(); i++) {
                     
                     // Calculate a progress rate
-                    count += (100 / snapshotMap.size() + 1);
-                    if (count >= 100) count = 100;
-                    jProgressBar2.setString(count + "% Done");
-                    jProgressBar2.setValue(count);
+                    count += (double)100 / (double)snapshotMap.size();
+                    if (i == snapshotMap.size()-1) count = 100;
+                    jProgressBar2.setString((int)count + "% Done");
+                    jProgressBar2.setValue((int)count);
                     
                     System.out.println("tick: " + (i + 1) + " " + snapshotMap.get(i).getSnapshotString());
                     //writer.println(snapshotMap.get(i).getSnapshotString());
@@ -216,11 +237,10 @@ public class NewJFrame extends javax.swing.JFrame {
                         e.printStackTrace();
                     }
                 }
-                long end = System.currentTimeMillis();
                 
-                //writer.close();
-                //jTextPane16.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
-                //jTextPane16.setEditable(false);
+                jTextField_SS4.setText("Simulation Finished");
+                jTextField_VC3.setText("Total runtime: " + ( end - start )/1000.0 + " sec");
+                jTextField_VC3.setEditable(false);
             }
             
         }, 1, TimeUnit.SECONDS);
@@ -254,7 +274,6 @@ public class NewJFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 
-                long start = System.currentTimeMillis();
                 dataTool2.reset();
                 MCIProperty rescuedProperty;
                 SPRT verifier;
@@ -281,7 +300,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 int simulationTime = 300;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
-                int count = 1;
+                int count = 0;
                 Boolean totalRet = true;
                 double probability = 0;
                 int accumulatedSimulation = 0;
@@ -306,11 +325,9 @@ public class NewJFrame extends javax.swing.JFrame {
                 // Verification Progress & Result Modification
                 jTextPane1.setText("MCI Response SoS Model (Simulation_Firefighters.java)");
                 VP_TextPanel.setText("Verification in progress");
-                
+    
+                long start = System.currentTimeMillis();
                 for (int i = 1; i < 100; i++) {
-                    count++;
-                    jProgressBar1.setString(count + "% Done");
-                    jProgressBar1.setValue(count);
                     
                     theta = i * 0.01;
                     verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
@@ -338,6 +355,10 @@ public class NewJFrame extends javax.swing.JFrame {
                     fileBufferVerification.add(verificationResult.getValue());
     
                     jTextPane12.setText(Integer.toString(accumulatedSimulation));
+    
+                    count++;
+                    jProgressBar1.setString(count + "% Done");
+                    jProgressBar1.setValue(count);
                 }
                 long end = System.currentTimeMillis();
     
@@ -1153,13 +1174,13 @@ public class NewJFrame extends javax.swing.JFrame {
         
         VI_Grey2.setBackground(new java.awt.Color(244, 244, 244));
         
-        jLabel8.setText("Verification Progress & Results");
+        jLabel8.setText("Simulation Progress & Results");
         
         VI_White3.setBackground(new java.awt.Color(255, 255, 255));
         
-        jLabel38.setText("Simulation Configuration");
+        jLabel38.setText("Time Consumed");
         
-        jLabel46.setText("Simulation Scenario");
+        jLabel46.setText("Simulation Progress");
         
         jTextField_SS4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1213,24 +1234,27 @@ public class NewJFrame extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(VI_White3Layout.createSequentialGroup()
-                            .addComponent(jTextField_SS4, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextField_SS4, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            //.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(VI_White3Layout.createSequentialGroup()
-                            .addComponent(jTextField_VC3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextField_VC3, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            //.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap(29, Short.MAX_VALUE))
         );
         VI_White3Layout.setVerticalGroup(
             VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(VI_White3Layout.createSequentialGroup()
+                    // Simualtion Progress & Results Gap
+                    .addGap(10)
                     .addContainerGap()
                     .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel46)
                         .addComponent(jTextField_SS4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton9))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGap(15)
                     .addGroup(VI_White3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextField_SS5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel47)
@@ -1720,7 +1744,7 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     private void SVR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-        int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
+        int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Location", JOptionPane.YES_NO_OPTION);
         
     }
     
@@ -1730,10 +1754,8 @@ public class NewJFrame extends javax.swing.JFrame {
     private void SAR_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // Save analysis results on single simulation tab
         
-        int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
+        JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/SingleSimulationLog.txt", "Simulation Results Saved", JOptionPane.CLOSED_OPTION);
         
-        
-        if (yes_or_no == 0) {
             String filetowrite = "./src/new main/GUI/testing/SingleSimulationLog.txt";
             FileWriter fw = null;
             try {
@@ -1748,10 +1770,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 e.printStackTrace();
             }
             
-            VP_TextPanel.setText("Saved");
-        } else {
-            VP_TextPanel.setText("No");
-        }
+            jTextField_SS4.setText("Simulation Saved");
     }
     
     /**
@@ -1759,10 +1778,9 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     private void SAR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SAR_ButtonActionPerformed
         // TODO add your handling code here:
+    
+        JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/VerificationLog.txt", "Verification Results Saved", JOptionPane.CLOSED_OPTION);
         
-        int yes_or_no = JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION);
-        
-        if (yes_or_no == 0) {
             String filetowrite = "./src/new main/GUI/testing/VerificationLog.txt";
             FileWriter fw = null;
             try {
@@ -1777,9 +1795,6 @@ public class NewJFrame extends javax.swing.JFrame {
             }
             
             VP_TextPanel.setText("Verification Saved");
-        } else {
-            VP_TextPanel.setText("No");
-        }
     }
     
     private void Stop_Button1ActionPerformed(java.awt.event.ActionEvent evt) {

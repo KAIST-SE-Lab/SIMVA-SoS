@@ -50,8 +50,8 @@ public class Simulation_Firefighters extends Simulation {
     @Override
     void initModels(){
         System.out.println("Simulation_Firefighters > initModels()");
-        double fireFighterPr = 0.04;
-        int numFireFighter = 2;
+        double fireFighterPr = 0.5;
+        int numFireFighter = 3;
         ArrayList<CS> CSs = new ArrayList();
 
         for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?

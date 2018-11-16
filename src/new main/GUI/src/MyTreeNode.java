@@ -5,7 +5,7 @@ import java.util.List;
 class MyTreeNode
 {
     private String name;
-    private String description;
+    private String state;
     private List<MyTreeNode> children = new ArrayList<MyTreeNode>();
      
     public MyTreeNode() 
@@ -15,7 +15,7 @@ class MyTreeNode
     public MyTreeNode( String name, String description ) 
     {
         this.name = name;
-        this.description = description;
+        this.state = description;
     }
      
     public String getName() 
@@ -30,12 +30,12 @@ class MyTreeNode
      
     public String getDescription() 
     {
-        return description;
+        return this.state;
     }
      
     public void setDescription(String description) 
     {
-        this.description = description;
+        this.state = description;
     }
      
     public List<MyTreeNode> getChildren() 
@@ -45,6 +45,6 @@ class MyTreeNode
      
     public String toString()
     {
-        return "MyTreeNode: " + name + ", " + description;
+        return "MyTreeNode: " + name + ", " + this.state;
     }
 }
