@@ -1,7 +1,6 @@
 package new_simvasos.property;
 
 import new_simvasos.log.Log;
-import new_simvasos.log.SimulationLog;
 import new_simvasos.log.Snapshot;
 
 public abstract class PropertyChecker {

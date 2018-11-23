@@ -1,10 +1,6 @@
 package new_simvasos.verifier;
 
-import new_simvasos.log.SimulationLog;
-import new_simvasos.property.Property;
 import new_simvasos.property.PropertyChecker;
-
-import java.util.ArrayList;
 
 public class Verifier {
   PropertyChecker propertychecker;
