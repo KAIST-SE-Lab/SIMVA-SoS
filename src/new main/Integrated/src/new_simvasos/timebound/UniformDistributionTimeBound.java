@@ -1,4 +1,4 @@
-package new_simvasos.timebound;
+/*package new_simvasos.timebound;
 
 import java.util.Random;
 public class UniformDistributionTimeBound extends TimeBound {
@@ -19,3 +19,4 @@ public class UniformDistributionTimeBound extends TimeBound {
     return random.nextInt(end - start + 1) + start;
   }
 }
+*/

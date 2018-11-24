@@ -9,7 +9,7 @@ public class Scenario {
     this.events = events;
 
   }
-
+/*
   private void addEvent(Event event) {
     this.events.add(event);
   }
@@ -19,7 +19,7 @@ public class Scenario {
       this.events.add(ev);
     }
   }
-
+*/
   public void reset() {
     for (Event ev : events) {
         ev.reset();

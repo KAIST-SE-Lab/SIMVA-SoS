@@ -7,6 +7,7 @@
 import javafx.util.Pair;
 import new_simvasos.log.Snapshot;
 import new_simvasos.property.*;
+import new_simvasos.property.pattern.SteadyStateProbabilityChecker;
 import new_simvasos.simulation.Simulation_Firefighters;
 import new_simvasos.verifier.SPRT;
 import org.jdesktop.swingx.JXTreeTable;
@@ -296,8 +297,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 //verifier = new SPRT(minimumDurationChecker);
                 
                 // Simulation
-                int repeatSim = 1500;
-                int simulationTime = 300;
+                //int repeatSim = 1500;
+                //int simulationTime = 300;
+                // for Mutation Testing
+                int simulationTime = 15;
+                int repeatSim = 100;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
                 int count = 0;
@@ -310,7 +314,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.90);
                 
                 // SteadyStateProbability
-               //rescuedProperty.setThresholdPatient(0.5);
+                //rescuedProperty.setThresholdPatient(0.5);
                 
                 // TransientStateProbability
                 //rescuedProperty.setThresholdPatient(0.9);
@@ -330,7 +334,17 @@ public class NewJFrame extends javax.swing.JFrame {
                 for (int i = 1; i < 100; i++) {
                     
                     theta = i * 0.01;
+                    //Existence, Absence, Universality
                     verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
+    
+                    //MinimumDuration
+                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 5, 15);
+    
+                    //Steady State Probability
+                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 15);
+    
+                    //Transient State Probability
+                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 10, 15);
                     
                     // True or False for this theta iteration
                     int myInt = verificationResult.getKey().getValue() ? 1 : 0;

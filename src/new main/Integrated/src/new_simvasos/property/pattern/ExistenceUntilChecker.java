@@ -1,4 +1,4 @@
-package new_simvasos.property.pattern;
+/*package new_simvasos.property.pattern;
 
 import new_simvasos.log.Log;
 import new_simvasos.log.Snapshot;
@@ -23,6 +23,5 @@ public abstract class ExistenceUntilChecker extends ExistenceChecker{
         }
         return false;
     }
-}
-
+}*/
 
