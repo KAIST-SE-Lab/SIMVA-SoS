@@ -16,7 +16,7 @@ public abstract class UniversalityChecker extends PropertyChecker {
         HashMap<Integer, Snapshot> snapshots = log.getSnapshotMap();
         int logSize = snapshots.size(); // 0 ... 10 => size: 11, endTime: 10
         for (int i = 0; i < logSize; i++) {
-            if (evaluateState(snapshots.get(i), verificationProperty)) {
+            if (!evaluateState(snapshots.get(i), verificationProperty)) {
                 return false;
             }
         }

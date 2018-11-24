@@ -10,20 +10,20 @@ public class MyTreeTableModel extends AbstractTreeTableModel {
         myroot = new MyTreeNode( "root", "Root of the tree" );
 
         myroot.getChildren().add( new MyTreeNode( "CS_Firefighter",
-          "hello" ) );
+          "Enabled" ) );
 
         MyTreeNode subtree = new MyTreeNode( "CS_Action_Rescue",
-          "world" );
+          "Disabled" );
         subtree.getChildren().add( new MyTreeNode( "Behavior_First_Aid",
-          "hi" ) );
+          "Enabled" ) );
         subtree.getChildren().add( new MyTreeNode( "Behavior_Pickup",
-          "world" ) );
+          "Disabled" ) );
         myroot.getChildren().add( subtree );
 
         myroot.getChildren().add( new MyTreeNode( "CS_Action_Move",
-          "goodbye" ) );
+          "Enabled" ) );
         myroot.getChildren().add( new MyTreeNode( "CS_Action_Extinguish",
-          "world" ) );
+          "Enalbed" ) );
 
     }
 
