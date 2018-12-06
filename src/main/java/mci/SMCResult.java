@@ -16,7 +16,7 @@ package mci;
  * furnished to do so, subject to the following conditions: TBD
  */
 public class SMCResult {
-
+    // statistical model checker result
     private double prob;
     private int numOfSamples;
     private long executionTime;
