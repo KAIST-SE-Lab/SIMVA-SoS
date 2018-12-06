@@ -27,7 +27,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws Exception{
 
-        // To prepare the result_directory
+        // To prepare the result_directory 
         //Util.create_result_directory("mci_result");
 
         // Globally used (no need to replicate in concurrency)
