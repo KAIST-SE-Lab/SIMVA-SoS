@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class SPRTTest extends Verifier {
-
+    // SPRT test 
     public SPRTTest(PropertyChecker checker) {
         super(checker);
     }
