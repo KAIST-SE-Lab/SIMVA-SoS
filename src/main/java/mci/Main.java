@@ -27,7 +27,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws Exception{
 
-        // To prepare the result_directory 
+        // To prepare the result_directory
         //Util.create_result_directory("mci_result");
 
         // Globally used (no need to replicate in concurrency)
@@ -37,7 +37,7 @@ public class Main {
 
     public static void experimentMain(String[] args) throws IOException{
         System.out.println("==========================================\n" +
-                            "Welcome to Simulator for System of Systems");
+                            "Welcome to System of Systems Simulator");
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(1500, 400);
 
