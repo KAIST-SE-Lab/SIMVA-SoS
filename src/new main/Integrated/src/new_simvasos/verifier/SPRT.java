@@ -20,7 +20,7 @@ public class SPRT extends Verifier {
     this.delta = 0.01;
     this.minimumSample = 2;
   }
-  
+
     // Return <pair for drawing graph<number of samples, true/false>,
     // verification result on each theta>
   public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta) {
