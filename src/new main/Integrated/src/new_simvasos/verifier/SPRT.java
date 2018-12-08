@@ -27,7 +27,7 @@ public class SPRT extends Verifier {
   }
 
     /**
-     * Verify with simulation gui pair.
+     * Verify input simulation in GUI.
      *
      * @param simulation           the simulation
      * @param verificationProperty the verification property
