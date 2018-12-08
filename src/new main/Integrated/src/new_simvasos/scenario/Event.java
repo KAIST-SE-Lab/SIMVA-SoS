@@ -6,6 +6,14 @@ public class Event {
 
   public Action action;
   TimeBound timebound;
+
+  /**
+   * Instantiates a new Event.
+   * An event is an action at a time.
+   *
+   * @param action    the action
+   * @param timebound the timebound
+   */
   public Event(Action action, TimeBound timebound) {  //constructor
     this.action = action;
     this.timebound = timebound;
