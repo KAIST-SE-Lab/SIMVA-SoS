@@ -9,7 +9,7 @@ public class PatientOccurrence extends Action {
 
   /**
    * Instantiates a new Patient occurrence.
-   * PatientOccurence is an user-defined event.
+   * PatientOccurence is an user-defined action.
    *
    * @param name        the name
    * @param environment the environment
@@ -19,7 +19,7 @@ public class PatientOccurrence extends Action {
     this.environment = environment;
 
   }
-  
+
   // Change "do" function in the prototype into "bahave"
   // Because there is already default "do" function in Java
   public String behave(){
