@@ -19,6 +19,13 @@ public class Simulator {
     this.simulationTime = simulationTime;
   }
 
+  /**
+   * Run the input SoS model with the input scenario.
+   *
+   * @param sos      the sos
+   * @param scenario the scenario
+   * @return the log
+   */
   public Log run(SoS sos, Scenario scenario) {
     this.reset();
 
