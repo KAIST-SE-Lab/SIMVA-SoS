@@ -3,6 +3,9 @@ package new_simvasos.not_decided;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * A CS of MCI scenario.
+ */
 public class FireFighter extends CS {
 
   double probability;
