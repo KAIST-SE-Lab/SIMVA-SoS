@@ -9,7 +9,12 @@ import new_simvasos.scenario.Scenario;
 import java.util.ArrayList;
 public class Simulator {
   int simulationTime;
-  
+
+  /**
+   * Instantiates a new Simulator.
+   *
+   * @param simulationTime the simulation time
+   */
   public Simulator(int simulationTime) {
     this.simulationTime = simulationTime;
   }
