@@ -12,8 +12,13 @@ public class SPRT extends Verifier {
   double beta;
   double delta;
   int minimumSample;
-  
-  public SPRT(PropertyChecker checker) {
+
+    /**
+     * Instantiates a new Sprt.
+     *
+     * @param checker the checker
+     */
+    public SPRT(PropertyChecker checker) {
     super(checker);
     this.alpha = 0.05;
     this.beta = 0.05;
@@ -21,7 +26,16 @@ public class SPRT extends Verifier {
     this.minimumSample = 2;
   }
 
-    // Return <pair for drawing graph<number of samples, true/false>,
+    /**
+     * Verify with simulation gui pair.
+     *
+     * @param simulation           the simulation
+     * @param verificationProperty the verification property
+     * @param maxRepeat            the max repeat
+     * @param theta                the theta
+     * @return the pair
+     */
+// Return <pair for drawing graph<number of samples, true/false>,
     // verification result on each theta>
   public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta) {
         int maxNumSamples = maxRepeat;
