@@ -25,6 +25,11 @@ public abstract class Simulation {
         initSimulation(15);
     }
 
+    /**
+     * Instantiates a new Simulation with simulation time.
+     *
+     * @param simulationTime the simulation time
+     */
     public Simulation(int simulationTime) {
         System.out.println("Simulation > Constructor 2");
         initSimulation(simulationTime);
