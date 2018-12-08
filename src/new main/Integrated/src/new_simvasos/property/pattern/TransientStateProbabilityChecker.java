@@ -7,6 +7,10 @@ import new_simvasos.property.PropertyChecker;
 
 import java.util.HashMap;
 
+/**
+ * The type Transient state probability checker.
+ * checks ...
+ */
 public abstract class TransientStateProbabilityChecker extends PropertyChecker {
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
