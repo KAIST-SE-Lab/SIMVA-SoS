@@ -7,6 +7,10 @@ import new_simvasos.property.PropertyChecker;
 
 import java.util.HashMap;
 
+/**
+ * The type Existence checker.
+ * checks whether a property is satisfied at least once.
+ */
 public abstract class ExistenceChecker extends PropertyChecker {
     @Override
     protected abstract boolean evaluateState(Snapshot snapshot, Property verificationProperty);
