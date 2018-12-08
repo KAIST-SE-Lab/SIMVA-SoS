@@ -36,7 +36,8 @@ public abstract class Simulation {
     }
 
     /**
-     * A method for initializing Simulation
+     * A method for initializing Simulation.
+     * This method inits simulation model, scenario and simulation with simulation time.
      *
      * @param simulationTime    limited time (num of ticks) for a single simulation execution
      */
