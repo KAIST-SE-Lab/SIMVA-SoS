@@ -21,6 +21,7 @@ public class Simulator {
 
   /**
    * Run the input SoS model with the input scenario.
+   * repeats SoS and scenario during simulationTime.
    *
    * @param sos      the sos
    * @param scenario the scenario
