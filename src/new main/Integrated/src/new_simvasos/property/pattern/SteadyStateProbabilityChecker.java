@@ -7,6 +7,10 @@ import new_simvasos.property.PropertyChecker;
 
 import java.util.HashMap;
 
+/**
+ * The type Steady state probability checker.
+ * checks the steady states of the property satisfaction
+ */
 public abstract class SteadyStateProbabilityChecker extends PropertyChecker{
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);
