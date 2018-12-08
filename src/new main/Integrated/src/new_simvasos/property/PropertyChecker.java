@@ -12,7 +12,14 @@ public abstract class PropertyChecker {
   }
 */
 
-  // this method is for inherited classes' check call
+  /**
+   * A method to evaluate a property satisfaction for a snapshot.
+   *
+   * @param snapshot             the snapshot
+   * @param verificationProperty the verification property
+   * @return the boolean
+   */
+// this method is for inherited classes' check call
   protected abstract boolean evaluateState(Snapshot snapshot, Property verificationProperty);
   public abstract boolean check(Log log, Property verificationProperty);
   public abstract boolean check(Log log, Property verificationProperty, int until);
