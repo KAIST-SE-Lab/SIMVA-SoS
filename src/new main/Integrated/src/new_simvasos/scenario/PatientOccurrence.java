@@ -6,6 +6,14 @@ import java.util.Random;
 public class PatientOccurrence extends Action {
 
   ArrayList<Integer> environment;
+
+  /**
+   * Instantiates a new Patient occurrence.
+   * PatientOccurence is an user-defined event.
+   *
+   * @param name        the name
+   * @param environment the environment
+   */
   public PatientOccurrence(String name, ArrayList environment){  // Constructor
     super(name);
     this.environment = environment;
