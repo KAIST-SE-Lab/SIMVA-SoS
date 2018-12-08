@@ -2,9 +2,18 @@ package new_simvasos.not_decided;
 
 import java.util.ArrayList;
 
+/**
+ * A constituent system
+ */
 public abstract class CS {
 
   String name;
+
+  /**
+   * Instantiates a new CS.
+   *
+   * @param name the name
+   */
   public CS(String name) { // constructor
     this.name = name;
   }
