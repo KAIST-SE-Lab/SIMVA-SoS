@@ -13,6 +13,9 @@ import new_simvasos.verifier.SPRT;
 
 import java.util.ArrayList;
 
+/**
+ * SIMVA-SoS Main program
+ */
 public class SIMVA_SoS {
     public static void main (String[] args) {
         // Input generation
