@@ -19,6 +19,13 @@ public class Event {
     this.timebound = timebound;
   }
 
+  /**
+   * Occur action.
+   * A method to actuate or occur the event usig the behave method of the action.
+   *
+   * @param current the current
+   * @return the action
+   */
   public Action occur(int current) {
     if (this.timebound.getTick() == current) {
       this.action.behave();
@@ -32,6 +39,9 @@ public class Event {
     return null;
   }
 
+  /**
+   * Reset.
+   */
   protected void reset() {
     this.timebound.reset();
   }
