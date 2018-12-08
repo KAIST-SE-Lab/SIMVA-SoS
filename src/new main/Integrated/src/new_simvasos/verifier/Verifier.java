@@ -5,6 +5,11 @@ import new_simvasos.property.PropertyChecker;
 public class Verifier {
   PropertyChecker propertychecker;
 
+  /**
+   * Instantiates a new Verifier.
+   *
+   * @param checker the checker
+   */
   public Verifier(PropertyChecker checker) {
     this.propertychecker = checker;
   }
