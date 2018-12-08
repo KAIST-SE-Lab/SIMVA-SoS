@@ -7,6 +7,10 @@ import new_simvasos.property.PropertyChecker;
 
 import java.util.HashMap;
 
+/**
+ * The type Absence checker.
+ * checks whether a property is not satisfied for all logs.
+ */
 public abstract class AbsenceChecker extends PropertyChecker {
     @Override
     protected abstract boolean evaluateState(Snapshot snapshot, Property verificationProperty);
