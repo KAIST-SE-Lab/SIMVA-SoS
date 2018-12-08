@@ -30,6 +30,12 @@ public class Simulation_Firefighters extends Simulation {
         System.out.println("Simulation_Firefighters > setSimulationTime: " + simulationTime);
     }
 
+    /**
+     * the main method to execute a single simulation on consol.
+     * A single simulation for slicing method.
+     *
+     * @param args the args
+     */
     public static void main(String []args) {
         System.out.println("Simulation_Firefighters > Main()");
 
