@@ -4,6 +4,10 @@ import new_simvasos.scenario.Event;
 
 import java.util.ArrayList;
 
+/**
+ * The type Snapshot.
+ * includes a snapshot string
+ */
 public class Snapshot {
   private String snapshotString;
   
