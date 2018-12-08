@@ -17,6 +17,9 @@ public abstract class Simulation {
     SoS targetSoS;              //Simulation Object 1: Target SoS
     Scenario targetScenario;    //Simulation Object 2: Target Scenario (Event Sequence)
 
+    /**
+     * Instantiates a new Simulation.
+     */
     public Simulation() {
         System.out.println("Simulation > Constructor 1");
         initSimulation(15);
