@@ -47,6 +47,7 @@ public class Main extends JApplet {
     static Set<Goal> goals = null;
 
     public static void main(String[] args) {
+        //Setting for GoalModelSlicer GUI
         Main applet = new Main();
         applet.init();
 
