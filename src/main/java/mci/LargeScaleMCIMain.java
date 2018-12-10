@@ -25,6 +25,7 @@ import java.util.ArrayList;
  * furnished to do so, subject to the following conditions: TBD
  */
 public class LargeScaleMCIMain {
+       // manage properties of MCI case referenced
 
     public static void main(String[] args) throws Exception {
 
@@ -40,7 +41,7 @@ public class LargeScaleMCIMain {
         distributor.setNormalDistParams(2500, 700);
 
         LargeMCIScenario lMCI = new LargeMCIScenario(20, 500);
-
+        // initialize simulator
         Simulator sim = new Simulator(lMCI);
         sim.setDEBUG();
 
@@ -51,7 +52,7 @@ public class LargeScaleMCIMain {
     public static void experimentMain() throws IOException{
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(1500, 400);
-
+//       Experimenting on the simulation
         // Experiment # 1  Total # of CSs 10
 //        LargeMCIScenario lMCI = new LargeMCIScenario(5, 250);
 //        Simulator sim = new Simulator(lMCI);

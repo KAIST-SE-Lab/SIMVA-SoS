@@ -23,7 +23,7 @@ public class SIMVASoS {
             try {
                 Main.experimentMain(passedArgs);
             } catch (IOException e) {
-                System.out.println("Error: Old version is not runnable");
+                System.out.println("Error: The old version is not runnable");
                 e.printStackTrace();
             } finally {
                 System.exit(0);
@@ -31,6 +31,7 @@ public class SIMVASoS {
         }
 
         Scenario scenario = new RobotScenario(3);
+        //initializing world
         World world = scenario.getWorld();
         PropertyChecker checker = scenario.getChecker();
 

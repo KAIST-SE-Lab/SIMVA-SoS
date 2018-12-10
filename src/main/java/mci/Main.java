@@ -37,7 +37,7 @@ public class Main {
 
     public static void experimentMain(String[] args) throws IOException{
         System.out.println("==========================================\n" +
-                            "Welcome to Simulator for System of Systems");
+                            "Welcome to System of Systems Simulator");
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(1500, 400);
 
