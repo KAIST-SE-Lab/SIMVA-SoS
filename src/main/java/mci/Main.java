@@ -52,7 +52,7 @@ public class Main {
         distributor.setNormalDistParams(2000, 500);
 
         MCIScenario lMCI = new MCIScenario(6000, 100);
-
+        // initialize simulator
         Simulator sim = new Simulator(lMCI);
         sim.setDEBUG();
 

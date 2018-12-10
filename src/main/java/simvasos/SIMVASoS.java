@@ -40,7 +40,7 @@ public class SIMVASoS {
         // fixed iteration
         for (int i = 1; i < 100; i++) {
             sprt.reset(0.05, 0.05, 0.01, 0.01 * i);
-            // log result 
+            // log result
             while (sprt.isSampleNeeded()) {
                 ArrayList<Snapshot> simulationLog = Simulator.execute(world, 11);
                 sprt.addSample(checker.isSatisfied(simulationLog));
