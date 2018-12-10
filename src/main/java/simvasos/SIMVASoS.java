@@ -31,7 +31,7 @@ public class SIMVASoS {
         }
 
         Scenario scenario = new RobotScenario(3);
-        //initializing world
+        //initializing world from World class
         World world = scenario.getWorld();
         PropertyChecker checker = scenario.getChecker();
 
