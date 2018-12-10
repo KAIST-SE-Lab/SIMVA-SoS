@@ -50,7 +50,7 @@ public class GoalModelParser {
 
     }
 
-    public Set<Goal> getGoals(){
+    Set<Goal> getGoals(){
         return goals;
     }
 
