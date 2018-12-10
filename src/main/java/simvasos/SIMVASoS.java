@@ -36,7 +36,7 @@ public class SIMVASoS {
         PropertyChecker checker = scenario.getChecker();
 
         SPRT sprt = new SPRT();
-
+        // fixed iteration
         for (int i = 1; i < 100; i++) {
             sprt.reset(0.05, 0.05, 0.01, 0.01 * i);
 
