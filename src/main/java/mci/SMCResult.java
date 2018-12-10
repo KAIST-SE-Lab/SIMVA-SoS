@@ -42,7 +42,7 @@ public class SMCResult {
         retStr += "," + this.result;
         return retStr;
     }
-
+//log output
     public String[] getArr(){
         return new String[] {String.format("%.2f", this.prob), Integer.toString(numOfSamples),
                 String.format("%.3f", (this.executionTime/1000.0)), Boolean.toString(this.result)};
