@@ -33,7 +33,7 @@ public class GoalModelSlicer {
         return slicedGoals;
     }
 
-    public Goal findGoalByName (String goalName) {
+    private Goal findGoalByName (String goalName) {
         for (Goal goal: slicedGoals) {
             if (goal.name.equals(goalName))
                 return goal;
