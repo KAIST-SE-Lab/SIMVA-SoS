@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ActionTest {
-//action test 
+//action test
     @Test
     public void behave() {
     }
