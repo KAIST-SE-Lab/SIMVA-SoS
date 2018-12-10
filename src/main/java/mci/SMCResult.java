@@ -15,8 +15,9 @@ package mci;
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions: TBD
  */
+
+//statistical model checker result
 public class SMCResult {
-    // statistical model checker result
     private double prob;
     private int numOfSamples;
     private long executionTime;
