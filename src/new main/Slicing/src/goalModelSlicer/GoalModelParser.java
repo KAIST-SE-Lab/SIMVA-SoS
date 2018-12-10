@@ -54,7 +54,7 @@ public class GoalModelParser {
         return goals;
     }
 
-    public String getGoalLog () {
+    String getGoalLog() {
         String goalLog = "";
         for(Goal goal: goals) {
             goalLog += ("[" + goal.name + "]\r\n");
