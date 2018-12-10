@@ -11,7 +11,7 @@ public class GoalModelSlicer {
             recursiveSlice(criterionGoal.name);
         }
     }
-
+    // recurively slicing model in sliceGoalModel function
     public void recursiveSlice (String goalName) {
 
         Goal currentGoal = findGoalByName(goalName);
