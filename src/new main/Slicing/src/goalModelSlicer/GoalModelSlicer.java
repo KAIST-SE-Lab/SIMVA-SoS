@@ -29,7 +29,7 @@ public class GoalModelSlicer {
         }
     }
 
-    public Set<Goal> getSlicedGoals () {
+    private Set<Goal> getSlicedGoals () {
         return slicedGoals;
     }
 
