@@ -41,7 +41,7 @@ public class LargeScaleMCIMain {
         distributor.setNormalDistParams(2500, 700);
 
         LargeMCIScenario lMCI = new LargeMCIScenario(20, 500);
-
+        // initialize simulator
         Simulator sim = new Simulator(lMCI);
         sim.setDEBUG();
 
