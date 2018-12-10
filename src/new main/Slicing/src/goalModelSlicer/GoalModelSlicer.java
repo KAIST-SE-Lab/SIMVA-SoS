@@ -5,7 +5,7 @@ import java.util.Set;
 public class GoalModelSlicer {
     private Set<Goal> slicedGoals;
     // slicing goal model recursively
-    private void sliceGoalModel (Set<Goal> goals, Set<Goal> criterion) {
+    public void sliceGoalModel (Set<Goal> goals, Set<Goal> criterion) {
         slicedGoals = goals;
         for(Goal criterionGoal: criterion) {
             recursiveSlice(criterionGoal.name);
@@ -29,7 +29,7 @@ public class GoalModelSlicer {
         }
     }
 
-    private Set<Goal> getSlicedGoals () {
+    public Set<Goal> getSlicedGoals () {
         return slicedGoals;
     }
 
