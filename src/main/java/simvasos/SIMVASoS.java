@@ -21,6 +21,7 @@ public class SIMVASoS {
         if (args.length > 0 && args[0].equals("old")) {
             String[] passedArgs = Arrays.copyOfRange(args, 1, args.length);
             try {
+                //execute experiment 
                 Main.experimentMain(passedArgs);
             } catch (IOException e) {
                 System.out.println("Error: The old version is not runnable");
