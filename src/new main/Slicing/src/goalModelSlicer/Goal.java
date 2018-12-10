@@ -3,6 +3,7 @@ package goalModelSlicer;
 import java.util.HashSet;
 import java.util.Set;
 
+//Goal class, the basic structure
 public class Goal {
     String name;
     String subject;
