@@ -23,7 +23,7 @@ public class SMCResult {
     private int minTick;
     private int maxTick;
     private boolean result;
-
+//simulation result
     public SMCResult(double prob, int numOfSamples, long executionTime, int minTick, int maxTick, boolean result){
         this.prob = prob;
         this.numOfSamples = numOfSamples;
@@ -32,7 +32,7 @@ public class SMCResult {
         this.maxTick = maxTick;
         this.result = result;
     }
-// output format 
+// output format
     public String toString(){
         String retStr = "";
         retStr += String.format("%.2f", this.prob);
