@@ -32,7 +32,7 @@ public class SMCResult {
         this.maxTick = maxTick;
         this.result = result;
     }
-
+// output format 
     public String toString(){
         String retStr = "";
         retStr += String.format("%.2f", this.prob);
