@@ -52,7 +52,7 @@ public class LargeScaleMCIMain {
     public static void experimentMain() throws IOException{
         NormalDistributor distributor = new NormalDistributor();
         distributor.setNormalDistParams(1500, 400);
-
+//       Experimenting on the simulation
         // Experiment # 1  Total # of CSs 10
 //        LargeMCIScenario lMCI = new LargeMCIScenario(5, 250);
 //        Simulator sim = new Simulator(lMCI);
