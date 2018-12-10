@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CriterionParser {
-
+    //parsing xml file which contains criterion
     public Set<Goal> parseCriterion (File file) {
         Set<Goal> criteriaGoals = new HashSet<Goal>();
         BufferedReader reader;
