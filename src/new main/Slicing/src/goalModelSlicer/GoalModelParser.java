@@ -13,7 +13,7 @@ public class GoalModelParser {
 
     private Set<Goal> goals = new HashSet<Goal>();;
 
-    public void parseGoalModel (File file) {
+    void parseGoalModel(File file) {
         String cvsSplit = ",";
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
