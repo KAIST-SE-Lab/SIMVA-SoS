@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PropertyCheckerTest {
-
+// checking the property of constituent systems
     @Test
     public void evaluateState() {
     }
