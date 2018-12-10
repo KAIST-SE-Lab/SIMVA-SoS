@@ -1,5 +1,5 @@
 package simvasos;
-
+//main class 
 import mci.Main;
 import simvasos.propcheck.PropertyChecker;
 import simvasos.sa.method.SPRT;
@@ -21,7 +21,7 @@ public class SIMVASoS {
         if (args.length > 0 && args[0].equals("old")) {
             String[] passedArgs = Arrays.copyOfRange(args, 1, args.length);
             try {
-                //execute experiment 
+                //execute experiment
                 Main.experimentMain(passedArgs);
             } catch (IOException e) {
                 System.out.println("Error: The old version is not runnable");
