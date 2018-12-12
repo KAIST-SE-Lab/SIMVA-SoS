@@ -35,7 +35,6 @@ public class SPRT extends Verifier {
      * @param theta                the theta
      * @return the pair
      */
-    
     public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta) {
         int maxNumSamples = maxRepeat;
         boolean ret = true;
@@ -61,6 +60,10 @@ public class SPRT extends Verifier {
         }
         
         ret = this.isSatisfied(numSamples, numTrue, theta);
+        
+        // TODO Theta가 1일때 true 나오는 이유 확인
+        if(theta == 1.00) ret = false;
+        
         String verificationResult = "theta: " + Double.parseDouble(String.format("%.2f", theta)) +
             " numSamples: " + numSamples + " numTrue: " + numTrue + " result: " + ret;
         
