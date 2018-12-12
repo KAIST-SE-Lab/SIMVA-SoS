@@ -162,6 +162,9 @@ public class SPRTTest {
         assertNotEquals(100,(int)verificationResult.getKey().getKey());
     }
     
+    /**
+     * This method tests the Steady State Checker by checking the result at 0.01, 0.80, 0.99
+     */
     @Test
     public void verifyWTransientStateChecker() {
         this.sim1 = new Simulation_Firefighters(15);
