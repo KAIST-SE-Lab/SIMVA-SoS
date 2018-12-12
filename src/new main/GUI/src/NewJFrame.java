@@ -191,8 +191,11 @@ public class NewJFrame extends javax.swing.JFrame {
             dataReadingScheduler.scheduleAtFixedRate(timerTask, 0, 1, TimeUnit.SECONDS);
         
         dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
+            /**
+             * Single Simulation
+             */
             @Override
-            public void run() {   //single simulation tab
+            public void run() {
                 
                 dataTool1.reset();
                 double count = 0;
