@@ -22,6 +22,9 @@ public class SimulatorTest {
     Scenario scenario;
     Simulator simulator;
     
+    /**
+     * This method is for configuration of model for testing.
+     */
     void initModels(){
         System.out.println("Simulation_Firefighters > initModels()");
         double fireFighterPr = 1.0;
@@ -43,6 +46,9 @@ public class SimulatorTest {
         this.sos= new SoS(new ArrayList<>(CSs), MCIMap);
     }
     
+    /**
+     * This method is for configuration of scenario for testing.
+     */
     void initScenario(){
         System.out.println("Simulation_Firefighters > initScenario()");
         
@@ -62,6 +68,9 @@ public class SimulatorTest {
         this.scenario = new Scenario(MCIEvents);
     }
     
+    /**
+     * This method tests the Scenario and SoS by checking the RescueRate.
+     */
     @Test
     public void run() {
         initModels();
