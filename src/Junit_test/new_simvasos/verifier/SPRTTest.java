@@ -67,7 +67,7 @@ public class SPRTTest {
     }
     
     /**
-     *  This method tests the Universality Checker by checking the result at 0.01, 0.70, 0.99
+     *  This method tests the Universality Checker by checking the result at 0.01, 0.80, 0.99
      */
     @Test
     public void verifyUniversalityChecker() {
@@ -91,6 +91,9 @@ public class SPRTTest {
         assertEquals(100,(int)verificationResult.getKey().getKey());
     }
     
+    /**
+     * This method tests the Universality Checker by checking the result at 0.01, 0.70, 0.99
+     */
     @Test
     public void verifyWMinimumDurationChecker() {
         this.sim1 = new Simulation_Firefighters(15);
