@@ -113,6 +113,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextField_VC2.setBackground(Color.LIGHT_GRAY);
         jTextField_VC2.setText("Not supported");
         jTextField_VC2.setEditable(false);
+    
+        // TODO Input part update to accept inputs
         
         // Single Simulation Progress & Result
         jTextField_SS5.setVisible(false);
