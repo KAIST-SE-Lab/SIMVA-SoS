@@ -27,7 +27,7 @@ public class SPRT extends Verifier {
   }
 
     /**
-     * Verify input simulation in GUI.
+     * Verify input simulation in GUI (Existence, Absence, Universality Checker).
      *
      * @param simulation           the simulation
      * @param verificationProperty the verification property
@@ -36,9 +36,6 @@ public class SPRT extends Verifier {
      * @return the pair
      */
     
-    // Return <pair for drawing graph<number of samples, true/false>,
-    // verification result on each theta>
-    // Existence, Absence, Universality Check
     public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta) {
         int maxNumSamples = maxRepeat;
         boolean ret = true;
