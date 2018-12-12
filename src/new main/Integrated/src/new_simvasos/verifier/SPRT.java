@@ -67,7 +67,19 @@ public class SPRT extends Verifier {
         
         return new Pair(new Pair(numSamples, ret), verificationResult);
     }
-    // Minimum Duration Check
+    
+    /**
+     * Verify input simulation in GUI (Minimum Duration Checker).
+     *
+     * @param simulation           the simulation
+     * @param verificationProperty the verification property
+     * @param maxRepeat            the max repeat
+     * @param theta                the theta
+     * @param t                    specific time period that shows the minimum duration
+     * @param T                    whole simulation time
+     * @return the pair
+     */
+    
     public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta, int t, int T) {
         int maxNumSamples = maxRepeat;
         boolean ret = true;
