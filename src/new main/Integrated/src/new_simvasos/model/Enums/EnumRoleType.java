@@ -1,5 +1,5 @@
 package new_simvasos.model.Enums;
 
 public enum EnumRoleType {
-    TYPE1
+    ROLE_TYPE1
 }
