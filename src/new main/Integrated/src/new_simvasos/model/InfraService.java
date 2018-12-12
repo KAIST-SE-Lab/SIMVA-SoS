@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * @author ymbaek
  *
- * InfraService is an abstract class that autonomously provide a service to orgs & CSs of an SoS.
+ * InfraService is an abstract class that autonomously provides a service to orgs & CSs of an SoS.
  * Each InfraService has its own id, name, type, and it can be occupied by multiple CSs.
  * InfraService can run its own service autonomously, so it has an abstract method runService(...).
  * runService() method is called by the simulation engine.
@@ -33,7 +33,7 @@ public abstract class InfraService {
      * @param SoSEnvironment    SoS-level environmental factors
      * @return execution log message
      */
-    abstract String runService(ArrayList<SIMVASoS_Object> SoSEnvironment);
+    abstract String runService(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment);
 
     /* ADDERS */
 
