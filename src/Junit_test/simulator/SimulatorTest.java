@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class SimulatorTest extends Action {
-
+    // Test structure
     public SimulatorTest(String name) {
         super(name);
     }

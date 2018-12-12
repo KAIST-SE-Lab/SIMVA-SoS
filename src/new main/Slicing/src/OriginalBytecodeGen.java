@@ -6,7 +6,7 @@ import org.objectweb.asm.util.ASMifier;
 import org.objectweb.asm.util.TraceClassVisitor;
 
 public class OriginalBytecodeGen {
-    public void genOriginalBytecode (String[] args) throws IOException {
+    public void main (String[] args) throws IOException {
         for (String arg: args) {
             new ClassReader(OriginalBytecodeGen.class.getResourceAsStream((arg+".class")))
                     .accept(new TraceClassVisitor(null, new ASMifier(), new PrintWriter(new File((arg+".txt")))), 0);
