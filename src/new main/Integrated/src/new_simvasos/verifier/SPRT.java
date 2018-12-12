@@ -154,6 +154,19 @@ public class SPRT extends Verifier {
         return new Pair(new Pair(numSamples, ret), verificationResult);
     }
     
+    /**
+     * Verify input simulation in GUI (Transient State Checker).
+     *
+     * @param simulation           the simulation
+     * @param verificationProperty the verification property
+     * @param maxRepeat            the max repeat
+     * @param theta                the theta
+     * @param p                    probability of satisfying property in the whole simulation time (t/T = p, where t is a sum of true property ticks)
+     * @param t                    specific simulation time
+     * @param T                    whole simulation time
+     * @return the pair
+     */
+    
     public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta, double p, int t, int T) {
         int maxNumSamples = maxRepeat;
         boolean ret = true;
@@ -184,7 +197,7 @@ public class SPRT extends Verifier {
         
         return new Pair(new Pair(numSamples, ret), verificationResult);
     }
-    
+
     private boolean isSampleNeeded(int numSample, int numTrue, double theta) {
         if (numSample < this.minimumSample) return true;
         
