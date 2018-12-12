@@ -241,6 +241,12 @@ public class SPRT extends Verifier {
         }
     }
     
+    /**
+     * @param numSample
+     * @param numTrue
+     * @param theta
+     * @return double
+     */
     private double getV(int numSample, int numTrue, double theta) {
         double p0 = theta + this.delta;
         double p1 = theta - this.delta;
