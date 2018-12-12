@@ -6,10 +6,10 @@ import java.util.ArrayList;
  * @author ymbaek
  *
  * Abstract class for every actionable object class in SIMVA-SoS.
- * Actionable ojbects can perform its own specific actions during the simulation.
+ * Actionable ojbects can perform its own specific actions autonomously during the simulation.
  * The set (list) of possible (executable) actions are stored in actionList.
  *
- * ActionableObject is mainly inhereted by systems (CSs, serviczed systems).
+ * ActionableObject is mainly inherited by systems (CSs, serviczed systems).
  */
 public abstract class ActionableObject extends SIMVASoS_Object{
 
