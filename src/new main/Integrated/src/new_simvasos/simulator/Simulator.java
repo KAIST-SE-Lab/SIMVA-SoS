@@ -7,13 +7,31 @@ import new_simvasos.scenario.Event;
 import new_simvasos.scenario.Scenario;
 
 import java.util.ArrayList;
+
+/**
+ * The type Simulator.
+ * A module of SIMVA-SoS to run a simulation of input SoS model
+ */
 public class Simulator {
   int simulationTime;
-  
+
+  /**
+   * Instantiates a new Simulator.
+   *
+   * @param simulationTime the simulation time
+   */
   public Simulator(int simulationTime) {
     this.simulationTime = simulationTime;
   }
 
+  /**
+   * Run the input SoS model with the input scenario.
+   * repeats SoS and scenario during simulationTime.
+   *
+   * @param sos      the sos
+   * @param scenario the scenario
+   * @return the log
+   */
   public Log run(SoS sos, Scenario scenario) {
     this.reset();
 

@@ -8,6 +8,7 @@ import java.util.Collections;
 
 /**
  * Class System-of-Systems
+ * will be replaced by the newly defined SoS
  */
 public class SoS {
   public ArrayList <CS> CSs;

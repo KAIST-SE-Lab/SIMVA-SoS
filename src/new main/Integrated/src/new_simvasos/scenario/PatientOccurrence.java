@@ -6,12 +6,20 @@ import java.util.Random;
 public class PatientOccurrence extends Action {
 
   ArrayList<Integer> environment;
+
+  /**
+   * Instantiates a new Patient occurrence.
+   * PatientOccurence is an user-defined action.
+   *
+   * @param name        the name
+   * @param environment the environment
+   */
   public PatientOccurrence(String name, ArrayList environment){  // Constructor
     super(name);
     this.environment = environment;
 
   }
-  
+
   // Change "do" function in the prototype into "bahave"
   // Because there is already default "do" function in Java
   public String behave(){

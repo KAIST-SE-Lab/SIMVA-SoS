@@ -13,7 +13,15 @@ import new_simvasos.verifier.SPRT;
 
 import java.util.ArrayList;
 
+/**
+ * SIMVA-SoS Main program
+ */
 public class SIMVA_SoS {
+    /**
+     * The entry point of the SIMVA-SoS.
+     *
+     * @param args the input arguments
+     */
     public static void main (String[] args) {
         // Input generation
         //SoS sos;

@@ -7,6 +7,10 @@ import new_simvasos.property.PropertyChecker;
 
 import java.util.HashMap;
 
+/**
+ * The type Universality checker.
+ * checks whether a property is satisfied for all logs
+ */
 public abstract class UniversalityChecker extends PropertyChecker {
     @Override
     protected abstract boolean evaluateState(Snapshot state, Property verificationProperty);

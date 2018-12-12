@@ -2,9 +2,18 @@ package new_simvasos.verifier;
 
 import new_simvasos.property.PropertyChecker;
 
+/**
+ * The type Verifier.
+ * A module of SIMVA-SoS to verify the simulation results.
+ */
 public class Verifier {
   PropertyChecker propertychecker;
 
+  /**
+   * Instantiates a new Verifier.
+   *
+   * @param checker the checker
+   */
   public Verifier(PropertyChecker checker) {
     this.propertychecker = checker;
   }

@@ -7,6 +7,10 @@ import new_simvasos.property.PropertyChecker;
 
 import java.util.HashMap;
 
+/**
+ * The type Minimum duration checker.
+ * checks whether a length of a property satisfaction in the log is longer than the minimum duration requirements
+ */
 public abstract class MinimumDurationChecker extends PropertyChecker {
     @Override
     protected abstract boolean evaluateState(Snapshot snapshot, Property verificationProperty);

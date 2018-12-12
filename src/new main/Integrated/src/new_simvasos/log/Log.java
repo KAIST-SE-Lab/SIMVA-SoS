@@ -8,18 +8,31 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 
+/**
+ * The type Log.
+ * A log is a set of snapshot
+ */
 public class Log {
   
   // Save the whole information of CS Activity & Environment State per EACH TICK
   // This snapshotMap is currently used for Property Verification (11/14)
   private HashMap<Integer, Snapshot> snapshotMap;
-  
-  
+
+
+  /**
+   * Instantiates a new Log.
+   */
   public Log() {
     this.snapshotMap = new HashMap<>();
     //this.simuLog = new SimulationLog();
   }
-  
+
+  /**
+   * Add snapshot with its occurred time.
+   *
+   * @param tick     the tick
+   * @param snapshot the snapshot
+   */
   public void addSnapshot(int tick, String snapshot) {
     Snapshot tmp = new Snapshot(snapshot);
     
@@ -31,7 +44,10 @@ public class Log {
 //    this.simuLog.addEnvironmentResultLog(Evs);
 //  }
 
-  
+
+  /**
+   * Print a snapshot.
+   */
   public void printSnapshot() {
     Iterator<Integer> keys = snapshotMap.keySet().iterator();
     System.out.println("===================== SNAPSHOT PRINT =====================");

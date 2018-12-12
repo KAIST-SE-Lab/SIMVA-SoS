@@ -17,18 +17,27 @@ public abstract class Simulation {
     SoS targetSoS;              //Simulation Object 1: Target SoS
     Scenario targetScenario;    //Simulation Object 2: Target Scenario (Event Sequence)
 
+    /**
+     * Instantiates a new Simulation.
+     */
     public Simulation() {
         System.out.println("Simulation > Constructor 1");
         initSimulation(15);
     }
 
+    /**
+     * Instantiates a new Simulation with simulation time.
+     *
+     * @param simulationTime the simulation time
+     */
     public Simulation(int simulationTime) {
         System.out.println("Simulation > Constructor 2");
         initSimulation(simulationTime);
     }
 
     /**
-     * A method for initializing Simulation
+     * A method for initializing Simulation.
+     * This method inits simulation model, scenario and simulation with simulation time.
      *
      * @param simulationTime    limited time (num of ticks) for a single simulation execution
      */
