@@ -17,12 +17,17 @@ import new_simvasos.model.Enums.EnumMessageType;
  * (1) unicast (CS-to-CS), (2) broadcast (CS-to-Org)
  * One of those two casting methods is determined according to the msgReceiverId.
  * If msgReceiverId is CS's id, then it is unicasted.
- * Otherwise (Org's id), it will be broadcasted to the member CSs of the Org.
+ * Otherwise (Org's id), it will be broadcasted to member CSs of the Org.
  */
 public class CommunicationMessage extends NonActionableObject {
     //EnumMessageType msgType;  //TODO: To implement EnumMessageType
 
+    //This msgType is used for the simulation engine to sort messages to process.
+    //If the message type is SEND_MESSAGE, this message will be stored in the receiver’s message queue.
+    //Otherwise (REQUEST_OCCUPANCY),
+    //the simulation engine will change the targeted NonActionableObject’s occupancy to message sender’s id.
     EnumMessageType msgType;    //Type of message: SEND_MESSAGE, REQUEST_OCCUPANCY
+
     String msgSenderId;         //Sender's id: it must be a single CS's id
     String msgReceiverId;       //Receiver's id: it could be either CS's id or Org's id
     String msgContents;         //Contents of a message to be sent
@@ -31,7 +36,7 @@ public class CommunicationMessage extends NonActionableObject {
         msgType = null;
         msgSenderId = "noId";
         msgReceiverId = "noId";
-        msgContents = null;
+        msgContents = "noContents";
     }
 
     public CommunicationMessage(EnumMessageType msgType) {
