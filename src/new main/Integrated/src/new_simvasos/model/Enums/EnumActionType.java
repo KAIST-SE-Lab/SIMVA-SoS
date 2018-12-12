@@ -5,7 +5,7 @@ package new_simvasos.model.Enums;
  *
  * DO_TASK: doing a specific task defined in an organization
  * COMMUNICATE: communicating with one or more systems
- * DO_NOTHING: doing nothing without affecting any other values
+ * DO_NOTHING: doing nothing without affecting any other objects
  */
 public enum EnumActionType {
     DO_TASK,
