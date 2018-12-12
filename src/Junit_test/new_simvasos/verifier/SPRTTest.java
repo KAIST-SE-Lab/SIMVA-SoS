@@ -92,7 +92,8 @@ public class SPRTTest {
     }
     
     /**
-     * This method tests the Universality Checker by checking the result at 0.01, 0.70, 0.99
+     * This method tests the Universality Checker by checking the result at 0.01, 0.99
+     * and also tests the checker by making demo log file. 
      */
     @Test
     public void verifyWMinimumDurationChecker() {
