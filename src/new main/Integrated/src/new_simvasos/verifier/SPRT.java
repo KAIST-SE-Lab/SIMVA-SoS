@@ -197,7 +197,13 @@ public class SPRT extends Verifier {
         
         return new Pair(new Pair(numSamples, ret), verificationResult);
     }
-
+    
+    /**
+     * @param numSample
+     * @param numTrue
+     * @param theta
+     * @return true/false
+     */
     private boolean isSampleNeeded(int numSample, int numTrue, double theta) {
         if (numSample < this.minimumSample) return true;
         
