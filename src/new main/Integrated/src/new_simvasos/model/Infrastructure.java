@@ -1,5 +1,7 @@
 package new_simvasos.model;
 
+import new_simvasos.model.Abstract.SIMVASoS_Object;
+
 import java.util.ArrayList;
 
 /**
@@ -33,6 +35,10 @@ public class Infrastructure {
         InfraName = infraName;
         this.infraServices = infraServices;
         this.infraResources = infraResources;
+    }
+
+    public String runInfrastructure(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment) {
+        return "";
     }
 
     /* ADDERS */
