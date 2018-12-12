@@ -12,10 +12,5 @@ package new_simvasos.model.Enums;
  * PASSIVE: passively operating system, very-low authority
  */
 public enum EnumRoleGrade {
-    ADMIN,
-    MANAGER,
-    MIDDLE_MANAGER,
-    MEDIATOR,
-    NORMAL,
-    PASSIVE
+    ROLE_GRADE1
 }
