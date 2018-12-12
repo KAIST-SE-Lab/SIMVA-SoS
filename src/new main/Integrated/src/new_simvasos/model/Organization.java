@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * An Organization can have its suborganizations as well.
  */
 public class Organization {
-    int orgId;                              //id of an organization
+    String orgId;                              //id of an organization
     String orgName;                         //name of an organization
     EnumOrgType orgType;                    //type of an organization (DIR, ACK, COL, VIR)
     boolean isOrgActivated;                 //activated or not
@@ -30,7 +30,7 @@ public class Organization {
      *
      */
     public Organization() {
-        orgId = -1;
+        orgId = "noId";
         orgName = "noName";
         orgType = null;
         isOrgActivated = false;
@@ -41,7 +41,7 @@ public class Organization {
 
     }
 
-    public Organization(int orgId, String orgName, EnumOrgType orgType, boolean isOrgActivated) {
+    public Organization(String orgId, String orgName, EnumOrgType orgType, boolean isOrgActivated) {
         this.orgId = orgId;
         this.orgName = orgName;
         this.orgType = orgType;
@@ -58,11 +58,13 @@ public class Organization {
      * @param SoSEnvironment    SoS-level EnvironmentElements (received from SoS)
      * @return                  Execution log after running a single tick of Org's behaviors
      */
-    public void runOrganization(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment){
+    public String runOrganization(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment){
         System.out.println("[Org] " + orgName + ": doOperation() at " + tick);
         for(CS cs : orgCSs) {
             cs.runCS(tick, SoSEnvironment); //TODO: include SoSEnvironment as a parameter
         }
+
+        return "";
     }
 
 
@@ -139,11 +141,11 @@ public class Organization {
 
     /* GETTERS & SETTERS */
 
-    public int getOrgId() {
+    public String getOrgId() {
         return orgId;
     }
 
-    public void setOrgId(int orgId) {
+    public void setOrgId(String orgId) {
         this.orgId = orgId;
     }
 
