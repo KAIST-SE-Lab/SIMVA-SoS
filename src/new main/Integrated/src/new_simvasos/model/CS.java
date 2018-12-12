@@ -13,13 +13,13 @@ import java.util.ArrayList;
  * @author ymbaek
  *
  * CS is a major component system of an organization of an SoS.
- * Basically, A CS is an ActionableObject, which means that a CS can perform its autonomous behaviors.
+ * Basically, a CS is an ActionableObject, which means that a CS can perform its autonomous behaviors.
  * By extending ActionableObject, a CS has its own ActionList[] with selectActions() and doActions() methods.
  *
- * For the communication, Each CS has a message queue to receive messages from other CSs.
+ * For communication, Each CS has a message queue to receive messages from other CSs.
  *
  * Additionally, to represent CS's capabilities and independencies,
- * A CS has its own local knowledge base (csKnowledgeList) and resource base (csResourceList).
+ * a CS has its own local/individual knowledge base (csKnowledgeList) and resource base (csResourceList).
  */
 public abstract class CS extends ActionableObject{
     EnumCSType csType;          //type of a CS: ADMIN,MANAGER,MIDDLE_MANAGER,MEDIATOR,NORMAL,PASSIVE
@@ -66,6 +66,9 @@ public abstract class CS extends ActionableObject{
     /**
      * Before selecting actions, A CS should check messages from other CSs.
      * Detailed message checking mechanism (interpretation & processing) should be implemented in child classes
+     * This method checks received messages in csReceivedMessages[],
+     * and add corresponding actions into selectedActionList[]
+     *
      * (This method is abstract, so it should be implemented by child classes)
      *
      * @return execution logs of checking received messages
