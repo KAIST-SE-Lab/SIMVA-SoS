@@ -98,10 +98,12 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextPane21.setText("0.01");
         // TODO Minimum sample number 2?
         jTextPane23.setText("2");
-        jTextPane25.setText("1500");
+        // RepeatSim
+        jTextPane25.setText("1000");
         
         // TODO Input part update to accept inputs
-        jTextPane24.setText("300");
+        // SimulationTime
+        jTextPane24.setText("30");
         jTextField_VC.setText("Existence Property");
         jTextField_SS.setText("MCI Firefighter Scenario1");
         
@@ -205,7 +207,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 double count = 0;
                 
                 // Simulation
-                int simulationTime = 300;
+                int simulationTime = 50;
                 
                 jTextField_SS4.setText("Simulation in Progress");
                 System.out.println("Run Single Simulation");
@@ -311,8 +313,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 //int repeatSim = 1500;
                 //int simulationTime = 300;
                 // for Mutation Testing
-                int simulationTime = 15;
-                int repeatSim = 100;
+                int simulationTime = 50;
+                int repeatSim = 1000;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
                 int count = 0;
@@ -322,7 +324,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 
                 Simulation_Firefighters sim1 = new Simulation_Firefighters(simulationTime);
                 
-                rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.90);
+                rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.80);
                 
                 // SteadyStateProbability
                 //rescuedProperty.setThresholdPatient(0.5);
@@ -342,7 +344,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 VP_TextPanel.setText("Verification in progress");
     
                 long start = System.currentTimeMillis();
-                for (int i = 1; i < 100; i++) {
+                for (int i = 1; i <= 100; i++) {
                     
                     //TODO Verification Function Call Interaction with GUI Inputs
                     
@@ -358,9 +360,6 @@ public class NewJFrame extends javax.swing.JFrame {
     
                     //Transient State Probability
                     //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 10, 15);
-                    
-                    // True or False for this theta iteration
-                    int myInt = verificationResult.getKey().getValue() ? 1 : 0;
                     
                     // number of samples for this theta iteration
                     dataTool2.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
@@ -404,7 +403,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 jTextPane16.setEditable(false);
                 
                 // Verification Progress & Result Modification
-                jTextPane18.setText("Transient Universality Checking Result: " + probability*100 + "%");
+                jTextPane18.setText("Existence Checking Result: " + probability*100 + "%");
             }
             
         }, 1, TimeUnit.SECONDS);
