@@ -232,6 +232,8 @@ public class NewJFrame extends javax.swing.JFrame {
                             break;
                     }
                     
+                    //TODO Current: After simulation, showing the result. How to change it to the after each tick?
+                    
                     int notRescuedPatients = Integer.parseInt(st.nextToken());
                     // number of samples for this theta iteration
                     dataTool1.addValueIntoDataset(notRescuedPatients, "line", String.valueOf(i + 1));
