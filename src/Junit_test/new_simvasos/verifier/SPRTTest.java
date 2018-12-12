@@ -93,7 +93,7 @@ public class SPRTTest {
     
     /**
      * This method tests the Universality Checker by checking the result at 0.01, 0.99
-     * and also tests the checker by making demo log file. 
+     * and also tests the checker by making demo log file.
      */
     @Test
     public void verifyWMinimumDurationChecker() {
@@ -138,6 +138,9 @@ public class SPRTTest {
         assertEquals(true, ret);
     }
     
+    /**
+     * This method tests the Steady State Checker by checking the result at 0.01, 0.80, 0.99
+     */
     @Test
     public void verifyWSteadyStateChecker() {
         this.sim1 = new Simulation_Firefighters(15);
