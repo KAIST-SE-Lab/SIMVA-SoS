@@ -19,6 +19,9 @@ public class SPRTTest {
     MCIPropertyChecker rescuedChecker;
     SPRT verifier;
     
+    /**
+     * This method tests the Existence Checker by checking the result at 0.01, 0.70, 0.99
+     */
     @Test
     public void verifyWExistenceChecker() {
         this.sim1 = new Simulation_Firefighters(15);
