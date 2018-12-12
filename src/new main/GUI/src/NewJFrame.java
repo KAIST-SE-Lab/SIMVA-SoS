@@ -1781,7 +1781,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private void SAR_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // Save analysis results on single simulation tab
         // TODO Single simulation save button save location update
-        // TODO SIngle simulation save file name with date time
+        // TODO Single simulation save file name with date time
         
         JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/SingleSimulationLog.txt", "Simulation Results Saved", JOptionPane.CLOSED_OPTION);
         
@@ -1807,6 +1807,7 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     private void SAR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SAR_ButtonActionPerformed
         // TODO Verification save button save location update
+        // TODO Verification save file name with date time
         
         JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/VerificationLog.txt", "Verification Results Saved", JOptionPane.CLOSED_OPTION);
         
