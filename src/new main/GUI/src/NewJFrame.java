@@ -344,6 +344,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 long start = System.currentTimeMillis();
                 for (int i = 1; i < 100; i++) {
                     
+                    //TODO Verification Function Call Interaction with GUI Inputs
+                    
                     theta = i * 0.01;
                     //Existence, Absence, Universality
                     verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
