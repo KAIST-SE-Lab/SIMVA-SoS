@@ -11,11 +11,11 @@ import new_simvasos.model.Enums.EnumActionType;
  * which has its own operations, durations, progress, and status information.
  *
  * CS_Action basically inherits SIMVASoS_Action, thus it has all attributes and methods of SIMVASoS_Action.
- * Since, CS_Action is also an abstract class, and it has CS-specific attributes such as cost and benefit information.
+ * CS_Action is also an abstract class, and it has CS-specific attributes such as cost and benefit information.
  *
  * From SIMVASoS_Action, two abstract methods should be implemented for instantiation of CS_Action:
  * (1) runOperations(): detailed code-level behaviors of an action. It can consist of a series of CS_Operations
- * (2) checkPrecondition(): to update value of actionPrecondition (true/false), this method should be implemented.
+ * (2) checkPrecondition(): to update value of actionPrecondition (true/false)
  *
  * In CS_Action, the concept 'utility' is used to describe the value of an action with respect to SoS-level goal.
  * Thus, calculateUtility() should be implemented when CS_Action is instantiated while defining a CS.
