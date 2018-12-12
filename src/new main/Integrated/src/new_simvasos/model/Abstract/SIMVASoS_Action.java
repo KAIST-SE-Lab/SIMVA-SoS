@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * An action has its duration according to the time unit of the simulation engine.
  */
 public abstract class SIMVASoS_Action {
-    String actionId;                                   //id of an action
+    String actionId;                                //id of an action
     String actionName;                              //name of an action
     EnumActionPriority actionPriority;              //priority of an action (MANDATORY ~ EXCLUDED)
     EnumActionType actionType;                      //type of an action (DO_TASK, COMMUNICATE, DO_NOTHING)
@@ -36,7 +36,7 @@ public abstract class SIMVASoS_Action {
         actionType = null;
         actionPrecondition = false;
         actionOperations = new ArrayList<SIMVASoS_Operation>();
-        actionDuration = -1;
+        actionDuration = 1;
         actionProgress = 0;
         actionStatus = null;
     }
@@ -48,7 +48,7 @@ public abstract class SIMVASoS_Action {
         actionType = null;
         actionPrecondition = false;
         actionOperations = new ArrayList<SIMVASoS_Operation>();
-        actionDuration = -1;
+        actionDuration = 1;
         actionProgress = 0;
         actionStatus = null;
     }
@@ -110,6 +110,7 @@ public abstract class SIMVASoS_Action {
         actionProgress = 0;
     }
 
+
     /* GETTERS & SETTERS */
 
     public String getActionId() {
@@ -143,6 +144,8 @@ public abstract class SIMVASoS_Action {
     public void setActionType(EnumActionType actionType) {
         this.actionType = actionType;
     }
+
+    public boolean isPreconditionMet() {return actionPrecondition; }
 
     public ArrayList<SIMVASoS_Operation> getActionOperations() {
         return actionOperations;
