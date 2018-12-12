@@ -23,26 +23,26 @@ public class Simulation_Firefighters extends Simulation {
     public Simulation_Firefighters() {
         System.out.println("Simulation_Firefighter > Constructor 1");
     }
-
+    
     public Simulation_Firefighters(int simulationTime) {
         System.out.println("Simulation_Firefighters > Constructor 2");
         setSimulationTime(simulationTime);
         System.out.println("Simulation_Firefighters > setSimulationTime: " + simulationTime);
     }
-
+    
     public static void main(String []args) {
         System.out.println("Simulation_Firefighters > Main()");
-
+        
         Simulation_Firefighters simFF = new Simulation_Firefighters(15);
         Log log = simFF.runSimulation();
         log.printSnapshot();
     }
-
+    
     public Log runSimulation() {
         this.targetSoS.reset();
         return simulator.run(this.targetSoS, this.targetScenario);
     }
-
+    
     /**
      * (This function should be overridden.)
      * Three firefighters are included as an SoS model.
@@ -51,26 +51,30 @@ public class Simulation_Firefighters extends Simulation {
     @Override
     void initModels(){
         System.out.println("Simulation_Firefighters > initModels()");
+        //double fireFighterPr = 0.5;
+        // for Mutation Testing
         double fireFighterPr = 0.8;
-        int numFireFighter = 3;
+        int numFireFighter = 2;
         ArrayList<CS> CSs = new ArrayList();
-
+        
         for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
             FireFighter fireFighter = new FireFighter(Integer.toString(i), fireFighterPr);
             CSs.add(fireFighter);
         }
-
-        int mapSize = 20;
+        
+        //int mapSize = 300;
+        // for Mutation Testing
+        int mapSize = 10;
         ArrayList<Integer> MCIMap = new ArrayList<>();
-
+        
         for (int i = 0; i < mapSize; i++) {
             MCIMap.add(0);
         }
-
+        
         //targetSoS = new SoS(CSs, MCIMap);
         targetSoS = new SoS(new ArrayList<>(CSs), MCIMap);
     }
-
+    
     /**
      * (This function should be overridden.)
      * Number of patients is assigned to the map according to the scenario.
@@ -78,14 +82,16 @@ public class Simulation_Firefighters extends Simulation {
     @Override
     void initScenario(){
         System.out.println("Simulation_Firefighters > initScenario()");
-
+        
         ConstantTimeBound constantTimeBound;
         PatientOccurrence patientOccurrence;
         Event event;
-
+        
         ArrayList MCIEvents = new ArrayList();
-        int numPatients = 20;
-
+        //int numPatients = 100;
+        // for Mutation Testing
+        int numPatients = 5;
+        
         for(int j = 0; j < numPatients; j++) {
             constantTimeBound = new ConstantTimeBound(0);
             patientOccurrence = new PatientOccurrence("patient + 1", targetSoS.getEnvironment());
