@@ -85,9 +85,6 @@ public class NewJFrame extends javax.swing.JFrame {
         fileBufferSingle = new ArrayList<>();
         
         // 시험 검증 평가
-        jTextPane24.setText("300");
-        jTextField_VC.setText("Existence Property");
-        jTextField_SS.setText("MCI Firefighter Scenario1");
         
         // Slicing Part Disable
         jLabel24.setVisible(false);
@@ -99,9 +96,14 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextPane20.setText("0.05");
         jTextPane22.setText("0.05");
         jTextPane21.setText("0.01");
-        // TODO Minimum Sample number 2?
+        // TODO Minimum sample number 2?
         jTextPane23.setText("2");
         jTextPane25.setText("1500");
+        
+        // TODO Input part update to accept inputs
+        jTextPane24.setText("300");
+        jTextField_VC.setText("Existence Property");
+        jTextField_SS.setText("MCI Firefighter Scenario1");
         
         // Single Simulation Information
         jTextField_SS2.setText("MCI Firefighter Scenario 1");
