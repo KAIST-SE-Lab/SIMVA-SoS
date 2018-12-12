@@ -112,7 +112,17 @@ public class SPRT extends Verifier {
         return new Pair(new Pair(numSamples, ret), verificationResult);
     }
     
-    // SteadyStateProbability Check
+    /**
+     * Verify input simulation in GUI (Steady State Checker).
+     *
+     * @param simulation           the simulation
+     * @param verificationProperty the verification property
+     * @param maxRepeat            the max repeat
+     * @param theta                the theta
+     * @param p                    probability of satisfying property in the whole simulation time (t/T = p, where t is a sum of true property ticks)
+     * @param T                    whole simulation time
+     * @return the pair
+     */
     public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta, double p, int T) {
         int maxNumSamples = maxRepeat;
         boolean ret = true;
@@ -144,7 +154,6 @@ public class SPRT extends Verifier {
         return new Pair(new Pair(numSamples, ret), verificationResult);
     }
     
-    // Transient State Probability Check
     public Pair<Pair<Integer,Boolean>, String> verifyWithSimulationGUI(Simulation simulation, Property verificationProperty, int maxRepeat, double theta, double p, int t, int T) {
         int maxNumSamples = maxRepeat;
         boolean ret = true;
