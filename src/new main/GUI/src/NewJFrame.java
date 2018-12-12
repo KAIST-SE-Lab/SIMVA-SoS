@@ -291,13 +291,15 @@ public class NewJFrame extends javax.swing.JFrame {
                 //시험 검증 평가
                 System.out.println("**********SIMVA_SoS Existence Property Evaluation START**********");
                 
+                // TODO Property Checker interaction with GUI Inputs
+                
                 MCIPropertyChecker existenceChecker = new MCIPropertyChecker();
                 MCIAbsenceChecker absenceChecker = new MCIAbsenceChecker();
                 MCISteadyStateProbabilityChecker steadyChecker = new MCISteadyStateProbabilityChecker();
                 MCITransientStateProbabilityChecker transientChecker = new MCITransientStateProbabilityChecker();
                 MCIUniversalityChecker universalityChecker = new MCIUniversalityChecker();
                 MCIMinimumDurationChecker minimumDurationChecker = new MCIMinimumDurationChecker();
-    
+                
                 verifier = new SPRT(existenceChecker);
                 //verifier = new SPRT(absenceChecker);
                 //verifier = new SPRT(steadyChecker);
