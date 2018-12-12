@@ -10,8 +10,8 @@ import java.util.ArrayList;
  *
  * CS_DecisionMaking is a class used for selectActions() method of ActionableObject (i.e., CS)
  * CS_DecisionMaking includes specific decision making mechanism such as cost-benefit analysis.
- * Since this class requires a goal-based model to execute a specific mechanism,
- * makeDecision(...) method should be implemented.
+ * Since this class requires a goal-based assessment model to evaluate actions to be performed,
+ * makeDecision() method should be implemented.
  */
 public abstract class CS_DecisionMaking {
     String mechanismId;     //Id of decision making mechanism
