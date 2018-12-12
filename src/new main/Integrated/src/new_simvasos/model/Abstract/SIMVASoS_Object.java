@@ -7,7 +7,6 @@ import new_simvasos.model.Enums.EnumObjType;
  * @author ymbaek
  *
  * Abstract class for every object class in SIMVA-SoS.
- * SIMVASoS_Object represents a non-system object.
  * SIMVASoS_Object basically includes its name, type, state, and activation.
  *
  * If a SIMVASoS_Object should be excluded for the simulation,
