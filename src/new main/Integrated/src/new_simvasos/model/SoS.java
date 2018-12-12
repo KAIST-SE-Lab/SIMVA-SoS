@@ -10,7 +10,8 @@ import java.util.ArrayList;
  *
  * SoS is the highest-level of system class.
  * SoS has one or more Organizations, and each Organization can have multiple CSs.
- * Also, SoS has its Infrastructure (SoSInfra) and manages it.
+ * In SIMVA-SoS, an SoS is conceptually defined to integrate component systems (CSs),
+ * infrastructue, and policy instruments.
  */
 public class SoS {
     String SoSName;                             //Name of an SoS
