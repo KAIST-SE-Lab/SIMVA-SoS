@@ -223,6 +223,12 @@ public class SPRT extends Verifier {
         }
     }
     
+    /**
+     * @param numSamples
+     * @param numTrue
+     * @param theta
+     * @return true/false
+     */
     private boolean isSatisfied(int numSamples, int numTrue, double theta) {
         double h0Threshold = this.beta/(1-this.alpha);
         
