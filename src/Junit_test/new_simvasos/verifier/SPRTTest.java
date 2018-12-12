@@ -42,6 +42,9 @@ public class SPRTTest {
         assertNotEquals(100,(int)verificationResult.getKey().getKey());
     }
     
+    /**
+     * This method tests the Absence Checker by checking the result at 0.01, 0.70, 0.99
+     */
     @Test
     public void verifyWAbsenceChecker() {
         this.sim1 = new Simulation_Firefighters(15);
