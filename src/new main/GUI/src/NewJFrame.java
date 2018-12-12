@@ -1806,8 +1806,8 @@ public class NewJFrame extends javax.swing.JFrame {
      * @param evt Saves anyalysis results
      */
     private void SAR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SAR_ButtonActionPerformed
-        // TODO add your handling code here:
-    
+        // TODO Verification save button save location update
+        
         JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/VerificationLog.txt", "Verification Results Saved", JOptionPane.CLOSED_OPTION);
         
             String filetowrite = "./src/new main/GUI/testing/VerificationLog.txt";
