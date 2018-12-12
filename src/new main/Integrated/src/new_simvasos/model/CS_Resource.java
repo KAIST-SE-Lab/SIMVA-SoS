@@ -10,7 +10,7 @@ import new_simvasos.model.Enums.EnumResType;
  * To represent a specific resource, it has its resource type.
  */
 public class CS_Resource extends NonActionableObject{
-    EnumResType csResType;
+    EnumResType csResType;  //Type of CS-level resource
 
     public CS_Resource() {
         super();
