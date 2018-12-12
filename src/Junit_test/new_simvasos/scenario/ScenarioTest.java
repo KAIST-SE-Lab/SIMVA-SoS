@@ -12,6 +12,9 @@ import static org.junit.Assert.*;
 
 public class ScenarioTest {
     
+    /**
+     * This method is for testing Simulation and Scenario part.
+     */
     @Test
     public void scenario() {
     
