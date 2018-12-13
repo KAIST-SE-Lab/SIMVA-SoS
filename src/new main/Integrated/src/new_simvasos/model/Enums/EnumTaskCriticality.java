@@ -19,5 +19,5 @@ public enum EnumTaskCriticality {
     CATEGORY_A, //Catastrophic consequences if failed
     CATEGORY_B, //Critical consequence if failed
     CATEGORY_C, //Major consequences if failed
-    CATEGORY_D
+    CATEGORY_D //Minor or negligible consequences if failed
 }
