@@ -9,4 +9,7 @@ public class ConditionHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes att) throws SAXException {
 
     }
+    public void endElement(String uri, String localName, String qName) throws SAXException{
+
+    }
 }
