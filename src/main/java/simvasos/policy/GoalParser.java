@@ -1,4 +1,4 @@
 package main.java.simvasos.policy;
 
-public class GoalParser {
+public class GoalParser extends GoalHandler {
 }
