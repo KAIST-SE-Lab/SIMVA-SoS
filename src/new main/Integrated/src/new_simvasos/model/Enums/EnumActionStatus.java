@@ -5,7 +5,7 @@ public enum EnumActionStatus {
     NOT_STARTED,    //An action is not yet started
     EXECUTING,      //An action is being executed
     PAUSED,         //An action is paused
-    PENDED,
+    PENDED,         //An action is pended
     COMPLETED,
     ERROR
 }
