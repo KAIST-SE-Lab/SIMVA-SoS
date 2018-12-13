@@ -14,5 +14,5 @@ public enum EnumActionPriority {
     MIDDLE,     //Middle priority action
     LOW,        //Low priority action
     VERY_LOW,   //Very low priority action
-    EXCLUDED
+    EXCLUDED    //Excluded action by simulation engine
 }
