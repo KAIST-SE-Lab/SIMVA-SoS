@@ -6,6 +6,6 @@ public enum EnumActionStatus {
     EXECUTING,      //An action is being executed
     PAUSED,         //An action is paused
     PENDED,         //An action is pended
-    COMPLETED,
+    COMPLETED,      //An action is completed
     ERROR
 }
