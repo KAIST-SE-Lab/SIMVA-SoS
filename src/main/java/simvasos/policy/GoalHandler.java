@@ -8,6 +8,9 @@ public class GoalHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes att) throws SAXException {
 
     }
+    public void endElement(String uri, String localName, String qName) throws SAXException{
+
+    }
     public void characters(char ch[], int start, int length) throws SAXException {
 
     }
