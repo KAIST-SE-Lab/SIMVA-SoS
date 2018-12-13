@@ -4,7 +4,7 @@ public enum EnumActionStatus {
     UNAVAILABLE,    //An action is unavailable
     NOT_STARTED,    //An action is not yet started
     EXECUTING,      //An action is being executed
-    PAUSED,
+    PAUSED,         //An action is paused
     PENDED,
     COMPLETED,
     ERROR
