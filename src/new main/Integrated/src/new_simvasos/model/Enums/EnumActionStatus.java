@@ -7,5 +7,5 @@ public enum EnumActionStatus {
     PAUSED,         //An action is paused
     PENDED,         //An action is pended
     COMPLETED,      //An action is completed
-    ERROR
+    ERROR           //An action has an error
 }
