@@ -12,7 +12,7 @@ public enum EnumActionPriority {
     VERY_HIGH,  //Very high priority action
     HIGH,       //High priority action
     MIDDLE,     //Middle priority action
-    LOW,
+    LOW,        //Low priority action
     VERY_LOW,
     EXCLUDED
 }
