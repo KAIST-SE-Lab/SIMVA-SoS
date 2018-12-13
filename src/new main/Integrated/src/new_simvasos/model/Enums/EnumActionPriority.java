@@ -10,7 +10,7 @@ package new_simvasos.model.Enums;
 public enum EnumActionPriority {
     MANDATORY,  //Mandatory action
     VERY_HIGH,  //Very high priority action
-    HIGH,
+    HIGH,       //High priority action
     MIDDLE,
     LOW,
     VERY_LOW,
