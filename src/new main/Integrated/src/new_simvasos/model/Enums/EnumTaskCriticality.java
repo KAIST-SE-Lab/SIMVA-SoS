@@ -16,7 +16,7 @@ package new_simvasos.model.Enums;
  * Workshop of Critical Software (WOCS)
  */
 public enum EnumTaskCriticality {
-    CATEGORY_A, //Category A
+    CATEGORY_A, //Catastrophic consequences if failed
     CATEGORY_B,
     CATEGORY_C,
     CATEGORY_D
