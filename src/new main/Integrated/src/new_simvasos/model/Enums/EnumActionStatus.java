@@ -1,5 +1,8 @@
 package new_simvasos.model.Enums;
 
+/**
+ * Enumeration for describing status of an action
+ */
 public enum EnumActionStatus {
     UNAVAILABLE,    //An action is unavailable
     NOT_STARTED,    //An action is not yet started
