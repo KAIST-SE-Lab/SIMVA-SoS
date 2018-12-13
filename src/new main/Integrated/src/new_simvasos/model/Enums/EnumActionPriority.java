@@ -8,7 +8,7 @@ package new_simvasos.model.Enums;
  * EXCLUDED: unconditionally not-selected and excluded by the simulator
  */
 public enum EnumActionPriority {
-    MANDATORY,
+    MANDATORY,  //Mandatory action
     VERY_HIGH,
     HIGH,
     MIDDLE,
