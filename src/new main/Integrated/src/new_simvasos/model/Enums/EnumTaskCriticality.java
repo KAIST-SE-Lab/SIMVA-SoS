@@ -18,6 +18,6 @@ package new_simvasos.model.Enums;
 public enum EnumTaskCriticality {
     CATEGORY_A, //Catastrophic consequences if failed
     CATEGORY_B, //Critical consequence if failed
-    CATEGORY_C,
+    CATEGORY_C, //Major consequences if failed
     CATEGORY_D
 }
