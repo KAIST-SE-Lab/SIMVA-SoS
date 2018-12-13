@@ -6,7 +6,6 @@ import org.xml.sax.helpers.DefaultHandler;
 /* This class is used handle collaboration attributes which includes policy constructs*/
 public class CollaborationHandler extends DefaultHandler {
 
-    @Override;
     public void startElement(String uri, String localName, String qName, Attributes att) throws SAXException{
 
     }
@@ -16,6 +15,6 @@ public class CollaborationHandler extends DefaultHandler {
     }
 
     public void characters(char ch[], int start, int length) throws SAXException{
-        
+
     }
 }
