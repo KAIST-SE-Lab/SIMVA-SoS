@@ -301,7 +301,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 //int simulationTime = 300;
                 // for Mutation Testing
                 int simulationTime = 15;
-                int repeatSim = 100;
+                int repeatSim = 2000;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
                 int count = 0;
