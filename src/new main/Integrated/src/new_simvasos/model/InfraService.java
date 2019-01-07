@@ -31,7 +31,7 @@ public abstract class InfraService {
      * (This method is abstract, so it should be implemented by child classes)
      *
      * @param SoSEnvironment    SoS-level environmental factors
-     * @return execution log message
+     * @return execution log Message
      */
     abstract String runService(ArrayList<SIMVASoS_Object> SoSEnvironment);
 

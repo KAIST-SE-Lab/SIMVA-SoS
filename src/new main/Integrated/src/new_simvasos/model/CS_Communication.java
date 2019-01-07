@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * CS_Communication is a specialized type of CS_Action for communication purpose.
  * When selecting actions from actionList[] of a CS, CS_Communication can be selected (or created).
- * Because this action is for the communication, it necessarily requires a message (CommunicationMessage).
+ * Because this action is for the communication, it necessarily requires a Message (CommunicationMessage).
  *
  * //TODO: Check this part (abstract)
  * Since CS_Communication is also an abstract class inheriting CS_Action (from SIMVASoS_Action),
@@ -67,7 +67,7 @@ public class CS_Communication extends SIMVASoS_Action {
      */
     @Override
     protected String runOperations(int tick, ArrayList<SIMVASoS_Object> SoSEnvironment) {
-        //TODO: Add a message into the message queue of the Simulation Engine
+        //TODO: Add a Message into the Message queue of the Simulation Engine
         return null;
     }
 

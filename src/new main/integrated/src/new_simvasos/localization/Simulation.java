@@ -1,9 +1,9 @@
-package new_simvasos.simulation;
+package new_simvasos.localization;
 
 import new_simvasos.log.Log;
-import new_simvasos.simulator.Simulator;
 import new_simvasos.not_decided.SoS;
 import new_simvasos.scenario.Scenario;
+import new_simvasos.simulator.Simulator;
 
 /**
  * @author ymbaek
