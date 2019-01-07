@@ -19,6 +19,9 @@ public class SPRTTest {
     MCIPropertyChecker rescuedChecker;
     SPRT verifier;
     
+    /**
+     * This method tests the Existence Checker by checking the result at 0.01, 0.70, 0.99
+     */
     @Test
     public void verifyWExistenceChecker() {
         this.sim1 = new Simulation_Firefighters(15);
@@ -39,6 +42,9 @@ public class SPRTTest {
         assertNotEquals(100,(int)verificationResult.getKey().getKey());
     }
     
+    /**
+     * This method tests the Absence Checker by checking the result at 0.01, 0.70, 0.99
+     */
     @Test
     public void verifyWAbsenceChecker() {
         this.sim1 = new Simulation_Firefighters(15);
@@ -60,6 +66,9 @@ public class SPRTTest {
         assertNotEquals(100,(int)verificationResult.getKey().getKey());
     }
     
+    /**
+     *  This method tests the Universality Checker by checking the result at 0.01, 0.80, 0.99
+     */
     @Test
     public void verifyUniversalityChecker() {
         this.sim1 = new Simulation_Firefighters(15);
@@ -82,6 +91,10 @@ public class SPRTTest {
         assertEquals(100,(int)verificationResult.getKey().getKey());
     }
     
+    /**
+     * This method tests the Universality Checker by checking the result at 0.01, 0.99
+     * and also tests the checker by making demo log file.
+     */
     @Test
     public void verifyWMinimumDurationChecker() {
         this.sim1 = new Simulation_Firefighters(15);
@@ -125,6 +138,9 @@ public class SPRTTest {
         assertEquals(true, ret);
     }
     
+    /**
+     * This method tests the Steady State Checker by checking the result at 0.01, 0.80, 0.99
+     */
     @Test
     public void verifyWSteadyStateChecker() {
         this.sim1 = new Simulation_Firefighters(15);
@@ -146,6 +162,9 @@ public class SPRTTest {
         assertNotEquals(100,(int)verificationResult.getKey().getKey());
     }
     
+    /**
+     * This method tests the Steady State Checker by checking the result at 0.01, 0.80, 0.99
+     */
     @Test
     public void verifyWTransientStateChecker() {
         this.sim1 = new Simulation_Firefighters(15);

@@ -85,9 +85,6 @@ public class NewJFrame extends javax.swing.JFrame {
         fileBufferSingle = new ArrayList<>();
         
         // 시험 검증 평가
-        jTextPane24.setText("300");
-        jTextField_VC.setText("Existence Property");
-        jTextField_SS.setText("MCI Firefighter Scenario1");
         
         // Slicing Part Disable
         jLabel24.setVisible(false);
@@ -99,9 +96,14 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextPane20.setText("0.05");
         jTextPane22.setText("0.05");
         jTextPane21.setText("0.01");
-        // TODO Minimum Sample number 2?
+        // TODO Minimum sample number 2?
         jTextPane23.setText("2");
         jTextPane25.setText("1500");
+        
+        // TODO Input part update to accept inputs
+        jTextPane24.setText("300");
+        jTextField_VC.setText("Existence Property");
+        jTextField_SS.setText("MCI Firefighter Scenario1");
         
         // Single Simulation Information
         jTextField_SS2.setText("MCI Firefighter Scenario 1");
@@ -111,6 +113,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextField_VC2.setBackground(Color.LIGHT_GRAY);
         jTextField_VC2.setText("Not supported");
         jTextField_VC2.setEditable(false);
+    
+        // TODO Input part update to accept inputs
         
         // Single Simulation Progress & Result
         jTextField_SS5.setVisible(false);
@@ -191,8 +195,11 @@ public class NewJFrame extends javax.swing.JFrame {
             dataReadingScheduler.scheduleAtFixedRate(timerTask, 0, 1, TimeUnit.SECONDS);
         
         dataAddingThread = dataAddingScheduler.schedule(new Runnable() {
+            /**
+             * Single Simulation
+             */
             @Override
-            public void run() {   //single simulation tab
+            public void run() {
                 
                 dataTool1.reset();
                 double count = 0;
@@ -228,6 +235,8 @@ public class NewJFrame extends javax.swing.JFrame {
                         if (st.nextToken().equals("NotRescuedPatients:"))
                             break;
                     }
+                    
+                    //TODO Current: After simulation, showing the result. How to change it to the after each tick?
                     
                     int notRescuedPatients = Integer.parseInt(st.nextToken());
                     // number of samples for this theta iteration
@@ -282,13 +291,15 @@ public class NewJFrame extends javax.swing.JFrame {
                 //시험 검증 평가
                 System.out.println("**********SIMVA_SoS Existence Property Evaluation START**********");
                 
+                // TODO Property Checker interaction with GUI Inputs
+                
                 MCIPropertyChecker existenceChecker = new MCIPropertyChecker();
                 MCIAbsenceChecker absenceChecker = new MCIAbsenceChecker();
                 MCISteadyStateProbabilityChecker steadyChecker = new MCISteadyStateProbabilityChecker();
                 MCITransientStateProbabilityChecker transientChecker = new MCITransientStateProbabilityChecker();
                 MCIUniversalityChecker universalityChecker = new MCIUniversalityChecker();
                 MCIMinimumDurationChecker minimumDurationChecker = new MCIMinimumDurationChecker();
-    
+                
                 verifier = new SPRT(existenceChecker);
                 //verifier = new SPRT(absenceChecker);
                 //verifier = new SPRT(steadyChecker);
@@ -332,6 +343,8 @@ public class NewJFrame extends javax.swing.JFrame {
     
                 long start = System.currentTimeMillis();
                 for (int i = 1; i < 100; i++) {
+                    
+                    //TODO Verification Function Call Interaction with GUI Inputs
                     
                     theta = i * 0.01;
                     //Existence, Absence, Universality
@@ -1767,6 +1780,8 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     private void SAR_Button1ActionPerformed(java.awt.event.ActionEvent evt) {
         // Save analysis results on single simulation tab
+        // TODO Single simulation save button save location update
+        // TODO Single simulation save file name with date time
         
         JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/SingleSimulationLog.txt", "Simulation Results Saved", JOptionPane.CLOSED_OPTION);
         
@@ -1791,8 +1806,9 @@ public class NewJFrame extends javax.swing.JFrame {
      * @param evt Saves anyalysis results
      */
     private void SAR_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SAR_ButtonActionPerformed
-        // TODO add your handling code here:
-    
+        // TODO Verification save button save location update
+        // TODO Verification save file name with date time
+        
         JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/VerificationLog.txt", "Verification Results Saved", JOptionPane.CLOSED_OPTION);
         
             String filetowrite = "./src/new main/GUI/testing/VerificationLog.txt";

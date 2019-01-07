@@ -18,6 +18,7 @@ public class Log {
   // This snapshotMap is currently used for Property Verification (11/14)
   private HashMap<Integer, Snapshot> snapshotMap;
 
+  // TODO Log Class Refactoring
 
   /**
    * Instantiates a new Log.
