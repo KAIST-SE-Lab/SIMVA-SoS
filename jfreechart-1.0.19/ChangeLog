@@ -508,7 +508,7 @@
     (setAttributedLabel(String)): Likewise,
     (setAttributedLabel(AttributedString)): Likewise,
     (createAttributedLabel(String)): New private method,
-    (getLabelEnclosure): Use attributedLabel if not null,¨
+    (getLabelEnclosure): Use attributedLabel if not null,?
     (drawAttributedLabel): New method,
     (equals): Check new attributedLabel field,
     (hashCode): Call super,
@@ -1346,7 +1346,7 @@
 2009-06-29  David Gilbert  <david.gilbert@object-refinery.com>
 
     * source/org/jfree/chart/JFreeChart.java
-    (draw): Check the visibility of the main chart title before drawing it.
+    (draw): Check the visibility of the new_simvasos.localization.main chart title before drawing it.
 
 2009-06-29  David Gilbert  <david.gilbert@object-refinery.com>
 
@@ -2477,7 +2477,7 @@
     * tests/org/jfree/data/junit/DataUtilitiesTests.java
     (testEqual): New method,
     (suite): Likewise,
-    (main): Likewise.
+    (new_simvasos.localization.main): Likewise.
 
 2009-01-23  David Gilbert  <david.gilbert@object-refinery.com>
 
@@ -3178,7 +3178,7 @@
 2008-09-03  David Gilbert  <david.gilbert@object-refinery.com>
 
     * experimental/org/jfree/experimental/chart/annotations/XYTitleAnnotation.java:
-    Moved to main,
+    Moved to new_simvasos.localization.main,
     * experimental/org/jfree/experimental/chart/annotations/junit/XYTitleAnnotationTests.java
     Likewise,
     * experimental/org/jfree/experimental/chart/util/XYCoordinateType.java
@@ -6279,10 +6279,10 @@
 2007-05-19  Henry Proudhon <henry.proudhon@insa-lyon.fr>
 
     * swt/org/jfree/experimental/chart/swt/ChartComposite.java
-    Integrated a patch by Cédric Chabanois to remove resources leaks.
+    Integrated a patch by C?dric Chabanois to remove resources leaks.
     * swt/org/jfree/experimental/swt/SWTGraphics2D.java
     Removed resource leaks by adding a resource pool thanks to a patch
-    sent by Cédric Chabanois.
+    sent by C?dric Chabanois.
 
 2007-05-21  David Gilbert  <david.gilbert@object-refinery.com>
 
@@ -7541,7 +7541,7 @@
     (testValueToJava2D): Likewise,
     (checkPointsToJava2D): Likewise,
     (checkPointsToValue): Likewise,
-    (main): Likewise.
+    (new_simvasos.localization.main): Likewise.
 
 2007-03-02  Sergei Ivanov  <sergei_ivanov@users.sourceforge.net>
 
@@ -7810,7 +7810,7 @@
 2007-02-07  David Gilbert  <david.gilbert@object-refinery.com>
 
     * swt/org/jfree/experimental/chart/swt/demo/SWTBarChartDemo1.java
-    (main): Set offscreen buffer flag to true.
+    (new_simvasos.localization.main): Set offscreen buffer flag to true.
 
 2007-02-07  David Gilbert  <david.gilbert@object-refinery.com>
 
@@ -8025,7 +8025,7 @@
     * source/org/jfree/chart/renderer/xy/XYBlockRenderer.java: Moved from
     experimental,
     * experimental/org/jfree/experimental/chart/renderer/xy/XYBlockRenderer.java:
-    Moved to main API,
+    Moved to new_simvasos.localization.main API,
     * experimental/org/jfree/experimental/chart/renderer/xy/junit/XYBlockRendererTests.java:
     Likewise,
     * tests/org/jfree/chart/renderer/junit/RendererPackageTests.java
@@ -8045,7 +8045,7 @@
     * org/jfree/chart/renderer/PaintScale.java: Likewise,
     * org/jfree/chart/title/PaintScaleLegend.java: Likewise,
     * experimental/org/jfree/experimental/chart/renderer/GrayPaintScale.java:
-    Moved to main API,
+    Moved to new_simvasos.localization.main API,
     * experimental/org/jfree/experimental/chart/renderer/LookupPaintScale.java:
     Likewise,
     * experimental/org/jfree/experimental/chart/renderer/PaintScale.java:

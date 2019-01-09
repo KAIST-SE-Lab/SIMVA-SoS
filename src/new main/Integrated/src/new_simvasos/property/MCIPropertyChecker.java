@@ -52,28 +52,4 @@ public class MCIPropertyChecker extends ExistenceChecker {
     public boolean check(Log log, Property verificationProperty, int t, int T) {
         return false;
     }
-<<<<<<< HEAD
   }
-
-  @Override
-  public boolean check(Log log, Property verificationProperty, int until) {
-    return false;
-  }
-
-  @Override
-  public boolean check(Log log, Property verificationProperty, double prob, int T) {
-    return false;
-  }
-
-  @Override
-  public boolean check(Log log, Property verificationProperty, double prob, int t, int T) {
-    return false;
-  }
-
-  @Override
-  public boolean check(Log log, Property verificationProperty, int t, int T) {
-    return false;
-  }
-=======
->>>>>>> 14636ca4fc6e331cffe95a35a494afdeddaf35f2
-}

@@ -32,10 +32,10 @@ public class RescueRobot extends CS {
 
     @Override
     public String act(int tick, ArrayList<ArrayList<Integer>> environment) {
-        String ret = "CS number: ";
+        String ret = "CS : ";
         Random random = new Random();
 
-        if (this.location_i == -1) {
+        if (this.location_i == -1 || this.location_j == -1) {
             this.location_i = random.nextInt(environment.size());
             this.location_j = random.nextInt(environment.size());
         }
@@ -51,23 +51,23 @@ public class RescueRobot extends CS {
                 //ret = ret + ", Rescued Patient :" + environment.toString();
                 ret = ret + " Rescue Patient: " + this.rescued;
             }
-            else{
+            else{   //todo: rescue policy implementation
                 float decision = random.nextFloat() * 4;
                 if(this.knowledge.size() > 0){
                     // if there is any knowledge, make decision based on the knowledge #todo
                 }
 
                 if (decision < 1){
-                    this.location_i = (this.location_i - 1) % environment.size();
+                    this.location_i = (this.location_i + environment.size() - 1) % environment.size();
                 }
                 else if (decision < 2){
-                    this.location_j = (this.location_i + 1) % environment.size();
+                    this.location_j = (this.location_i + environment.size() + 1) % environment.size();
                 }
                 else if (decision < 3){
-                    this.location_i = (this.location_i + 1) % environment.size();
+                    this.location_i = (this.location_i + environment.size() + 1) % environment.size();
                 }
                 else{
-                    this.location_j = (this.location_i - 1) % environment.size();
+                    this.location_j = (this.location_i + environment.size() - 1) % environment.size();
                 }
 
             }
@@ -82,6 +82,7 @@ public class RescueRobot extends CS {
     }
 
     // get resuced number for simulation log
+    @Override
     public int getRescued() { return this.rescued; }
 
     public void addMessage(Message newMessage) { this.message.add(newMessage); }
@@ -90,6 +91,9 @@ public class RescueRobot extends CS {
         if (this.message.size() > 0){
             // read message and update knowlegd #todo
             // pop the message #todo
+            Message newMessage = this.message.get(this.message.size()-1);
+
+            System.out.println(newMessage.message + newMessage.sender + newMessage.receiver + newMessage.openTime);
         }
     }
 }

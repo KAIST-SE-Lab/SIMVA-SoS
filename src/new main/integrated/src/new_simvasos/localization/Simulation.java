@@ -1,9 +1,9 @@
 package new_simvasos.localization;
 
 import new_simvasos.log.Log;
-import new_simvasos.not_decided.SoS;
+import new_simvasos.localization.SoS;
 import new_simvasos.scenario.Scenario;
-import new_simvasos.simulator.Simulator;
+import new_simvasos.localization.Simulator;
 
 /**
  * @author ymbaek
@@ -122,7 +122,7 @@ Class Simulation{   //기본적으로는 주어진 모델과 시나리오에 맞
 
     }
 
-    public static Log main(simulationConfiguration conf){ //consol에서 입력받을 수 있는 무언가가 파라미터
+    public static Log new_simvasos.localization.main(simulationConfiguration conf){ //consol에서 입력받을 수 있는 무언가가 파라미터
         //configuration 수정 부분?
         sim.setTime(conf);
         return runSimulation();

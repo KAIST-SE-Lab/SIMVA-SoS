@@ -122,7 +122,7 @@ Class Simulation{   //기본적으로는 주어진 모델과 시나리오에 맞
 
     }
 
-    public static Log main(simulationConfiguration conf){ //consol에서 입력받을 수 있는 무언가가 파라미터
+    public static Log new_simvasos.localization.main(simulationConfiguration conf){ //consol에서 입력받을 수 있는 무언가가 파라미터
         //configuration 수정 부분?
         sim.setTime(conf);
         return runSimulation();

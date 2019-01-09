@@ -37,7 +37,7 @@ public abstract class CS {
   public void reset() {  }
 
   // this method is for inherited classes' getRescued call in simulationLog.java
-  public int getRescued() { return -1;}
+  public int getRescued() { return 0; }
 
   public String getName() {
     return name;

@@ -1,3 +1,4 @@
+
 import new_simvasos.not_decided.CS;
 import new_simvasos.not_decided.FireFighter;
 import new_simvasos.not_decided.SoS;
@@ -89,7 +90,7 @@ public class SIMVA_SoS {
         //System.out.println();
         System.out.println("Verify with simulator");
         //verifier.verifyWithSimulator(MCISim, rescuedProperty, repeatSim);
-        //verifier.verifyWithSimulation(sim1, rescuedProperty, repeatSim);
+        //verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, 0.01);
 
         long end = System.currentTimeMillis();
         System.out.println( "Total runtime: " + ( end - start )/1000.0 + " sec" );
