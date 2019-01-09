@@ -40,7 +40,7 @@ public class PatrolDrone extends CS {
         ret = ret + this.name + " at Location: (" + this.location_i + "," + this.location_j + ")";
 
         for(int s = 0; s < speed; s++){
-            System.out.println(this.location_i + ", " + this.location_j);
+            //System.out.println(this.location_i + ", " + this.location_j);
             if(environment.get(this.location_i).get(this.location_j) > 0) { //rescue
                 // send to message
                 String contents = "(" + this.location_i + "," + this.location_j + ")";
@@ -51,20 +51,7 @@ public class PatrolDrone extends CS {
                 }
             }
             else{   //todo: patrol policy implementation
-                float decision = random.nextFloat() * 4;
-
-                if (decision < 1){
-                    this.location_i = (this.location_i + environment.size() - 1) % environment.size();
-                }
-                else if (decision < 2){
-                    this.location_j = (this.location_i + environment.size() + 1) % environment.size();
-                }
-                else if (decision < 3){
-                    this.location_i = (this.location_i + environment.size() + 1) % environment.size();
-                }
-                else{
-                    this.location_j = (this.location_i + environment.size() - 1) % environment.size();
-                }
+                randomMovement(environment.size());
             }
         }
         return ret;
@@ -73,5 +60,20 @@ public class PatrolDrone extends CS {
     public void reset() {
         this.location_i = -1;
         this.location_j = -1;
+    }
+
+    private void randomMovement(int envSize){
+        Random random = new Random();
+        float decision = random.nextFloat() * 4;
+
+        if (decision < 1) {
+            this.location_i = (this.location_i + envSize - 1) % envSize;
+        } else if (decision < 2) {
+            this.location_j = (this.location_j + envSize + 1) % envSize;
+        } else if (decision < 3) {
+            this.location_i = (this.location_i + envSize + 1) % envSize;
+        } else {
+            this.location_j = (this.location_j + envSize - 1) % envSize;
+        }
     }
 }

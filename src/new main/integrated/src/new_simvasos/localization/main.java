@@ -19,7 +19,7 @@ public class main {
         MCIProperty rescuedProperty;
         MCIPropertyChecker rescuedChecker;
         SPRT verifier;
-        rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.7);
+        rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", 0.5);
         rescuedChecker = new MCIPropertyChecker();
         verifier = new SPRT(rescuedChecker);
         int repeatSim = 2000;
@@ -28,7 +28,7 @@ public class main {
         RescueSimulation sim1 = new RescueSimulation(100);
         sim1.runSimulation().printSnapshot();
 
-        /*double satisfactionProb = 0;
+        double satisfactionProb = 0;
         Boolean satisfaction = true;
         for (int i = 1; i < 100; i++) {
             double theta = i * 0.01;
@@ -40,6 +40,6 @@ public class main {
                 satisfaction = false;
             }
         }
-        System.out.println("Verification property satisfaction probability: " + satisfactionProb);*/
+        System.out.println("Verification property satisfaction probability: " + satisfactionProb);
     }
 }
