@@ -10,6 +10,7 @@ public class PatrolDrone extends CS {
     int location_j;
     int rescued;
     ArrayList<RescueRobot> messageConnection;
+    ArrayList<Integer> delays;
     int delay;
     int speed;
 
@@ -21,12 +22,13 @@ public class PatrolDrone extends CS {
      *
      * @param name the name
      */
-    public PatrolDrone(String name, int speed, ArrayList<RescueRobot> connection) {  //constructor
+    public PatrolDrone(String name, int speed, ArrayList<RescueRobot> connection, ArrayList<Integer> delays) {  //constructor
         super(name);
         this.speed = speed;
         this.location_i = -1;
         this.location_j = -1;
         this.messageConnection = connection;
+        this.delays = delays;
         this.speed = 2;
         this.delay = 1;
 
@@ -50,8 +52,9 @@ public class PatrolDrone extends CS {
             if(environment.get(this.location_i).get(this.location_j) > 0) { //rescue
                 // send to message
                 String contents = "(" + this.location_i + "," + this.location_j + ")";
-                int openTime = tick + delay;
-                for(RescueRobot cs : messageConnection){
+                for(int i = 0; i < messageConnection.size(); i++){
+                    RescueRobot cs = messageConnection.get(i);
+                    int openTime = tick + delays.get(i);
                     Message message = new Message(contents, openTime, name, cs.getName());
                     cs.addMessage(message);
                 }
@@ -100,4 +103,7 @@ public class PatrolDrone extends CS {
             this.location_j = (this.location_j + envSize - 1) % envSize;
         }
     }
+
+    @Override
+    public double getCapability(){ return speed; }
 }

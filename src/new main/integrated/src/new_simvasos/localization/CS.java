@@ -42,4 +42,6 @@ public abstract class CS {
   public String getName() {
     return name;
   }
+
+  public abstract double getCapability();
 }

@@ -110,6 +110,8 @@ public class RescueRobot extends CS {
         this.location_i = -1;
         this.location_j = -1;
         this.rescued = 0;
+        this.knowledge.clear();
+        this.message.clear();
     }
 
     // get resuced number for simulation log
@@ -161,4 +163,7 @@ public class RescueRobot extends CS {
             this.location_j = (this.location_j + envSize - 1) % envSize;
         }
     }
+
+    @Override
+    public double getCapability(){ return probability; }
 }

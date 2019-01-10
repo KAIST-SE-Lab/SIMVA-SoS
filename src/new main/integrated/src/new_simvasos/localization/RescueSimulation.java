@@ -48,7 +48,7 @@ public class RescueSimulation extends Simulation {
      * MCI map is included as the environment model.
      */
     @Override
-    public void initModels(){   //todo
+    public void initModels(){
         System.out.println("Rescue Simulation > initModels()");
 
         double rescuePr = 0.4;
@@ -73,7 +73,9 @@ public class RescueSimulation extends Simulation {
         for (int i = 0; i < numPatrolDrone; i++) {
             ArrayList<RescueRobot> connection = new ArrayList<>();
             connection.add((RescueRobot)RescueRobotCSs.get(i));
-            PatrolDrone pd = new PatrolDrone("drone" + Integer.toString(i), speed, connection);
+            ArrayList<Integer> delay = new ArrayList<>();
+            delay.add(1);
+            PatrolDrone pd = new PatrolDrone("drone" + Integer.toString(i), speed, connection, delay);
             PatrolDroneCSs.add(pd);
         }
 
@@ -81,6 +83,33 @@ public class RescueSimulation extends Simulation {
         //int mapSize = 300;
         // for Mutation Testing
         int mapSize = 20;
+        ArrayList<ArrayList<Integer>> MCIMap = new ArrayList<>();
+
+        for (int i = 0; i < mapSize; i++) {
+            ArrayList<Integer> arr = new ArrayList<>();
+            MCIMap.add(arr);
+            for (int j = 0; j < mapSize; j++) {
+                MCIMap.get(i).add(0);
+            }
+        }
+
+        //targetSoS = new SoS(CSs, MCIMap);
+        ArrayList<CS> CSs = (ArrayList<CS>)RescueRobotCSs.clone();
+        CSs.addAll(PatrolDroneCSs);
+        targetSoS = new SoS(CSs, MCIMap);
+    }
+
+    public void initModels(ArrayList<CS> robots, ArrayList<CS> drones){
+        System.out.println("Rescue Simulation > initModels(robots, drones)");
+
+        ArrayList<CS> RescueRobotCSs = robots;
+
+        ArrayList<CS> PatrolDroneCSs = drones;
+
+
+        //int mapSize = 300;
+        // for Mutation Testing
+        int mapSize = 10;
         ArrayList<ArrayList<Integer>> MCIMap = new ArrayList<>();
 
         for (int i = 0; i < mapSize; i++) {
