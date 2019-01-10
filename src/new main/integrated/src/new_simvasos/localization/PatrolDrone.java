@@ -13,6 +13,9 @@ public class PatrolDrone extends CS {
     int delay;
     int speed;
 
+    private int target_i;
+    private int target_j;
+
     /**
      * Instantiates a new CS.
      *
@@ -26,6 +29,9 @@ public class PatrolDrone extends CS {
         this.messageConnection = connection;
         this.speed = 2;
         this.delay = 1;
+
+        target_i = -1;
+        target_j = -1;
     }
 
     @Override
@@ -51,7 +57,25 @@ public class PatrolDrone extends CS {
                 }
             }
             else{   //todo: patrol policy implementation
-                randomMovement(environment.size());
+                //randomMovement(environment.size());
+                while(target_i == -1 || target_j == -1 || (target_i == this.location_i && target_j == this.location_j)){
+                    target_i = random.nextInt(environment.size());
+                    target_j = random.nextInt(environment.size());
+                }
+
+                if (target_i > location_i) {
+                    this.location_i = (this.location_i + environment.size() + 1) % environment.size();
+                } else if (target_i < location_i) {
+                    this.location_i = (this.location_i + environment.size() - 1) % environment.size();
+                } else {
+                    if (target_j > location_j) {
+                        this.location_j = (this.location_j + environment.size() + 1) % environment.size();
+                    } else if (target_j < location_j) {
+                        this.location_j = (this.location_j + environment.size() - 1) % environment.size();
+                    } else {
+                        System.out.println("DRONE MOVEMENT ERROR!!");
+                    }
+                }
             }
         }
         return ret;

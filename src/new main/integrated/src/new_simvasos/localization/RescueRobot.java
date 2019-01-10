@@ -93,7 +93,7 @@ public class RescueRobot extends CS {
                             } else if (target_j < location_j) {
                                 this.location_j = (this.location_j + environment.size() - 1) % environment.size();
                             } else {
-                                System.out.println("ERROR!!");
+                                System.out.println("ROBOT MOVEMENT ERROR!!");
                             }
                         }
                     }
