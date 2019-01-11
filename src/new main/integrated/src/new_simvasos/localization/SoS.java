@@ -32,7 +32,6 @@ public class SoS {
         //logs += " ";
       }
     }
-    //logs.add(String (environment));
 
     //logs += this.environment.toString();
     logs += " ";

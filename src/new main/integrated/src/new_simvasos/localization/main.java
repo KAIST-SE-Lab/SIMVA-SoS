@@ -24,7 +24,7 @@ public class main {
         MCIPropertyChecker rescuedChecker;
         SPRT verifier;
         int simulationTime = 100; // todo: test parameter: simulation time
-        double goalRescueRatio = 0.9; // todo: test parameter: goal
+        double goalRescueRatio = 0.7; // todo: test parameter: goal
         rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", goalRescueRatio);
         rescuedChecker = new MCIPropertyChecker();
         verifier = new SPRT(rescuedChecker);
@@ -34,7 +34,7 @@ public class main {
         // model pool generation
         double rescuePr = 1; // todo: test parameter: robot capability
         int numRescueRobot = 10; // todo: test parameter: the number of robots
-        int speed = 8; // todo: test parameter: drone capability
+        int speed = 5; // todo: test parameter: drone capability
         int numPatrolDrone = 10; // todo: test parameter: the number of drones
         int numConnections = numRescueRobot; // todo: test parameter: number of interaction connections for each drone
 
@@ -42,12 +42,13 @@ public class main {
 
         for (int i = 0; i < numRescueRobot; i++) {
             RescueRobot rr;
-            if(i < 2){  // fault seeding
-                rr = new RescueRobot("robot" + Integer.toString(i), rescuePr/2);
+            /*if(i < 2){  // fault seeding
+                rr = new RescueRobot("robot" + Integer.toString(i), rescuePr/2); // // todo: test parameter: FAULT SEEDING robot rescue ratio
             }
             else{
                 rr = new RescueRobot("robot" + Integer.toString(i), rescuePr);
-            }
+            }*/
+            rr = new RescueRobot("robot" + Integer.toString(i), rescuePr);
             RescueRobotCSs.add(rr);
         }
 
@@ -57,28 +58,121 @@ public class main {
             ArrayList<RescueRobot> connection = new ArrayList<>();
             ArrayList<Integer> delays = new ArrayList<>();
             for (int c = 0; c < numConnections; c++){
-                connection.add((RescueRobot)RescueRobotCSs.get((i+c) % RescueRobotCSs.size()));
-                if((i == 5 || i == 6) && c == 0){   // fault seeding
+                connection.add((RescueRobot)RescueRobotCSs.get(c));
+                /*if((i == 5 || i == 6) && c == i){   // fault seeding
                     delays.add(10);
                 }
                 else{
-                    delays.add(1);  // todo: test parameter: interaction delay
-                }
+                    delays.add(1);  // todo: test parameter: FAULT SEEDING interaction delay
+                }*/
+                delays.add(1);
             }
             PatrolDrone pd;
             if(i < 2){  // fault seeding
-                pd = new PatrolDrone("drone" + Integer.toString(i), 1, connection, delays);
+                pd = new PatrolDrone("drone" + Integer.toString(i), 1, connection, delays); // todo: test parameter: FAULT SEEDING drone speed
             }
             else{
                 pd = new PatrolDrone("drone" + Integer.toString(i), speed, connection, delays);
             }
+            //pd = new PatrolDrone("drone" + Integer.toString(i), speed, connection, delays);
             PatrolDroneCSs.add(pd);
         }
 
         oracleFileGeneration(RescueRobotCSs, PatrolDroneCSs);
 
+        // manual test loop start
+        ArrayList<CS> robots = new ArrayList();
+        ArrayList<CS> drones = new ArrayList();
+
+        robots.add(RescueRobotCSs.get(0));
+        robots.add(RescueRobotCSs.get(2));
+        robots.add(RescueRobotCSs.get(5));
+
+        drones.add(PatrolDroneCSs.get(0));
+        drones.add(PatrolDroneCSs.get(2));
+        drones.add(PatrolDroneCSs.get(5));
+
+        drones.get(0).setSomething(0);
+        drones.get(1).setSomething(2);
+        drones.get(2).setSomething(5);
+
+        // simulation initialization
+        RescueSimulation sim1 = new RescueSimulation(simulationTime);
+        sim1.initModels(robots, drones);
+        sim1.initScenario();
+
+        // single simulation
+        sim1.runSimulation().printSnapshot();
+
+        // statistical verification
+        double satisfactionProb = 0;
+        Boolean satisfaction = true;
+        for (int i = 1; i < 100; i++) {
+            memoryManaging(RescueRobotCSs);
+            memoryManaging(PatrolDroneCSs);
+
+            double theta = i * 0.01;
+            //Existence, Absence, Universality
+            verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
+            System.out.println(verificationResult.getValue());
+            if (satisfaction == true && !verificationResult.getKey().getValue()) {
+                satisfactionProb = theta;
+                satisfaction = false;
+            }
+        }
+        if (satisfaction == true) {
+            satisfactionProb = 1;
+        }
+        System.out.println("Verification property satisfaction probability: " + satisfactionProb);
+
+        // test 2
+        robots = new ArrayList();
+        drones = new ArrayList();
+
+        robots.add(RescueRobotCSs.get(7));
+        robots.add(RescueRobotCSs.get(8));
+        robots.add(RescueRobotCSs.get(9));
+
+        drones.add(PatrolDroneCSs.get(7));
+        drones.add(PatrolDroneCSs.get(8));
+        drones.add(PatrolDroneCSs.get(9));
+
+        drones.get(0).setSomething(7);
+        drones.get(1).setSomething(8);
+        drones.get(2).setSomething(9);
+
+        // simulation initialization
+        sim1 = new RescueSimulation(simulationTime);
+        sim1.initModels(robots, drones);
+        sim1.initScenario();
+
+        // single simulation
+        sim1.runSimulation().printSnapshot();
+
+        // statistical verification
+        satisfactionProb = 0;
+        satisfaction = true;
+        for (int i = 1; i < 100; i++) {
+            memoryManaging(RescueRobotCSs);
+            memoryManaging(PatrolDroneCSs);
+
+            double theta = i * 0.01;
+            //Existence, Absence, Universality
+            verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
+            System.out.println(verificationResult.getValue());
+            if (satisfaction == true && !verificationResult.getKey().getValue()) {
+                satisfactionProb = theta;
+                satisfaction = false;
+            }
+        }
+        if (satisfaction == true) {
+            satisfactionProb = 1;
+        }
+        System.out.println("Verification property satisfaction probability: " + satisfactionProb);
+        // mnual test loop end
+
         // test loop start
-        int numTest = 100;  //todo: test parameter: the number of the logs
+        /*int numTest = 100;  //todo: test parameter: the number of the logs
         for(int t = 0; t < numTest; t++) {
             // test model choice
             ArrayList<CS> robots = new ArrayList();
@@ -147,7 +241,7 @@ public class main {
             }
             System.out.println("Verification property satisfaction probability: " + satisfactionProb);
             logFileGeneration(t, robots, drones, satisfactionProb * 100);
-        }
+        }*/
         // test loop end
     }
 

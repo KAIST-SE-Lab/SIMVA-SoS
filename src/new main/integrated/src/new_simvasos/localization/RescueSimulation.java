@@ -109,7 +109,7 @@ public class RescueSimulation extends Simulation {
 
         //int mapSize = 300;
         // for Mutation Testing
-        int mapSize = 10;
+        int mapSize = 20;
         ArrayList<ArrayList<Integer>> MCIMap = new ArrayList<>();
 
         for (int i = 0; i < mapSize; i++) {
@@ -137,7 +137,7 @@ public class RescueSimulation extends Simulation {
         Event event;
 
         ArrayList MCIEvents = new ArrayList();
-        int numPatients = 100;
+        int numPatients = 150;
 
         for(int j = 0; j < numPatients; j++) {
             constantTimeBound = new ConstantTimeBound(0);

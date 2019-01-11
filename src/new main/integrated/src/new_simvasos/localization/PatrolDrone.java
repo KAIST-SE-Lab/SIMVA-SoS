@@ -11,7 +11,6 @@ public class PatrolDrone extends CS {
     int rescued;
     ArrayList<RescueRobot> messageConnection;
     ArrayList<Integer> delays;
-    int delay;
     int speed;
 
     private int target_i;
@@ -31,8 +30,6 @@ public class PatrolDrone extends CS {
         this.location_j = -1;
         this.messageConnection = connection;
         this.delays = delays;
-        this.speed = 2;
-        this.delay = 1;
 
         target_i = -1;
         target_j = -1;
@@ -54,7 +51,7 @@ public class PatrolDrone extends CS {
         for(int s = 0; s < speed; s++){
             //System.out.println(this.location_i + ", " + this.location_j);
             if(environment.get(this.location_i).get(this.location_j) > 0) { //sending message
-                // send to message
+                // send a message
                 String contents = "(" + this.location_i + "," + this.location_j + ")";
                 for(int i = 0; i < messageConnection.size(); i++){
                     RescueRobot cs = messageConnection.get(i);
@@ -68,11 +65,6 @@ public class PatrolDrone extends CS {
                 }
 
                 //randomMovement(environment.size());
-                while(target_i == -1 || target_j == -1 || (target_i == this.location_i && target_j == this.location_j)){
-                    target_i = random.nextInt(environment.size());
-                    target_j = random.nextInt(environment.size());
-                }
-
                 targetMovement(environment.size());
             }
             else{   //todo: patrol policy implementation
