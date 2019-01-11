@@ -53,7 +53,7 @@ public class RescueSimulation extends Simulation {
 
         double rescuePr = 0.4;
         int numRescueRobot = 10;
-        int speed = 4;
+        double perceptionPr = 4;
         int numPatrolDrone = 10;
 
         //double fireFighterPr = 0.5;
@@ -75,7 +75,7 @@ public class RescueSimulation extends Simulation {
             connection.add((RescueRobot)RescueRobotCSs.get(i));
             ArrayList<Integer> delay = new ArrayList<>();
             delay.add(1);
-            PatrolDrone pd = new PatrolDrone("drone" + Integer.toString(i), speed, connection, delay);
+            PatrolDrone pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPr, connection, delay);
             PatrolDroneCSs.add(pd);
         }
 
@@ -137,7 +137,7 @@ public class RescueSimulation extends Simulation {
         Event event;
 
         ArrayList MCIEvents = new ArrayList();
-        int numPatients = 150;
+        int numPatients = 100;
 
         for(int j = 0; j < numPatients; j++) {
             constantTimeBound = new ConstantTimeBound(0);

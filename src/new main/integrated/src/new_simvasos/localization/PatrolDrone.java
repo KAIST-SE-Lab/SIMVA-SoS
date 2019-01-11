@@ -12,6 +12,7 @@ public class PatrolDrone extends CS {
     ArrayList<RescueRobot> messageConnection;
     ArrayList<Integer> delays;
     int speed;
+    double probability;
 
     private int target_i;
     private int target_j;
@@ -23,14 +24,14 @@ public class PatrolDrone extends CS {
      *
      * @param name the name
      */
-    public PatrolDrone(String name, int speed, ArrayList<RescueRobot> connection, ArrayList<Integer> delays) {  //constructor
+    public PatrolDrone(String name, double prob, ArrayList<RescueRobot> connection, ArrayList<Integer> delays) {  //constructor
         super(name);
-        this.speed = speed;
+        this.speed = 5;
         this.location_i = -1;
         this.location_j = -1;
         this.messageConnection = connection;
         this.delays = delays;
-
+        this.probability = prob;
         target_i = -1;
         target_j = -1;
 
@@ -51,17 +52,19 @@ public class PatrolDrone extends CS {
         for(int s = 0; s < speed; s++){
             //System.out.println(this.location_i + ", " + this.location_j);
             if(environment.get(this.location_i).get(this.location_j) > 0) { //sending message
-                // send a message
-                String contents = "(" + this.location_i + "," + this.location_j + ")";
-                for(int i = 0; i < messageConnection.size(); i++){
-                    RescueRobot cs = messageConnection.get(i);
-                    int openTime = tick + delays.get(i);
-                    Message message = new Message(contents, openTime, name, cs.getName());
-                    if(oneToOneConnection == -1)
-                        cs.addMessage(message);
-                    else if(oneToOneConnection == i) //todo: one-to-one connection 임시 구현: Yong-Jun Shin: a drone can send a message to only a robot.
-                        cs.addMessage(message);
-                    else;
+                if (random.nextFloat() < this.probability) {
+                    // send a message
+                    String contents = "(" + this.location_i + "," + this.location_j + ")";
+                    for (int i = 0; i < messageConnection.size(); i++) {
+                        RescueRobot cs = messageConnection.get(i);
+                        int openTime = tick + delays.get(i);
+                        Message message = new Message(contents, openTime, name, cs.getName());
+                        if (oneToOneConnection == -1)
+                            cs.addMessage(message);
+                        else if (oneToOneConnection == i) //todo: one-to-one connection 임시 구현: Yong-Jun Shin: a drone can send a message to only a robot.
+                            cs.addMessage(message);
+                        else ;
+                    }
                 }
 
                 //randomMovement(environment.size());

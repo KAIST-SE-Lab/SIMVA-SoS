@@ -23,8 +23,8 @@ public class main {
         MCIProperty rescuedProperty;
         MCIPropertyChecker rescuedChecker;
         SPRT verifier;
-        int simulationTime = 100; // todo: test parameter: simulation time
-        double goalRescueRatio = 0.7; // todo: test parameter: goal
+        int simulationTime = 130; // todo: test parameter: simulation time
+        double goalRescueRatio = 0.8; // todo: test parameter: goal
         rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", goalRescueRatio);
         rescuedChecker = new MCIPropertyChecker();
         verifier = new SPRT(rescuedChecker);
@@ -34,7 +34,7 @@ public class main {
         // model pool generation
         double rescuePr = 1; // todo: test parameter: robot capability
         int numRescueRobot = 10; // todo: test parameter: the number of robots
-        int speed = 5; // todo: test parameter: drone capability
+        double  perceptionPr = 1; // todo: test parameter: drone capability
         int numPatrolDrone = 10; // todo: test parameter: the number of drones
         int numConnections = numRescueRobot; // todo: test parameter: number of interaction connections for each drone
 
@@ -59,29 +59,29 @@ public class main {
             ArrayList<Integer> delays = new ArrayList<>();
             for (int c = 0; c < numConnections; c++){
                 connection.add((RescueRobot)RescueRobotCSs.get(c));
-                /*if((i == 5 || i == 6) && c == i){   // fault seeding
-                    delays.add(10);
+                if((i == 5 || i == 6) && c == i){   // fault seeding
+                    delays.add(50);
                 }
                 else{
                     delays.add(1);  // todo: test parameter: FAULT SEEDING interaction delay
-                }*/
-                delays.add(1);
+                }
+                //delays.add(1);
             }
             PatrolDrone pd;
-            if(i < 2){  // fault seeding
-                pd = new PatrolDrone("drone" + Integer.toString(i), 1, connection, delays); // todo: test parameter: FAULT SEEDING drone speed
+            /*if(i < 2){  // fault seeding
+                pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPr/10, connection, delays); // todo: test parameter: FAULT SEEDING drone speed
             }
             else{
-                pd = new PatrolDrone("drone" + Integer.toString(i), speed, connection, delays);
-            }
-            //pd = new PatrolDrone("drone" + Integer.toString(i), speed, connection, delays);
+                pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPr, connection, delays);
+            }*/
+            pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPr, connection, delays);
             PatrolDroneCSs.add(pd);
         }
 
         oracleFileGeneration(RescueRobotCSs, PatrolDroneCSs);
 
         // manual test loop start
-        ArrayList<CS> robots = new ArrayList();
+        /*ArrayList<CS> robots = new ArrayList();
         ArrayList<CS> drones = new ArrayList();
 
         robots.add(RescueRobotCSs.get(0));
@@ -168,11 +168,11 @@ public class main {
         if (satisfaction == true) {
             satisfactionProb = 1;
         }
-        System.out.println("Verification property satisfaction probability: " + satisfactionProb);
-        // mnual test loop end
+        System.out.println("Verification property satisfaction probability: " + satisfactionProb);*/
+        // manual test loop end
 
         // test loop start
-        /*int numTest = 100;  //todo: test parameter: the number of the logs
+        int numTest = 100;  //todo: test parameter: the number of the logs
         for(int t = 0; t < numTest; t++) {
             // test model choice
             ArrayList<CS> robots = new ArrayList();
@@ -241,7 +241,7 @@ public class main {
             }
             System.out.println("Verification property satisfaction probability: " + satisfactionProb);
             logFileGeneration(t, robots, drones, satisfactionProb * 100);
-        }*/
+        }
         // test loop end
     }
 
