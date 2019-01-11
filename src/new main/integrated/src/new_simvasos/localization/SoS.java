@@ -28,13 +28,13 @@ public class SoS {
       String result = cs.act(tick, this.environment);
 
       if(result != null && !result.isEmpty()) {
-        logs += result;
-        logs += " ";
+        //logs += result;
+        //logs += " ";
       }
     }
     //logs.add(String (environment));
 
-    logs += this.environment.toString();
+    //logs += this.environment.toString();
     logs += " ";
     logs += "NotRescuedPatients: " + getNumOfNotRescuedPatients();
     logs += " ";

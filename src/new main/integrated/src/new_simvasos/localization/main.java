@@ -105,10 +105,13 @@ public class main {
 
             for (int i : robotNumbers) {
                 robots.add(RescueRobotCSs.get(i));
+                System.out.print("robot"+i+", ");
             }
             for (int i : droneNumbers) {
                 drones.add(PatrolDroneCSs.get(i));
+                System.out.print("drone"+i+", ");
             }
+            System.out.println();
 
             // simulation initialization
             RescueSimulation sim1 = new RescueSimulation(simulationTime);
@@ -122,6 +125,9 @@ public class main {
             double satisfactionProb = 0;
             Boolean satisfaction = true;
             for (int i = 1; i < 100; i++) {
+                memoryManaging(RescueRobotCSs);
+                memoryManaging(PatrolDroneCSs);
+
                 double theta = i * 0.01;
                 //Existence, Absence, Universality
                 verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
@@ -160,9 +166,7 @@ public class main {
             FileWriter fw = new FileWriter(file);
             for(int i = 0; i < RescueRobotCSs.size(); i++){
                 fw.write(RescueRobotCSs.get(i).getName());
-                if(i != RescueRobotCSs.size()-1){
-                    fw.write(",");
-                }
+                fw.write(",");
             }
             for(int i = 0; i < PatrolDroneCSs.size(); i++){
                 fw.write(PatrolDroneCSs.get(i).getName());
@@ -187,7 +191,11 @@ public class main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+    }
+    private static void memoryManaging(ArrayList<CS> CSs){
+        for(CS cs: CSs){
+            cs.reset();
+        }
     }
 }
 
