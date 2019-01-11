@@ -24,7 +24,7 @@ public class main {
         MCIPropertyChecker rescuedChecker;
         SPRT verifier;
         int simulationTime = 100; // todo: test parameter: simulation time
-        double goalRescueRatio = 0.8; // todo: test parameter: goal
+        double goalRescueRatio = 0.9; // todo: test parameter: goal
         rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", goalRescueRatio);
         rescuedChecker = new MCIPropertyChecker();
         verifier = new SPRT(rescuedChecker);
@@ -34,7 +34,7 @@ public class main {
         // model pool generation
         double rescuePr = 1; // todo: test parameter: robot capability
         int numRescueRobot = 10; // todo: test parameter: the number of robots
-        int speed = 5; // todo: test parameter: drone capability
+        int speed = 8; // todo: test parameter: drone capability
         int numPatrolDrone = 10; // todo: test parameter: the number of drones
         int numConnections = numRescueRobot; // todo: test parameter: number of interaction connections for each drone
 
@@ -84,7 +84,7 @@ public class main {
             ArrayList<CS> robots = new ArrayList();
             ArrayList<CS> drones = new ArrayList();
 
-            int numChosenRobots = 4; // todo: test parameter: the number of chosen robots
+            int numChosenRobots = 3; // todo: test parameter: the number of chosen robots
             int numChosenDrones = 3; // todo: test parameter: the number of chosen drones
 
             ArrayList<Integer> robotNumbers = new ArrayList<>();
@@ -112,6 +112,11 @@ public class main {
                 System.out.print("drone"+i+", ");
             }
             System.out.println();
+
+            // todo: one to one connection: Yong-Jun Shin: a drone can send a message to only a robot.
+            for (int i = 0; i<drones.size(); i++){
+                drones.get(i).setSomething(robotNumbers.get(i));
+            }
 
             // simulation initialization
             RescueSimulation sim1 = new RescueSimulation(simulationTime);

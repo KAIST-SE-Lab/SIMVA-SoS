@@ -17,6 +17,8 @@ public class PatrolDrone extends CS {
     private int target_i;
     private int target_j;
 
+    int oneToOneConnection;
+
     /**
      * Instantiates a new CS.
      *
@@ -34,6 +36,8 @@ public class PatrolDrone extends CS {
 
         target_i = -1;
         target_j = -1;
+
+        oneToOneConnection = -1;
     }
 
     @Override
@@ -49,44 +53,52 @@ public class PatrolDrone extends CS {
 
         for(int s = 0; s < speed; s++){
             //System.out.println(this.location_i + ", " + this.location_j);
-            if(environment.get(this.location_i).get(this.location_j) > 0) { //rescue
+            if(environment.get(this.location_i).get(this.location_j) > 0) { //sending message
                 // send to message
                 String contents = "(" + this.location_i + "," + this.location_j + ")";
                 for(int i = 0; i < messageConnection.size(); i++){
                     RescueRobot cs = messageConnection.get(i);
                     int openTime = tick + delays.get(i);
                     Message message = new Message(contents, openTime, name, cs.getName());
-                    cs.addMessage(message);
+                    if(oneToOneConnection == -1)
+                        cs.addMessage(message);
+                    else if(oneToOneConnection == i) //todo: one-to-one connection 임시 구현: Yong-Jun Shin: a drone can send a message to only a robot.
+                        cs.addMessage(message);
+                    else;
                 }
-            }
-            else{   //todo: patrol policy implementation
+
                 //randomMovement(environment.size());
                 while(target_i == -1 || target_j == -1 || (target_i == this.location_i && target_j == this.location_j)){
                     target_i = random.nextInt(environment.size());
                     target_j = random.nextInt(environment.size());
                 }
 
-                if (target_i > location_i) {
-                    this.location_i = (this.location_i + environment.size() + 1) % environment.size();
-                } else if (target_i < location_i) {
-                    this.location_i = (this.location_i + environment.size() - 1) % environment.size();
-                } else {
-                    if (target_j > location_j) {
-                        this.location_j = (this.location_j + environment.size() + 1) % environment.size();
-                    } else if (target_j < location_j) {
-                        this.location_j = (this.location_j + environment.size() - 1) % environment.size();
-                    } else {
-                        System.out.println("DRONE MOVEMENT ERROR!!");
-                    }
-                }
+                targetMovement(environment.size());
+            }
+            else{   //todo: patrol policy implementation
+                //randomMovement(environment.size());
+                targetMovement(environment.size());
             }
         }
         return ret;
     }
 
+    @Override
+    public void setSomething(int something){
+        setOneToOneConnection(something);
+    }
+
+    public void setOneToOneConnection(int idx){
+        oneToOneConnection = idx;
+        System.out.println(oneToOneConnection);
+    }
+
     public void reset() {
         this.location_i = -1;
         this.location_j = -1;
+
+        this.target_j = -1;
+        this.target_i = -1;
     }
 
     private void randomMovement(int envSize){
@@ -101,6 +113,28 @@ public class PatrolDrone extends CS {
             this.location_i = (this.location_i + envSize + 1) % envSize;
         } else {
             this.location_j = (this.location_j + envSize - 1) % envSize;
+        }
+    }
+
+    private void targetMovement(int envSize){
+        while(target_i == -1 || target_j == -1 || (target_i == this.location_i && target_j == this.location_j)){
+            Random random = new Random();
+            target_i = random.nextInt(envSize);
+            target_j = random.nextInt(envSize);
+        }
+
+        if (target_i > location_i) {
+            this.location_i = (this.location_i + envSize + 1) % envSize;
+        } else if (target_i < location_i) {
+            this.location_i = (this.location_i + envSize - 1) % envSize;
+        } else {
+            if (target_j > location_j) {
+                this.location_j = (this.location_j + envSize + 1) % envSize;
+            } else if (target_j < location_j) {
+                this.location_j = (this.location_j + envSize - 1) % envSize;
+            } else {
+                System.out.println("DRONE MOVEMENT ERROR!!");
+            }
         }
     }
 

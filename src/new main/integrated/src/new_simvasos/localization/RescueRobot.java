@@ -166,4 +166,9 @@ public class RescueRobot extends CS {
 
     @Override
     public double getCapability(){ return probability; }
+
+    @Override
+    public void setSomething(int something) {
+
+    }
 }
