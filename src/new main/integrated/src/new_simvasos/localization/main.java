@@ -42,13 +42,13 @@ public class main {
 
         for (int i = 0; i < numRescueRobot; i++) {
             RescueRobot rr;
-            /*if(i < 2){  // fault seeding
+            if(i < 2){  // fault seeding
                 rr = new RescueRobot("robot" + Integer.toString(i), rescuePr/2); // // todo: test parameter: FAULT SEEDING robot rescue ratio
             }
             else{
                 rr = new RescueRobot("robot" + Integer.toString(i), rescuePr);
-            }*/
-            rr = new RescueRobot("robot" + Integer.toString(i), rescuePr);
+            }
+            //rr = new RescueRobot("robot" + Integer.toString(i), rescuePr);
             RescueRobotCSs.add(rr);
         }
 
@@ -68,13 +68,13 @@ public class main {
                 //delays.add(1);
             }
             PatrolDrone pd;
-            /*if(i < 2){  // fault seeding
+            if(i < 2){  // fault seeding
                 pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPr/10, connection, delays); // todo: test parameter: FAULT SEEDING drone speed
             }
             else{
                 pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPr, connection, delays);
-            }*/
-            pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPr, connection, delays);
+            }
+            //pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPr, connection, delays);
             PatrolDroneCSs.add(pd);
         }
 
@@ -275,7 +275,7 @@ public class main {
             }
             fw.write("\n");
             for(int i = 0; i < RescueRobotCSs.size(); i++){
-                for(int j = 0; j < PatrolDroneCSs.size(); j++){
+                /*for(int j = 0; j < PatrolDroneCSs.size(); j++){
                     fw.write("(" + RescueRobotCSs.get(i).getName() + "," + PatrolDroneCSs.get(j).getName() + ")");
                     if(i == RescueRobotCSs.size()-1 && j == PatrolDroneCSs.size()-1){
                         fw.write("\n");
@@ -283,6 +283,13 @@ public class main {
                     else{
                         fw.write(",");
                     }
+                }*/
+                fw.write("(" + RescueRobotCSs.get(i).getName() + "," + PatrolDroneCSs.get(i).getName() + ")");
+                if(i == RescueRobotCSs.size()-1){
+                    fw.write("\n");
+                }
+                else{
+                    fw.write(",");
                 }
             }
             fw.write(Double.toString(result));
