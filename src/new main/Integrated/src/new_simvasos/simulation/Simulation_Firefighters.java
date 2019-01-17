@@ -54,7 +54,7 @@ public class Simulation_Firefighters extends Simulation {
         //double fireFighterPr = 0.5;
         // for Mutation Testing
         double fireFighterPr = 0.5;
-        int numFireFighter = 5;
+        int numFireFighter = 10;
         ArrayList<CS> CSs = new ArrayList();
         
         for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?
@@ -62,9 +62,9 @@ public class Simulation_Firefighters extends Simulation {
             CSs.add(fireFighter);
         }
         
-        //int mapSize = 300;
+        int mapSize = 600;
         // for Mutation Testing
-        int mapSize = 60;
+        //int mapSize = 60;
         ArrayList<Integer> MCIMap = new ArrayList<>();
         
         for (int i = 0; i < mapSize; i++) {
@@ -88,9 +88,9 @@ public class Simulation_Firefighters extends Simulation {
         Event event;
         
         ArrayList MCIEvents = new ArrayList();
-        //int numPatients = 100;
+        int numPatients = 200;
         // for Mutation Testing
-        int numPatients = 20;
+        //int numPatients = 20;
         
         for(int j = 0; j < numPatients; j++) {
             constantTimeBound = new ConstantTimeBound(0);

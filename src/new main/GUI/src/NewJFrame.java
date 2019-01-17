@@ -99,12 +99,12 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO Minimum sample number 2?
         jTextPane23.setText("2");
         // RepeatSim
-        jTextPane25.setText("1000");
+        jTextPane25.setText("1500");
         
         // TODO Input part update to accept inputs
         // SimulationTime
-        jTextPane24.setText("30");
-        jTextField_VC.setText("Existence Property");
+        jTextPane24.setText("200");
+        jTextField_VC.setText("Transient State Property");
         jTextField_SS.setText("MCI Firefighter Scenario1");
         
         // Single Simulation Information
@@ -302,19 +302,19 @@ public class NewJFrame extends javax.swing.JFrame {
                 MCIUniversalityChecker universalityChecker = new MCIUniversalityChecker();
                 MCIMinimumDurationChecker minimumDurationChecker = new MCIMinimumDurationChecker();
                 
-                verifier = new SPRT(existenceChecker);
+                //verifier = new SPRT(existenceChecker);
                 //verifier = new SPRT(absenceChecker);
                 //verifier = new SPRT(steadyChecker);
-                //verifier = new SPRT(transientChecker);
+                verifier = new SPRT(transientChecker);
                 //verifier = new SPRT(universalityChecker);
                 //verifier = new SPRT(minimumDurationChecker);
                 
                 // Simulation
-                //int repeatSim = 1500;
-                //int simulationTime = 300;
+                int repeatSim = 1500;
+                int simulationTime = 200;
                 // for Mutation Testing
-                int simulationTime = 50;
-                int repeatSim = 1000;
+                //int simulationTime = 50;
+                //int repeatSim = 1000;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
                 int count = 0;
@@ -330,11 +330,10 @@ public class NewJFrame extends javax.swing.JFrame {
                 //rescuedProperty.setThresholdPatient(0.5);
                 
                 // TransientStateProbability
-                //rescuedProperty.setThresholdPatient(0.9);
+                rescuedProperty.setThresholdPatient(0.6);
                 
                 // Universality, MinimumDuration
                 //rescuedProperty.setThresholdPatient(1.0);
-                
                 
                 System.out.println("Simulation based Analysis");
                 fileBufferVerification.add("Simulation based Analysis");
@@ -350,16 +349,16 @@ public class NewJFrame extends javax.swing.JFrame {
                     
                     theta = i * 0.01;
                     //Existence, Absence, Universality
-                    verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
+                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
     
                     //MinimumDuration
-                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 5, 15);
+                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 150, 200);
     
                     //Steady State Probability
-                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 15);
+                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 200);
     
                     //Transient State Probability
-                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 10, 15);
+                    verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 100, 200);
                     
                     // number of samples for this theta iteration
                     dataTool2.addValueIntoDataset(verificationResult.getKey().getKey(), "line", String.valueOf(theta));
@@ -377,6 +376,7 @@ public class NewJFrame extends javax.swing.JFrame {
                             probability = theta;
                         }
                     }
+                    
                     System.out.println(verificationResult.getValue());
                     fileBufferVerification.add(verificationResult.getValue());
     
@@ -391,6 +391,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 // Verification Progress & Result Modification
                 VP_TextPanel.setText("Verification in progress");
                 
+                if(probability == 0.0) probability = 1.0;
+                
                 System.out.println("Probability: about " + probability * 100 + "%");
                 fileBufferVerification.add("Probability: about " + probability * 100 + "%");
                 System.out.println("---------------------------------------------------------------------");
@@ -403,7 +405,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 jTextPane16.setEditable(false);
                 
                 // Verification Progress & Result Modification
-                jTextPane18.setText("Existence Checking Result: " + probability*100 + "%");
+                jTextPane18.setText("Transient State Checking Result: " + probability*100 + "%");
             }
             
         }, 1, TimeUnit.SECONDS);

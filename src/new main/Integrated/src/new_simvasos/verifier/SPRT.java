@@ -51,6 +51,7 @@ public class SPRT extends Verifier {
             }
             
             Log log = simulation.runSimulation();
+            Log log2= simulation.runSimulation();
             
             if (this.propertychecker.check(log, verificationProperty)) {
                 
@@ -99,6 +100,7 @@ public class SPRT extends Verifier {
             }
             
             Log log = simulation.runSimulation();
+            Log log2 = simulation.runSimulation();
             
             //MinimumDurationChecker
             if(this.propertychecker.check(log, verificationProperty, t, T)) {
@@ -142,6 +144,7 @@ public class SPRT extends Verifier {
             }
             
             Log log = simulation.runSimulation();
+            Log log2= simulation.runSimulation();
             
             if(this.propertychecker.check(log, verificationProperty, p, T)) {
                 numTrue += 1;
@@ -186,6 +189,7 @@ public class SPRT extends Verifier {
             }
             
             Log log = simulation.runSimulation();
+            Log log2 = simulation.runSimulation();
             
             if(this.propertychecker.check(log, verificationProperty, p, t, T)) {
                 numTrue += 1;
