@@ -300,8 +300,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 //int repeatSim = 1500;
                 //int simulationTime = 300;
                 // for Mutation Testing
-                int simulationTime = 15;
-                int repeatSim = 2000;
+                int simulationTime = 200;
+                int repeatSim = 1500;
                 Pair<Pair<Integer, Boolean>, String> verificationResult;
                 double theta;
                 int count = 0;
@@ -376,6 +376,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 }
                 long end = System.currentTimeMillis();
     
+                if(probability == 0.0) probability = 1.0;
+                
                 // Verification Progress & Result Modification
                 VP_TextPanel.setText("Verification in progress");
                 
