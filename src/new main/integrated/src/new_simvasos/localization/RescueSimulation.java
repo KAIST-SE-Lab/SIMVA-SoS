@@ -109,7 +109,7 @@ public class RescueSimulation extends Simulation {
 
         //int mapSize = 300;
         // for Mutation Testing
-        int mapSize = 20;
+        int mapSize = 20; //TODO parameter: mapsize
         ArrayList<ArrayList<Integer>> MCIMap = new ArrayList<>();
 
         for (int i = 0; i < mapSize; i++) {

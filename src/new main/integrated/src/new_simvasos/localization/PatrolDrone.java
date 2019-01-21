@@ -134,5 +134,7 @@ public class PatrolDrone extends CS {
     }
 
     @Override
-    public double getCapability(){ return speed; }
+    public double getCapability(){ return this.probability; }
+    
+    public ArrayList<Integer> getDelays() { return this.delays; }
 }
