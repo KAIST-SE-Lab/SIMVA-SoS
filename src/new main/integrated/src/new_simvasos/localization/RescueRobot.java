@@ -128,6 +128,7 @@ public class RescueRobot extends CS {
 
             if (newMessage.openTime == tick){
                 //System.out.println(newMessage.message + newMessage.sender + newMessage.receiver + newMessage.openTime);
+                newMessage.printMessage();
                 String messageStr = newMessage.message;
                 ArrayList<String> tokens = new ArrayList<>();
                 StringTokenizer st = new StringTokenizer(messageStr, ",");

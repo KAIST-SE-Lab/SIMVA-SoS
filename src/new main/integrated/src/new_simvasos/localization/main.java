@@ -12,9 +12,7 @@ import new_simvasos.simulator.Simulator;
 import new_simvasos.timebound.ConstantTimeBound;
 import new_simvasos.localization.SPRT;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -27,7 +25,7 @@ public class main {
         double  perceptionPrmin = 0.85; // todo: test parameter: drone capability
         int numPatrolDrone = 10; // todo: test parameter: the number of drones
         int numConnections = numRescueRobot; // todo: test parameter: number of interaction connections for each drone
-
+        
         ArrayList<Double> rescuePrs = new ArrayList<>();
         ArrayList<Double> perceptionPrs = new ArrayList<>();
         Random r = new Random();
@@ -38,62 +36,59 @@ public class main {
             perceptionPrs.add(Math.round((perceptionPrmin + r.nextDouble()* (1.0 - perceptionPrmin))*100)/100.0);
         }
         
-        //System.out.println(rescuePrs);
-        //System.out.println(perceptionPrs);
         ArrayList<CS> RescueRobotCSs = new ArrayList();
 
         // Random number generation for Fault seeding
         ArrayList<Integer> randomValue = new ArrayList<>();
         randomGeneration(2, randomValue, numRescueRobot); //TODO test paprameter: FAULT SEEDING NUM for Robot
     
-        System.out.println(randomValue);
+        //System.out.println(randomValue);
         for (int i = 0; i < numRescueRobot; i++) {
             RescueRobot rr;
-            if(randomValue.contains(i)){  // fault seeding
+            /*if(randomValue.contains(i)){  // fault seeding
                 rr = new RescueRobot("robot" + Integer.toString(i), Math.round((rescuePrs.get(i)/2)*100)/100.0); // // todo: test parameter: FAULT SEEDING robot rescue ratio
-                //System.out.println("Robot"+randIndex);
             }
             else{
                 rr = new RescueRobot("robot" + Integer.toString(i), rescuePrs.get(i));
-            }
-            //rr = new RescueRobot("robot" + Integer.toString(i), rescuePrs.get(i));
+            }*/
+            rr = new RescueRobot("robot" + Integer.toString(i), rescuePrs.get(i));
             RescueRobotCSs.add(rr);
         }
 
         ArrayList<CS> PatrolDroneCSs = new ArrayList();
     
-        randomGeneration(4, randomValue, numRescueRobot); //TODO test paprameter: FAULT SEEDING NUM
-        System.out.println(randomValue);
+        randomGeneration(2, randomValue, numRescueRobot); //TODO test paprameter: FAULT SEEDING NUM
+        //System.out.println(randomValue);
         int randCount = 0;
         for (int i = 0; i < numPatrolDrone; i++) {
             ArrayList<RescueRobot> connection = new ArrayList<>();
             ArrayList<Integer> delays = new ArrayList<>();
             for (int c = 0; c < numConnections; c++){
                 connection.add((RescueRobot)RescueRobotCSs.get(c));
-                if(randCount < 4 && randomValue.get(randCount) == i && c == i && randCount % 2 == 0){   // fault seeding
+                if(randCount < 2 && randomValue.get(randCount) == i && c == i){ //&& randCount % 2 == 0){   // fault seeding
                     delays.add(50);
                     randCount++;
                 }
                 else{
                     delays.add(1);  // todo: test parameter: FAULT SEEDING interaction delay
                 }
-                //delays.add(1);
+               // delays.add(1);
             }
             PatrolDrone pd;
-            if(randCount < 4 && randomValue.get(randCount) == i && randCount % 2 == 1){  // fault seeding
+            /*if(randCount < 2 && randomValue.get(randCount) == i ){//&& randCount % 2 == 1){  // fault seeding
                 pd = new PatrolDrone("drone" + Integer.toString(i), Math.round((perceptionPrs.get(i)/2)*100)/100.0, connection, delays); // todo: test parameter: FAULT SEEDING drone speed
                 randCount++;
             }
             else{
                 pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPrs.get(i), connection, delays);
-            }
-            //pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPrs.get(i), connection, delays);
+            }*/
+            pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPrs.get(i), connection, delays);
             PatrolDroneCSs.add(pd);
         }
         
         configurationFileGeneration(RescueRobotCSs, PatrolDroneCSs);
         
-        for (int i = 0; i <10; i++) { //TODO test parameter: Test number for a selected combination of drones and robots
+        for (int i = 0; i <1; i++) { //TODO test parameter: Test number for a selected combination of drones and robots
             runTest(i, numRescueRobot, RescueRobotCSs, PatrolDroneCSs);
         }
         
@@ -124,7 +119,7 @@ public class main {
         int repeatSim = 2000;
         Pair<Pair<Integer, Boolean>, String> verificationResult;
         
-        int numTest = 10;  //todo: test parameter: the number of the logs
+        int numTest = 30;  //todo: test parameter: the number of the logs
         for(int t = 0; t < numTest; t++) {
             // test model choice
             ArrayList<CS> robots = new ArrayList();
@@ -157,7 +152,6 @@ public class main {
                 drones.add(PatrolDroneCSs.get(i));
                 System.out.print("drone"+i+", ");
             }
-            System.out.println();
         
             // todo: one to one connection: Yong-Jun Shin: a drone can send a message to only a robot.
             for (int i = 0; i<drones.size(); i++){
@@ -169,8 +163,16 @@ public class main {
             sim1.initModels(robots, drones);
             sim1.initScenario();
         
+            File file = new File("./localizationLog/LCS/Log" + testid + "_" + t + ".txt");
+            try {
+                PrintStream printStream = new PrintStream(new FileOutputStream(file));
+                System.setErr(printStream);
+            } catch(FileNotFoundException e) {
+                System.out.println(e);
+            }
+            
             // single simulation
-            sim1.runSimulation().printSnapshot();
+            //sim1.runSimulation().printSnapshot();
         
             // statistical verification
             double satisfactionProb = 0;
@@ -197,7 +199,7 @@ public class main {
     }
   
     private static void configurationFileGeneration(ArrayList<CS> RescueRobotCSs, ArrayList<CS> PatrolDroneCSs) {
-        File file = new File("./localizationLog/RDI Fault/configuration.csv");
+        File file = new File("./localizationLog/LCS/configuration.csv");
         try {
             FileWriter fw = new FileWriter(file);
             for(int i = 0; i < RescueRobotCSs.size(); i++){
@@ -226,7 +228,7 @@ public class main {
     }
     
     private static void logFileGeneration(int testid, int id, ArrayList<CS> RescueRobotCSs, ArrayList<CS> PatrolDroneCSs, double result){
-        File file = new File("./localizationLog/RDI Fault/" + testid +"_" + id + ".csv");
+        File file = new File("./localizationLog/LCS/" + testid +"_" + id + ".csv");
 
         try {
             FileWriter fw = new FileWriter(file);
@@ -265,6 +267,7 @@ public class main {
             e.printStackTrace();
         }
     }
+    
     private static void memoryManaging(ArrayList<CS> CSs){
         for(CS cs: CSs){
             cs.reset();

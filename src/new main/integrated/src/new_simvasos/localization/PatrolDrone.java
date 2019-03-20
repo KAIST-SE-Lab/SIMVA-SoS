@@ -58,7 +58,7 @@ public class PatrolDrone extends CS {
                     for (int i = 0; i < messageConnection.size(); i++) {
                         RescueRobot cs = messageConnection.get(i);
                         int openTime = tick + delays.get(i);
-                        Message message = new Message(contents, openTime, name, cs.getName());
+                        Message message = new Message(contents, tick, openTime, name, cs.getName());
                         if (oneToOneConnection == -1)
                             cs.addMessage(message);
                         else if (oneToOneConnection == i) //todo: one-to-one connection 임시 구현: Yong-Jun Shin: a drone can send a message to only a robot.
@@ -85,7 +85,7 @@ public class PatrolDrone extends CS {
 
     public void setOneToOneConnection(int idx){
         oneToOneConnection = idx;
-        System.out.println(oneToOneConnection);
+        //System.out.println(oneToOneConnection);
     }
 
     public void reset() {
