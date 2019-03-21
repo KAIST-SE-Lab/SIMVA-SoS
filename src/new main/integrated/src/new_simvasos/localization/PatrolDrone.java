@@ -85,7 +85,7 @@ public class PatrolDrone extends CS {
 
     public void setOneToOneConnection(int idx){
         oneToOneConnection = idx;
-        //System.out.println(oneToOneConnection);
+        System.out.println(oneToOneConnection);
     }
 
     public void reset() {
@@ -137,4 +137,6 @@ public class PatrolDrone extends CS {
     public double getCapability(){ return this.probability; }
     
     public ArrayList<Integer> getDelays() { return this.delays; }
+    
+    public int getSomething() {return this.oneToOneConnection;}
 }

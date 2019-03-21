@@ -91,7 +91,6 @@ public class main {
         for (int i = 0; i <1; i++) { //TODO test parameter: Test number for a selected combination of drones and robots
             runTest(i, numRescueRobot, RescueRobotCSs, PatrolDroneCSs);
         }
-        
     }
 
     private static void randomGeneration(int numFaultSeeding, ArrayList<Integer> randomValue, int numRescueRobot) {
@@ -119,7 +118,7 @@ public class main {
         int repeatSim = 2000;
         Pair<Pair<Integer, Boolean>, String> verificationResult;
         
-        int numTest = 30;  //todo: test parameter: the number of the logs
+        int numTest = 100;  //todo: test parameter: the number of the logs
         for(int t = 0; t < numTest; t++) {
             // test model choice
             ArrayList<CS> robots = new ArrayList();
@@ -153,8 +152,20 @@ public class main {
                 System.out.print("drone"+i+", ");
             }
         
+            // Swap Robot numbers for increasing the probability of same numbers matching
+            //System.out.println(robotNumbers);
+            //System.out.println(droneNumbers);
             // todo: one to one connection: Yong-Jun Shin: a drone can send a message to only a robot.
-            for (int i = 0; i<drones.size(); i++){
+            for (int i = 0; i<drones.size(); i++) {
+                int posIndex = robotNumbers.indexOf(droneNumbers.get(i));
+                if (posIndex != -1 && posIndex != i) {
+                    Collections.swap(robotNumbers, posIndex, i);
+                    Collections.swap(robots, posIndex, i);
+                    //System.out.println(robotNumbers);
+                }
+                
+            }
+            for(int i = 0; i < drones.size(); i++) {
                 drones.get(i).setSomething(robotNumbers.get(i));
             }
         
@@ -254,6 +265,7 @@ public class main {
                     }
                 }*/
                 fw.write("(" + RescueRobotCSs.get(i).getName() + "," + PatrolDroneCSs.get(i).getName() + ")");
+                //fw.write("("+ RescueRobotCSs.get(PatrolDroneCSs.get(i).getSomething()) + "," + PatrolDroneCSs.get(i).getName() + ")");
                 if(i == RescueRobotCSs.size()-1){
                     fw.write("\n");
                 }
