@@ -2,6 +2,8 @@ package new_simvasos.localization;
 
 import javafx.util.Pair;
 import new_simvasos.localization.RescueSimulation;
+import new_simvasos.log.Log;
+import new_simvasos.log.Snapshot;
 import new_simvasos.not_decided.SoS;
 import new_simvasos.property.MCIProperty;
 import new_simvasos.property.MCIPropertyChecker;
@@ -16,6 +18,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.StringTokenizer;
 
 public class main {
     public static void main (String[] args) {
@@ -107,18 +110,18 @@ public class main {
     }
     
     private static void runTest(int testid, int numRescueRobot, ArrayList<CS> RescueRobotCSs, ArrayList<CS>PatrolDroneCSs) {
-        MCIProperty rescuedProperty;
-        MCIPropertyChecker rescuedChecker;
-        SPRT verifier;
+        //MCIProperty rescuedProperty;
+        //MCIPropertyChecker rescuedChecker;
+        //SPRT verifier;
         int simulationTime = 130; // todo: test parameter: simulation time
-        double goalRescueRatio = 0.8; // todo: test parameter: goal
-        rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", goalRescueRatio);
-        rescuedChecker = new MCIPropertyChecker();
-        verifier = new SPRT(rescuedChecker);
-        int repeatSim = 2000;
-        Pair<Pair<Integer, Boolean>, String> verificationResult;
+        //double goalRescueRatio = 0.8; // todo: test parameter: goal
+        //rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", goalRescueRatio);
+        //rescuedChecker = new MCIPropertyChecker();
+        //verifier = new SPRT(rescuedChecker);
+        //int repeatSim = 2000;
+        //Pair<Pair<Integer, Boolean>, String> verificationResult;
         
-        int numTest = 100;  //todo: test parameter: the number of the logs
+        int numTest = 100;  //todo: test parameter: the number of the logs with same configuration
         for(int t = 0; t < numTest; t++) {
             // test model choice
             ArrayList<CS> robots = new ArrayList();
@@ -186,7 +189,7 @@ public class main {
             //sim1.runSimulation().printSnapshot();
         
             // statistical verification
-            double satisfactionProb = 0;
+            /*double satisfactionProb = 0;
             Boolean satisfaction = true;
             for (int i = 1; i < 100; i++) {
                 memoryManaging(RescueRobotCSs);
@@ -205,7 +208,21 @@ public class main {
                 satisfactionProb = 1;
             }
             System.out.println("Verification property satisfaction probability: " + satisfactionProb);
-            logFileGeneration(testid, t, robots, drones, satisfactionProb * 100);
+            logFileGeneration(testid, t, robots, drones, satisfactionProb * 100);*/
+            
+            // Single Simulation Result Record
+            Log log = sim1.runSimulation();
+            log.printSnapshot();
+            String lastSnapshot = log.getSnapshotMap().get(simulationTime-1).getSnapshotString();
+    
+            StringTokenizer st = new StringTokenizer(lastSnapshot, " ");
+            while(st.hasMoreTokens()) {
+                if(st.nextToken().equals("RescuedRate:"))
+                    break;
+            }
+    
+            double rescueRate = Double.parseDouble(st.nextToken());
+            logFileGeneration(testid, t, robots, drones, rescueRate * 100);
         }
     }
   
