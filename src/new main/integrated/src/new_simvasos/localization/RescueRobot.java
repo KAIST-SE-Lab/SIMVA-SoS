@@ -122,13 +122,13 @@ public class RescueRobot extends CS {
 
     public void readMessage(int tick) {
         for (int i = 0; i < this.message.size(); i++){
-            // read message and update knowlegd #todo
-            // pop the message #todo
+            // read message and update knowlegde
+            // pop the message
             Message newMessage = this.message.get(i);
 
             if (newMessage.openTime == tick){
                 //System.out.println(newMessage.message + newMessage.sender + newMessage.receiver + newMessage.openTime);
-                newMessage.printMessage();
+                //newMessage.printMessage(); // TODO print messages between Drones and Robots
                 String messageStr = newMessage.message;
                 ArrayList<String> tokens = new ArrayList<>();
                 StringTokenizer st = new StringTokenizer(messageStr, ",");
