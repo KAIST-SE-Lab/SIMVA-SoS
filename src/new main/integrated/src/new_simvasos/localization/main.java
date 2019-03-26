@@ -33,10 +33,12 @@ public class main {
         ArrayList<Double> perceptionPrs = new ArrayList<>();
         Random r = new Random();
         for(int i = 0; i < numRescueRobot; i++) {
-            rescuePrs.add(Math.round((rescuePrmin + r.nextDouble() * (1.0 - rescuePrmin)) * 100) / 100.0);
+            //rescuePrs.add(Math.round((rescuePrmin + r.nextDouble() * (1.0 - rescuePrmin)) * 100) / 100.0); // SMC
+            rescuePrs.add(1.0);
         }
         for(int i = 0; i < numPatrolDrone; i++) {
-            perceptionPrs.add(Math.round((perceptionPrmin + r.nextDouble()* (1.0 - perceptionPrmin))*100)/100.0);
+            //perceptionPrs.add(Math.round((perceptionPrmin + r.nextDouble()* (1.0 - perceptionPrmin))*100)/100.0); // SMC
+            perceptionPrs.add(1.0);
         }
         
         ArrayList<CS> RescueRobotCSs = new ArrayList();
@@ -121,7 +123,7 @@ public class main {
         //int repeatSim = 2000;
         //Pair<Pair<Integer, Boolean>, String> verificationResult;
         
-        int numTest = 100;  //todo: test parameter: the number of the logs with same configuration
+        int numTest = 1000;  //todo: test parameter: the number of the logs with same configuration
         for(int t = 0; t < numTest; t++) {
             // test model choice
             ArrayList<CS> robots = new ArrayList();
