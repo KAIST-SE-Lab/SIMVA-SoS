@@ -24,5 +24,4 @@ public class Action {
   public String behave() {
     return "do action: " + this.name;
   }
-  
 }

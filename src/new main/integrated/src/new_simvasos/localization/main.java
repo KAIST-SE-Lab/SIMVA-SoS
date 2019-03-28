@@ -90,6 +90,14 @@ public class main {
             pd = new PatrolDrone("drone" + Integer.toString(i), perceptionPrs.get(i), connection, delays);
             PatrolDroneCSs.add(pd);
         }
+    
+        ArrayList<PatrolDrone> connection = new ArrayList<>();
+        for(int i = 0; i < numPatrolDrone; i++) {
+            connection.add((PatrolDrone)PatrolDroneCSs.get(i));
+        }
+        for(int i = 0; i < numRescueRobot; i++) {
+            RescueRobotCSs.get(i).addConnection(connection);
+        }
         
         configurationFileGeneration(RescueRobotCSs, PatrolDroneCSs);
         
@@ -115,7 +123,7 @@ public class main {
         //MCIProperty rescuedProperty;
         //MCIPropertyChecker rescuedChecker;
         //SPRT verifier;
-        int simulationTime = 130; // todo: test parameter: simulation time
+        int simulationTime = 1000; // todo: test parameter: simulation time
         //double goalRescueRatio = 0.8; // todo: test parameter: goal
         //rescuedProperty = new MCIProperty("RescuePatientProperty", "RescuedPatientRatioUpperThanValue", "MCIPropertyType", goalRescueRatio);
         //rescuedChecker = new MCIPropertyChecker();
@@ -129,8 +137,8 @@ public class main {
             ArrayList<CS> robots = new ArrayList();
             ArrayList<CS> drones = new ArrayList();
         
-            int numChosenRobots = 3; // todo: test parameter: the number of chosen robots
-            int numChosenDrones = 3; // todo: test parameter: the number of chosen drones
+            int numChosenRobots = 1; // todo: test parameter: the number of chosen robots
+            int numChosenDrones = 1; // todo: test parameter: the number of chosen drones
         
             ArrayList<Integer> robotNumbers = new ArrayList<>();
             Random randomGenerator = new Random();
@@ -169,9 +177,14 @@ public class main {
                     //System.out.println(robotNumbers);
                 }
                 
-            }*/
+            }
             for(int i = 0; i < drones.size(); i++) {
                 drones.get(i).setSomething(robotNumbers.get(i));
+            }*/
+            
+            for(int i = 0; i < drones.size(); i++) {
+                drones.get(i).setConnection(robotNumbers);
+                robots.get(i).setConnection(droneNumbers);
             }
         
             // simulation initialization

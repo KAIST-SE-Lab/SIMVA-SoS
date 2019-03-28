@@ -9,7 +9,9 @@ public class PatrolDrone extends CS {
     int location_i;
     int location_j;
     int rescued;
-    ArrayList<RescueRobot> messageConnection;
+    ArrayList<RescueRobot> robotConnection;
+    ArrayList<Message> message;
+    ArrayList<Integer> connections;
     ArrayList<Integer> delays;
     int speed;
     double probability;
@@ -17,7 +19,7 @@ public class PatrolDrone extends CS {
     private int target_i;
     private int target_j;
 
-    int oneToOneConnection;
+    //int oneToOneConnection;
 
     /**
      * Instantiates a new CS.
@@ -26,18 +28,29 @@ public class PatrolDrone extends CS {
      */
     public PatrolDrone(String name, double prob, ArrayList<RescueRobot> connection, ArrayList<Integer> delays) {  //constructor
         super(name);
-        this.speed = 5;
+        this.speed = 1;
         this.location_i = -1;
         this.location_j = -1;
-        this.messageConnection = connection;
+        this.robotConnection = connection;
         this.delays = delays;
         this.probability = prob;
         target_i = -1;
         target_j = -1;
-
-        oneToOneConnection = -1;
+        this.message = new ArrayList<>();
+        
+        //oneToOneConnection = -1;
     }
 
+    @Override
+    public void addConnection(ArrayList CSs) {
+        return;
+    }
+    
+    @Override
+    public void setConnection(ArrayList connections) {
+        this.connections = connections;
+    }
+    
     @Override
     public String act(int tick, ArrayList<ArrayList<Integer>> environment) {
         String ret = "CS : ";
@@ -51,22 +64,35 @@ public class PatrolDrone extends CS {
 
         for(int s = 0; s < speed; s++){
             //System.out.println(this.location_i + ", " + this.location_j);
-            if(environment.get(this.location_i).get(this.location_j) > 0) { //sending message
+            
+            readMessage(tick);
+            
+            if(environment.get(this.location_i).get(this.location_j) > 0) {
                 if (random.nextFloat() < this.probability) {
                     // send a message
-                    String contents = "(" + this.location_i + "," + this.location_j + ")";
-                    for (int i = 0; i < messageConnection.size(); i++) {
-                        RescueRobot cs = messageConnection.get(i);
+                    System.out.println("Drone Send Message");
+                    String contents = "(" + this.location_i + "," + this.location_j + ")," + environment.get(this.location_i).get(this.location_j);
+                    
+                    int index = connections.get(random.nextInt(this.connections.size()));
+                    RescueRobot cs = robotConnection.get(index);
+
+                    int openTime = tick + delays.get(index);
+                    Message message = new Message(contents, tick, openTime, name, cs.getName());
+                    cs.addMessage(message);
+                    //System.err.println("tick :" + String.valueOf(tick));
+                    //message.printMessage();
+                    
+                    /*for (int i = 0; i < robotConnection.size(); i++) {
+                        RescueRobot cs = robotConnection.get(i);
                         int openTime = tick + delays.get(i);
                         Message message = new Message(contents, tick, openTime, name, cs.getName());
                         if (oneToOneConnection == -1)
                             cs.addMessage(message);
-                        else if (oneToOneConnection == i) //todo: one-to-one connection 임시 구현: Yong-Jun Shin: a drone can send a message to only a robot.
+                        else if (oneToOneConnection == i)
                             cs.addMessage(message);
                         else ;
-                    }
+                    }*/
                 }
-
                 //randomMovement(environment.size());
                 targetMovement(environment.size());
             }
@@ -76,16 +102,6 @@ public class PatrolDrone extends CS {
             }
         }
         return ret;
-    }
-
-    @Override
-    public void setSomething(int something){
-        setOneToOneConnection(something);
-    }
-
-    public void setOneToOneConnection(int idx){
-        oneToOneConnection = idx;
-        System.out.println(oneToOneConnection);
     }
 
     public void reset() {
@@ -133,10 +149,44 @@ public class PatrolDrone extends CS {
         }
     }
 
+    public void addMessage(Message msg) {
+        this.message.add(msg);
+    }
+    
+    private void readMessage(int tick) {
+        for (int i = 0; i < this.message.size(); i++) {
+            System.out.println("Drone Read Message");
+            // read message and update knowlegde
+            // pop the message
+            Message newMessage = this.message.get(i);
+    
+            if (newMessage.openTime == tick) {
+                newMessage.printMessage(); // TODO print messages between Drones and Robots
+                String messageStr = newMessage.message;
+                if (messageStr.contains("Another") && robotConnection.size() != 1) {
+                    Random random = new Random();
+                    String contents = messageStr.replace(" Another Critical Mission Exists", "");
+                    RescueRobot cs;
+                    int index;
+                    
+                    while(true) {
+                         index = random.nextInt(this.connections.size());
+                         cs = robotConnection.get(index);
+                         if(cs.getName() != newMessage.getSender()) break;
+                    }
+                    int openTime = tick + delays.get(index);
+                    Message message = new Message(contents, tick, openTime, name, cs.getName());
+                    cs.addMessage(message);
+                }
+                
+                message.remove(i);
+                i--;
+            }
+        }
+    }
+    
     @Override
     public double getCapability(){ return this.probability; }
     
     public ArrayList<Integer> getDelays() { return this.delays; }
-    
-    public int getSomething() {return this.oneToOneConnection;}
 }

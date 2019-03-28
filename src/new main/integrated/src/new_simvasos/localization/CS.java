@@ -44,8 +44,10 @@ public abstract class CS {
   }
 
   public abstract double getCapability();
-
-  public abstract void setSomething(int something);
   
-  public abstract int getSomething();
+  public abstract void addConnection(ArrayList CSs);
+  
+  public abstract void setConnection(ArrayList connections);
+  
+  public abstract void addMessage(Message msg);
 }

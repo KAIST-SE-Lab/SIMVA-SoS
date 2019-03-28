@@ -54,6 +54,7 @@ public class Simulator {
       //System.out.println(result_sos);
                                             // CS Actition      // Environment State
       log.addSnapshot(tick, result_sos);
+      //log.printSnapshot();
     }
 
     // Save the other information from sos

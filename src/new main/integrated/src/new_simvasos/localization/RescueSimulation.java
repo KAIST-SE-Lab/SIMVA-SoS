@@ -109,7 +109,7 @@ public class RescueSimulation extends Simulation {
 
         //int mapSize = 300;
         // for Mutation Testing
-        int mapSize = 5; //TODO parameter: mapsize
+        int mapSize = 10; //TODO parameter: mapsize
         ArrayList<ArrayList<Integer>> MCIMap = new ArrayList<>();
 
         for (int i = 0; i < mapSize; i++) {
@@ -149,7 +149,7 @@ public class RescueSimulation extends Simulation {
         }
         
         // Patient state update (decrease the life time of patient) at every tick.
-        for(int j = 1; j < 130; j++) {
+        for(int j = 1; j < 130; j++) { // Same as simulation Time
             constantTimeBound = new ConstantTimeBound(j);
             patientStateUpdate = new PatientStateUpdate("Patient update " + String.valueOf(j),targetSoS.getEnvironment());
             event = new Event(patientStateUpdate, constantTimeBound);

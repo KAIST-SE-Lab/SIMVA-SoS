@@ -28,7 +28,7 @@ public class PatientOccurrence2D extends Action{
             j = random.nextInt(this.environment.size());
             if(this.environment.get(i).get(j) == 0) break;
         }
-        this.environment.get(i).set(j, random.nextInt(131));
+        this.environment.get(i).set(j, random.nextInt(50)+80);
         
         return super.behave() + "at (" + String.valueOf(i) + "," + String.valueOf(j) + ")";
     }
