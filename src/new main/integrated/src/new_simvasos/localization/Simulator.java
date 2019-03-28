@@ -64,8 +64,7 @@ public class Simulator {
 
     return log;
   }
-
-
+  
   public  void pause() {
 
   }

@@ -87,7 +87,6 @@ public abstract class Simulation {
         simulator = new Simulator(simulationTime);
     }
 
-
 }
 
 

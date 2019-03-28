@@ -33,12 +33,12 @@ public class main {
         ArrayList<Double> perceptionPrs = new ArrayList<>();
         Random r = new Random();
         for(int i = 0; i < numRescueRobot; i++) {
-            //rescuePrs.add(Math.round((rescuePrmin + r.nextDouble() * (1.0 - rescuePrmin)) * 100) / 100.0); // SMC
-            rescuePrs.add(1.0);
+            rescuePrs.add(Math.round((rescuePrmin + r.nextDouble() * (1.0 - rescuePrmin)) * 100) / 100.0); // SMC
+            //rescuePrs.add(1.0);
         }
         for(int i = 0; i < numPatrolDrone; i++) {
-            //perceptionPrs.add(Math.round((perceptionPrmin + r.nextDouble()* (1.0 - perceptionPrmin))*100)/100.0); // SMC
-            perceptionPrs.add(1.0);
+            perceptionPrs.add(Math.round((perceptionPrmin + r.nextDouble()* (1.0 - perceptionPrmin))*100)/100.0); // SMC
+            //perceptionPrs.add(1.0);
         }
         
         ArrayList<CS> RescueRobotCSs = new ArrayList();
@@ -123,7 +123,7 @@ public class main {
         //int repeatSim = 2000;
         //Pair<Pair<Integer, Boolean>, String> verificationResult;
         
-        int numTest = 1000;  //todo: test parameter: the number of the logs with same configuration
+        int numTest = 1;  //todo: test parameter: the number of the logs with same configuration
         for(int t = 0; t < numTest; t++) {
             // test model choice
             ArrayList<CS> robots = new ArrayList();
@@ -161,7 +161,7 @@ public class main {
             //System.out.println(robotNumbers);
             //System.out.println(droneNumbers);
             // todo: one to one connection: Yong-Jun Shin: a drone can send a message to only a robot.
-            for (int i = 0; i<drones.size(); i++) {
+            /*for (int i = 0; i<drones.size(); i++) {
                 int posIndex = robotNumbers.indexOf(droneNumbers.get(i));
                 if (posIndex != -1 && posIndex != i) {
                     Collections.swap(robotNumbers, posIndex, i);
@@ -169,7 +169,7 @@ public class main {
                     //System.out.println(robotNumbers);
                 }
                 
-            }
+            }*/
             for(int i = 0; i < drones.size(); i++) {
                 drones.get(i).setSomething(robotNumbers.get(i));
             }
@@ -214,7 +214,7 @@ public class main {
             
             // Single Simulation Result Record
             Log log = sim1.runSimulation();
-            log.printSnapshot();
+            //log.printSnapshot();
             String lastSnapshot = log.getSnapshotMap().get(simulationTime-1).getSnapshotString();
     
             StringTokenizer st = new StringTokenizer(lastSnapshot, " ");

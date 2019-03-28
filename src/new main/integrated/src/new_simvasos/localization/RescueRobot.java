@@ -50,7 +50,8 @@ public class RescueRobot extends CS {
 
             if(environment.get(this.location_i).get(this.location_j) > 0) { //rescue
                 this.rescued += 1;
-                environment.get(this.location_i).set(this.location_j, environment.get(this.location_i).get(this.location_j) - 1);
+                //environment.get(this.location_i).set(this.location_j, environment.get(this.location_i).get(this.location_j) - 1);
+                environment.get(this.location_i).set(this.location_j, 0);
                 //ret = ret + ", Rescued Patient :" + environment.toString();
                 ret = ret + " Rescue Patient: " + this.rescued;
             }
@@ -128,7 +129,7 @@ public class RescueRobot extends CS {
 
             if (newMessage.openTime == tick){
                 //System.out.println(newMessage.message + newMessage.sender + newMessage.receiver + newMessage.openTime);
-                //newMessage.printMessage(); // TODO print messages between Drones and Robots
+                newMessage.printMessage(); // TODO print messages between Drones and Robots
                 String messageStr = newMessage.message;
                 ArrayList<String> tokens = new ArrayList<>();
                 StringTokenizer st = new StringTokenizer(messageStr, ",");

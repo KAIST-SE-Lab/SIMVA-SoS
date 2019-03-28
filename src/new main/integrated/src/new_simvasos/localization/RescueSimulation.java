@@ -82,7 +82,7 @@ public class RescueSimulation extends Simulation {
 
         //int mapSize = 300;
         // for Mutation Testing
-        int mapSize = 20;
+        int mapSize = 100;
         ArrayList<ArrayList<Integer>> MCIMap = new ArrayList<>();
 
         for (int i = 0; i < mapSize; i++) {
@@ -109,7 +109,7 @@ public class RescueSimulation extends Simulation {
 
         //int mapSize = 300;
         // for Mutation Testing
-        int mapSize = 20; //TODO parameter: mapsize
+        int mapSize = 5; //TODO parameter: mapsize
         ArrayList<ArrayList<Integer>> MCIMap = new ArrayList<>();
 
         for (int i = 0; i < mapSize; i++) {
@@ -134,15 +134,25 @@ public class RescueSimulation extends Simulation {
     void initScenario(){
         ConstantTimeBound constantTimeBound;
         PatientOccurrence2D patientOccurrence;
+        PatientStateUpdate patientStateUpdate;
         Event event;
 
         ArrayList MCIEvents = new ArrayList();
-        int numPatients = 100;
+        int numPatients = 5;
 
+        // Patient occurrence at 0 times
         for(int j = 0; j < numPatients; j++) {
             constantTimeBound = new ConstantTimeBound(0);
             patientOccurrence = new PatientOccurrence2D("patient + 1", targetSoS.getEnvironment());
             event = new Event(patientOccurrence, constantTimeBound);
+            MCIEvents.add(event);
+        }
+        
+        // Patient state update (decrease the life time of patient) at every tick.
+        for(int j = 1; j < 130; j++) {
+            constantTimeBound = new ConstantTimeBound(j);
+            patientStateUpdate = new PatientStateUpdate("Patient update " + String.valueOf(j),targetSoS.getEnvironment());
+            event = new Event(patientStateUpdate, constantTimeBound);
             MCIEvents.add(event);
         }
         targetScenario = new Scenario(MCIEvents);

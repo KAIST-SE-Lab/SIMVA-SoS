@@ -20,13 +20,16 @@ public class PatientOccurrence2D extends Action{
 
     public String behave(){
         Random random = new Random();
-
-        int i = random.nextInt(this.environment.size());
-        int j = random.nextInt(this.environment.size());
-        int value = this.environment.get(i).get(j);
-        this.environment.get(i).set(j, value + 1);
-
-
+        int i, j;
+        
+        // No patient occurrence on same place
+        while(true) {
+            i = random.nextInt(this.environment.size());
+            j = random.nextInt(this.environment.size());
+            if(this.environment.get(i).get(j) == 0) break;
+        }
+        this.environment.get(i).set(j, random.nextInt(131));
+        
         return super.behave() + "at (" + String.valueOf(i) + "," + String.valueOf(j) + ")";
     }
 }
