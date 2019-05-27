@@ -1,7 +1,0 @@
-initial_indoor_temperature:0
-initial_indoor_humidity:0
-degree_of_opening_of_window:0
-air_conditioner_temperature_control_per_tick:0
-heater_temperature_control_per_tick:0
-humidifier_humidity_control_per_tick:0
-dehumidifier_humidify_control_per_tick:0

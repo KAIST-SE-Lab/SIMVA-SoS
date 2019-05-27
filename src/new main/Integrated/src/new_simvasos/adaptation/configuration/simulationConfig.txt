@@ -1,0 +1,8 @@
+simulationTime:100
+configurationPath:./src./new main./Integrated./src./new_simvasos./adaptation./configuration./
+smartHomeConfigFile:smartHomeConfig.txt
+environmentControllerConfigFile:environmentControllerConfig.txt
+airConditionerConfigFile:airConditionerConfig.txt
+heaterConfigFile:heaterConfig.txt
+humidifierConfigFile:heaterConfig.txt
+dehumidifierConfigFile:dehumidifierConfig.txt

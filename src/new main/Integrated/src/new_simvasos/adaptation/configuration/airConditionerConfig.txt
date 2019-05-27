@@ -1,0 +1,1 @@
+air_conditioner_temperature_control_per_tick:0
