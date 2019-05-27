@@ -388,6 +388,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 }
                 long end = System.currentTimeMillis();
     
+                if(probability == 0.0) probability = 1.0;
+                
                 // Verification Progress & Result Modification
                 VP_TextPanel.setText("Verification in progress");
                 
