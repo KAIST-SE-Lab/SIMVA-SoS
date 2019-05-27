@@ -1,10 +1,13 @@
 package new_simvasos.adaptation;
 
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 
 public class AirConditioner extends CS {
-    public AirConditioner(String name) {
+    public AirConditioner(String name, String configFile) {
         super(name);
+        ArrayList<Pair<String, String>> config = FileManager.readConfiguration(configFile);
     }
 
     public String act(int tick, ArrayList<Double> environment) {

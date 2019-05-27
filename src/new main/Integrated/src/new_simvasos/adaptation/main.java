@@ -6,7 +6,6 @@ public class main {
     public static void main (String[] args) {
         String path = "./src./new main./Integrated./src./new_simvasos./adaptation./configuration./";
         SmartHomeSimulation smartHomeSimulation = new SmartHomeSimulation(path + "simulationConfig.txt");
-        smartHomeSimulation.initSimulation();
         Log log = smartHomeSimulation.runSimulation();
         log.printSnapshot();
     }

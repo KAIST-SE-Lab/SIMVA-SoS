@@ -22,7 +22,7 @@ public abstract class Simulation {
      */
     public Simulation() {
         System.out.println("Simulation > Constructor 1");
-        initSimulation(15);
+        //initSimulation(15);
     }
 
     /**

@@ -1,5 +1,7 @@
 package new_simvasos.adaptation;
 
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -11,10 +13,20 @@ import java.util.Collections;
 public class SoS {
   public ArrayList <CS> CSs;
   ArrayList <Double> environment;
+  ArrayList <Double> initialEnv;
+  private Double degreeOfOpeningOfWindow;
 
-  public SoS(ArrayList <CS> CSs, ArrayList<Double> environment) {
+  public SoS(ArrayList <CS> CSs, String configFile) {
     this.CSs = CSs;
-    this.environment = environment;
+    this.environment = new ArrayList<Double>();
+    ArrayList<Pair<String, String>> config = FileManager.readConfiguration(configFile);
+    this.environment.add(Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_indoor_temperature")));
+    this.environment.add(Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_indoor_humidity")));
+
+    this.initialEnv = new ArrayList<Double>();
+    this.initialEnv.addAll(this.environment);
+
+    degreeOfOpeningOfWindow = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "degree_of_opening_of_window"));
   }
 
   public String run(int tick) {
@@ -51,7 +63,7 @@ public class SoS {
 
   private void resetEnvironment() {
       for (int i = 0; i < this.environment.size(); i++) {
-        this.environment.set(i, 0.);
+        this.environment.set(i, this.initialEnv.get(i));
       }
   }
 
