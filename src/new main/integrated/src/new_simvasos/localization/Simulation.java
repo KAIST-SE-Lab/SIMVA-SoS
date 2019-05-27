@@ -1,9 +1,9 @@
-package new_simvasos.simulation;
+package new_simvasos.localization;
 
 import new_simvasos.log.Log;
-import new_simvasos.simulator.Simulator;
-import new_simvasos.not_decided.SoS;
+import new_simvasos.localization.SoS;
 import new_simvasos.scenario.Scenario;
+import new_simvasos.localization.Simulator;
 
 /**
  * @author ymbaek
@@ -86,7 +86,6 @@ public abstract class Simulation {
     private void initSimulator(int simulationTime) {
         simulator = new Simulator(simulationTime);
     }
-
 
 }
 

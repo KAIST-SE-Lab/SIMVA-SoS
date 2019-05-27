@@ -1786,9 +1786,9 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO Single simulation save button save location update
         // TODO Single simulation save file name with date time
         
-        JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/SingleSimulationLog.txt", "Simulation Results Saved", JOptionPane.CLOSED_OPTION);
+        JOptionPane.showConfirmDialog(null, "Location: ./src/new new_simvasos.localization.main/GUI/testing/SingleSimulationLog.txt", "Simulation Results Saved", JOptionPane.CLOSED_OPTION);
         
-            String filetowrite = "./src/new main/GUI/testing/SingleSimulationLog.txt";
+            String filetowrite = "./src/new new_simvasos.localization.main/GUI/testing/SingleSimulationLog.txt";
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filetowrite);
@@ -1812,9 +1812,9 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO Verification save button save location update
         // TODO Verification save file name with date time
         
-        JOptionPane.showConfirmDialog(null, "Location: ./src/new main/GUI/testing/VerificationLog.txt", "Verification Results Saved", JOptionPane.CLOSED_OPTION);
+        JOptionPane.showConfirmDialog(null, "Location: ./src/new new_simvasos.localization.main/GUI/testing/VerificationLog.txt", "Verification Results Saved", JOptionPane.CLOSED_OPTION);
         
-            String filetowrite = "./src/new main/GUI/testing/VerificationLog.txt";
+            String filetowrite = "./src/new new_simvasos.localization.main/GUI/testing/VerificationLog.txt";
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filetowrite);

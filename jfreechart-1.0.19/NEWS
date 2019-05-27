@@ -209,7 +209,7 @@ Also fixed:
 - use of timezone in TimeTableXYDataset constructor;
 - duplicate series names in XYSeriesCollection;
 - HistogramDataset fires a change event in addSeries();
-- check visibility of main chart title before drawing it;
+- check visibility of new_simvasos.localization.main chart title before drawing it;
 - fixed serialization of PowerFunction2D, NormalDistributionFunction2D,
   and LineFunction2D;
 - item label positioning for the AreaRenderer class when the plot has an
@@ -747,7 +747,7 @@ other enhancements, bug fixes and documentation updates.
 
 A new DialPlot implementation has been added to the 'experimental' sources. 
 We are looking for people to test this code and provide feedback, so that we
-can stabilize the API and add this code to the main JFreeChart API.
+can stabilize the API and add this code to the new_simvasos.localization.main JFreeChart API.
 
 API adjustments:
 
@@ -856,7 +856,7 @@ In this release, some new (incomplete) classes have been included in the
 org.jfree.experimental.* namespace.  These classes are not part of the 
 standard API, but are included for developers to experiment with and provide
 feedback on.  Hopefully in the future, refined versions of these classes will
-be incorporated into the main library.  PLEASE NOTE THAT THE API FOR THESE
+be incorporated into the new_simvasos.localization.main library.  PLEASE NOTE THAT THE API FOR THESE
 CLASSES IS SUBJECT TO CHANGE. 
 
 

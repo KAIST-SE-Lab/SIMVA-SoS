@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Basically, A CS is an ActionableObject, which means that a CS can perform its autonomous behaviors.
  * By extending ActionableObject, a CS has its own ActionList[] with selectActions() and doActions() methods.
  *
- * For the communication, Each CS has a message queue to receive messages from other CSs.
+ * For the communication, Each CS has a Message queue to receive messages from other CSs.
  *
  * Additionally, to represent CS's capabilities and independencies,
  * A CS has its own local knowledge base (csKnowledgeList) and resource base (csResourceList).
@@ -65,7 +65,7 @@ public abstract class CS extends ActionableObject{
 
     /**
      * Before selecting actions, A CS should check messages from other CSs.
-     * Detailed message checking mechanism (interpretation & processing) should be implemented in child classes
+     * Detailed Message checking mechanism (interpretation & processing) should be implemented in child classes
      * (This method is abstract, so it should be implemented by child classes)
      *
      * @return execution logs of checking received messages
@@ -95,7 +95,7 @@ public abstract class CS extends ActionableObject{
         initActionList();       //Add (initial) CS_Actions into its actionList[] as CS's capabilities
         initKnowledgeList();    //Add initial CS_Knowledge(s) into its csKnowledgeList[]
         initResourceList();     //Add initial CS_Resource(s) into its csResourceList[]
-        initReceivedMessages(); //Make the message queue empty
+        initReceivedMessages(); //Make the Message queue empty
     }
 
 
@@ -112,15 +112,15 @@ public abstract class CS extends ActionableObject{
     }
 
     private void initReceivedMessages() {
-        //TODO: how to intialize the message queue?
+        //TODO: how to intialize the Message queue?
     }
 
 
     /* ADDERS */
 
     /**
-     * Add a newly received message into the CS's message queue
-     * @param receivedMessage   a received message from other CSs/Organizations
+     * Add a newly received Message into the CS's Message queue
+     * @param receivedMessage   a received Message from other CSs/Organizations
      */
     public void addReceivedMessage(CommunicationMessage receivedMessage) {
         csReceivedMessages.add(receivedMessage);

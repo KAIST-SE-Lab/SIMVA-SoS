@@ -49,12 +49,17 @@ public class Simulation_Firefighters extends Simulation {
      * MCI map is included as the environment model.
      */
     @Override
-    void initModels(){
+    public void initModels(){
         System.out.println("Simulation_Firefighters > initModels()");
+
+        double fireFighterPr = 0.4;
+        int numFireFighter = 10;
+
         //double fireFighterPr = 0.5;
         // for Mutation Testing
-        double fireFighterPr = 0.5;
-        int numFireFighter = 10;
+        //double fireFighterPr = 0.8;
+        //int numFireFighter = 2;
+
         ArrayList<CS> CSs = new ArrayList();
         
         for (int i = 0; i < numFireFighter; i++) {      // start from zero or one?

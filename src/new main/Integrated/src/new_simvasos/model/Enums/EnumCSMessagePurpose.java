@@ -1,7 +1,7 @@
 package new_simvasos.model.Enums;
 
 /**
- * Enumeration for message purpose definition (last updated: 18-07-19)
+ * Enumeration for Message purpose definition (last updated: 18-07-19)
  *
  * REQUEST_INFO: Request specific information to another system
  * REQUEST_ACTION: Ask another system for executing a specific action
