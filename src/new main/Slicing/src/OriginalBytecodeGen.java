@@ -1,3 +1,4 @@
+/*
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,4 +13,4 @@ public class OriginalBytecodeGen {
                     .accept(new TraceClassVisitor(null, new ASMifier(), new PrintWriter(new File((arg+".txt")))), 0);
         }
     }
-}
+}*/
