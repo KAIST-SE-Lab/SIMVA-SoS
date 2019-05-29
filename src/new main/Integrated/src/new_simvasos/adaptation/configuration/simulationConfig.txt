@@ -4,5 +4,5 @@ smartHomeConfigFile:smartHomeConfig.txt
 environmentControllerConfigFile:environmentControllerConfig.txt
 airConditionerConfigFile:airConditionerConfig.txt
 heaterConfigFile:heaterConfig.txt
-humidifierConfigFile:heaterConfig.txt
+humidifierConfigFile:humidifierConfig.txt
 dehumidifierConfigFile:dehumidifierConfig.txt

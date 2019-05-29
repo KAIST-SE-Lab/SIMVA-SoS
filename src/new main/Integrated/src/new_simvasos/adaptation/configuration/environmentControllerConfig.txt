@@ -1,1 +1,4 @@
 peakPoint:50
+initial_outdoor_temperature:0
+initial_outdoor_humidity:0
+degree_of_opening_of_window:1

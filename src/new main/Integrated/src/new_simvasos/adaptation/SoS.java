@@ -14,7 +14,6 @@ public class SoS {
   public ArrayList <CS> CSs;
   ArrayList <Double> environment;
   ArrayList <Double> initialEnv;
-  private Double degreeOfOpeningOfWindow;
 
   public SoS(ArrayList <CS> CSs, String configFile) {
     this.CSs = CSs;
@@ -26,7 +25,7 @@ public class SoS {
     this.initialEnv = new ArrayList<Double>();
     this.initialEnv.addAll(this.environment);
 
-    degreeOfOpeningOfWindow = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "degree_of_opening_of_window"));
+
   }
 
   public String run(int tick) {
@@ -44,11 +43,11 @@ public class SoS {
     }
     //logs.add(String (environment));
 
-    logs += this.environment.toString();
+    //logs += this.environment.toString();
+    //logs += " ";
+    logs += "indoorTemperature:" + getTemperature();
     logs += " ";
-    logs += "temperature: " + getTemperature();
-    logs += " ";
-    logs += "humidity: " + getHumidity();
+    logs += "indoorHumidity:" + getHumidity();
 
     return logs;
   }
@@ -68,11 +67,11 @@ public class SoS {
   }
 
   private double getHumidity(){
-    return environment.get(1);
+    return Math.round(environment.get(1)*100)/100.0;
   }
 
   private double getTemperature(){
-    return environment.get(0);
+    return Math.round(environment.get(0)*100)/100.0;
   }
 
   public ArrayList<Double> getEnvironment() {

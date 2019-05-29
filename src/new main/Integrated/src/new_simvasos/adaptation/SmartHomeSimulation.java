@@ -54,9 +54,4 @@ public class SmartHomeSimulation extends Simulation {
     void initScenario() {
         targetScenario = new Scenario(new ArrayList());
     }
-
-    private void readConfiguration(String fileName){
-        simulationTime = 100;
-    }
-
 }

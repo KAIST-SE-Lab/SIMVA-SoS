@@ -1,17 +1,55 @@
 package new_simvasos.adaptation;
 
-import javafx.util.Pair;
-
 import java.util.ArrayList;
 
-public class AirConditioner extends CS {
+public class AirConditioner extends SmartHomeCS {
+    private Double opThresholdSummer;
+    private Double opThresholdWinter;
+    private int timeThresholdSummer;
+    private int timeThresholdWinter;
+    private Double temperatureControlPower;
+
     public AirConditioner(String name, String configFile) {
-        super(name);
-        ArrayList<Pair<String, String>> config = FileManager.readConfiguration(configFile);
+        super(name, configFile);
+
+        temperatureControlPower = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "air_conditioner_temperature_control_per_tick"));
+        opThresholdSummer = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "operation_threshold_summer"));
+        opThresholdWinter = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "operation_threshold_winter"));
+        timeThresholdSummer = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "time_threshold_summer"));
+        timeThresholdWinter = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "time_threshold_winter"));
     }
 
     public String act(int tick, ArrayList<Double> environment) {
         String ret = super.name + ":";
+
+        if(tick < timeThresholdSummer || tick > timeThresholdWinter){   //winter
+            if(monitor(environment) > opThresholdWinter){ //on
+                increaseTemperature(environment, (-1)*temperatureControlPower);
+                ret = ret + "ON_W";
+            }
+            else{   //off
+                ret = ret + "OFF_W";
+            }
+        }
+        else{   //summer
+            if(monitor(environment) > opThresholdSummer){ //on
+                increaseTemperature(environment, (-1)*temperatureControlPower);
+                ret = ret + "ON_S";
+            }
+            else{   //off
+                ret = ret + "OFF_S";
+            }
+        }
+
         return ret;
+    }
+
+    private Double monitor(ArrayList<Double> environment){
+        Double realTemperature = environment.get(0);
+
+        //uncertainty operator
+        Double monitoredTemperature = realTemperature;
+
+        return monitoredTemperature;
     }
 }

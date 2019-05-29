@@ -1,1 +1,5 @@
 dehumidifier_humidify_control_per_tick:0
+operation_threshold_summer:57.3
+operation_threshold_winter:58.3
+time_threshold_summer:30
+time_threshold_winter:80
