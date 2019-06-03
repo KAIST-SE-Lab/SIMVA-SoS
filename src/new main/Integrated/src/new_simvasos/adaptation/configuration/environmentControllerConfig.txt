@@ -1,4 +1,7 @@
 peakPoint:50
 initial_outdoor_temperature:0
 initial_outdoor_humidity:0
+model_path:./src./new main./Integrated./src./new_simvasos./adaptation./configuration./model./
+temperature_model:temperature_polyReg_environment_model.txt
+humidity_model:humidity_polyReg_environment_model.txt
 degree_of_opening_of_window:1

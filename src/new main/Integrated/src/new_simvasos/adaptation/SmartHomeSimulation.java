@@ -20,14 +20,14 @@ public class SmartHomeSimulation extends Simulation {
         System.out.println("Simulation > Constructor 2");
         ArrayList<Pair<String, String>> config = FileManager.readConfiguration(configurationFile);
 
-        simulationTime = Integer.parseInt(FileManager.getValueFromConfigDictionary(config, "simulationTime"));
-        configPath = FileManager.getValueFromConfigDictionary(config, "configurationPath");
-        smartHomeConfigFile = FileManager.getValueFromConfigDictionary(config, "smartHomeConfigFile");
-        environmentControllerConfigFile = FileManager.getValueFromConfigDictionary(config, "environmentControllerConfigFile");
-        airConditionerConfigFile = FileManager.getValueFromConfigDictionary(config, "airConditionerConfigFile");
-        heaterConfigFile = FileManager.getValueFromConfigDictionary(config, "heaterConfigFile");
-        humidifierConfigFile = FileManager.getValueFromConfigDictionary(config, "humidifierConfigFile");
-        dehumidifierConfigFile = FileManager.getValueFromConfigDictionary(config, "dehumidifierConfigFile");
+        simulationTime = Integer.parseInt(FileManager.getValueFromConfigDictionary(config, "simulation_time"));
+        configPath = FileManager.getValueFromConfigDictionary(config, "configuration_path");
+        smartHomeConfigFile = FileManager.getValueFromConfigDictionary(config, "smart_home_config_file");
+        environmentControllerConfigFile = FileManager.getValueFromConfigDictionary(config, "environment_controller_config_file");
+        airConditionerConfigFile = FileManager.getValueFromConfigDictionary(config, "air_conditioner_config_file");
+        heaterConfigFile = FileManager.getValueFromConfigDictionary(config, "heater_config_file");
+        humidifierConfigFile = FileManager.getValueFromConfigDictionary(config, "humidifier_config_file");
+        dehumidifierConfigFile = FileManager.getValueFromConfigDictionary(config, "dehumidifier_config_file");
 
         super.initSimulation(simulationTime);
     }

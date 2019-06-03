@@ -4,6 +4,12 @@ import javafx.util.Pair;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+import new_simvasos.log.Log;
+import new_simvasos.log.Snapshot;
 
 public class FileManager {
     public static ArrayList<Pair<String, String>> readConfiguration(String configFile){
@@ -33,5 +39,51 @@ public class FileManager {
                 return p.getValue();
         }
         return null;
+    }
+
+    public static void saveLog(Log log, String filePath, String keyword){
+        File file = new File(filePath);
+        try {
+            FileWriter fw = new FileWriter(file);
+
+            HashMap<Integer, Snapshot> snapshotMap = log.getSnapshotMap();
+            Iterator<Integer> keys = snapshotMap.keySet().iterator();
+            while(keys.hasNext()) {
+                Integer key = keys.next();
+
+                String snapshotStr = snapshotMap.get(key).getSnapshotString();
+
+                StringTokenizer st = new StringTokenizer(snapshotStr, " :");
+                while(st.hasMoreTokens()) {
+                    if(st.nextToken().equals(keyword))
+                        break;
+                }
+
+                if(st.hasMoreTokens()){
+                    Double keywordValue = Double.parseDouble(st.nextToken());
+                    fw.write(keywordValue.toString() + "\n");
+                }
+            }
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveLog(Log log, String filePath){
+        File file = new File(filePath);
+        try {
+            FileWriter fw = new FileWriter(file);
+
+            HashMap<Integer, Snapshot> snapshotMap = log.getSnapshotMap();
+            Iterator<Integer> keys = snapshotMap.keySet().iterator();
+            while(keys.hasNext()) {
+                Integer key = keys.next();
+                fw.write("TICK:" + key.toString() + " " + snapshotMap.get(key).getSnapshotString() + "\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
