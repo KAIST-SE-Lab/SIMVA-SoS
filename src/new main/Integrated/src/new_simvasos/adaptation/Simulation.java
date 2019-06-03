@@ -52,7 +52,7 @@ public abstract class Simulation {
      * @return results (accumulated text logs) of a single simulation execution
      */
     public Log runSimulation() {
-        System.out.println("Simulation > runSimulation()");
+        //System.out.println("Simulation > runSimulation()");
 
         //TODO: write the Log
         //TODO: modify Verifier code to read the Log

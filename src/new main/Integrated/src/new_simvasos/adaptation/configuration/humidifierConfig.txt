@@ -1,5 +1,5 @@
-humidifier_humidity_control_per_tick:0
+humidifier_humidity_control_per_tick:20
 operation_threshold_summer:24.4
 operation_threshold_winter:29.3
-time_threshold_summer:30
-time_threshold_winter:80
+time_threshold_summer:2100
+time_threshold_winter:6500

@@ -1,2 +1,2 @@
-initial_indoor_temperature:0
-initial_indoor_humidity:0
+initial_indoor_temperature:23.5
+initial_indoor_humidity:43.3

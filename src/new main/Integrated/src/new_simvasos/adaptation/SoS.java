@@ -48,8 +48,45 @@ public class SoS {
     logs += "indoorTemperature:" + getTemperature();
     logs += " ";
     logs += "indoorHumidity:" + getHumidity();
+    logs += " ";
+    logs += "comfort:" + isInComfortZone(tick, getTemperature(), getHumidity());
+    logs += " ";
+    logs += "TICK:" + tick;
 
     return logs;
+  }
+
+  private boolean isInComfortZone(Integer tick, Double indoorTemperature, Double indoorHumidity){
+    // https://www.mathsisfun.com/straight-line-graph-calculate.html 사용
+    int time_threshold_summer = 2100;
+    int time_threshold_winter = 6500;
+
+    if(tick > time_threshold_summer && tick < time_threshold_winter){   // summer
+      if(indoorHumidity > equation(-55.1, 1319.25, indoorTemperature) &&
+              indoorHumidity > equation(-1.314, 55.2857, indoorTemperature) &&
+              indoorHumidity < equation(-6.3429, 222.214, indoorTemperature) &&
+              indoorHumidity < equation(-37.5, 1032.3, indoorTemperature)){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    else{   // winter
+      if(indoorHumidity > equation(-57.2, 1201.9, indoorTemperature) &&
+              indoorHumidity > equation(-1.575, 61.5875, indoorTemperature) &&
+              indoorHumidity < equation(-7.05, 223.975, indoorTemperature) &&
+              indoorHumidity < equation(-35.3, 887.85, indoorTemperature)){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+
+  private Double equation(Double c1, Double c0, Double x){
+    return (c1 * x) + c0;
   }
 
   // reset all cs's attributes ex) firefighter

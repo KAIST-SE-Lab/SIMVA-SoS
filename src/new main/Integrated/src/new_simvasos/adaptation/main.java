@@ -1,5 +1,6 @@
 package new_simvasos.adaptation;
 
+import javafx.util.Pair;
 import new_simvasos.log.Log;
 
 public class main {
@@ -13,5 +14,30 @@ public class main {
         FileManager.saveLog(log, outputPath + "log.txt");
         FileManager.saveLog(log, outputPath + "outputTemperature.csv","indoorTemperature");
         FileManager.saveLog(log, outputPath + "outputHumidity.csv","indoorHumidity");
+
+
+
+        //verification
+        SPRT verifier;
+        ComfortZoneChecker comfortZonechecker = new ComfortZoneChecker();
+        verifier = new SPRT(comfortZonechecker);
+        Pair<Pair<Integer, Boolean>, String> verificationResult;
+
+        double satisfactionProb = 0;
+        Boolean satisfaction = true;
+        for (int i = 1; i < 100; i++) {
+            double theta = i * 0.01;
+            //Existence, Absence, Universality
+            verificationResult = verifier.verifyWithSimulationGUI(smartHomeSimulation, null, 2000, theta);
+            System.out.println(verificationResult.getValue());
+            if (satisfaction == true && !verificationResult.getKey().getValue()) {
+                satisfactionProb = theta;
+                satisfaction = false;
+            }
+        }
+        if (satisfaction == true) {
+            satisfactionProb = 1;
+        }
+        System.out.println("Verification property satisfaction probability: " + satisfactionProb);
     }
 }

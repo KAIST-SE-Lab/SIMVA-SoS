@@ -10,11 +10,8 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
     EnvironmentModel temperatureModel;
     EnvironmentModel humidityModel;
 
-    int peak;
-
     public EnvironmentController(String name, String configFile) {
         super(name, configFile);
-        peak = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "peakPoint"));   //delete
         outdoorTemperature = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_outdoor_temperature"));
         outdoorHumidity = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_outdoor_humidity"));
         degreeOfOpeningOfWindow = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "degree_of_opening_of_window"));
@@ -50,17 +47,10 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
             increaseOutdoorHumidity(newHumidity - outdoorHumidity, environment);
         }
 
-        /*if(tick < peak){
-            ret = ret + "INC";
-            increaseOutdoorTemperature(1., environment);
-            increaseOutdoorHumidity(1., environment);
-        }
-        else{
-            ret = ret + "DEC";
-            increaseOutdoorTemperature(-1., environment);
-            increaseOutdoorHumidity(-1., environment);
-        }*/
-
+        ret += " ";
+        ret += "outdoorTemperature:" + Math.round(outdoorTemperature*100)/100.0;
+        ret += " ";
+        ret += "outdoorHumidity:" + Math.round(outdoorHumidity*100)/100.0;
         return ret;
     }
 
