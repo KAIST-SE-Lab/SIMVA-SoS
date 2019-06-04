@@ -2,12 +2,13 @@ package new_simvasos.adaptation;
 
 import new_simvasos.log.Snapshot;
 import new_simvasos.property.Property;
-import new_simvasos.property.pattern.MinimumDurationChecker;
+import new_simvasos.property.pattern.MaximumDurationChecker;
 
-import java.util.StringTokenizer;
-
-public class ComfortZoneMinimumDurationChecker extends MinimumDurationChecker {
-    
+/*
+* checks the longest duration when it is not comfort is not longer than the given maximum duration.
+*
+* */
+public class ComfortZoneMaximumDurationChecker extends MaximumDurationChecker {
     @Override
     protected boolean evaluateState(Snapshot snapshot, Property verificationProperty) {
         String[] tokens = snapshot.getSnapshotString().split(" ");

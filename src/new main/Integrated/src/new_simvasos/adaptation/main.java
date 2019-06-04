@@ -19,8 +19,10 @@ public class main {
 
         //verification
         SPRT verifier;
-        ComfortZoneChecker comfortZonechecker = new ComfortZoneChecker();
-        verifier = new SPRT(comfortZonechecker);
+        //ComfortZoneChecker comfortZoneChecker = new ComfortZoneChecker();
+        ComfortZoneMaximumDurationChecker comfortZoneMaximumDurationChecker = new ComfortZoneMaximumDurationChecker();
+        //verifier = new SPRT(comfortZoneChecker);
+        verifier = new SPRT(comfortZoneMaximumDurationChecker);
         Pair<Pair<Integer, Boolean>, String> verificationResult;
 
         double satisfactionProb = 0;
@@ -28,7 +30,8 @@ public class main {
         for (int i = 1; i < 100; i++) {
             double theta = i * 0.01;
             //Existence, Absence, Universality
-            verificationResult = verifier.verifyWithSimulationGUI(smartHomeSimulation, null, 2000, theta);
+            //verificationResult = verifier.verifyWithSimulationGUI(smartHomeSimulation, null, 2000, theta);
+            verificationResult = verifier.verifyWithSimulationGUI(smartHomeSimulation, null, 2000, theta, 0, 4);
             System.out.println(verificationResult.getValue());
             if (satisfaction == true && !verificationResult.getKey().getValue()) {
                 satisfactionProb = theta;
