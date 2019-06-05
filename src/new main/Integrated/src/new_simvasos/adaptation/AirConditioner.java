@@ -24,7 +24,8 @@ public class AirConditioner extends SmartHomeCS {
 
         if(tick < timeThresholdSummer || tick > timeThresholdWinter){   //winter
             if(monitor(environment) > opThresholdWinter){ //on
-                increaseTemperature(environment, (-1)*temperatureControlPower);
+                //increaseTemperature(environment, (-1)*temperatureControlPower);
+                sophisticatedControl(environment, opThresholdWinter);
                 ret = ret + "ON_W";
             }
             else{   //off
@@ -33,8 +34,10 @@ public class AirConditioner extends SmartHomeCS {
         }
         else{   //summer
             if(monitor(environment) > opThresholdSummer){ //on
-                increaseTemperature(environment, (-1)*temperatureControlPower);
+                //increaseTemperature(environment, (-1)*temperatureControlPower);
+                sophisticatedControl(environment, opThresholdSummer);
                 ret = ret + "ON_S";
+
             }
             else{   //off
                 ret = ret + "OFF_S";
@@ -51,5 +54,19 @@ public class AirConditioner extends SmartHomeCS {
         Double monitoredTemperature = realTemperature;
 
         return monitoredTemperature;
+    }
+
+    private void sophisticatedControl(ArrayList<Double> environment, Double threshold){
+        int controlDegree = 5;
+
+        for(int i = 0; i < controlDegree; i++){
+            if(monitor(environment) < threshold){
+                increaseTemperature(environment, (-1)*(temperatureControlPower/controlDegree));
+            }
+            else{
+                increaseTemperature(environment, (-1)*(temperatureControlPower/controlDegree));
+                break;
+            }
+        }
     }
 }

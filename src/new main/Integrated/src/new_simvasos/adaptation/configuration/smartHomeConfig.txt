@@ -1,2 +1,4 @@
-initial_indoor_temperature:23.5
-initial_indoor_humidity:43.3
+initial_indoor_temperature_min:20.5
+initial_indoor_temperature_max:23.5
+initial_indoor_humidity_min:29.3
+initial_indoor_humidity_max:58.3

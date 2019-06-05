@@ -24,7 +24,8 @@ public class Heater extends SmartHomeCS {
 
         if(tick < timeThresholdSummer || tick > timeThresholdWinter){   //winter
             if(monitor(environment) < opThresholdWinter){ //on
-                increaseTemperature(environment, temperatureControlPower);
+                //increaseTemperature(environment, temperatureControlPower);
+                sophisticatedControl(environment, opThresholdWinter);
                 ret = ret + "ON_W";
             }
             else{   //off
@@ -33,7 +34,8 @@ public class Heater extends SmartHomeCS {
         }
         else{   //summer
             if(monitor(environment) < opThresholdSummer){ //on
-                increaseTemperature(environment, temperatureControlPower);
+                //increaseTemperature(environment, temperatureControlPower);
+                sophisticatedControl(environment, opThresholdSummer);
                 ret = ret + "ON_S";
             }
             else{   //off
@@ -51,5 +53,19 @@ public class Heater extends SmartHomeCS {
         Double monitoredTemperature = realTemperature;
 
         return monitoredTemperature;
+    }
+
+    private void sophisticatedControl(ArrayList<Double> environment, Double threshold){
+        int controlDegree = 5;
+
+        for(int i = 0; i < controlDegree; i++){
+            if(monitor(environment) < threshold){
+                increaseTemperature(environment, (temperatureControlPower/controlDegree));
+            }
+            else{
+                increaseTemperature(environment, (temperatureControlPower/controlDegree));
+                break;
+            }
+        }
     }
 }

@@ -24,7 +24,8 @@ public class Dehumidifier extends SmartHomeCS {
 
         if(tick < timeThresholdSummer || tick > timeThresholdWinter){   //winter
             if(monitor(environment) > opThresholdWinter){ //on
-                increaseHumidity(environment, (-1)*humidityControlPower);
+                //increaseHumidity(environment, (-1)*humidityControlPower);
+                sophisticatedControl(environment, opThresholdWinter);
                 ret = ret + "ON_W";
             }
             else{   //off
@@ -33,7 +34,8 @@ public class Dehumidifier extends SmartHomeCS {
         }
         else{   //summer
             if(monitor(environment) > opThresholdSummer){ //on
-                increaseHumidity(environment, (-1)*humidityControlPower);
+                //increaseHumidity(environment, (-1)*humidityControlPower);
+                sophisticatedControl(environment, opThresholdSummer);
                 ret = ret + "ON_S";
             }
             else{   //off
@@ -51,5 +53,19 @@ public class Dehumidifier extends SmartHomeCS {
         Double monitoredHumidity = realHumidity;
 
         return monitoredHumidity;
+    }
+
+    private void sophisticatedControl(ArrayList<Double> environment, Double threshold){
+        int controlDegree = 5;
+
+        for(int i = 0; i < controlDegree; i++){
+            if(monitor(environment) < threshold){
+                increaseHumidity(environment, (-1)*(humidityControlPower/controlDegree));
+            }
+            else{
+                increaseHumidity(environment, (-1)*(humidityControlPower/controlDegree));
+                break;
+            }
+        }
     }
 }

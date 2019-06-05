@@ -4,6 +4,7 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 
 /**
@@ -19,13 +20,17 @@ public class SoS {
     this.CSs = CSs;
     this.environment = new ArrayList<Double>();
     ArrayList<Pair<String, String>> config = FileManager.readConfiguration(configFile);
-    this.environment.add(Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_indoor_temperature")));
-    this.environment.add(Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_indoor_humidity")));
+    Double initialIndoorTemperatureMin = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_indoor_temperature_min"));
+    Double initialIndoorTemperatureMax = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_indoor_temperature_max"));
+    Double initialIndoorHumidityMin = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_indoor_humidity_min"));
+    Double initialIndoorHumidityMax = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_indoor_humidity_max"));
+
+    Random random = new Random();
+    this.environment.add((random.nextDouble() * (initialIndoorTemperatureMax - initialIndoorTemperatureMin)) + initialIndoorTemperatureMin);
+    this.environment.add((random.nextDouble() * (initialIndoorHumidityMax - initialIndoorHumidityMin)) + initialIndoorHumidityMin);
 
     this.initialEnv = new ArrayList<Double>();
     this.initialEnv.addAll(this.environment);
-
-
   }
 
   public String run(int tick) {
