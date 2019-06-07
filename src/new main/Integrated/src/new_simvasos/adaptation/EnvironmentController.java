@@ -8,6 +8,8 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
     Double outdoorTemperature;
     Double outdoorHumidity;
     Double degreeOfOpeningOfWindow;
+    Double degreeOfOpeningOfWindowMin;
+    Double degreeOfOpeningOfWindowMax;
     EnvironmentModel temperatureModel;
     EnvironmentModel humidityModel;
     int experimentOption;
@@ -17,9 +19,10 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
         super(name, configFile);
         outdoorTemperature = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_outdoor_temperature"));
         outdoorHumidity = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_outdoor_humidity"));
+        degreeOfOpeningOfWindowMin = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "degree_of_opening_of_window_min"));
+        degreeOfOpeningOfWindowMax = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "degree_of_opening_of_window_max"));
         //degreeOfOpeningOfWindow = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "degree_of_opening_of_window"));
-        Random random = new Random();
-        degreeOfOpeningOfWindow = random.nextDouble();
+        reset();    //degreeOfOpeningOfWindow setting
         experimentOption = Integer.parseInt(FileManager.getValueFromConfigDictionary(config, "environment_model_experiment_option"));
 
         String modelPath = FileManager.getValueFromConfigDictionary(super.config, "model_path");
@@ -105,6 +108,6 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
 
     public void reset(){
         Random random = new Random();
-        degreeOfOpeningOfWindow = random.nextDouble() * 0.5;
+        degreeOfOpeningOfWindow = (random.nextDouble() * (degreeOfOpeningOfWindowMax - degreeOfOpeningOfWindowMin)) + degreeOfOpeningOfWindowMin;
     }
 }
