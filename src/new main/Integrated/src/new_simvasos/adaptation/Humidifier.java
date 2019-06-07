@@ -8,11 +8,13 @@ public class Humidifier extends SmartHomeCS {
     private int timeThresholdSummer;
     private int timeThresholdWinter;
     private Double humidityControlPower;
+    private int controlDegree;
 
     public Humidifier(String name, String configFile) {
         super(name, configFile);
 
         humidityControlPower = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "humidifier_humidity_control_per_tick"));
+        controlDegree = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "humidifier_control_degree"));
         opThresholdSummer = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "operation_threshold_summer"));
         opThresholdWinter = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "operation_threshold_winter"));
         timeThresholdSummer = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "time_threshold_summer"));
@@ -56,14 +58,12 @@ public class Humidifier extends SmartHomeCS {
     }
 
     private void sophisticatedControl(ArrayList<Double> environment, Double threshold){
-        int controlDegree = 5;
-
         for(int i = 0; i < controlDegree; i++){
             if(monitor(environment) < threshold){
                 increaseHumidity(environment, (humidityControlPower/controlDegree));
             }
             else{
-                increaseHumidity(environment, (humidityControlPower/controlDegree));
+                //increaseHumidity(environment, (humidityControlPower/controlDegree));
                 break;
             }
         }

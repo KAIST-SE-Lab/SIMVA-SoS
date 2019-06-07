@@ -3,4 +3,5 @@ initial_outdoor_humidity:0
 model_path:./src./new main./Integrated./src./new_simvasos./adaptation./configuration./model./
 temperature_model:temperature_movingAvg_environment_model.txt
 humidity_model:humidity_movingAvg_environment_model.txt
-degree_of_opening_of_window:0.1
+degree_of_opening_of_window:0.5
+environment_model_experiment_option:5

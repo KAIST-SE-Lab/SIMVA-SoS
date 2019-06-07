@@ -33,6 +33,8 @@ public class Simulator {
    */
   public Log run(SoS sos, Scenario scenario) {
     this.reset();
+    sos.reset();
+    scenario.reset();
 
     Log log = new Log();
     String result_sos = null;

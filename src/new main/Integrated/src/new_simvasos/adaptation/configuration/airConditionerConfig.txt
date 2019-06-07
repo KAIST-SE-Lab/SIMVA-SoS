@@ -1,4 +1,5 @@
-air_conditioner_temperature_control_per_tick:5
+air_conditioner_temperature_control_per_tick:10
+air_conditioner_control_degree:10
 operation_threshold_summer:26
 operation_threshold_winter:23.5
 time_threshold_summer:2100

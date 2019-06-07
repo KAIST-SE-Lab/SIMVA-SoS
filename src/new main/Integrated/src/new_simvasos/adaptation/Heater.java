@@ -8,11 +8,13 @@ public class Heater extends SmartHomeCS {
     private int timeThresholdSummer;
     private int timeThresholdWinter;
     private Double temperatureControlPower;
+    private int controlDegree;
 
     public Heater(String name, String configFile) {
         super(name, configFile);
 
         temperatureControlPower = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "heater_temperature_control_per_tick"));
+        controlDegree = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "heater_control_degree"));
         opThresholdSummer = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "operation_threshold_summer"));
         opThresholdWinter = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "operation_threshold_winter"));
         timeThresholdSummer = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "time_threshold_summer"));
@@ -56,14 +58,12 @@ public class Heater extends SmartHomeCS {
     }
 
     private void sophisticatedControl(ArrayList<Double> environment, Double threshold){
-        int controlDegree = 5;
-
         for(int i = 0; i < controlDegree; i++){
             if(monitor(environment) < threshold){
                 increaseTemperature(environment, (temperatureControlPower/controlDegree));
             }
             else{
-                increaseTemperature(environment, (temperatureControlPower/controlDegree));
+                //increaseTemperature(environment, (temperatureControlPower/controlDegree));
                 break;
             }
         }

@@ -1,4 +1,5 @@
-heater_temperature_control_per_tick:5
+heater_temperature_control_per_tick:10
+heater_control_degree:10
 operation_threshold_summer:23.5
 operation_threshold_winter:20.5
 time_threshold_summer:2100

@@ -1,6 +1,7 @@
 package new_simvasos.adaptation;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class EnvironmentController extends SmartHomeCS {    //outdoor environment controller
@@ -9,12 +10,17 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
     Double degreeOfOpeningOfWindow;
     EnvironmentModel temperatureModel;
     EnvironmentModel humidityModel;
+    int experimentOption;
+
 
     public EnvironmentController(String name, String configFile) {
         super(name, configFile);
         outdoorTemperature = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_outdoor_temperature"));
         outdoorHumidity = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "initial_outdoor_humidity"));
-        degreeOfOpeningOfWindow = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "degree_of_opening_of_window"));
+        //degreeOfOpeningOfWindow = Double.parseDouble(FileManager.getValueFromConfigDictionary(config, "degree_of_opening_of_window"));
+        Random random = new Random();
+        degreeOfOpeningOfWindow = random.nextDouble();
+        experimentOption = Integer.parseInt(FileManager.getValueFromConfigDictionary(config, "environment_model_experiment_option"));
 
         String modelPath = FileManager.getValueFromConfigDictionary(super.config, "model_path");
         String temperatureModelFile = FileManager.getValueFromConfigDictionary(super.config, "temperature_model");
@@ -27,8 +33,37 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
     public String act(int tick, ArrayList<Double> environment) {
         String ret = super.name + ":";
 
-        Double newTemperature = temperatureModel.getEnvironmentalValue(tick);
-        Double newHumidity = humidityModel.getEnvironmentalValue(tick);
+        Double newTemperature = 0.;
+        Double newHumidity = 0.;
+
+        if(experimentOption == 0){ //environment model
+            newTemperature = temperatureModel.getEnvironmentalValue(tick);
+            newHumidity = humidityModel.getEnvironmentalValue(tick);
+        }
+        else if(experimentOption == 1){    //random environment
+            newTemperature = temperatureModel.getRandomEnvironmentalValue(tick);
+            newHumidity = humidityModel.getRandomEnvironmentalValue(tick);
+        }
+        else if(experimentOption == 2){    //min-max triangle
+            newTemperature = temperatureModel.getMinMaxTriangleEnvironmentalValue(tick);
+            newHumidity = humidityModel.getMinMaxTriangleEnvironmentalValue(tick);
+        }
+        else if(experimentOption == 3){    //discrete environment model
+            newTemperature = temperatureModel.getDiscreteEnvironmentalValue(tick);
+            newHumidity = humidityModel.getDiscreteEnvironmentalValue(tick);
+        }
+        else if(experimentOption == 4){    //historical data
+            newTemperature = temperatureModel.getHistoricalEnvironmentValue(tick);
+            newHumidity = humidityModel.getHistoricalEnvironmentValue(tick);
+        }
+        else if(experimentOption == 5){    //trend data
+            newTemperature = temperatureModel.getTrendEnvironmentalValue(tick);
+            newHumidity = humidityModel.getTrendEnvironmentalValue(tick);
+        }
+        else{
+            System.out.println("wrong environment model option");
+        }
+
 
         if(newTemperature >= outdoorTemperature){
             ret = ret + "INC_T/";
@@ -68,5 +103,8 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
         increaseHumidity(indoorEnvironment, Math.round(humidityTransfer*100)/100.0);
     }
 
-
+    public void reset(){
+        Random random = new Random();
+        degreeOfOpeningOfWindow = random.nextDouble() * 0.5;
+    }
 }

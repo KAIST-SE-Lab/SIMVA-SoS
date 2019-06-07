@@ -34,7 +34,6 @@ public class SoS {
   }
 
   public String run(int tick) {
-
     String logs = "";
     //Collections.shuffle(CSs);
 
