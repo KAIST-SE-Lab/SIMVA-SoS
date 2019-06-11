@@ -24,10 +24,11 @@ public class Heater extends SmartHomeCS {
     public String act(int tick, ArrayList<Double> environment) {
         String ret = super.name + ":";
 
+        Double monitored = monitor(environment);
         if(tick < timeThresholdSummer || tick > timeThresholdWinter){   //winter
-            if(monitor(environment) < opThresholdWinter){ //on
+            if(monitored != null && monitored < opThresholdWinter){ //on
                 //increaseTemperature(environment, temperatureControlPower);
-                sophisticatedControl(environment, opThresholdWinter);
+                sophisticatedControl(environment, monitored, opThresholdWinter);
                 ret = ret + "ON_W";
             }
             else{   //off
@@ -35,9 +36,9 @@ public class Heater extends SmartHomeCS {
             }
         }
         else{   //summer
-            if(monitor(environment) < opThresholdSummer){ //on
+            if(monitored != null && monitored < opThresholdSummer){ //on
                 //increaseTemperature(environment, temperatureControlPower);
-                sophisticatedControl(environment, opThresholdSummer);
+                sophisticatedControl(environment, monitored, opThresholdSummer);
                 ret = ret + "ON_S";
             }
             else{   //off
@@ -53,19 +54,28 @@ public class Heater extends SmartHomeCS {
 
         //uncertainty operator
         Double monitoredTemperature = realTemperature;
+        //monitoredTemperature = uncertaintyUniformDistributionNoise(monitoredTemperature, -0.1, 0.1);
+        //monitoredTemperature = uncertaintyMonitoringImprecision(monitoredTemperature, 0.1);
+        //monitoredTemperature = uncertaintyMonitoringFrequency(monitoredTemperature, 2);
+        //monitoredTemperature = uncertaintyMonitoringFailure(monitoredTemperature, 0.05);
 
         return monitoredTemperature;
     }
 
-    private void sophisticatedControl(ArrayList<Double> environment, Double threshold){
-        for(int i = 0; i < controlDegree; i++){
-            if(monitor(environment) < threshold){
-                increaseTemperature(environment, (temperatureControlPower/controlDegree));
+    private void sophisticatedControl(ArrayList<Double> environment, Double monitored, Double threshold){
+        int controlNum = (int)((threshold - monitored) / (temperatureControlPower/controlDegree)) + 1;
+        if(controlNum > controlDegree){
+            controlNum = controlDegree;
+        }
+        for(int i = 0; i < controlNum; i++){
+            increaseTemperature(environment, (temperatureControlPower/controlDegree));
+            /*if(monitored < threshold){
+
             }
             else{
                 //increaseTemperature(environment, (temperatureControlPower/controlDegree));
                 break;
-            }
+            }*/
         }
     }
 }

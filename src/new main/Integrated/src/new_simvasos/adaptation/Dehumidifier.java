@@ -24,10 +24,11 @@ public class Dehumidifier extends SmartHomeCS {
     public String act(int tick, ArrayList<Double> environment) {
         String ret = super.name + ":";
 
+        Double monitored = monitor(environment);
         if(tick < timeThresholdSummer || tick > timeThresholdWinter){   //winter
-            if(monitor(environment) > opThresholdWinter){ //on
+            if(monitored != null && monitored > opThresholdWinter){ //on
                 //increaseHumidity(environment, (-1)*humidityControlPower);
-                sophisticatedControl(environment, opThresholdWinter);
+                sophisticatedControl(environment, monitored, opThresholdWinter);
                 ret = ret + "ON_W";
             }
             else{   //off
@@ -35,9 +36,9 @@ public class Dehumidifier extends SmartHomeCS {
             }
         }
         else{   //summer
-            if(monitor(environment) > opThresholdSummer){ //on
+            if(monitored != null && monitored > opThresholdSummer){ //on
                 //increaseHumidity(environment, (-1)*humidityControlPower);
-                sophisticatedControl(environment, opThresholdSummer);
+                sophisticatedControl(environment, monitored, opThresholdSummer);
                 ret = ret + "ON_S";
             }
             else{   //off
@@ -53,19 +54,28 @@ public class Dehumidifier extends SmartHomeCS {
 
         //uncertainty operator
         Double monitoredHumidity = realHumidity;
+        //monitoredHumidity = uncertaintyUniformDistributionNoise(monitoredHumidity, -1., 1.);
+        //monitoredHumidity = uncertaintyMonitoringImprecision(monitoredHumidity, 5.);
+        //monitoredHumidity = uncertaintyMonitoringFrequency(monitoredHumidity, 2);
+        //monitoredHumidity = uncertaintyMonitoringFailure(monitoredHumidity, 0.05);
 
         return monitoredHumidity;
     }
 
-    private void sophisticatedControl(ArrayList<Double> environment, Double threshold){
-        for(int i = 0; i < controlDegree; i++){
-            if(monitor(environment) > threshold){
-                increaseHumidity(environment, (-1)*(humidityControlPower/controlDegree));
+    private void sophisticatedControl(ArrayList<Double> environment, Double monitored, Double threshold){
+        int controlNum = (int)((monitored - threshold) / (humidityControlPower/controlDegree)) + 1;
+        if(controlNum > controlDegree){
+            controlNum = controlDegree;
+        }
+        for(int i = 0; i < controlNum; i++){
+            increaseHumidity(environment, (-1)*(humidityControlPower/controlDegree));
+            /*if(monitored > threshold){
+
             }
             else{
                 //increaseHumidity(environment, (-1)*(humidityControlPower/controlDegree));
                 break;
-            }
+            }*/
         }
     }
 }
