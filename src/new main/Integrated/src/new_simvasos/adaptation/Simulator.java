@@ -1,7 +1,6 @@
 package new_simvasos.adaptation;
 
 import new_simvasos.log.Log;
-import new_simvasos.adaptation.SoS;
 import new_simvasos.scenario.Event;
 import new_simvasos.scenario.Scenario;
 
@@ -12,20 +11,27 @@ import java.util.ArrayList;
  * A module of SIMVA-SoS to run a simulation of input SoS model
  */
 public class Simulator {
-  int simulationTime;
+  int simulationEndTime;
+  int simulationStartTime;
 
   /**
    * Instantiates a new Simulator.
    *
-   * @param simulationTime the simulation time
+   * @param simulationEndTime the simulation time
    */
-  public Simulator(int simulationTime) {
-    this.simulationTime = simulationTime;
+  public Simulator(int simulationEndTime) {
+    this.simulationStartTime = 0;
+    this.simulationEndTime = simulationEndTime;
+  }
+
+  public Simulator(int simulationStartTime, int simulationEndTime){
+    this.simulationStartTime = simulationStartTime;
+    this.simulationEndTime = simulationEndTime;
   }
 
   /**
    * Run the input SoS model with the input scenario.
-   * repeats SoS and scenario during simulationTime.
+   * repeats SoS and scenario during simulationEndTime.
    *
    * @param sos      the sos
    * @param scenario the scenario
@@ -41,7 +47,7 @@ public class Simulator {
     ArrayList<Event> occuredEvents = new ArrayList<>();
 
     // for every tick in simulation time
-    for(int tick  = 0; tick < this.simulationTime; tick++) {
+    for(int tick = simulationStartTime; tick < this.simulationEndTime; tick++) {
       // check every event in scenario
       for (Event ev : scenario.events) {
         // result = (Action, Constant TimeBound)

@@ -47,6 +47,12 @@ public abstract class Simulation {
         initSimulator(simulationTime);
     }
 
+    public void initSimulation(int simulationStartTime, int simulationEndTime) {
+        initModels();
+        initScenario();
+        initSimulator2(simulationStartTime, simulationEndTime);
+    }
+
     /**
      * A method for running a simulation
      * @return results (accumulated text logs) of a single simulation execution
@@ -85,6 +91,10 @@ public abstract class Simulation {
      */
     private void initSimulator(int simulationTime) {
         simulator = new Simulator(simulationTime);
+    }
+
+    private void initSimulator2(int simulationStartTime, int simulationEndTime){
+        simulator = new Simulator(simulationStartTime, simulationEndTime);
     }
 
 

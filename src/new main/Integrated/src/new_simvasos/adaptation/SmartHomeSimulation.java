@@ -6,7 +6,8 @@ import new_simvasos.scenario.Scenario;
 import java.util.ArrayList;
 
 public class SmartHomeSimulation extends Simulation {
-    private int simulationTime;
+    private int simulationStartTime;
+    private int simulationEndTime;
     private String configPath;
     private String environmentControllerConfigFile;
     private String smartHomeConfigFile;
@@ -20,7 +21,8 @@ public class SmartHomeSimulation extends Simulation {
         System.out.println("Simulation > Constructor 2");
         ArrayList<Pair<String, String>> config = FileManager.readConfiguration(configurationFile);
 
-        simulationTime = Integer.parseInt(FileManager.getValueFromConfigDictionary(config, "simulation_time"));
+        simulationStartTime = Integer.parseInt(FileManager.getValueFromConfigDictionary(config, "simulation_start_time"));
+        simulationEndTime = Integer.parseInt(FileManager.getValueFromConfigDictionary(config, "simulation_end_time"));
         configPath = FileManager.getValueFromConfigDictionary(config, "configuration_path");
         smartHomeConfigFile = FileManager.getValueFromConfigDictionary(config, "smart_home_config_file");
         environmentControllerConfigFile = FileManager.getValueFromConfigDictionary(config, "environment_controller_config_file");
@@ -29,11 +31,11 @@ public class SmartHomeSimulation extends Simulation {
         humidifierConfigFile = FileManager.getValueFromConfigDictionary(config, "humidifier_config_file");
         dehumidifierConfigFile = FileManager.getValueFromConfigDictionary(config, "dehumidifier_config_file");
 
-        super.initSimulation(simulationTime);
+        super.initSimulation(simulationStartTime, simulationEndTime);
     }
 
     /*public void initSimulation() {
-        super.initSimulation(simulationTime);
+        super.initSimulation(simulationEndTime);
     }*/
 
 

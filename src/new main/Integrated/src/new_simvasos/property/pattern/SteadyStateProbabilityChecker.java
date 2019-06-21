@@ -5,6 +5,7 @@ import new_simvasos.log.Snapshot;
 import new_simvasos.property.Property;
 import new_simvasos.property.PropertyChecker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -18,11 +19,12 @@ public abstract class SteadyStateProbabilityChecker extends PropertyChecker{
     @Override
     public boolean check(Log log, Property verificationProperty, double prob, int T) {
         HashMap<Integer, Snapshot> snapshots = log.getSnapshotMap();
+        ArrayList keySet = new ArrayList(snapshots.keySet());
         int logSize = snapshots.size(); // 0 ... 10 => size: 11, endTime: 10
         int satisfiedCount = 0;
 
         for (int i = 0; i < logSize; i++) {
-            if (evaluateState(snapshots.get(i), verificationProperty)) {
+            if (evaluateState(snapshots.get(keySet.get(i)), verificationProperty)) {
                 satisfiedCount++;
             }
         }

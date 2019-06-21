@@ -5,6 +5,7 @@ import new_simvasos.log.Snapshot;
 import new_simvasos.property.Property;
 import new_simvasos.property.PropertyChecker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -19,15 +20,14 @@ public abstract class MaximumDurationChecker extends PropertyChecker {
 
     public boolean check(Log log, Property verificationProperty, int t, int T) {
         HashMap<Integer, Snapshot> snapshots = log.getSnapshotMap();
+        ArrayList keySet = new ArrayList(snapshots.keySet());
         int logSize = snapshots.size(); // 0 ... 10 => size: 11, endTime: 10
 
         int maxSatisfiedCount = 0;
         int satisfiedCount = 0;
-        int totalSatisfiedCount = 0;
         for (int i = t; i < logSize; i++) {
-            if (evaluateState(snapshots.get(i), verificationProperty)) {
+            if (evaluateState(snapshots.get(keySet.get(i)), verificationProperty)) {
                 satisfiedCount++;
-                totalSatisfiedCount++;
             }
             else{
                 if(satisfiedCount > maxSatisfiedCount){

@@ -1,4 +1,6 @@
-simulation_time:8742
+simulation_start_time:2050
+simulation_end_time:2150
+simulation_max_time:8742
 configuration_path:./src./new main./Integrated./src./new_simvasos./adaptation./configuration./
 smart_home_config_file:smartHomeConfig.txt
 environment_controller_config_file:environmentControllerConfig.txt
