@@ -34,7 +34,9 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
     }
 
     public String act(int tick, ArrayList<Double> environment) {
-        String ret = super.name + ":";
+        String ret = "window:"+ Math.round(degreeOfOpeningOfWindow*100)/100.0;
+        ret += " ";
+        ret += super.name + ":";
 
         Double newTemperature = 0.;
         Double newHumidity = 0.;

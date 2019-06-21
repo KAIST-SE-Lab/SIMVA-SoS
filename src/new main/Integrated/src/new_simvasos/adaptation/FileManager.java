@@ -41,7 +41,7 @@ public class FileManager {
         return null;
     }
 
-    public static void saveLog(Log log, String filePath, String keyword){
+    public static void saveLogCSV(Log log, String filePath, String keyword){
         File file = new File(filePath);
         try {
             FileWriter fw = new FileWriter(file);
@@ -70,7 +70,32 @@ public class FileManager {
         }
     }
 
-    public static void saveLog(Log log, String filePath){
+    public static void saveAllLogCSV(Log log, String filePath){
+        File file = new File(filePath);
+        try {
+            FileWriter fw = new FileWriter(file);
+
+            HashMap<Integer, Snapshot> snapshotMap = log.getSnapshotMap();
+            Iterator<Integer> keys = snapshotMap.keySet().iterator();
+            while(keys.hasNext()) {
+                Integer key = keys.next();
+
+                String snapshotStr = snapshotMap.get(key).getSnapshotString();
+
+                StringTokenizer st = new StringTokenizer(snapshotStr, " :");
+                while(st.hasMoreTokens()) {
+                    st.nextToken();
+                    fw.write(st.nextToken() + ",");
+                }
+                fw.write("\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveAllLogTXT(Log log, String filePath){
         File file = new File(filePath);
         try {
             FileWriter fw = new FileWriter(file);

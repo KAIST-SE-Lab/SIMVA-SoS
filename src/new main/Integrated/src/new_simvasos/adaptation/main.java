@@ -11,9 +11,10 @@ public class main {
         log.printSnapshot();
 
         String outputPath = "./src./new main./Integrated./src./new_simvasos./adaptation./output./";
-        FileManager.saveLog(log, outputPath + "log.txt");
-        FileManager.saveLog(log, outputPath + "outputTemperature.csv","indoorTemperature");
-        FileManager.saveLog(log, outputPath + "outputHumidity.csv","indoorHumidity");
+        FileManager.saveAllLogTXT(log, outputPath + "log.txt");
+        FileManager.saveAllLogCSV(log, outputPath + "log.csv");
+        FileManager.saveLogCSV(log, outputPath + "outputTemperature.csv","indoorTemperature");
+        FileManager.saveLogCSV(log, outputPath + "outputHumidity.csv","indoorHumidity");
 
 
 
