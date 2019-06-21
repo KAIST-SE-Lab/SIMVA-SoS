@@ -48,6 +48,8 @@ public class Dehumidifier extends SmartHomeCS {
             }
         }
 
+        ret += " ";
+        ret += "dh_m:" + monitored;
         return ret;
     }
 

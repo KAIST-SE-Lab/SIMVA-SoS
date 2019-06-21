@@ -49,6 +49,8 @@ public class AirConditioner extends SmartHomeCS {
             }
         }
 
+        ret += " ";
+        ret += "ac_m:" + monitored;
         return ret;
     }
 

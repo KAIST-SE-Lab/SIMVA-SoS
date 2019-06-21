@@ -49,6 +49,8 @@ public class Heater extends SmartHomeCS {
             }
         }
 
+        ret += " ";
+        ret += "he_m:" + monitored;
         return ret;
     }
 

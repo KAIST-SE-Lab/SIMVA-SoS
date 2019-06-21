@@ -48,6 +48,8 @@ public class Humidifier extends SmartHomeCS {
             }
         }
 
+        ret += " ";
+        ret += "hu_m:" + monitored;
         return ret;
     }
 
