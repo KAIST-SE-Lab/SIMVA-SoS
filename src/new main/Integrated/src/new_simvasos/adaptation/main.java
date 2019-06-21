@@ -32,7 +32,7 @@ public class main {
             double theta = i * 0.01;
             //Existence, Absence, Universality
             //verificationResult = verifier.verifyWithSimulationGUI(smartHomeSimulation, null, 2000, theta);
-            verificationResult = verifier.verifyWithSimulationGUI(smartHomeSimulation, null, 2000, theta, 0, 5);    //or T = 3
+            verificationResult = verifier.verifyWithSimulationGUI(smartHomeSimulation, null, 2000, theta, 2, 5);    //or T = 3
             System.out.println(verificationResult.getValue());
             if (satisfaction == true && !verificationResult.getKey().getValue()) {
                 satisfactionProb = theta;

@@ -4,3 +4,4 @@ operation_threshold_summer:23.5
 operation_threshold_winter:20.5
 time_threshold_summer:2100
 time_threshold_winter:6500
+uncertainty_option:0

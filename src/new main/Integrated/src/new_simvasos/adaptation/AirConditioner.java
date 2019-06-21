@@ -9,6 +9,7 @@ public class AirConditioner extends SmartHomeCS {
     private int timeThresholdWinter;
     private Double temperatureControlPower;
     private int controlDegree;
+    private String uncertaintyOption;
 
     public AirConditioner(String name, String configFile) {
         super(name, configFile);
@@ -19,6 +20,7 @@ public class AirConditioner extends SmartHomeCS {
         opThresholdWinter = Double.parseDouble(FileManager.getValueFromConfigDictionary(super.config, "operation_threshold_winter"));
         timeThresholdSummer = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "time_threshold_summer"));
         timeThresholdWinter = Integer.parseInt(FileManager.getValueFromConfigDictionary(super.config, "time_threshold_winter"));
+        uncertaintyOption = FileManager.getValueFromConfigDictionary(super.config, "uncertainty_option");
     }
 
     public String act(int tick, ArrayList<Double> environment) {
@@ -55,10 +57,19 @@ public class AirConditioner extends SmartHomeCS {
 
         //uncertainty operator
         Double monitoredTemperature = realTemperature;
-        //monitoredTemperature = uncertaintyUniformDistributionNoise(monitoredTemperature, -0.1, 0.1);
-        //monitoredTemperature = uncertaintyMonitoringImprecision(monitoredTemperature, 0.1);
-        //monitoredTemperature = uncertaintyMonitoringFrequency(monitoredTemperature, 2);
-        //monitoredTemperature = uncertaintyMonitoringFailure(monitoredTemperature, 0.05);
+
+        if(uncertaintyOption.contains("1")){
+            monitoredTemperature = uncertaintyUniformDistributionNoise(monitoredTemperature, -1., 1.);
+        }
+        if(uncertaintyOption.contains("2")){
+            monitoredTemperature = uncertaintyMonitoringImprecision(monitoredTemperature, 1.);
+        }
+        if(uncertaintyOption.contains("3")){
+            monitoredTemperature = uncertaintyMonitoringFrequency(monitoredTemperature, 2);
+        }
+        if(uncertaintyOption.contains("4")){
+            monitoredTemperature = uncertaintyMonitoringFailure(monitoredTemperature, 0.05);
+        }
 
         return monitoredTemperature;
     }
