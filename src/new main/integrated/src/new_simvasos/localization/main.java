@@ -63,6 +63,7 @@ public class main {
         ArrayList<CS> PatrolDroneCSs = new ArrayList();
     
         randomGeneration(2, randomValue, numRescueRobot); //TODO test paprameter: FAULT SEEDING NUM
+        System.out.println("randomValue size: "+randomValue.size());
         //System.out.println(randomValue);
         int randCount = 0;
         for (int i = 0; i < numPatrolDrone; i++) {
@@ -113,7 +114,7 @@ public class main {
         // Generate random index list without same numbers
         for(int i = 0; i < numFaultSeeding; i++) {
             temp = r.nextInt(numRescueRobot);
-            while(randomValue.contains(temp)) temp = r.nextInt(numRescueRobot);
+            while(randomValue.contains(temp)){ temp = r.nextInt(numRescueRobot); System.out.println("entered: "+temp);}
             randomValue.add(temp);
         }
         Collections.sort(randomValue);

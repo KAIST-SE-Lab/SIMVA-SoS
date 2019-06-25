@@ -26,4 +26,5 @@ public abstract class PropertyChecker {
   public abstract boolean check(Log log, Property verificationProperty, double prob, int T);
   public abstract boolean check(Log log, Property verificationProperty, double prob, int t, int T);
   public abstract boolean check(Log log, Property verificationProperty, int t, int T);
+  public abstract boolean check(String fileName, String time, String vehicleNum, String distance);
 }

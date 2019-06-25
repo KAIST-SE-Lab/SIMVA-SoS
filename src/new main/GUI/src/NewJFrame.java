@@ -299,13 +299,15 @@ public class NewJFrame extends javax.swing.JFrame {
                 MCITransientStateProbabilityChecker transientChecker = new MCITransientStateProbabilityChecker();
                 MCIUniversalityChecker universalityChecker = new MCIUniversalityChecker();
                 MCIMinimumDurationChecker minimumDurationChecker = new MCIMinimumDurationChecker();
+                PlatooningAbssenceChecker pac = new PlatooningAbssenceChecker();
                 
-                verifier = new SPRT(existenceChecker);
+                //verifier = new SPRT(existenceChecker);
                 //verifier = new SPRT(absenceChecker);
                 //verifier = new SPRT(steadyChecker);
                 //verifier = new SPRT(transientChecker);
                 //verifier = new SPRT(universalityChecker);
                 //verifier = new SPRT(minimumDurationChecker);
+                verifier = new SPRT(pac);
                 
                 // Simulation
                 //int repeatSim = 1500;
@@ -348,7 +350,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     
                     theta = i * 0.01;
                     //Existence, Absence, Universality
-                    verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
+                    //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta);
     
                     //MinimumDuration
                     //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 5, 15);
@@ -358,6 +360,9 @@ public class NewJFrame extends javax.swing.JFrame {
     
                     //Transient State Probability
                     //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 10, 15);
+
+                    //Platooning - arrive "vehicleNum" vehicles at "distance" within "time"
+                    verificationResult = verifier.verifyWithSimulationGUI(repeatSim, theta, "C:\\Users\\User\\Documents", "vehicleData", "100", "5", "1200");
                     
                     // True or False for this theta iteration
                     int myInt = verificationResult.getKey().getValue() ? 1 : 0;

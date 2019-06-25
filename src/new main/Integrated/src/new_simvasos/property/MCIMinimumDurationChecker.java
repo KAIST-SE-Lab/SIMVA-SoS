@@ -24,4 +24,9 @@ public class MCIMinimumDurationChecker extends MinimumDurationChecker {
             return false;
         }
     }
+
+    @Override
+    public boolean check(String fileName, String time, String vehicleNum, String distance) {
+        return false;
+    }
 }

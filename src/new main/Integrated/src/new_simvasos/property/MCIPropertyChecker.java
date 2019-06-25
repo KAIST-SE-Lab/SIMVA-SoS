@@ -52,4 +52,9 @@ public class MCIPropertyChecker extends ExistenceChecker {
     public boolean check(Log log, Property verificationProperty, int t, int T) {
         return false;
     }
-  }
+
+    @Override
+    public boolean check(String fileName, String time, String vehicleNum, String distance) {
+        return false;
+    }
+}
