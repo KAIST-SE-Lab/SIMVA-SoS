@@ -100,11 +100,13 @@ public class SPRT extends Verifier {
             }
             
             Log log = simulation.runSimulation();
-            //Log log2 = simulation.runSimulation();
             
             //MinimumDurationChecker
             if(this.propertychecker.check(log, verificationProperty, t, T)) {
                 numTrue += 1;
+            }
+            else{
+                FileManager.saveAllLogCSV(log, "./src./new main./Integrated./src./new_simvasos./adaptation./output./temp./"+ Math.round(theta*100) + "_" + numSamples + ".csv");
             }
             numSamples += 1;
         }
