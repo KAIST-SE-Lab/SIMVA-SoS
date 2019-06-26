@@ -2,6 +2,7 @@ package new_simvasos.property;
 
 import new_simvasos.log.Log;
 import new_simvasos.log.Snapshot;
+
 import java.io.*;
 import java.util.StringTokenizer;
 
@@ -37,18 +38,24 @@ public class PlatooningAbssenceChecker extends PropertyChecker {
         return false;
     }
 
+    public double isNum (String s) {
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
     @Override
     public boolean check(String fileName, String time, String vehicleNum, String distance) {
 
         BufferedReader reader = null;
         try {
-            FileReader fr = new FileReader(new File(fileName));
-            reader = new BufferedReader(fr);
+            reader = new BufferedReader(new FileReader(new File(fileName)));
 
             String line;
             double criterionT = Double.parseDouble(time);
             double criterionD = Double.parseDouble(distance);
-            int currentVechicleNum = 0;
+            int currentVehicleNum = 0;
             double currentT = 0;
 
             while ((line = reader.readLine()) != null) {
@@ -57,22 +64,24 @@ public class PlatooningAbssenceChecker extends PropertyChecker {
 
                 if (st.countTokens() == 8) {
                     st.nextToken();
-                     currentT= Double.parseDouble(st.nextToken().trim());
+                    String numCheck = st.nextToken();
+                    if ((currentT=isNum(numCheck)) == -1)
+                        continue;
+
                     if (criterionT == currentT) { // time
                         st.nextToken();
                         if (criterionD <= Double.parseDouble(st.nextToken().trim())) { //distance
-                            currentVechicleNum++;
+                            currentVehicleNum++;
                         }
                     }
                 }
-                if (currentT>criterionT)
+                if (currentT > criterionT)
                     break;
             }
 
             reader.close();
-            fr.close();
 
-            if (currentVechicleNum >= criterionD) {
+            if (currentVehicleNum >= Double.parseDouble(vehicleNum)) {
                 return true;
             } else {
                 return false;

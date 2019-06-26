@@ -7,7 +7,6 @@
 import javafx.util.Pair;
 import new_simvasos.log.Snapshot;
 import new_simvasos.property.*;
-import new_simvasos.property.pattern.SteadyStateProbabilityChecker;
 import new_simvasos.simulation.Simulation_Firefighters;
 import new_simvasos.verifier.SPRT;
 import org.jdesktop.swingx.JXTreeTable;
@@ -33,7 +32,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author TaeGeon, SuMin, YongJun, SangWon
+ * @author TaeGeon, SuMin, YongJun, SangWon, Jiyoung :)
  */
 
 public class NewJFrame extends javax.swing.JFrame {
