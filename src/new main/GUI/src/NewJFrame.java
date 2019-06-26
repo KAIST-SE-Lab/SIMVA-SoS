@@ -299,6 +299,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 MCIUniversalityChecker universalityChecker = new MCIUniversalityChecker();
                 MCIMinimumDurationChecker minimumDurationChecker = new MCIMinimumDurationChecker();
                 PlatooningAbssenceChecker pac = new PlatooningAbssenceChecker();
+                PlatooningManueverChecker pmc = new PlatooningManueverChecker();
                 
                 //verifier = new SPRT(existenceChecker);
                 //verifier = new SPRT(absenceChecker);
@@ -306,7 +307,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 //verifier = new SPRT(transientChecker);
                 //verifier = new SPRT(universalityChecker);
                 //verifier = new SPRT(minimumDurationChecker);
-                verifier = new SPRT(pac);
+                //verifier = new SPRT(pac);
+                verifier = new SPRT(pmc);
                 
                 // Simulation
                 //int repeatSim = 1500;
@@ -361,8 +363,11 @@ public class NewJFrame extends javax.swing.JFrame {
                     //verificationResult = verifier.verifyWithSimulationGUI(sim1, rescuedProperty, repeatSim, theta, 0.5, 10, 15);
 
                     //Platooning - arrive "vehicleNum" vehicles at "distance" within "time"
-                    verificationResult = verifier.verifyWithSimulationGUI(repeatSim, theta, "C:\\Users\\User\\Documents", "vehicleData", "100", "5", "1200");
-                    
+                    //verificationResult = verifier.verifyWithSimulationGUI(repeatSim, theta, "C:\\Users\\User\\Documents", "vehicleData", "100", "5", "1200");
+
+                    //Platooning - manuever numMergerReject < criterion within "time"
+                    verificationResult = verifier.verifyWithSimulationGUI(repeatSim, theta, "C:\\Users\\User\\Documents", "plnData", "100", "0", "");
+
                     // True or False for this theta iteration
                     int myInt = verificationResult.getKey().getValue() ? 1 : 0;
                     
