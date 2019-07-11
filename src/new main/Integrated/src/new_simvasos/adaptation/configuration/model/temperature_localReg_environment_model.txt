@@ -3,7 +3,7 @@ trend:[-6.69,-6.68,-6.68,-6.67,-6.66,-6.66,-6.65,-6.64,-6.64,-6.63,-6.62,-6.62,-
 seasonal_duration:24
 seasonal_min:-1.93
 seasonal_max:2.65
-remainder_average:0.0
-remainder_standard_deviation:4.41
+remainder_average:0.11
+remainder_standard_deviation:4.16
 global_min:-17.8
 global_max:39.4

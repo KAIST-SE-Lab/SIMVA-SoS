@@ -62,7 +62,7 @@ public class SoS {
 
   private boolean isInComfortZone(Integer tick, Double indoorTemperature, Double indoorHumidity){
     // https://www.mathsisfun.com/straight-line-graph-calculate.html 사용
-    int time_threshold_summer = 2100;
+    int time_threshold_summer = 50;
     int time_threshold_winter = 6500;
 
     if(tick > time_threshold_summer && tick < time_threshold_winter){   // summer
