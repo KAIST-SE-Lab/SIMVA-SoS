@@ -29,7 +29,6 @@ public class EnvironmentController extends SmartHomeCS {    //outdoor environmen
         String temperatureModelFile = FileManager.getValueFromConfigDictionary(super.config, "temperature_model");
         String humidityModelFile = FileManager.getValueFromConfigDictionary(super.config, "humidity_model");
 
-        //todo window opening model
         temperatureModel = new EnvironmentModel(modelPath + temperatureModelFile);
         humidityModel = new EnvironmentModel(modelPath + humidityModelFile);
     }
