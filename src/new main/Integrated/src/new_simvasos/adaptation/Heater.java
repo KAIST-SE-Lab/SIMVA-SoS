@@ -63,7 +63,7 @@ public class Heater extends SmartHomeCS {
             monitoredTemperature = uncertaintyUniformDistributionNoise(monitoredTemperature, -1., 1.);
         }
         if(uncertaintyOption.contains("2")){
-            monitoredTemperature = uncertaintyMonitoringImprecision(monitoredTemperature, 1.);
+            monitoredTemperature = uncertaintyMonitoringImprecision(monitoredTemperature, 2.);
         }
         if(uncertaintyOption.contains("3")){
             monitoredTemperature = uncertaintyMonitoringFrequency(monitoredTemperature, 2);

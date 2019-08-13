@@ -104,9 +104,10 @@ public class SPRT extends Verifier {
             //MinimumDurationChecker
             if(this.propertychecker.check(log, verificationProperty, t, T)) {
                 numTrue += 1;
+                FileManager.saveAllLogCSV(log, "./src./new main./Integrated./src./new_simvasos./adaptation./output./temp./pass./"+ Math.round(theta*100) + "_" + numSamples + ".csv");
             }
             else{
-                FileManager.saveAllLogCSV(log, "./src./new main./Integrated./src./new_simvasos./adaptation./output./temp./"+ Math.round(theta*100) + "_" + numSamples + ".csv");
+                FileManager.saveAllLogCSV(log, "./src./new main./Integrated./src./new_simvasos./adaptation./output./temp./fail./"+ Math.round(theta*100) + "_" + numSamples + ".csv");
             }
             numSamples += 1;
         }

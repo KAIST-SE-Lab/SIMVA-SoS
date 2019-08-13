@@ -96,7 +96,7 @@ public class EnvironmentModel {
         Double value = trendValue + seasonalValue + remainderValue;
         //Double value = trendValue + seasonalValue;
 
-        if(value > globalMax){
+        /*if(value > globalMax){
             return globalMax;
         }
         else if(value < globalMin){
@@ -104,7 +104,8 @@ public class EnvironmentModel {
         }
         else{
             return value;
-        }
+        }*/
+        return value;
     }
 
     public Double getMinMaxTriangleEnvironmentalValue(int tick){
