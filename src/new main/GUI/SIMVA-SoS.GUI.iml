@@ -8,7 +8,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="module" module-name="SIMVA-SoS.Simulation &amp; Verification" />
     <orderEntry type="library" name="swingx-all-1.6.4" level="project" />
     <orderEntry type="library" name="jfreechart-1.0.19" level="project" />

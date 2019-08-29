@@ -3,10 +3,7 @@ package new_simvasos.adaptation.runtimeVerification;
 import javafx.util.Pair;
 import new_simvasos.adaptation.FileManager;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -50,6 +47,11 @@ public class smartHomeController {
     private static int knowledgeLength;
     private static int maxNumSamples;
 
+    //PID controller
+    private static float integral;
+    private static float prevErr;
+    private static float settingPoint;
+
 
     public smartHomeController(){
         currentOutdoorTemperature = 0.;
@@ -85,11 +87,15 @@ public class smartHomeController {
                 solutions[i][j][1] = (maxHumidityControl/controlDegree) * j - maxHumidityControl;
             }
         }
+
+        integral = 0;
+        prevErr =0;
+        settingPoint = (float)1.5;
     }
 
     public static void main (String[] args){
         String[] years = {"2014"};//, "2015", "2016", "2017", "2018"};
-        String[] days = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
+        String[] days = {"SUN"};//, "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 
         ArrayList<Double> costReportList = new ArrayList<>();
         ArrayList<Double> comfortReportList = new ArrayList<>();
@@ -107,17 +113,18 @@ public class smartHomeController {
                 ArrayList<Float> APTimeList = new ArrayList<>();
                 ArrayList<Float> ATimeList = new ArrayList<>();
                 ArrayList<Float> PTimeList = new ArrayList<>();
+                ArrayList<Integer> numSampleList = new ArrayList<>();
                 for(int t = 0; t < maxSimulationTime; t++){
 //                    //scenario2
 //                    if (t > maxSimulationTime/2){
 //                        energyEfficiencyOfTemperatureControl = 3.;
 //                    }
-                    //scenario3
-                    if (t > maxSimulationTime/2){
-                        energyEfficiencyOfHumidityControl = 3.;
-                    }
+//                    //scenario3
+//                    if (t > maxSimulationTime/2){
+//                        energyEfficiencyOfHumidityControl = 3.;
+//                    }
 
-                    //System.out.println(t);
+                    System.out.println(t);
                     environmentalChange(t, environmentalDataDirName + environmentalDataFileName);
                     monitor(t);
                     int option = 2;
@@ -166,6 +173,29 @@ public class smartHomeController {
                             planningStart = System.currentTimeMillis();
                             nondeterministicProactivePlan(t, forcastedOutdoorTemperatureMin, forcastedOutdoorTemperatureMax, forcastedOutdoorHumidityMin, forcastedOutdoorHumidityMax);
                             planningEnd = System.currentTimeMillis();
+
+                            numSampleList.add(maxNumSamples);
+                            System.out.println(maxNumSamples + " " + (planningEnd-analysisStart)/1000F);
+                            PIDController((planningEnd-analysisStart)/1000F);   //todo: 검토
+                        }
+                    }
+                    else if(option == 3){   //nondeterministic forcasting with Z3
+                        if(t <= knowledgeLength){
+                            analysisStart = System.currentTimeMillis();
+                            planningStart = System.currentTimeMillis();
+                            reactivePlan(t);
+                            planningEnd = System.currentTimeMillis();
+                        }
+                        else{
+                            analysisStart = System.currentTimeMillis();
+                            double[] forcastingInfo = analyze(t);
+                            double forcastedOutdoorTemperatureMin = forcastingInfo[1];
+                            double forcastedOutdoorTemperatureMax = forcastingInfo[2];
+                            double forcastedOutdoorHumidityMin = forcastingInfo[4];
+                            double forcastedOutdoorHumidityMax = forcastingInfo[5];
+                            planningStart = System.currentTimeMillis();
+                            nondeterministicProactivePlanWithZ3(t, forcastedOutdoorTemperatureMin, forcastedOutdoorTemperatureMax, forcastedOutdoorHumidityMin, forcastedOutdoorHumidityMax);
+                            planningEnd = System.currentTimeMillis();
                         }
                     }
                     else{
@@ -180,11 +210,17 @@ public class smartHomeController {
                     PTimeList.add((planningEnd-planningStart)/1000F);
                     effect(t);
 
+
+
+
+
                     if(isInComfortZone(currentIndoorTemperature, currentIndoorHumidity)){
                         comfortList.add(1);
+                        System.out.println(1);
                     }
                     else{
                         comfortList.add(0);
+                        System.out.println(0);
                     }
 
                 }
@@ -235,7 +271,8 @@ public class smartHomeController {
                     fw.write("comfort" + ',');
                     fw.write("AP time" + ',');
                     fw.write("A time" + ',');
-                    fw.write("P time" + '\n');
+                    fw.write("P time" + ',');
+                    fw.write("samples" + '\n');
 
                     for(int i=0; i<outdoorTemperatureList.size(); i++){
                         fw.write(Double.toString(outdoorTemperatureList.get(i)) + ',');
@@ -248,7 +285,8 @@ public class smartHomeController {
                         fw.write(Double.toString(comfortList.get(i)) + ',');
                         fw.write(Float.toString(APTimeList.get(i)) + ',');
                         fw.write(Float.toString(ATimeList.get(i)) + ',');
-                        fw.write(Float.toString(PTimeList.get(i)) + '\n');
+                        fw.write(Float.toString(PTimeList.get(i)) + ',');
+                        fw.write(Integer.toString(numSampleList.get(i)) + '\n');
                     }
                     costReportList.add(costSum);
                     comfortReportList.add((double)comfortSum/comfortList.size());
@@ -423,6 +461,16 @@ public class smartHomeController {
         totalCost.add(command[2]);
     }
 
+    private static void nondeterministicProactivePlanWithZ3(int time, double forcastedOutdoorTemperatureMin, double forcastedOutdoorTemperatureMax, double forcastedOutdoorHumidityMin, double forcastedOutdoorHumidityMax) {
+        Double curInTemp = indoorTemperatureList.get(time);
+        Double curInHumi = indoorHumidityList.get(time);
+
+        double[] command = greedyProactiveSearchWithZ3(curInTemp, forcastedOutdoorTemperatureMin, forcastedOutdoorTemperatureMax, curInHumi, forcastedOutdoorHumidityMin, forcastedOutdoorHumidityMax);
+        commandTemperature = command[0];
+        commandHumidity = command[1];
+        totalCost.add(command[2]);
+    }
+
     private static void effect(int time){
         if (abs(commandTemperature) > maxTemperatureControl){
             commandTemperature = maxTemperatureControl * (abs(commandTemperature)/commandTemperature);
@@ -540,6 +588,113 @@ public class smartHomeController {
             return plan;
         }
     }
+
+    private static double[] greedyProactiveSearchWithZ3(Double curInTemp, double forcastedOutdoorTemperatureMin, double forcastedOutdoorTemperatureMax, Double curInHumi, double forcastedOutdoorHumidityMin, double forcastedOutdoorHumidityMax) {
+        boolean[][] validityEvaluation = new boolean[controlDegree*2+1][controlDegree*2+1];
+        double[][] costEvaluation = new double[controlDegree*2+1][controlDegree*2+1];
+
+        //centroid와 너무 먼 경우는 계산을 안하도록 구현
+        double forcastedTempMin = curInTemp + windowOpenness * (forcastedOutdoorTemperatureMin - curInTemp);
+        double forcastedTempMax = curInTemp + windowOpenness * (forcastedOutdoorTemperatureMax - curInTemp);
+        boolean notSearch = false;
+        if((forcastedTempMin - maxTemperatureControl < tempCentroid - 1.25 && forcastedTempMax + maxTemperatureControl < tempCentroid - 1.25) || (forcastedTempMin - maxTemperatureControl > tempCentroid + 2.25 && forcastedTempMax + maxTemperatureControl < tempCentroid + 2.25)){
+            notSearch = true;
+        }
+        if(!notSearch) {
+            for (int i = 0; i < solutions.length; i++) {
+                for (int j = 0; j < solutions[i].length; j++) {
+                    validityEvaluation[i][j] = evaluateNondeterministicValidityWithZ3(curInTemp, forcastedOutdoorTemperatureMin, forcastedOutdoorTemperatureMax, curInHumi, forcastedOutdoorHumidityMin, forcastedOutdoorHumidityMax, solutions[i][j][0], solutions[i][j][1]);
+                    costEvaluation[i][j] = evaluateCost(i, j);
+                }
+            }
+        }
+
+        int bestTempIdx = -1;
+        int bestHumiIdx = -1;
+        boolean bestValidity = false;
+        double bestCost = -1;
+
+        for(int i = 0; i < solutions.length; i++){
+            for(int j = 0; j < solutions[i].length; j++){
+                if(bestTempIdx < 0 && bestHumiIdx < 0){
+                    bestTempIdx = i;
+                    bestHumiIdx = j;
+                    bestCost = costEvaluation[i][j];
+                    bestValidity = validityEvaluation[i][j];
+                    continue;
+                }
+                if(!bestValidity){
+                    if(validityEvaluation[i][j]){
+                        bestTempIdx = i;
+                        bestHumiIdx = j;
+                        bestCost = costEvaluation[i][j];
+                        bestValidity = true;
+                        continue;
+                    }
+                    else{
+                        if(costEvaluation[i][j] < bestCost){
+                            bestTempIdx = i;
+                            bestHumiIdx = j;
+                            bestCost = costEvaluation[i][j];
+                            continue;
+                        }
+                    }
+                }
+                else{
+                    if(validityEvaluation[i][j]){
+                        if(costEvaluation[i][j] < bestCost){
+                            bestTempIdx = i;
+                            bestHumiIdx = j;
+                            bestCost = costEvaluation[i][j];
+                            continue;
+                        }
+                    }
+                    else{
+                        continue;
+                    }
+                }
+            }
+        }
+
+        if(bestValidity){
+            Random r = new Random();
+            double[] plan = {solutions[bestTempIdx][bestHumiIdx][0] + ((double)r.nextInt(controlDegree)-(double)controlDegree/2)/controlDegree, solutions[bestTempIdx][bestHumiIdx][1] + ((double)r.nextInt(controlDegree)-(double)controlDegree/2)/controlDegree, bestCost/controlDegree};
+            return plan;
+        }
+        else{
+            //another solution
+            double[] plan = new double[3];
+            double cost = 0;
+
+            if(tempCentroid > curInTemp + maxTemperatureControl){
+                plan[0] = maxTemperatureControl;
+                cost = cost + controlDegree * energyEfficiencyOfTemperatureControl;
+            }
+            else if(tempCentroid < curInTemp - maxTemperatureControl){
+                plan[0] = -maxTemperatureControl;
+                cost = cost + controlDegree * energyEfficiencyOfTemperatureControl;
+            }
+            else{
+                plan[0] = 0;
+            }
+            if(humiCentroid > curInHumi + maxHumidityControl){
+                plan[1] = maxHumidityControl;
+                cost = cost + controlDegree * energyEfficiencyOfHumidityControl;
+            }
+            else if(humiCentroid < curInHumi - maxHumidityControl){
+                plan[1] = -maxHumidityControl;
+                cost = cost + controlDegree * energyEfficiencyOfHumidityControl;
+            }
+            else{
+                plan[1] = 0;
+            }
+            plan[2] = cost/controlDegree;
+
+            return plan;
+        }
+    }
+
+
 
     private static double[] greedyProactiveSearch(Double curInTemp, Double forcastedOutdoorTemperatureMin, Double forcastedOutdoorTemperatureMax, Double curInHumi, Double forcastedOutdoorHumidityMin, Double forcastedOutdoorHumidityMax){
         double[][] validityEvaluation = new double[controlDegree*2+1][controlDegree*2+1];
@@ -660,6 +815,75 @@ public class smartHomeController {
         return satisfactionProb;
     }
 
+    private static boolean evaluateNondeterministicValidityWithZ3(Double curInTemp, double forcastedOutdoorTemperatureMin, double forcastedOutdoorTemperatureMax, Double curInHumi, double forcastedOutdoorHumidityMin, double forcastedOutdoorHumidityMax, double tempControl, double humiControl) {
+        double forcastedIndoorTempMin = curInTemp + windowOpenness * (forcastedOutdoorTemperatureMin - curInTemp);
+        double forcastedIndoorTempMax = curInTemp + windowOpenness * (forcastedOutdoorTemperatureMax - curInTemp);
+        double forcastedIndoorHumiMin = curInHumi + windowOpenness * (forcastedOutdoorHumidityMin - curInHumi);
+        double forcastedIndoorHumiMax = curInHumi + windowOpenness * (forcastedOutdoorHumidityMax - curInHumi);
+
+        //todo
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter("D:\\z3-4.8.4.d6df51951f4c-x64-win\\bin\\script\\z3test.txt");
+
+            fw.write("(declare-const t Real)\n");
+            fw.write("(declare-const h Real)\n");
+            fw.write("(declare-const tp Real)\n");
+            fw.write("(declare-const hp Real)\n");
+            fw.write("(declare-const h1 Real)\n");
+            fw.write("(declare-const h2 Real)\n");
+            fw.write("(declare-const h3 Real)\n");
+            fw.write("(declare-const h4 Real)\n");
+            fw.write("(assert (= tp (+ t " + tempControl + ")))\n");
+            fw.write("(assert (= hp (+ h " + humiControl + ")))\n");
+            fw.write("(assert (> t " + forcastedIndoorTempMin + "))\n");
+            fw.write("(assert (< t " + forcastedIndoorTempMax + "))\n");
+            fw.write("(assert (> h " + forcastedIndoorHumiMin + "))\n");
+            fw.write("(assert (< h " + forcastedIndoorHumiMax + "))\n");
+            fw.write("(assert (= h1 (+ (* -55.1 tp) 1319.25)))\n");
+            fw.write("(assert (= h2 (+ (* -1.314 tp) 55.2857)))\n");
+            fw.write("(assert (= h3 (+ (* -6.3427 tp) 222.214)))\n");
+            fw.write("(assert (= h4 (+ (* -37.5 tp) 1032.3)))\n");
+            fw.write("(define-fun comfort () Bool\n");
+            fw.write("\t(and (and (> hp h1) (> hp h2)) (and (< hp h3) (< hp h4)))\n");
+            fw.write(")\n");
+            fw.write("(assert (not comfort))\n");
+            fw.write("(check-sat)");
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String line = "sat";
+        boolean sat = true;
+        try {
+            String cmd = "D:\\z3-4.8.4.d6df51951f4c-x64-win\\bin\\z3 -smt2 D:\\z3-4.8.4.d6df51951f4c-x64-win\\bin\\script\\z3test.txt";
+            //System.out.println("Executing command: " + cmd);
+            Process p = Runtime.getRuntime().exec(cmd);
+            int result = p.waitFor();
+
+//            System.out.println("Process exit code: " + result);
+//            System.out.println();
+//            System.out.println("Result:");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            while ((line = reader.readLine()) != null) {
+                //System.out.println(line);
+                if(line.contains("unsat")){
+                    sat = false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!sat){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     private static boolean isInComfortZone(Double indoorTemperature, Double indoorHumidity){
         // https://www.mathsisfun.com/straight-line-graph-calculate.html 사용
         if(indoorHumidity > equation(-55.1, 1319.25, indoorTemperature) &&
@@ -770,6 +994,25 @@ public class smartHomeController {
         }
 
         return p1m / p0m;
+    }
+
+    private static void PIDController(float currentTime) {  //todo: 검토, 학습
+        double kp = 1000;
+        double ki = 1;
+        double kd = 1;
+        int minNumSample = 100;
+
+        float error = currentTime - settingPoint;
+        integral += error;
+        float derivative = error - prevErr;
+
+        maxNumSamples = maxNumSamples - (int)(error * kp );//+ integral * ki + derivative * kd);
+
+        if(maxNumSamples < minNumSample){
+            maxNumSamples = minNumSample;
+        }
+
+        prevErr = error;
     }
 }
 
