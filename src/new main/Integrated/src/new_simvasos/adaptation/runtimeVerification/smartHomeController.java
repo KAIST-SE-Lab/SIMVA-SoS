@@ -90,12 +90,12 @@ public class smartHomeController {
 
         integral = 0;
         prevErr =0;
-        settingPoint = (float)1.5;
+        settingPoint = (float)5;
     }
 
     public static void main (String[] args){
-        String[] years = {"2014"};//, "2015", "2016", "2017", "2018"};
-        String[] days = {"SUN"};//, "MON", "TUE", "WED", "THU", "FRI", "SAT"};
+        String[] years = {"2014", "2015", "2016", "2017", "2018"};
+        String[] days = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 
         ArrayList<Double> costReportList = new ArrayList<>();
         ArrayList<Double> comfortReportList = new ArrayList<>();
@@ -105,7 +105,7 @@ public class smartHomeController {
                 smartHomeController controller = new smartHomeController();
                 int maxSimulationTime = 1248;
 
-                String environmentalDataDirName = "./src./new main./Integrated./src./new_simvasos./adaptation./runtimeVerification./environmentalDataset./";
+                String environmentalDataDirName = "./src./new main./Integrated./src./new_simvasos./adaptation./runtimeVerification./environmentalDataset./original./";
                 String environmentalDataFileName = years[x] + " " + days[y] + ".txt";
                 System.out.println(environmentalDataFileName);
 
@@ -124,7 +124,7 @@ public class smartHomeController {
 //                        energyEfficiencyOfHumidityControl = 3.;
 //                    }
 
-                    System.out.println(t);
+                    //System.out.println(t);
                     environmentalChange(t, environmentalDataDirName + environmentalDataFileName);
                     monitor(t);
                     int option = 2;
@@ -132,6 +132,8 @@ public class smartHomeController {
                     long analysisStart;
                     long planningStart;
                     long planningEnd;
+
+                    numSampleList.add(maxNumSamples);
                     if(option == 0){    //reactive
                         //analyze(t);
                         analysisStart = System.currentTimeMillis();
@@ -174,9 +176,9 @@ public class smartHomeController {
                             nondeterministicProactivePlan(t, forcastedOutdoorTemperatureMin, forcastedOutdoorTemperatureMax, forcastedOutdoorHumidityMin, forcastedOutdoorHumidityMax);
                             planningEnd = System.currentTimeMillis();
 
-                            numSampleList.add(maxNumSamples);
-                            System.out.println(maxNumSamples + " " + (planningEnd-analysisStart)/1000F);
-                            PIDController((planningEnd-analysisStart)/1000F);   //todo: 검토
+
+                            //System.out.println(maxNumSamples + " " + (planningEnd-analysisStart)/1000F);
+                            //PIDController((planningEnd-analysisStart)/1000F);
                         }
                     }
                     else if(option == 3){   //nondeterministic forcasting with Z3
@@ -216,11 +218,11 @@ public class smartHomeController {
 
                     if(isInComfortZone(currentIndoorTemperature, currentIndoorHumidity)){
                         comfortList.add(1);
-                        System.out.println(1);
+                        //System.out.println(1);
                     }
                     else{
                         comfortList.add(0);
-                        System.out.println(0);
+                        //System.out.println(0);
                     }
 
                 }
@@ -454,6 +456,15 @@ public class smartHomeController {
     private static void nondeterministicProactivePlan(int time, double forcastedOutdoorTemperatureMin, double forcastedOutdoorTemperatureMax, double forcastedOutdoorHumidityMin, double forcastedOutdoorHumidityMax){
         Double curInTemp = indoorTemperatureList.get(time);
         Double curInHumi = indoorHumidityList.get(time);
+        //todo: uncertainty on real situation
+        curInTemp = uncertaintyUniformDistributionNoise(curInTemp, -1., 1.); //복잡도를 제한하기 위해 indoorTemp에만 uncertainty가 있다고 가정하자.
+        curInTemp = uncertaintyMonitoringImprecision(curInTemp);
+        curInTemp = uncertaintyMonitoringFailure(curInTemp, 0.1);
+
+        //todo: uncertainty (monitoring failure) aware verification, uncertainty 발생 변수에 uncertainty 반영
+        if(curInTemp == null){
+            curInTemp = indoorTemperatureList.get(time-1);
+        }
 
         double[] command = greedyProactiveSearch(curInTemp, forcastedOutdoorTemperatureMin, forcastedOutdoorTemperatureMax, curInHumi, forcastedOutdoorHumidityMin, forcastedOutdoorHumidityMax);
         commandTemperature = command[0];
@@ -694,9 +705,12 @@ public class smartHomeController {
         }
     }
 
-
-
     private static double[] greedyProactiveSearch(Double curInTemp, Double forcastedOutdoorTemperatureMin, Double forcastedOutdoorTemperatureMax, Double curInHumi, Double forcastedOutdoorHumidityMin, Double forcastedOutdoorHumidityMax){
+        if(curInTemp == null){
+            double[] plan = {commandTemperature, commandHumidity, totalCost.get(totalCost.size()-1)};
+            return plan;
+        }
+
         double[][] validityEvaluation = new double[controlDegree*2+1][controlDegree*2+1];
         double[][] costEvaluation = new double[controlDegree*2+1][controlDegree*2+1];
 
@@ -792,7 +806,12 @@ public class smartHomeController {
         for(int i = 0; i < numSamples; i++){
             double forcastedOutdoorTemp = forcastedOutdoorTemperatureMin + (forcastedOutdoorTemperatureMax - forcastedOutdoorTemperatureMin) * r.nextDouble();
             double forcastedOutdoorHumi = forcastedOutdoorHumidityMin + (forcastedOutdoorHumidityMax - forcastedOutdoorHumidityMin) * r.nextDouble();
-            double forcastedIndoorTemp = curInTemp + windowOpenness * (forcastedOutdoorTemp - curInTemp);
+
+            Double error1 = (r.nextDouble() * (1.0 - (-1))) + (-1); //todo: uncertainty aware verification, uncertainty 발생 변수에 uncertainty 반영
+            Double error2 = (r.nextDouble() * (0.5 - (-0.5))) + (-0.5);
+            Double error3 = (r.nextDouble() * (1.0 - (-1))) + (-1);
+            double forcastedIndoorTemp = (curInTemp + error1 + error2 + error3) + windowOpenness * (forcastedOutdoorTemp - (curInTemp + error1 + error2 + error3));
+            //double forcastedIndoorTemp = (curInTemp) + windowOpenness * (forcastedOutdoorTemp - (curInTemp));
             double forcastedIndoorHumi = curInHumi + windowOpenness * (forcastedOutdoorHumi - curInHumi);
             logs.add(evaluateValidity(forcastedIndoorTemp, forcastedIndoorHumi, tempControl, humiControl));
         }
@@ -821,7 +840,7 @@ public class smartHomeController {
         double forcastedIndoorHumiMin = curInHumi + windowOpenness * (forcastedOutdoorHumidityMin - curInHumi);
         double forcastedIndoorHumiMax = curInHumi + windowOpenness * (forcastedOutdoorHumidityMax - curInHumi);
 
-        //todo
+
         FileWriter fw = null;
         try {
             fw = new FileWriter("D:\\z3-4.8.4.d6df51951f4c-x64-win\\bin\\script\\z3test.txt");
@@ -930,7 +949,7 @@ public class smartHomeController {
 
         ret = isSatisfied(numSamples, numTrue, theta);
 
-        // TODO Theta가 1일때 true 나오는 이유 확인
+
         if(theta == 1.00) ret = false;
 
         String verificationResult = "theta: " + Double.parseDouble(String.format("%.2f", theta)) +
@@ -996,7 +1015,7 @@ public class smartHomeController {
         return p1m / p0m;
     }
 
-    private static void PIDController(float currentTime) {  //todo: 검토, 학습
+    private static void PIDController(float currentTime) {
         double kp = 1000;
         double ki = 1;
         double kd = 1;
@@ -1013,6 +1032,26 @@ public class smartHomeController {
         }
 
         prevErr = error;
+    }
+
+
+    //uncertainties
+    private static Double uncertaintyUniformDistributionNoise(Double realEnv, Double minError, Double maxError){
+        Random random = new Random();
+        Double error = (random.nextDouble() * (maxError - minError)) + minError;
+        return realEnv + error;
+    }
+
+    private static Double uncertaintyMonitoringImprecision(Double realEnv){
+        return (double)Math.round(realEnv);
+    }
+
+    private static Double uncertaintyMonitoringFailure(Double realEnv, Double prob){
+        Random random = new Random();
+        if(random.nextDouble() < prob){
+            return null;
+        }
+        return realEnv;
     }
 }
 
