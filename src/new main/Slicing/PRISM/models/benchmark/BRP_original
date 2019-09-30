@@ -1,0 +1,74 @@
+dtmc
+
+const int N;
+const int MAX;
+
+module sender
+	s : [0..6];
+	srep : [0..3];
+	nrtr : [0..MAX];
+	i : [0..N];
+	bs : bool;
+	s_ab : bool;
+	fs : bool;
+	ls : bool;
+
+	[NewFile] (s=0) -> (s'=1) & (i'=1) & (srep'=0);
+	[aF] (s=1) -> (s'=2) & (fs'=(i=1)) & (ls'=(i=N)) & (bs'=s_ab) & (nrtr'=0);
+	[aB] (s=2) -> (s'=4) & (s_ab'=!s_ab);
+	[TO_Msg] (s=2) -> (s'=3);
+	[TO_Ack] (s=2) -> (s'=3);
+	[aF] (s=3) & (nrtr<MAX) -> (s'=2) & (fs'=(i=1)) & (ls'=(i=N)) & (bs'=s_ab) & (nrtr'=nrtr+1);
+	[] (s=3) & (nrtr=MAX) & (i<N) -> (s'=5) & (srep'=1);
+	[] (s=3) & (nrtr=MAX) & (i=N) -> (s'=5) & (srep'=2);
+	[] (s=4) & (i<N) -> (s'=1) & (i'=i+1);
+	[] (s=4) & (i=N) -> (s'=0) & (srep'=3);
+	[SyncWait] (s=5) -> (s'=6); 
+	[SyncWait] (s=6) -> (s'=0) & (s_ab'=false); 
+endmodule
+
+module receiver
+	r : [0..5];
+	rrep : [0..4];
+	fr : bool;
+	lr : bool;
+	br : bool;
+	r_ab : bool;
+	recv : bool;
+
+	[SyncWait] (r=0) -> (r'=0);
+	[aG] (r=0) -> (r'=1) & (fr'=fs) & (lr'=ls) & (br'=bs) & (recv'=T);
+	[] (r=1) -> (r'=2) & (r_ab'=br);
+	[] (r=2) & (r_ab=br) & (fr=true) & (lr=false)  -> (r'=3) & (rrep'=1);
+	[] (r=2) & (r_ab=br) & (fr=false) & (lr=false) -> (r'=3) & (rrep'=2);
+	[] (r=2) & (r_ab=br) & (fr=false) & (lr=true)  -> (r'=3) & (rrep'=3);
+	[aA] (r=2) & !(r_ab=br) -> (r'=4);  
+	[aA] (r=3) -> (r'=4) & (r_ab'=!r_ab);
+	[aG] (r=4) -> (r'=2) & (fr'=fs) & (lr'=ls) & (br'=bs) & (recv'=T);
+	[SyncWait] (r=4) & (ls=true) -> (r'=5);
+	[SyncWait] (r=4) & (ls=false) -> (r'=5) & (rrep'=4);
+	[SyncWait] (r=5) -> (r'=0) & (rrep'=0);
+endmodule
+
+module checker
+	T : bool;
+
+//	[NewFile] (T=false) -> (T'=false);
+	[NewFile] (T=false) -> (T'=true);
+endmodule
+
+module	channelK
+	k : [0..2];
+
+	[aF] (k=0) -> 0.98 : (k'=1) + 0.02 : (k'=2);
+	[aG] (k=1) -> (k'=0);
+	[TO_Msg] (k=2) -> (k'=0);
+endmodule
+
+module	channelL
+	l : [0..2];
+
+	[aA] (l=0) -> 0.99 : (l'=1) + 0.01 : (l'=2);
+	[aB] (l=1) -> (l'=0);
+	[TO_Ack] (l=2) -> (l'=0);
+endmodule

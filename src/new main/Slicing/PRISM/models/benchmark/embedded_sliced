@@ -1,0 +1,22 @@
+ctmc
+
+// rates
+const double lambda_s = 1/(30*24*60*60); // 1 month
+const double lambda_a = 1/(2*30*24*60*60); // 2 months
+
+// sensors
+module sensors
+	
+	s : [0..3] init 3; // number of sensors working
+	
+	[] s>1 -> s*lambda_s : (s'=s-1); // failure of a single sensor
+	
+endmodule
+
+module actuators
+	
+	a : [0..2] init 2; // number of actuators working
+	
+	[] a>0 -> a*lambda_a : (a'=a-1); // failure of a single actuator
+	
+endmodule

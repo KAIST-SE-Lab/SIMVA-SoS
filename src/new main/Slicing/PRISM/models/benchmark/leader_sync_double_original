@@ -1,0 +1,409 @@
+dtmc
+
+
+
+// CONSTANTS
+const int N4 = 4; // number of processes
+const int K4 = 4; // range of probabilistic choice
+
+// counter module used to count the number of processes that have been read
+// and to know when a process has decided
+module counter4
+	
+	// counter (c=i  means process j reading process (i-1)+j next)
+	c4 : [1..N4-1];
+	
+	// reading
+	[read4] c4<N4-1 -> (c4'=c4+1);
+	// finished reading
+	[read4] c4=N4-1 -> (c4'=c4);
+	//decide
+	[done4] u14|u24|u34|u44 -> (c4'=c4);
+	// pick again reset counter 
+	[retry4] !(u14|u24|u34|u44) -> (c4'=1);
+	// loop (when finished to avoid deadlocks)
+	[loop4] s14=3 -> (c4'=c4);
+	
+endmodule
+
+//  processes form a ring and suppose:
+// process 1 reads process 2
+// process 2 reads process 3
+// process 3 reads process 1
+module process14
+	
+	// local state
+	s14 : [0..3];
+	// s1=0 make random choice
+	// s1=1 reading
+	// s1=2 deciding
+	// s1=3 finished
+	
+	// has a unique id so far (initially true)
+	u14 : bool;
+	
+	// value to be sent to next process in the ring (initially sets this to its own value)
+	v14 : [0..K4-1];
+	
+	// random choice
+	p14 : [0..K4-1];
+	
+	// pick value
+	[pick4] s14=0 -> 1/K4 : (s14'=1) & (p14'=0) & (v14'=0) & (u14'=true)
+	             + 1/K4 : (s14'=1) & (p14'=1) & (v14'=1) & (u14'=true)
+	             + 1/K4 : (s14'=1) & (p14'=2) & (v14'=2) & (u14'=true)
+	             + 1/K4 : (s14'=1) & (p14'=3) & (v14'=3) & (u14'=true);
+	// read
+	[read4] s14=1 &  u14 & c4<N4-1 -> (u14'=(p14!=v24)) & (v14'=v24);
+	[read4] s14=1 & !u14 & c4<N4-1 -> (u14'=false) & (v14'=v24) & (p14'=0);
+	// read and move to decide
+	[read4] s14=1 &  u14 & c4=N4-1 -> (s14'=2) & (u14'=(p14!=v24)) & (v14'=0) & (p14'=0);
+	[read4] s14=1 & !u14 & c4=N4-1 -> (s14'=2) & (u14'=false) & (v14'=0);
+	// deciding
+	// done
+	[done4] s14=2 -> (s14'=3) & (u14'=false) & (v14'=0) & (p14'=0);
+	//retry
+	[retry4] s14=2 -> (s14'=0) & (u14'=false) & (v14'=0) & (p14'=0);
+	// loop (when finished to avoid deadlocks)
+	[loop4] s14=3 -> (s14'=3);
+	
+endmodule
+
+// construct remaining processes through renaming
+module process24 = process14 [ s14=s24,p14=p24,v14=v24,u14=u24,v24=v34 ] endmodule
+module process34 = process14 [ s14=s34,p14=p34,v14=v34,u14=u34,v24=v44 ] endmodule
+module process44 = process14 [ s14=s44,p14=p44,v14=v44,u14=u44,v24=v14 ] endmodule
+
+// expected number of rounds
+rewards "num_rounds4"
+	[pick4] true : 1;
+endrewards
+
+// labels
+label "elected4" = s14=3&s24=3&s34=3&s44=3;
+
+// CONSTANTS
+const int N5 = 5; // number of processes
+const int K5 = 5; // range of probabilistic choice
+
+// counter module used to count the number of processes that have been read
+// and to know when a process has decided
+module counter5
+	
+	// counter (c=i  means process j reading process (i-1)+j next)
+	c5 : [1..N5-1];
+	
+	// reading
+	[read5] c5<N5-1 -> (c5'=c5+1);
+	// finished reading
+	[read5] c5=N5-1 -> (c5'=c5);
+	//decide
+	[done5] u15|u25|u35|u45|u55 -> (c5'=c5);
+	// pick again reset counter 
+	[retry5] !(u15|u25|u35|u45|u55) -> (c5'=1);
+	// loop (when finished to avoid deadlocks)
+	[loop5] s15=3 -> (c5'=c5);
+	
+endmodule
+
+//  processes form a ring and suppose:
+// process 1 reads process 2
+// process 2 reads process 3
+// process 3 reads process 1
+module process15
+	
+	// local state
+	s15 : [0..3];
+	// s1=0 make random choice
+	// s1=1 reading
+	// s1=2 deciding
+	// s1=3 finished
+	
+	// has a unique id so far (initially true)
+	u15 : bool;
+	
+	// value to be sent to next process in the ring (initially sets this to its own value)
+	v15 : [0..K5-1];
+	
+	// random choice
+	p15 : [0..K5-1];
+	
+	// pick value
+	[pick5] s15=0 -> 1/K5 : (s15'=1) & (p15'=0) & (v15'=0) & (u15'=true)
+	             + 1/K5 : (s15'=1) & (p15'=1) & (v15'=1) & (u15'=true)
+	             + 1/K5 : (s15'=1) & (p15'=2) & (v15'=2) & (u15'=true)
+	             + 1/K5 : (s15'=1) & (p15'=3) & (v15'=3) & (u15'=true)
+	             + 1/K5 : (s15'=1) & (p15'=4) & (v15'=4) & (u15'=true);
+	// read
+	[read5] s15=1 &  u15 & c5<N5-1 -> (u15'=(p15!=v25)) & (v15'=v25);
+	[read5] s15=1 & !u15 & c5<N5-1 -> (u15'=false) & (v15'=v25) & (p15'=0);
+	// read and move to decide
+	[read5] s15=1 &  u15 & c5=N5-1 -> (s15'=2) & (u15'=(p15!=v25)) & (v15'=0) & (p15'=0);
+	[read5] s15=1 & !u15 & c5=N5-1 -> (s15'=2) & (u15'=false) & (v15'=0);
+	// deciding
+	// done
+	[done5] s15=2 -> (s15'=3) & (u15'=false) & (v15'=0) & (p15'=0);
+	//retry
+	[retry5] s15=2 -> (s15'=0) & (u15'=false) & (v15'=0) & (p15'=0);
+	// loop (when finished to avoid deadlocks)
+	[loop5] s15=3 -> (s15'=3);
+	
+endmodule
+
+// construct remaining processes through renaming
+module process25 = process15 [ s15=s25,p15=p25,v15=v25,u15=u25,v25=v35 ] endmodule
+module process35 = process15 [ s15=s35,p15=p35,v15=v35,u15=u35,v25=v45 ] endmodule
+module process45 = process15 [ s15=s45,p15=p45,v15=v45,u15=u45,v25=v55 ] endmodule
+module process55 = process15 [ s15=s55,p15=p55,v15=v55,u15=u55,v25=v15 ] endmodule
+
+// expected number of rounds
+rewards "num_rounds5"
+	[pick5] true : 1;
+endrewards
+
+// labels
+label "elected5" = s15=3&s25=3&s35=3&s45=3&s55=3;
+
+// CONSTANTS
+const int N6 = 6; // number of processes
+const int K6 = 6; // range of probabilistic choice
+
+// counter module used to count the number of processes that have been read
+// and to know when a process has decided
+module counter6
+	
+	// counter (c=i  means process j reading process (i-1)+j next)
+	c6 : [1..N6-1];
+	
+	// reading
+	[read6] c6<N6-1 -> (c6'=c6+1);
+	// finished reading
+	[read6] c6=N6-1 -> (c6'=c6);
+	//decide
+	[done6] u16|u26|u36|u46|u56|u66 -> (c6'=c6);
+	// pick again reset counter 
+	[retry6] !(u16|u26|u36|u46|u56|u66) -> (c6'=1);
+	// loop (when finished to avoid deadlocks)
+	[loop6] s16=3 -> (c6'=c6);
+	
+endmodule
+
+//  processes form a ring and suppose:
+// process 1 reads process 2
+// process 2 reads process 3
+// process 3 reads process 1
+module process16
+	
+	// local state
+	s16 : [0..3];
+	// s1=0 make random choice
+	// s1=1 reading
+	// s1=2 deciding
+	// s1=3 finished
+	
+	// has a unique id so far (initially true)
+	u16 : bool;
+	
+	// value to be sent to next process in the ring (initially sets this to its own value)
+	v16 : [0..K6-1];
+	
+	// random choice
+	p16 : [0..K6-1];
+	
+	// pick value
+	[pick6] s16=0 -> 1/K6 : (s16'=1) & (p16'=0) & (v16'=0) & (u16'=true)
+	             + 1/K6 : (s16'=1) & (p16'=1) & (v16'=1) & (u16'=true)
+	             + 1/K6 : (s16'=1) & (p16'=2) & (v16'=2) & (u16'=true)
+	             + 1/K6 : (s16'=1) & (p16'=3) & (v16'=3) & (u16'=true)
+	             + 1/K6 : (s16'=1) & (p16'=4) & (v16'=4) & (u16'=true)
+	             + 1/K6 : (s16'=1) & (p16'=5) & (v16'=5) & (u16'=true);
+	// read
+	[read6] s16=1 &  u16 & c6<N6-1 -> (u16'=(p16!=v26)) & (v16'=v26);
+	[read6] s16=1 & !u16 & c6<N6-1 -> (u16'=false) & (v16'=v26) & (p16'=0);
+	// read and move to decide
+	[read6] s16=1 &  u16 & c6=N6-1 -> (s16'=2) & (u16'=(p16!=v26)) & (v16'=0) & (p16'=0);
+	[read6] s16=1 & !u16 & c6=N6-1 -> (s16'=2) & (u16'=false) & (v16'=0);
+	// deciding
+	// done
+	[done6] s16=2 -> (s16'=3) & (u16'=false) & (v16'=0) & (p16'=0);
+	//retry
+	[retry6] s16=2 -> (s16'=0) & (u16'=false) & (v16'=0) & (p16'=0);
+	// loop (when finished to avoid deadlocks)
+	[loop6] s16=3 -> (s16'=3);
+	
+endmodule
+
+// construct remaining processes through renaming
+module process26 = process16 [ s16=s26,p16=p26,v16=v26,u16=u26,v26=v36 ] endmodule
+module process36 = process16 [ s16=s36,p16=p36,v16=v36,u16=u36,v26=v46 ] endmodule
+module process46 = process16 [ s16=s46,p16=p46,v16=v46,u16=u46,v26=v56 ] endmodule
+module process56 = process16 [ s16=s56,p16=p56,v16=v56,u16=u56,v26=v66 ] endmodule
+module process66 = process16 [ s16=s66,p16=p66,v16=v66,u16=u66,v26=v16 ] endmodule
+
+// expected number of rounds
+rewards "num_rounds6"
+	[pick6] true : 1;
+endrewards
+
+// labels
+label "elected6" = s16=3&s26=3&s36=3&s46=3&s56=3&s66=3;
+
+// CONSTANTS
+const int N33 = 3; // number of processes
+const int K33 = 4; // range of probabilistic choice
+
+// counter module used to count the number of processes that have been read
+// and to know when a process has decided
+module counter33
+	
+	// counter (c=i  means process j reading process (i-1)+j next)
+	c33 : [1..N33-1];
+	
+	// reading
+	[read33] c33<N33-1 -> (c33'=c33+1);
+	// finished reading
+	[read33] c33=N33-1 -> (c33'=c33);
+	//decide
+	[done33] u133|u233|u333 -> (c33'=c33);
+	// pick again reset counter 
+	[retry33] !(u133|u233|u333) -> (c33'=1);
+	// loop (when finished to avoid deadlocks)
+	[loop33] s133=3 -> (c33'=c33);
+	
+endmodule
+
+//  processes form a ring and suppose:
+// process 1 reads process 2
+// process 2 reads process 3
+// process 3 reads process 1
+module process133
+	
+	// local state
+	s133 : [0..3];
+	// s1=0 make random choice
+	// s1=1 reading
+	// s1=2 deciding
+	// s1=3 finished
+	
+	// has a unique id so far (initially true)
+	u133 : bool;
+	
+	// value to be sent to next process in the ring (initially sets this to its own value)
+	v133 : [0..K33-1];
+	
+	// random choice
+	p133 : [0..K33-1];
+	
+	// pick value
+	[pick33] s133=0 -> 1/K33 : (s133'=1) & (p133'=0) & (v133'=0) & (u133'=true)
+	             + 1/K33 : (s133'=1) & (p133'=1) & (v133'=1) & (u133'=true)
+	             + 1/K33 : (s133'=1) & (p133'=2) & (v133'=2) & (u133'=true)
+	             + 1/K33 : (s133'=1) & (p133'=3) & (v133'=3) & (u133'=true);
+	// read
+	[read33] s133=1 &  u133 & c33<N33-1 -> (u133'=(p133!=v233)) & (v133'=v233);
+	[read33] s133=1 & !u133 & c33<N33-1 -> (u133'=false) & (v133'=v233) & (p133'=0);
+	// read and move to decide
+	[read33] s133=1 &  u133 & c33=N33-1 -> (s133'=2) & (u133'=(p133!=v233)) & (v133'=0) & (p133'=0);
+	[read33] s133=1 & !u133 & c33=N33-1 -> (s133'=2) & (u133'=false) & (v133'=0);
+	// deciding
+	// done
+	[done33] s133=2 -> (s133'=3) & (u133'=false) & (v133'=0) & (p133'=0);
+	//retry
+	[retry33] s133=2 -> (s133'=0) & (u133'=false) & (v133'=0) & (p133'=0);
+	// loop (when finished to avoid deadlocks)
+	[loop33] s133=3 -> (s133'=3);
+	
+endmodule
+
+// construct remaining processes through renaming
+module process233 = process133 [ s133=s233,p133=p233,v133=v233,u133=u233,v233=v333 ] endmodule
+module process333 = process133 [ s133=s333,p133=p333,v133=v333,u133=u333,v233=v133 ] endmodule
+
+// expected number of rounds
+rewards "num_rounds33"
+	[pick33] true : 1;
+endrewards
+
+// labels
+label "elected33" = s133=3&s233=3&s333=3;
+
+// CONSTANTS
+const int N44 = 4; // number of processes
+const int K44 = 5; // range of probabilistic choice
+
+// counter module used to count the number of processes that have been read
+// and to know when a process has decided
+module counter44
+	
+	// counter (c=i  means process j reading process (i-1)+j next)
+	c44 : [1..N44-1];
+	
+	// reading
+	[read44] c44<N44-1 -> (c44'=c44+1);
+	// finished reading
+	[read44] c44=N44-1 -> (c44'=c44);
+	//decide
+	[done44] u144|u244|u344|u444 -> (c44'=c44);
+	// pick again reset counter 
+	[retry44] !(u144|u244|u344|u444) -> (c44'=1);
+	// loop (when finished to avoid deadlocks)
+	[loop44] s144=3 -> (c44'=c44);
+	
+endmodule
+
+//  processes form a ring and suppose:
+// process 1 reads process 2
+// process 2 reads process 3
+// process 3 reads process 1
+module process144
+	
+	// local state
+	s144 : [0..3];
+	// s1=0 make random choice
+	// s1=1 reading
+	// s1=2 deciding
+	// s1=3 finished
+	
+	// has a unique id so far (initially true)
+	u144 : bool;
+	
+	// value to be sent to next process in the ring (initially sets this to its own value)
+	v144 : [0..K44-1];
+	
+	// random choice
+	p144 : [0..K44-1];
+	
+	// pick value
+	[pick44] s144=0 -> 1/K44 : (s144'=1) & (p144'=0) & (v144'=0) & (u144'=true)
+	             + 1/K44 : (s144'=1) & (p144'=1) & (v144'=1) & (u144'=true)
+	             + 1/K44 : (s144'=1) & (p144'=2) & (v144'=2) & (u144'=true)
+	             + 1/K44 : (s144'=1) & (p144'=3) & (v144'=3) & (u144'=true)
+	             + 1/K44 : (s144'=1) & (p144'=4) & (v144'=4) & (u144'=true);
+	// read
+	[read44] s144=1 &  u144 & c44<N44-1 -> (u144'=(p144!=v244)) & (v144'=v244);
+	[read44] s144=1 & !u144 & c44<N44-1 -> (u144'=false) & (v144'=v244) & (p144'=0);
+	// read and move to decide
+	[read44] s144=1 &  u144 & c44=N44-1 -> (s144'=2) & (u144'=(p144!=v244)) & (v144'=0) & (p144'=0);
+	[read44] s144=1 & !u144 & c44=N44-1 -> (s144'=2) & (u144'=false) & (v144'=0);
+	// deciding
+	// done
+	[done44] s144=2 -> (s144'=3) & (u144'=false) & (v144'=0) & (p144'=0);
+	//retry
+	[retry44] s144=2 -> (s144'=0) & (u144'=false) & (v144'=0) & (p144'=0);
+	// loop (when finished to avoid deadlocks)
+	[loop44] s144=3 -> (s144'=3);
+	
+endmodule
+
+// construct remaining processes through renaming
+module process244 = process144 [ s144=s244,p144=p244,v144=v244,u144=u244,v244=v344 ] endmodule
+module process344 = process144 [ s144=s344,p144=p344,v144=v344,u144=u344,v244=v444 ] endmodule
+module process444 = process144 [ s144=s444,p144=p444,v144=v444,u144=u444,v244=v144 ] endmodule
+
+// expected number of rounds
+rewards "num_rounds44"
+	[pick44] true : 1;
+endrewards
+
+// labels
+label "elected44" = s144=3&s244=3&s344=3&s444=3;

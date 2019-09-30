@@ -1,0 +1,81 @@
+dtmc
+
+// CONSTANTS
+const int N4 = 4; // number of processes
+const int K4 = 4; // range of probabilistic choice
+
+// counter module used to count the number of processes that have been read
+// and to know when a process has decided
+module counter4
+	
+	// counter (c=i  means process j reading process (i-1)+j next)
+	c4 : [1..N4-1];
+	
+	// reading
+	[read4] c4<N4-1 -> (c4'=c4+1);
+	// finished reading
+	[read4] c4=N4-1 -> (c4'=c4);
+	//decide
+	[done4] u14|u24|u34|u44 -> (c4'=c4);
+	// pick again reset counter 
+	[retry4] !(u14|u24|u34|u44) -> (c4'=1);
+	// loop (when finished to avoid deadlocks)
+	[loop4] s14=3 -> (c4'=c4);
+	
+endmodule
+
+//  processes form a ring and suppose:
+// process 1 reads process 2
+// process 2 reads process 3
+// process 3 reads process 1
+module process14
+	
+	// local state
+	s14 : [0..3];
+	// s1=0 make random choice
+	// s1=1 reading
+	// s1=2 deciding
+	// s1=3 finished
+	
+	// has a unique id so far (initially true)
+	u14 : bool;
+	
+	// value to be sent to next process in the ring (initially sets this to its own value)
+	v14 : [0..K4-1];
+	
+	// random choice
+	p14 : [0..K4-1];
+	
+	// pick value
+	[pick4] s14=0 -> 1/K4 : (s14'=1) & (p14'=0) & (v14'=0) & (u14'=true)
+	             + 1/K4 : (s14'=1) & (p14'=1) & (v14'=1) & (u14'=true)
+	             + 1/K4 : (s14'=1) & (p14'=2) & (v14'=2) & (u14'=true)
+	             + 1/K4 : (s14'=1) & (p14'=3) & (v14'=3) & (u14'=true);
+	// read
+	[read4] s14=1 &  u14 & c4<N4-1 -> (u14'=(p14!=v24)) & (v14'=v24);
+	[read4] s14=1 & !u14 & c4<N4-1 -> (u14'=false) & (v14'=v24) & (p14'=0);
+	// read and move to decide
+	[read4] s14=1 &  u14 & c4=N4-1 -> (s14'=2) & (u14'=(p14!=v24)) & (v14'=0) & (p14'=0);
+	[read4] s14=1 & !u14 & c4=N4-1 -> (s14'=2) & (u14'=false) & (v14'=0);
+	// deciding
+	// done
+	[done4] s14=2 -> (s14'=3) & (u14'=false) & (v14'=0) & (p14'=0);
+	//retry
+	[retry4] s14=2 -> (s14'=0) & (u14'=false) & (v14'=0) & (p14'=0);
+	// loop (when finished to avoid deadlocks)
+	[loop4] s14=3 -> (s14'=3);
+	
+endmodule
+
+// construct remaining processes through renaming
+module process24 = process14 [ s14=s24,p14=p24,v14=v24,u14=u24,v24=v34 ] endmodule
+module process34 = process14 [ s14=s34,p14=p34,v14=v34,u14=u34,v24=v44 ] endmodule
+module process44 = process14 [ s14=s44,p14=p44,v14=v44,u14=u44,v24=v14 ] endmodule
+
+// expected number of rounds
+rewards "num_rounds4"
+	[pick4] true : 1;
+endrewards
+
+// labels
+label "elected4" = s14=3&s24=3&s34=3&s44=3;
