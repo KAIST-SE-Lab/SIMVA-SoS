@@ -1,0 +1,132 @@
+dtmc
+
+const double av1;
+const double ve1;
+const double av2;
+const double ve2;
+const double av3;
+const double ve3;
+const double av4;
+const double ve4;
+const double av5;
+const double ve5;
+const double av6;
+const double ve6;
+const double av7;
+const double ve7;
+const double av8;
+const double ve8;
+const double av9;
+const double ve9;
+const double av10;
+const double ve10;
+const double av11;
+const double ve11;
+const double av12;
+const double ve12;
+const double av13;
+const double ve13;
+const double av14;
+const double ve14;
+const double av15;
+const double ve15;
+const double av16;
+const double ve16;
+const double av17;
+const double ve17;
+const double av18;
+const double ve18;
+const double av19;
+const double ve19;
+const double av20;
+const double ve20;
+
+module Peer1
+	isListed1: bool init true;
+	status1: [0..5] init 0;
+//  0:none, 1:started, 2:available, 3:unavailable, 4:sucess, 5:failure
+	remainBit1: [0..100] init 100;
+
+	[C1request] isListed1 -> (status1'=1) & (isListed1'=false);
+	[] status1 = 1 -> av1: (status1'=2) + 1-av1: (status1'=3);
+	[C1trans] status1 = 2 & remainBit1 > 0 -> ve1: (remainBit1'=remainBit1-1) + 1-ve1: true;
+	[C1done] status1 = 2 & remainBit1 = 0 -> (status1'=4);
+	[C1X] status1 = 3 -> (status1'=5);
+	[] status1 = 0 -> true;
+endmodule
+
+module Peer2 = Peer1[C1request=C2request, C1trans=C2trans, C1done=C2done, C1X=C2X, isListed1=isListed2, av1=av2, ve1=ve2, status1=status2, remainBit1=remainBit2] endmodule
+module Peer3 = Peer1[C1request=C3request, C1trans=C3trans, C1done=C3done, C1X=C3X, isListed1=isListed3, av1=av3, ve1=ve3, status1=status3, remainBit1=remainBit3] endmodule
+module Peer4 = Peer1[C1request=C4request, C1trans=C4trans, C1done=C4done, C1X=C4X, isListed1=isListed4, av1=av4, ve1=ve4, status1=status4, remainBit1=remainBit4] endmodule
+module Peer5 = Peer1[C1request=C5request, C1trans=C5trans, C1done=C5done, C1X=C5X, isListed1=isListed5, av1=av5, ve1=ve5, status1=status5, remainBit1=remainBit5] endmodule
+
+module Client
+	C1stat: [0..4] init 1;
+//  0: none, 1:start, 2:transmit, 3:sucess, 4:fail
+	C2stat: [0..4] init 1;
+	C3stat: [0..4] init 1;
+	C4stat: [0..4] init 1;
+	C5stat: [0..4] init 1;
+	C6stat: [0..4] init 1;
+	C7stat: [0..4] init 1;
+	C8stat: [0..4] init 1;
+	C9stat: [0..4] init 1;
+	C10stat: [0..4] init 1;
+	C11stat: [0..4] init 1;
+	C12stat: [0..4] init 1;
+	C13stat: [0..4] init 1;
+	C14stat: [0..4] init 1;
+	C15stat: [0..4] init 1;
+	C16stat: [0..4] init 1;
+	C17stat: [0..4] init 1;
+	C18stat: [0..4] init 1;
+	C19stat: [0..4] init 1;
+	C20stat: [0..4] init 1;
+
+	transmissionT1: [0..100000] init 0;
+	transmissionT2: [0..100000] init 0;
+	transmissionT3: [0..100000] init 0;
+	transmissionT4: [0..100000] init 0;
+	transmissionT5: [0..100000] init 0;
+	transmissionT6: [0..1000] init 0;
+	transmissionT7: [0..1000] init 0;
+	transmissionT8: [0..1000] init 0;
+	transmissionT9: [0..1000] init 0;
+	transmissionT10: [0..1000] init 0;
+	transmissionT11: [0..1000] init 0;
+	transmissionT12: [0..1000] init 0;
+	transmissionT13: [0..1000] init 0;
+	transmissionT14: [0..1000] init 0;
+	transmissionT15: [0..1000] init 0;
+	transmissionT16: [0..1000] init 0;
+	transmissionT17: [0..1000] init 0;
+	transmissionT18: [0..1000] init 0;
+	transmissionT19: [0..1000] init 0;
+	transmissionT20: [0..1000] init 0;
+	
+	[C1request] C1stat=1 -> (C1stat'=2);
+	[C1trans] true -> (transmissionT1'=transmissionT1+1);
+	[C1done] true -> (C1stat'=3);
+	[C1X] true -> (C1stat'=4);
+	
+	[C2request] C2stat=1 -> (C2stat'=2);
+	[C2trans] true -> (transmissionT2'=transmissionT2+1);
+	[C2done] true -> (C2stat'=3);
+	[C2X] true -> (C2stat'=4);
+
+	[C3request] C3stat=1 -> (C3stat'=2);
+	[C3trans] true -> (transmissionT3'=transmissionT3+1);
+	[C3done] true -> (C3stat'=3);
+	[C3X] true -> (C3stat'=4);
+
+	[C4request] C4stat=1 -> (C4stat'=2);
+	[C4trans] true -> (transmissionT4'=transmissionT4+1);
+	[C4done] true -> (C4stat'=3);
+	[C4X] true -> (C4stat'=4);
+	
+	[C5request] C5stat=1 -> (C5stat'=2);
+	[C5trans] true -> (transmissionT5'=transmissionT5+1);
+	[C5done] true -> (C5stat'=3);
+	[C5X] true -> (C5stat'=4);
+	
+endmodule

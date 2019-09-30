@@ -1,0 +1,268 @@
+dtmc
+
+const double av1;
+const double ve1=0.5;
+const double av2=0.5;
+const double ve2=0.5;
+const double av3=0.5;
+const double ve3=0.5;
+const double av4=0.5;
+const double ve4=0.5;
+const double av5=0.5;
+const double ve5=0.5;
+const double av6=0.5;
+const double ve6=0.5;
+const double av7=0.5;
+const double ve7=0.5;
+const double av8=0.5;
+const double ve8=0.5;
+const double av9=0.5;
+const double ve9=0.5;
+const double av10=0.5;
+const double ve10=0.5;
+const double av11=0.5;
+const double ve11=0.5;
+const double av12=0.5;
+const double ve12=0.5;
+const double av13=0.5;
+const double ve13=0.5;
+const double av14=0.5;
+const double ve14=0.5;
+const double av15=0.5;
+const double ve15=0.5;
+const double av16=0.5;
+const double ve16=0.5;
+const double av17=0.5;
+const double ve17=0.5;
+const double av18=0.5;
+const double ve18=0.5;
+const double av19=0.5;
+const double ve19=0.5;
+const double av20=0.5;
+const double ve20=0.5;
+const double av21=0.5;
+const double ve21=0.5;
+
+module Peer1
+	isListed1: bool init true;
+	status1: [0..5] init 0;
+//  0:none, 1:started, 2:available, 3:unavailable, 4:sucess, 5:failure
+	remainBit1: [0..100] init 100;
+
+	[C1request] isListed1 -> (status1'=1) & (isListed1'=false);
+	[] status1 = 1 -> av1: (status1'=2) + 1-av1: (status1'=3);
+	[C1trans] status1 = 2 & remainBit1 > 0 -> ve1: (remainBit1'=remainBit1-1) + 1-ve1: true;
+	[C1done] status1 = 2 & remainBit1 = 0 -> (status1'=4);
+	[C1X] status1 = 3 -> (status1'=5);
+	[] status1 = 0 -> true;
+endmodule
+
+module Peer2 = Peer1[C1request=C2request, C1trans=C2trans, C1done=C2done, C1X=C2X, isListed1=isListed2, av1=av2, ve1=ve2, status1=status2, remainBit1=remainBit2] endmodule
+module Peer3 = Peer1[C1request=C3request, C1trans=C3trans, C1done=C3done, C1X=C3X, isListed1=isListed3, av1=av3, ve1=ve3, status1=status3, remainBit1=remainBit3] endmodule
+module Peer4 = Peer1[C1request=C4request, C1trans=C4trans, C1done=C4done, C1X=C4X, isListed1=isListed4, av1=av4, ve1=ve4, status1=status4, remainBit1=remainBit4] endmodule
+module Peer5 = Peer1[C1request=C5request, C1trans=C5trans, C1done=C5done, C1X=C5X, isListed1=isListed5, av1=av5, ve1=ve5, status1=status5, remainBit1=remainBit5] endmodule
+module Peer6 = Peer1[C1request=C6request, C1trans=C6trans, C1done=C6done, C1X=C6X, isListed1=isListed6, av1=av6, ve1=ve6, status1=status6, remainBit1=remainBit6] endmodule
+module Peer7 = Peer1[C1request=C7request, C1trans=C7trans, C1done=C7done, C1X=C7X, isListed1=isListed7, av1=av7, ve1=ve7, status1=status7, remainBit1=remainBit7] endmodule
+module Peer8 = Peer1[C1request=C8request, C1trans=C8trans, C1done=C8done, C1X=C8X, isListed1=isListed8, av1=av8, ve1=ve8, status1=status8, remainBit1=remainBit8] endmodule
+module Peer9 = Peer1[C1request=C9request, C1trans=C9trans, C1done=C9done, C1X=C9X, isListed1=isListed9, av1=av9, ve1=ve9, status1=status9, remainBit1=remainBit9] endmodule
+module Peer10 = Peer1[C1request=C10request, C1trans=C10trans, C1done=C10done, C1X=C10X, isListed1=isListed10, av1=av10, ve1=ve10, status1=status10, remainBit1=remainBit10] endmodule
+module Peer11 = Peer1[C1request=C11request, C1trans=C11trans, C1done=C11done, C1X=C11X, isListed1=isListed11, av1=av11, ve1=ve11, status1=status11, remainBit1=remainBit11] endmodule
+module Peer12 = Peer1[C1request=C12request, C1trans=C12trans, C1done=C12done, C1X=C12X, isListed1=isListed12, av1=av12, ve1=ve12, status1=status12, remainBit1=remainBit12] endmodule
+module Peer13 = Peer1[C1request=C13request, C1trans=C13trans, C1done=C13done, C1X=C13X, isListed1=isListed13, av1=av13, ve1=ve13, status1=status13, remainBit1=remainBit13] endmodule
+module Peer14 = Peer1[C1request=C14request, C1trans=C14trans, C1done=C14done, C1X=C14X, isListed1=isListed14, av1=av14, ve1=ve14, status1=status14, remainBit1=remainBit14] endmodule
+module Peer15 = Peer1[C1request=C15request, C1trans=C15trans, C1done=C15done, C1X=C15X, isListed1=isListed15, av1=av15, ve1=ve15, status1=status15, remainBit1=remainBit15] endmodule
+module Peer16 = Peer1[C1request=C16request, C1trans=C16trans, C1done=C16done, C1X=C16X, isListed1=isListed16, av1=av16, ve1=ve16, status1=status16, remainBit1=remainBit16] endmodule
+module Peer17 = Peer1[C1request=C17request, C1trans=C17trans, C1done=C17done, C1X=C17X, isListed1=isListed17, av1=av17, ve1=ve17, status1=status17, remainBit1=remainBit17] endmodule
+module Peer18 = Peer1[C1request=C18request, C1trans=C18trans, C1done=C18done, C1X=C18X, isListed1=isListed18, av1=av18, ve1=ve18, status1=status18, remainBit1=remainBit18] endmodule
+module Peer19 = Peer1[C1request=C19request, C1trans=C19trans, C1done=C19done, C1X=C19X, isListed1=isListed19, av1=av19, ve1=ve19, status1=status19, remainBit1=remainBit19] endmodule
+module Peer20 = Peer1[C1request=C20request, C1trans=C20trans, C1done=C20done, C1X=C20X, isListed1=isListed20, av1=av20, ve1=ve20, status1=status20, remainBit1=remainBit20] endmodule
+
+module Peer21
+	isListed21: bool init false;
+	status21: [0..5] init 0;
+//  0:none, 1:started, 2:available, 3:unavailable, 4:sucess, 5:failure
+	remainBit21: [0..100] init 100;
+
+	[C21request] isListed21 -> (status21'=1) & (isListed21'=false);
+	[] status21 = 1 -> av21: (status21'=2) + 1-av21: (status21'=3);
+	[C21trans] status21 = 2 & remainBit21 > 0 -> ve21: (remainBit21'=remainBit21-1) + 1-ve21: true;
+	[C21done] status21 = 2 & remainBit21 = 0 -> (status21'=4);
+	[C21X] status21 = 3 -> (status21'=5);
+	[] status21 = 0 -> true;
+endmodule
+
+module Peer22 = Peer21[C21request=C22request, C21trans=C22trans, C21done=C22done, C21X=C22X, isListed21=isListed22, status21=status22, remainBit21=remainBit22] endmodule
+module Peer23 = Peer21[C21request=C23request, C21trans=C23trans, C21done=C23done, C21X=C23X, isListed21=isListed23, status21=status23, remainBit21=remainBit23] endmodule
+module Peer24 = Peer21[C21request=C24request, C21trans=C24trans, C21done=C24done, C21X=C24X, isListed21=isListed24, status21=status24, remainBit21=remainBit24] endmodule
+module Peer25 = Peer21[C21request=C25request, C21trans=C25trans, C21done=C25done, C21X=C25X, isListed21=isListed25, status21=status25, remainBit21=remainBit25] endmodule
+module Peer26 = Peer21[C21request=C26request, C21trans=C26trans, C21done=C26done, C21X=C26X, isListed21=isListed26, status21=status26, remainBit21=remainBit26] endmodule
+module Peer27 = Peer21[C21request=C27request, C21trans=C27trans, C21done=C27done, C21X=C27X, isListed21=isListed27, status21=status27, remainBit21=remainBit27] endmodule
+module Peer28 = Peer21[C21request=C28request, C21trans=C28trans, C21done=C28done, C21X=C28X, isListed21=isListed28, status21=status28, remainBit21=remainBit28] endmodule
+module Peer29 = Peer21[C21request=C29request, C21trans=C29trans, C21done=C29done, C21X=C29X, isListed21=isListed29, status21=status29, remainBit21=remainBit29] endmodule
+module Peer30 = Peer21[C21request=C30request, C21trans=C30trans, C21done=C30done, C21X=C30X, isListed21=isListed30, status21=status30, remainBit21=remainBit30] endmodule
+module Peer31 = Peer21[C21request=C31request, C21trans=C31trans, C21done=C31done, C21X=C31X, isListed21=isListed31, status21=status31, remainBit21=remainBit31] endmodule
+module Peer32 = Peer21[C21request=C32request, C21trans=C32trans, C21done=C32done, C21X=C32X, isListed21=isListed32, status21=status32, remainBit21=remainBit32] endmodule
+module Peer33 = Peer21[C21request=C33request, C21trans=C33trans, C21done=C33done, C21X=C33X, isListed21=isListed33, status21=status33, remainBit21=remainBit33] endmodule
+module Peer34 = Peer21[C21request=C34request, C21trans=C34trans, C21done=C34done, C21X=C34X, isListed21=isListed34, status21=status34, remainBit21=remainBit34] endmodule
+module Peer35 = Peer21[C21request=C35request, C21trans=C35trans, C21done=C35done, C21X=C35X, isListed21=isListed35, status21=status35, remainBit21=remainBit35] endmodule
+module Peer36 = Peer21[C21request=C36request, C21trans=C36trans, C21done=C36done, C21X=C36X, isListed21=isListed36, status21=status36, remainBit21=remainBit36] endmodule
+module Peer37 = Peer21[C21request=C37request, C21trans=C37trans, C21done=C37done, C21X=C37X, isListed21=isListed37, status21=status37, remainBit21=remainBit37] endmodule
+module Peer38 = Peer21[C21request=C38request, C21trans=C38trans, C21done=C38done, C21X=C38X, isListed21=isListed38, status21=status38, remainBit21=remainBit38] endmodule
+module Peer39 = Peer21[C21request=C39request, C21trans=C39trans, C21done=C39done, C21X=C39X, isListed21=isListed39, status21=status39, remainBit21=remainBit39] endmodule
+module Peer40 = Peer21[C21request=C40request, C21trans=C40trans, C21done=C40done, C21X=C40X, isListed21=isListed40, status21=status40, remainBit21=remainBit40] endmodule
+
+module Peer41 = Peer21[C21request=C41request, C21trans=C41trans, C21done=C41done, C21X=C41X, isListed21=isListed41, status21=status41, remainBit21=remainBit41] endmodule
+module Peer42 = Peer21[C21request=C42request, C21trans=C42trans, C21done=C42done, C21X=C42X, isListed21=isListed42, status21=status42, remainBit21=remainBit42] endmodule
+module Peer43 = Peer21[C21request=C43request, C21trans=C43trans, C21done=C43done, C21X=C43X, isListed21=isListed43, status21=status43, remainBit21=remainBit43] endmodule
+module Peer44 = Peer21[C21request=C44request, C21trans=C44trans, C21done=C44done, C21X=C44X, isListed21=isListed44, status21=status44, remainBit21=remainBit44] endmodule
+module Peer45 = Peer21[C21request=C45request, C21trans=C45trans, C21done=C45done, C21X=C45X, isListed21=isListed45, status21=status45, remainBit21=remainBit45] endmodule
+module Peer46 = Peer21[C21request=C46request, C21trans=C46trans, C21done=C46done, C21X=C46X, isListed21=isListed46, status21=status46, remainBit21=remainBit46] endmodule
+module Peer47 = Peer21[C21request=C47request, C21trans=C47trans, C21done=C47done, C21X=C47X, isListed21=isListed47, status21=status47, remainBit21=remainBit47] endmodule
+module Peer48 = Peer21[C21request=C48request, C21trans=C48trans, C21done=C48done, C21X=C48X, isListed21=isListed48, status21=status48, remainBit21=remainBit48] endmodule
+module Peer49 = Peer21[C21request=C49request, C21trans=C49trans, C21done=C49done, C21X=C49X, isListed21=isListed49, status21=status49, remainBit21=remainBit49] endmodule
+module Peer50 = Peer21[C21request=C50request, C21trans=C50trans, C21done=C50done, C21X=C50X, isListed21=isListed50, status21=status50, remainBit21=remainBit50] endmodule
+
+module Client
+	C1stat: [0..4] init 1;
+//  0: none, 1:start, 2:transmit, 3:sucess, 4:fail
+	C2stat: [0..4] init 1;
+	C3stat: [0..4] init 1;
+	C4stat: [0..4] init 1;
+	C5stat: [0..4] init 1;
+	C6stat: [0..4] init 1;
+	C7stat: [0..4] init 1;
+	C8stat: [0..4] init 1;
+	C9stat: [0..4] init 1;
+	C10stat: [0..4] init 1;
+	C11stat: [0..4] init 1;
+	C12stat: [0..4] init 1;
+	C13stat: [0..4] init 1;
+	C14stat: [0..4] init 1;
+	C15stat: [0..4] init 1;
+	C16stat: [0..4] init 1;
+	C17stat: [0..4] init 1;
+	C18stat: [0..4] init 1;
+	C19stat: [0..4] init 1;
+	C20stat: [0..4] init 1;
+
+	transmissionT1: [0..1000] init 0;
+	transmissionT2: [0..1000] init 0;
+	transmissionT3: [0..1000] init 0;
+	transmissionT4: [0..1000] init 0;
+	transmissionT5: [0..1000] init 0;
+	transmissionT6: [0..1000] init 0;
+	transmissionT7: [0..1000] init 0;
+	transmissionT8: [0..1000] init 0;
+	transmissionT9: [0..1000] init 0;
+	transmissionT10: [0..1000] init 0;
+	transmissionT11: [0..1000] init 0;
+	transmissionT12: [0..1000] init 0;
+	transmissionT13: [0..1000] init 0;
+	transmissionT14: [0..1000] init 0;
+	transmissionT15: [0..1000] init 0;
+	transmissionT16: [0..1000] init 0;
+	transmissionT17: [0..1000] init 0;
+	transmissionT18: [0..1000] init 0;
+	transmissionT19: [0..1000] init 0;
+	transmissionT20: [0..1000] init 0;
+	
+	[C1request] C1stat=1 -> (C1stat'=2);
+	[C1trans] true -> (transmissionT1'=transmissionT1+1);
+	[C1done] true -> (C1stat'=3);
+	[C1X] true -> (C1stat'=4);
+	
+	[C2request] C2stat=1 -> (C2stat'=2);
+	[C2trans] true -> (transmissionT2'=transmissionT2+1);
+	[C2done] true -> (C2stat'=3);
+	[C2X] true -> (C2stat'=4);
+
+	[C3request] C3stat=1 -> (C3stat'=2);
+	[C3trans] true -> (transmissionT3'=transmissionT3+1);
+	[C3done] true -> (C3stat'=3);
+	[C3X] true -> (C3stat'=4);
+
+	[C4request] C4stat=1 -> (C4stat'=2);
+	[C4trans] true -> (transmissionT4'=transmissionT4+1);
+	[C4done] true -> (C4stat'=3);
+	[C4X] true -> (C4stat'=4);
+	
+	[C5request] C5stat=1 -> (C5stat'=2);
+	[C5trans] true -> (transmissionT5'=transmissionT5+1);
+	[C5done] true -> (C5stat'=3);
+	[C5X] true -> (C5stat'=4);
+	
+	[C6request] C6stat=1 -> (C6stat'=2);
+	[C6trans] true -> (transmissionT6'=transmissionT6+1);
+	[C6done] true -> (C6stat'=3);
+	[C6X] true -> (C6stat'=4);
+	
+	[C7request] C7stat=1 -> (C7stat'=2);
+	[C7trans] true -> (transmissionT7'=transmissionT7+1);
+	[C7done] true -> (C7stat'=3);
+	[C7X] true -> (C7stat'=4);
+	
+	[C8request] C8stat=1 -> (C8stat'=2);
+	[C8trans] true -> (transmissionT8'=transmissionT8+1);
+	[C8done] true -> (C8stat'=3);
+	[C8X] true -> (C8stat'=4);
+	
+	[C9request] C9stat=1 -> (C9stat'=2);
+	[C9trans] true -> (transmissionT9'=transmissionT9+1);
+	[C9done] true -> (C9stat'=3);
+	[C9X] true -> (C9stat'=4);
+	
+	[C10request] C10stat=1 -> (C10stat'=2);
+	[C10trans] true -> (transmissionT10'=transmissionT10+1);
+	[C10done] true -> (C10stat'=3);
+	[C10X] true -> (C10stat'=4);
+	
+	[C11request] C11stat=1 -> (C11stat'=2);
+	[C11trans] true -> (transmissionT11'=transmissionT11+1);
+	[C11done] true -> (C11stat'=3);
+	[C11X] true -> (C11stat'=4);
+	
+	[C12request] C12stat=1 -> (C12stat'=2);
+	[C12trans] true -> (transmissionT12'=transmissionT12+1);
+	[C12done] true -> (C12stat'=3);
+	[C12X] true -> (C12stat'=4);
+	
+	[C13request] C13stat=1 -> (C13stat'=2);
+	[C13trans] true -> (transmissionT13'=transmissionT13+1);
+	[C13done] true -> (C13stat'=3);
+	[C13X] true -> (C13stat'=4);
+	
+	[C14request] C14stat=1 -> (C14stat'=2);
+	[C14trans] true -> (transmissionT14'=transmissionT14+1);
+	[C14done] true -> (C14stat'=3);
+	[C14X] true -> (C14stat'=4);
+	
+	[C15request] C15stat=1 -> (C15stat'=2);
+	[C15trans] true -> (transmissionT15'=transmissionT15+1);
+	[C15done] true -> (C15stat'=3);
+	[C15X] true -> (C15stat'=4);
+	
+	[C16request] C16stat=1 -> (C16stat'=2);
+	[C16trans] true -> (transmissionT16'=transmissionT16+1);
+	[C16done] true -> (C16stat'=3);
+	[C16X] true -> (C16stat'=4);
+	
+	[C17request] C17stat=1 -> (C17stat'=2);
+	[C17trans] true -> (transmissionT17'=transmissionT17+1);
+	[C17done] true -> (C17stat'=3);
+	[C17X] true -> (C17stat'=4);
+	
+	[C18request] C18stat=1 -> (C18stat'=2);
+	[C18trans] true -> (transmissionT18'=transmissionT18+1);
+	[C18done] true -> (C18stat'=3);
+	[C18X] true -> (C18stat'=4);
+	
+	[C19request] C19stat=1 -> (C19stat'=2);
+	[C19trans] true -> (transmissionT19'=transmissionT19+1);
+	[C19done] true -> (C19stat'=3);
+	[C19X] true -> (C19stat'=4);
+	
+	[C20request] C20stat=1 -> (C20stat'=2);
+	[C20trans] true -> (transmissionT20'=transmissionT20+1);
+	[C20done] true -> (C20stat'=3);
+	[C20X] true -> (C20stat'=4);
+endmodule
