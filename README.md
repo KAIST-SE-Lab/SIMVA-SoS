@@ -4,7 +4,7 @@
 # SIMVA-SoS?
 
 SIMVA-SoS is a simulation-based verification and analysis tool for system of systems. It simulates a system of systems, and performs statistical model checking to verify the achievement of SoS-level goals. SoS-level goals can be translated into properties of the SoS. It is an open framework consisting of independent modules: simulator, property checker and statistical hypothesiss test module.
-
+ 
 # More Information
 
 We are sorry to tell you that related publications are written in Korean. If you have any questions or suggesitions, please email us, [yjshin@se.kaist.ac.kr](mailto:yjshin@se.kaist.ac.kr). We are pleased to have talks with you.
