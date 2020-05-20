@@ -105,7 +105,7 @@ public class smartHomeController {
                 smartHomeController controller = new smartHomeController();
                 int maxSimulationTime = 1248;
 
-                String environmentalDataDirName = "./src./new main./Integrated./src./new_simvasos./adaptation./runtimeVerification./environmentalDataset./original./";
+                String environmentalDataDirName = "./src./new main./Integrated./src./new_simvasos./adaptation./runtimeVerification./environmentalDataset./";
                 String environmentalDataFileName = years[x] + " " + days[y] + ".txt";
                 System.out.println(environmentalDataFileName);
 

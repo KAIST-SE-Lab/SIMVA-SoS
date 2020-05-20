@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <file url="file://$PROJECT_DIR$/src/new main/GUI/src/DatasetUtility.java" />
+      <file url="file://$PROJECT_DIR$/src/new main/GUI/src/MyTreeTableModel.java" />
+      <file url="file://$PROJECT_DIR$/src/new main/GUI/src/NewJFrame.java" />
+    </excludeFromCompile>
     <bytecodeTargetLevel>
       <module name="SIMVA-SoS_main" target="1.8" />
       <module name="SIMVA-SoS_test" target="1.8" />
