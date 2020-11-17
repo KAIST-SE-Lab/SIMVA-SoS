@@ -20,7 +20,7 @@ import kr.ac.kaist.se.simulator.BaseAction;
  * furnished to do so, subject to the following conditions: TBD
  */
 public class NearestPTS extends BasePTS{
-
+//
     @Override
     public int getUtility(BaseAction a) {
         RescueAction rA = (RescueAction) a;
