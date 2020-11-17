@@ -28,7 +28,7 @@ public class MapPoint {
         this.aList = new ArrayList<>();
         this.xPos = xPos;
     }
-
+//
     public void addCurAction(RescueAction a){
         // 이름이 제대로 걸러지지 않음..
         for(RescueAction rA : this.aList){
