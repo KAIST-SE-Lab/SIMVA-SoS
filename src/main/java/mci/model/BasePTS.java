@@ -48,7 +48,7 @@ public abstract class BasePTS extends BaseConstituent implements ConstituentInte
     @Override
     public void normalAction(int elapsedTime) {
         RescueAction currentAction = (RescueAction) this.getCurrentAction();
-        if(this.PTS_STATUS == 1){ // Go to Patient
+        if(this.PTS_STATUS == 1){ // Go to Patient location
             if(currentAction.getRaisedLoc() < 50){
                 int distance = this.curPos - currentAction.getRaisedLoc();
                 if(elapsedTime > distance){
