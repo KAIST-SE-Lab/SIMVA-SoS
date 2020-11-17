@@ -43,7 +43,7 @@ public class MCIScenario extends BaseScenario {
         this.csList = new ArrayList<>();
         this.csList.addAll(Arrays.asList(CSs));
         this.manager = new Hospital();
-
+        //description
         this.actionList = new ArrayList<>();
         for (int i = 0; i < expectedPatients; i++)
             this.actionList.add(new RescueAction(50, 0));
