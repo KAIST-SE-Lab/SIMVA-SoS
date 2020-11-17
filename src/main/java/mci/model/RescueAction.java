@@ -23,7 +23,7 @@ import java.util.Random;
  * furnished to do so, subject to the following conditions: TBD
  */
 public class RescueAction extends BaseAction {
-
+//
     public enum PatientStatus { Dangerous, Very_Dangerous, Dead }
 
     private PatientStatus pStat;
