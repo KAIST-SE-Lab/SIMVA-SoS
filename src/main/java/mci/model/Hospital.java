@@ -31,7 +31,7 @@ public class Hospital extends BaseConstituent implements ManagerInterface {
     /**
      * Normal action of Hospital
      * Heal the patient, shows basic operations
-     * This action takes 10 ticks
+     * This action takes 10 ticks on normal exection flow
      * @param elapsedTime
      */
     @Override
