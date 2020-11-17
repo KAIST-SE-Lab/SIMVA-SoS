@@ -28,7 +28,7 @@ public class RescueAction extends BaseAction {
 
     private PatientStatus pStat;
     private int raisedLoc;
-    private int timeToDead; // Remaining time to dead patient
+    private int timeToDead; // Remaining time to dead patient, time to death
     private int curPos;
 
     private boolean isAcknowledged;
