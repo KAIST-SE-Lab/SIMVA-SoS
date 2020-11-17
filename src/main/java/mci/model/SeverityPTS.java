@@ -46,7 +46,7 @@ public class SeverityPTS extends BasePTS{
     @Override
     public RescueAction choosePatient() {
         RescueAction bestAction = super.choosePatient();
-
+//
         if(bestAction != null && bestAction.getPatientStatus() == RescueAction.PatientStatus.Dangerous){
             int pPos = bestAction.getRaisedLoc();
             for(int i = 1; i<10; i++){
