@@ -26,7 +26,7 @@ import java.util.Arrays;
  */
 
 public class MCIScenario extends BaseScenario {
-    private int endTick;
+    private int endTick;//time at which tick expires
     private int expectedPatients;
     private ArrayList<BaseConstituent> csList;
     private BaseConstituent manager;
