@@ -23,7 +23,7 @@ public class SeverityPTS extends BasePTS{
 
     @Override
     public int getUtility(BaseAction a) {
-        //Utility는 항상 발생한 자리에서 선택이 되기 때문에 Raised Location을 기준으로 선택함
+        //Utility는 항상 발생한 자리에서 선택이 되기 때문에 Raised Location을 기준으로 선택함:reminder
         RescueAction rA = (RescueAction) a;
         RescueAction.PatientStatus pStat = rA.getPatientStatus();
 
