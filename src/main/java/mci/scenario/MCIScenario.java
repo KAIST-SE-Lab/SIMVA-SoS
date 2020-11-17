@@ -60,7 +60,7 @@ public class MCIScenario extends BaseScenario {
             Hospital.GeoMap.add(new MapPoint(i));
         }
     }
-
+    //set and get operations
     @Override
     public String getDescription() { return "MCI (4 PTSs)"; }
 
