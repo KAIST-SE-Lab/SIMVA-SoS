@@ -30,7 +30,7 @@ public class MapPoint {
     }
 //
     public void addCurAction(RescueAction a){
-        // 이름이 제대로 걸러지지 않음..
+        // 이름이 제대로 걸러지지 않음..reminder
         for(RescueAction rA : this.aList){
             if(rA.getName().equalsIgnoreCase(a.getName())){
                 return;
